@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "userInterfaceStyle": "automatic",
+    "orientation": "default",
+    "web": {
+      "output": "static"
+    },
+    "name": "yonksdotsol",
+    "slug": "yonksdotsol",
+    "android": {
+      "package": "com.anonymous.kitexpouniwind"
+    }
+  }
+}
