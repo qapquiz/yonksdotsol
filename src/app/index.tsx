@@ -11,8 +11,10 @@ import { Pressable, Text, View } from "react-native";
 
 export default function App() {
 	const { account, connect, disconnect } = useMobileWallet();
-	const cluster = createSolanaDevnet();
-	const connection = useMemo(() => new Connection(cluster.url), []);
+	const connection = useMemo(
+		() => new Connection(process.env.EXPO_PUBLIC_RPC_URL || ""),
+		[],
+	);
 	const [positions, setPositions] = useState<Map<string, PositionInfo>>(
 		new Map(),
 	);
@@ -32,7 +34,11 @@ export default function App() {
 			return;
 		}
 
-		getPositions(connection, new PublicKey(account.address));
+		const tempWallet = new PublicKey(
+			"87bdcSg4zvjExbvsUSbGifYUp75JdLhLafjgwvCjzjkA",
+		);
+		// getPositions(connection, new PublicKey(account.address));
+		getPositions(connection, new PublicKey(tempWallet));
 	}, [connection, account?.address]);
 
 	return (
