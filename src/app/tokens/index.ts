@@ -39,9 +39,6 @@ export const fetchTokenPriceData = async (mint: string) => {
 		// Adjust supply for decimals
 		const adjustedSupply = supply / Math.pow(10, decimals);
 		const marketCap = price_per_token * adjustedSupply;
-
-		console.log(`Price Per Token: ${price_per_token}`);
-		console.log(`Market Cap: $${marketCap.toLocaleString()}`);
 	}
 
 	return {

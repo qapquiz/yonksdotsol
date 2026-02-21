@@ -1,6 +1,6 @@
 import type { PositionInfo } from "@meteora-ag/dlmm";
 import { useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { fetchTokenPriceData, type TokenInfo } from "../../tokens";
 import { formatTokenAmount } from "../utils/formatters";
 
@@ -28,9 +28,41 @@ export default function PositionCard({ position }: PositionCardProps) {
 	if (!lbPairPosition) return null;
 	const { positionData } = lbPairPosition;
 
+	// Calculate total USD value of the position
+	const calculateTotalValue = (): string => {
+		// Return placeholder while price data loads
+		if (!tokenXInfo || !tokenYInfo) return "$0.00";
+
+		// Convert raw amounts to bigint
+		const totalXAmount = BigInt(positionData.totalXAmount);
+		const totalYAmount = BigInt(positionData.totalYAmount);
+
+		// Calculate decimal divisors
+		const xDivisor = 10n ** BigInt(tokenXInfo.decimals);
+		const yDivisor = 10n ** BigInt(tokenYInfo.decimals);
+
+		// Convert to human-readable amounts
+		const xAmount = Number(totalXAmount) / Number(xDivisor);
+		const yAmount = Number(totalYAmount) / Number(yDivisor);
+
+		// Calculate USD values
+		const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token;
+		const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token;
+
+		// Sum total value
+		const totalValueUSD = xValueUSD + yValueUSD;
+
+		// Format as USD currency
+		return `$${totalValueUSD.toLocaleString("en-US", {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+		})}`;
+	};
+
+	const totalValue = calculateTotalValue();
+
 	// Placeholders for data we don't have yet
 	// In a real app, these would come from price feeds or context
-	const totalValue = "$0.00";
 	const inRange = true;
 	const currentPrice = "$0.00";
 
