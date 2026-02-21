@@ -1,2 +1,21 @@
 @import 'tailwindcss';
 @import 'uniwind';
+
+@theme {
+  --color-app-bg: #050505;
+  --color-app-surface: #111111;
+  --color-app-surface-highlight: #1A1A1A;
+
+  --color-app-primary: #8FA893;
+  --color-app-primary-dim: #2A332C;
+  --color-app-primary-dark: #3E4F43;
+
+  --color-app-secondary: #D4955F;
+  --color-app-secondary-dim: #332619;
+
+  --color-app-text: #FFFFFF;
+  --color-app-text-secondary: #999999;
+  --color-app-text-muted: #555555;
+
+  --color-app-border: #222222;
+}

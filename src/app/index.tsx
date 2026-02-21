@@ -30,9 +30,9 @@ export default function App() {
 			}
 		};
 
-		if (account?.address === undefined) {
-			return;
-		}
+		// if (account?.address === undefined) {
+		// 	return;
+		// }
 
 		const tempWallet = new PublicKey(
 			"87bdcSg4zvjExbvsUSbGifYUp75JdLhLafjgwvCjzjkA",
@@ -42,16 +42,16 @@ export default function App() {
 	}, [connection, account?.address]);
 
 	return (
-		<View className="flex-1 bg-white dark:bg-black items-center justify-center px-8">
+		<View className="flex-1 bg-app-bg items-center justify-center px-8">
 			{/* Heading */}
-			<Text className="text-4xl font-extrabold text-gray-800 dark:text-white mb-3 tracking-tight">
+			<Text className="text-4xl font-extrabold text-app-text mb-3 tracking-tight">
 				🚀 Welcome
 			</Text>
 
 			{/* Subheading */}
-			<Text className="text-xl dark:text-white text-gray-700 mb-8 text-center leading-relaxed">
+			<Text className="text-xl text-app-text-secondary mb-8 text-center leading-relaxed">
 				Build beautiful apps with{" "}
-				<Text className="text-blue-500 font-semibold">
+				<Text className="text-app-primary font-semibold">
 					Expo + Uniwind + @solana/kit 🔥
 				</Text>
 			</Text>
@@ -59,7 +59,7 @@ export default function App() {
 			<View className="mb-8 items-center">
 				{account ? (
 					<View className="items-center">
-						<Text className="text-gray-600 dark:text-gray-400 mb-2">
+						<Text className="text-app-text-muted mb-2">
 							Connected: {account.address.toString().slice(0, 8)}...
 						</Text>
 						<Pressable
@@ -72,22 +72,20 @@ export default function App() {
 				) : (
 					<Pressable
 						onPress={connect}
-						className="bg-blue-600 px-6 py-3 rounded-xl active:bg-blue-700"
+						className="bg-app-primary px-6 py-3 rounded-xl active:opacity-80"
 					>
-						<Text className="text-white font-bold text-lg">Connect Wallet</Text>
+						<Text className="text-black font-bold text-lg">Connect Wallet</Text>
 					</Pressable>
 				)}
 			</View>
 
 			{/* Instruction text */}
-			<Text className="text-base text-gray-600 dark:text-white text-center max-w-sm">
+			<Text className="text-base text-app-text-secondary text-center max-w-sm">
 				Start customizing your app by editing{" "}
-				<Text className="font-semibold text-gray-800 dark:text-white">
-					app/index.tsx
-				</Text>
+				<Text className="font-semibold text-app-text">app/index.tsx</Text>
 			</Text>
 
-			<StatusBar style="auto" />
+			<StatusBar style="light" />
 		</View>
 	);
 }
