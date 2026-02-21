@@ -61,17 +61,34 @@ export default function PositionCard({ position }: PositionCardProps) {
 
 	const totalValue = calculateTotalValue();
 
-	// Placeholders for data we don't have yet
-	// In a real app, these would come from price feeds or context
-	const inRange = true;
-	const currentPrice = "$0.00";
+	// Calculate inRange status
+	const currentActiveId = position.lbPair.activeId;
+	const { lowerBinId, upperBinId } = positionData;
+	const inRange =
+		currentActiveId >= lowerBinId && currentActiveId <= upperBinId;
 
-	// Calculate approximate fees display (mocking USD conversion)
-	// formatTokenAmount returns string, so we're just displaying raw amounts for now
-	// ideally we'd multiply by price
-	const feeX = formatTokenAmount(positionData.feeX, 9);
-	const feeY = formatTokenAmount(positionData.feeY, 9);
-	const unrealizedFeesDisplay = `${feeX} ${tokenXInfo?.symbol || "X"} / ${feeY} ${tokenYInfo?.symbol || "Y"}`;
+	const currentPrice =
+		tokenXInfo && tokenYInfo
+			? `$${(
+					tokenXInfo.price_info.price_per_token /
+					tokenYInfo.price_info.price_per_token
+			  ).toLocaleString("en-US", {
+					minimumFractionDigits: 2,
+					maximumFractionDigits: 4,
+			  })}`
+			: "$0.00";
+
+	// Calculate approximate fees display
+	const feeX = tokenXInfo
+		? formatTokenAmount(positionData.feeX.toString(), tokenXInfo.decimals)
+		: "0";
+	const feeY = tokenYInfo
+		? formatTokenAmount(positionData.feeY.toString(), tokenYInfo.decimals)
+		: "0";
+	const unrealizedFeesDisplay =
+		tokenXInfo && tokenYInfo
+			? `${feeX} ${tokenXInfo.symbol} / ${feeY} ${tokenYInfo.symbol}`
+			: "Loading...";
 
 	return (
 		<View className="bg-zinc-900 rounded-3xl p-5 mb-4 border border-zinc-800">
