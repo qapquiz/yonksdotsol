@@ -1,4 +1,4 @@
-package com.anonymous.kitexpouniwind
+package dev.nullphase.yonks
 
 import android.app.Application
 import android.content.res.Configuration

@@ -26,6 +26,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="acme"/>
         <data android:scheme="exp+yonksdotsol"/>
+        <data android:scheme="exp+yonks"/>
       </intent-filter>
     </activity>
   </application>

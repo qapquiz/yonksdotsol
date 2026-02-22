@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.kitexpouniwind'
+    namespace 'dev.nullphase.yonks'
     defaultConfig {
-        applicationId 'com.anonymous.kitexpouniwind'
+        applicationId 'dev.nullphase.yonks'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -103,6 +103,13 @@ android {
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
+        }
+
+        dappStore {
+            storeFile file("yonks.keystore")
+            storePassword "UVTcfc42"
+            keyAlias "Yonks"
+            keyPassword "UVTcfc42"
         }
     }
     buildTypes {
