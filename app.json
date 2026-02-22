@@ -6,10 +6,17 @@
     "web": {
       "output": "static"
     },
-    "name": "yonksdotsol",
-    "slug": "yonksdotsol",
+    "name": "Yonks",
+    "slug": "Yonks",
+    "icon": "./assets/images/icon.png",
     "android": {
-      "package": "com.anonymous.kitexpouniwind"
-    }
+      "package": "dev.nullphase.yonks"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c6fde4df-25cc-4220-98ad-2888d07b8eea"
+      }
+    },
+    "owner": "armariya"
   }
 }
