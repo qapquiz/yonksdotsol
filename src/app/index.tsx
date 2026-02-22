@@ -23,16 +23,14 @@ export default function App() {
 		const getPositions = async (connection: Connection, wallet: PublicKey) => {
 			try {
 				const pos = await DLMM.getAllLbPairPositionsByUser(connection, wallet);
-				console.log(pos);
 				setPositions(pos);
 			} catch (e) {
 				console.error(e);
 			}
 		};
 
-		console.log(account?.address);
-
 		if (account?.address === undefined) {
+			setPositions(new Map());
 			return;
 		}
 
@@ -40,7 +38,7 @@ export default function App() {
 	}, [connection, account?.address]);
 
 	return (
-		<SafeAreaView className="flex-1 bg-app-bg">
+		<SafeAreaView style={{ flex: 1, backgroundColor: "#050505" }}>
 			<View className="px-4 py-4">
 				<View className="flex-row items-center justify-between">
 					<View className="flex-row items-center gap-3">
