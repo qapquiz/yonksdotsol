@@ -1,6 +1,6 @@
+import { Feather, Ionicons } from "@expo/vector-icons";
 import type { PositionInfo } from "@meteora-ag/dlmm";
 import DLMM from "@meteora-ag/dlmm";
-import { Feather, Ionicons } from "@expo/vector-icons";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { useMobileWallet } from "@wallet-ui/react-native-kit";
 import { StatusBar } from "expo-status-bar";
@@ -44,12 +44,22 @@ export default function App() {
 			<View className="px-4 py-4">
 				<View className="flex-row items-center justify-between">
 					<View className="flex-row items-center gap-3">
-						<View className="h-10 w-10 items-center justify-center rounded-full bg-app-primary-dim">
-							<Feather name="user" size={20} color="#8FA893" />
+						<View
+							className={`h-10 w-10 items-center justify-center rounded-full ${
+								account ? "bg-app-primary-dim" : "bg-app-surface-highlight"
+							}`}
+						>
+							<Feather
+								name="user"
+								size={20}
+								color={account ? "#8FA893" : "#999999"}
+							/>
 						</View>
 						<View>
 							<Text className="text-xs font-bold uppercase tracking-wider text-app-text-secondary">
-								Portfolio
+								{account
+									? `${account.address.slice(0, 4)}...${account.address.slice(-4)}`
+									: "Not Connected"}
 							</Text>
 							<Text className="text-lg font-bold text-app-text">
 								DLMM Overview
@@ -57,9 +67,10 @@ export default function App() {
 						</View>
 					</View>
 					<View className="flex-row items-center gap-3">
-						<View className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight">
+						{/*<View className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight">
 							<Feather name="bell" size={20} color="#999999" />
 						</View>
+						*/}
 						<Pressable
 							onPress={account ? disconnect : connect}
 							className={`h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80 ${
