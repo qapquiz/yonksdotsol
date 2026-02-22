@@ -1,5 +1,6 @@
 import type { PositionInfo } from "@meteora-ag/dlmm";
 import DLMM from "@meteora-ag/dlmm";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { useMobileWallet } from "@wallet-ui/react-native-kit";
 import { StatusBar } from "expo-status-bar";
@@ -22,11 +23,14 @@ export default function App() {
 		const getPositions = async (connection: Connection, wallet: PublicKey) => {
 			try {
 				const pos = await DLMM.getAllLbPairPositionsByUser(connection, wallet);
+				console.log(pos);
 				setPositions(pos);
 			} catch (e) {
 				console.error(e);
 			}
 		};
+
+		console.log(account?.address);
 
 		if (account?.address === undefined) {
 			return;
@@ -37,35 +41,38 @@ export default function App() {
 
 	return (
 		<SafeAreaView className="flex-1 bg-app-bg">
-			<View className="px-4 py-4 border-b border-app-border">
+			<View className="px-4 py-4">
 				<View className="flex-row items-center justify-between">
-					<Text className="text-2xl font-extrabold text-app-text tracking-tight">
-						🚀 Positions
-					</Text>
-					{account ? (
-						<View className="flex-row items-center gap-2">
-							<Text className="text-sm text-app-text-secondary">
-								{account.address.toString().slice(0, 8)}...
-							</Text>
-							<Pressable
-								onPress={disconnect}
-								className="bg-red-500/20 px-3 py-2 rounded-lg active:bg-red-500/30"
-							>
-								<Text className="text-red-500 font-semibold text-xs">
-									Disconnect
-								</Text>
-							</Pressable>
+					<View className="flex-row items-center gap-3">
+						<View className="h-10 w-10 items-center justify-center rounded-full bg-app-primary-dim">
+							<Feather name="user" size={20} color="#8FA893" />
 						</View>
-					) : (
-						<Pressable
-							onPress={connect}
-							className="bg-app-primary px-4 py-2 rounded-lg active:opacity-80"
-						>
-							<Text className="text-black font-bold text-sm">
-								Connect Wallet
+						<View>
+							<Text className="text-xs font-bold uppercase tracking-wider text-app-text-secondary">
+								Portfolio
 							</Text>
+							<Text className="text-lg font-bold text-app-text">
+								DLMM Overview
+							</Text>
+						</View>
+					</View>
+					<View className="flex-row items-center gap-3">
+						<View className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight">
+							<Feather name="bell" size={20} color="#999999" />
+						</View>
+						<Pressable
+							onPress={account ? disconnect : connect}
+							className={`h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80 ${
+								account ? "border border-app-primary" : ""
+							}`}
+						>
+							<Ionicons
+								name="wallet-outline"
+								size={20}
+								color={account ? "#8FA893" : "#999999"}
+							/>
 						</Pressable>
-					)}
+					</View>
 				</View>
 			</View>
 

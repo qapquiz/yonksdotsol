@@ -1,15 +1,15 @@
 import { memo, useMemo } from 'react'
 import { View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
-import { useTokenData } from '../hooks/useTokenData'
+import { useTokenData } from '../../hooks/positions/useTokenData'
 import {
   calculateCurrentPrice,
   calculateIsInRange,
   calculatePositionTotalValue,
   calculatePriceRange,
   generateLiquidityChartData,
-} from '../utils/calculations'
-import { formatTokenAmount } from '../utils/formatters'
+} from '../../utils/positions/calculations'
+import { formatTokenAmount } from '../../utils/positions/formatters'
 import { PositionHeader } from './PositionHeader'
 import { LiquidityChart } from './LiquidityChart'
 import { PositionFooter } from './PositionFooter'
