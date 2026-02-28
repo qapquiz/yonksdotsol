@@ -7,14 +7,12 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { env } from "../config/env";
 import PositionsList from "./positions";
 
 export default function App() {
 	const { account, connect, disconnect } = useMobileWallet();
-	const connection = useMemo(
-		() => new Connection(process.env.EXPO_PUBLIC_RPC_URL || ""),
-		[],
-	);
+	const connection = useMemo(() => new Connection(env.rpcUrl || ""), []);
 	const [positions, setPositions] = useState<Map<string, PositionInfo>>(
 		new Map(),
 	);

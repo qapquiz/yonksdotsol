@@ -1,3 +1,5 @@
+import { env } from "../config/env";
+
 export interface TokenInfo {
 	mint: string;
 	symbol: string;
@@ -11,7 +13,7 @@ export interface TokenInfo {
 }
 
 export const fetchTokenPriceData = async (mint: string) => {
-	const response = await fetch(process.env.EXPO_PUBLIC_RPC_URL || "", {
+	const response = await fetch(env.rpcUrl || "", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
