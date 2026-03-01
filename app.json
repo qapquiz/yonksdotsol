@@ -1,6 +1,9 @@
 {
   "expo": {
     "scheme": "acme",
+    "experiments": {
+      "reactCompiler": true
+    },
     "userInterfaceStyle": "automatic",
     "orientation": "default",
     "web": {
@@ -17,6 +20,7 @@
         "projectId": "c6fde4df-25cc-4220-98ad-2888d07b8eea"
       }
     },
-    "owner": "armariya"
+    "owner": "armariya",
+    "plugins": ["expo-router"]
   }
 }
