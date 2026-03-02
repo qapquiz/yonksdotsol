@@ -43,6 +43,56 @@ export function calculatePositionTotalValue(
   })}`
 }
 
+export function calculateUnrealizedFeesValue(
+  feeXAmount: bigint,
+  feeYAmount: bigint,
+  tokenXInfo: TokenInfo | null,
+  tokenYInfo: TokenInfo | null,
+): string {
+  if (!tokenXInfo || !tokenYInfo) return '$0.00'
+
+  const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
+  const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
+
+  const xAmount = Number(feeXAmount) / Number(xDivisor)
+  const yAmount = Number(feeYAmount) / Number(yDivisor)
+
+  const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token
+  const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token
+
+  const totalValueUSD = xValueUSD + yValueUSD
+
+  return `$${totalValueUSD.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`
+}
+
+export function calculateClaimedFeesValue(
+  claimedFeeXAmount: bigint,
+  claimedFeeYAmount: bigint,
+  tokenXInfo: TokenInfo | null,
+  tokenYInfo: TokenInfo | null,
+): string {
+  if (!tokenXInfo || !tokenYInfo) return '$0.00'
+
+  const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
+  const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
+
+  const xAmount = Number(claimedFeeXAmount) / Number(xDivisor)
+  const yAmount = Number(claimedFeeYAmount) / Number(yDivisor)
+
+  const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token
+  const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token
+
+  const totalValueUSD = xValueUSD + yValueUSD
+
+  return `$${totalValueUSD.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`
+}
+
 export function calculateIsInRange(currentActiveId: number, lowerBinId: number, upperBinId: number): boolean {
   return currentActiveId >= lowerBinId && currentActiveId <= upperBinId
 }

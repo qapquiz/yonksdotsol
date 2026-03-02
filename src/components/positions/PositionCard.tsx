@@ -3,10 +3,12 @@ import { View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useTokenData } from '../../hooks/positions/useTokenData'
 import {
+  calculateClaimedFeesValue,
   calculateCurrentPrice,
   calculateIsInRange,
   calculatePositionTotalValue,
   calculatePriceRange,
+  calculateUnrealizedFeesValue,
   generateLiquidityChartData,
 } from '../../utils/positions/calculations'
 import { formatTokenAmount } from '../../utils/positions/formatters'
@@ -53,6 +55,38 @@ function PositionCardComponent({ position }: PositionCardProps) {
     return `${feeX} ${tokenXInfo.symbol} / ${feeY} ${tokenYInfo.symbol}`
   }, [isLoading, positionData, tokenXInfo, tokenYInfo])
 
+  const claimedFeesDisplay = useMemo(() => {
+    if (isLoading) return 'Loading...'
+    if (!tokenXInfo || !tokenYInfo) return 'Loading...'
+    if (!positionData) return 'Loading...'
+    const claimedFeeX = formatTokenAmount(positionData.totalClaimedFeeXAmount.toString(), tokenXInfo.decimals)
+    const claimedFeeY = formatTokenAmount(positionData.totalClaimedFeeYAmount.toString(), tokenYInfo.decimals)
+    return `${claimedFeeX} ${tokenXInfo.symbol} / ${claimedFeeY} ${tokenYInfo.symbol}`
+  }, [isLoading, positionData, tokenXInfo, tokenYInfo])
+
+  const unrealizedFeesValue = useMemo(() => {
+    if (isLoading) return '$0.00'
+    if (!tokenXInfo || !tokenYInfo) return '$0.00'
+    if (!positionData) return '$0.00'
+    return calculateUnrealizedFeesValue(
+      BigInt(positionData.feeX.toString()),
+      BigInt(positionData.feeY.toString()),
+      tokenXInfo,
+      tokenYInfo,
+    )
+  }, [isLoading, positionData, tokenXInfo, tokenYInfo])
+
+  const claimedFeesValue = useMemo(() => {
+    if (isLoading) return '$0.00'
+    if (!tokenXInfo || !tokenYInfo) return '$0.00'
+    if (!positionData) return '$0.00'
+    return calculateClaimedFeesValue(
+      BigInt(positionData.totalClaimedFeeXAmount.toString()),
+      BigInt(positionData.totalClaimedFeeYAmount.toString()),
+      tokenXInfo,
+      tokenYInfo,
+    )
+  }, [isLoading, positionData, tokenXInfo, tokenYInfo])
   const chartData = useMemo(() => {
     if (!positionData) return []
     return generateLiquidityChartData(positionData.positionBinData, positionData.lowerBinId, positionData.upperBinId)
@@ -80,7 +114,12 @@ function PositionCardComponent({ position }: PositionCardProps) {
         maxLiquidity={priceRange.maxLiquidity}
       />
 
-      <PositionFooter unrealizedFeesDisplay={unrealizedFeesDisplay} />
+      <PositionFooter
+        unrealizedFeesDisplay={unrealizedFeesDisplay}
+        claimedFeesDisplay={claimedFeesDisplay}
+        unrealizedFeesValue={unrealizedFeesValue}
+        claimedFeesValue={claimedFeesValue}
+      />
     </View>
   )
 }
