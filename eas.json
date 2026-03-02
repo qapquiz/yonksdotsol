@@ -15,14 +15,14 @@
     "production": {
       "autoIncrement": true
     },
-		"dapp-store": {
+    "dapp-store": {
       "android": {
         "buildType": "apk"
       },
       "environment": "production",
-			"env": {
-				"EXPO_PUBLIC_RPC_URL": "EXPO_PUBLIC_RPC_URL"
-			}
+      "env": {
+        "EXPO_PUBLIC_RPC_URL": "EXPO_PUBLIC_RPC_URL"
+      }
     }
   },
   "submit": {

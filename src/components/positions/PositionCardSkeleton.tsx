@@ -12,7 +12,7 @@ export default function PositionCardSkeleton() {
     return () => {
       shimmerValue.value = 0
     }
-  }, [])
+  }, [shimmerValue])
 
   const shimmerStyle = useAnimatedStyle(() => ({
     opacity: 0.3 + shimmerValue.value * 0.2,

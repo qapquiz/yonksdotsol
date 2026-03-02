@@ -4,16 +4,16 @@
 @theme {
   --color-app-bg: #050505;
   --color-app-surface: #111111;
-  --color-app-surface-highlight: #1A1A1A;
+  --color-app-surface-highlight: #1a1a1a;
 
-  --color-app-primary: #8FA893;
-  --color-app-primary-dim: #2A332C;
-  --color-app-primary-dark: #3E4F43;
+  --color-app-primary: #8fa893;
+  --color-app-primary-dim: #2a332c;
+  --color-app-primary-dark: #3e4f43;
 
-  --color-app-secondary: #D4955F;
+  --color-app-secondary: #d4955f;
   --color-app-secondary-dim: #332619;
 
-  --color-app-text: #FFFFFF;
+  --color-app-text: #ffffff;
   --color-app-text-secondary: #999999;
   --color-app-text-muted: #555555;
 

@@ -7,5 +7,5 @@
 // const parsed = envSchema.parse(process.env);
 
 export const env = {
-	rpcUrl: process.env.EXPO_PUBLIC_RPC_URL,
-};
+  rpcUrl: process.env.EXPO_PUBLIC_RPC_URL,
+}
