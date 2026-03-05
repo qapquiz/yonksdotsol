@@ -15,8 +15,8 @@ function PositionFooterComponent({
   claimedFeesValue,
 }: PositionFooterProps) {
   return (
-    <View className="flex-row justify-between items-center">
-      <View className="flex-1">
+    <View>
+      <View className="mb-4">
         <Text className="text-zinc-500 text-[10px] font-bold mb-1 tracking-wider">UNREALIZED FEES</Text>
         <View className="flex-row items-center gap-1">
           <Text className="text-white font-bold text-sm">{unrealizedFeesDisplay}</Text>
@@ -25,7 +25,7 @@ function PositionFooterComponent({
         <Text className="text-zinc-400 text-xs mt-1">{unrealizedFeesValue}</Text>
       </View>
 
-      <View className="flex-1">
+      <View>
         <Text className="text-zinc-500 text-[10px] font-bold mb-1 tracking-wider">CLAIMED FEES</Text>
         <View className="flex-row items-center gap-1">
           <Text className="text-white font-bold text-sm">{claimedFeesDisplay}</Text>

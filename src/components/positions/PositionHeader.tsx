@@ -2,15 +2,27 @@ import { memo } from 'react'
 import { Text, View } from 'react-native'
 import type { TokenInfo } from '../../tokens'
 import { TokenIcons } from './TokenIcons'
+import { formatUPNLDisplay } from '../../utils/positions/calculations'
 
 interface PositionHeaderProps {
   tokenXInfo: TokenInfo | null
   tokenYInfo: TokenInfo | null
   inRange: boolean
   totalValue: string
+  upnlValue: number | null
+  upnlPercentage: number | null
 }
 
-function PositionHeaderComponent({ tokenXInfo, tokenYInfo, inRange, totalValue }: PositionHeaderProps) {
+function PositionHeaderComponent({
+  tokenXInfo,
+  tokenYInfo,
+  inRange,
+  totalValue,
+  upnlValue,
+  upnlPercentage,
+}: PositionHeaderProps) {
+  const upnlColorClass = upnlValue !== null ? (upnlValue >= 0 ? 'text-emerald-400' : 'text-red-400') : ''
+
   return (
     <View className="flex-row justify-between items-start mb-6">
       <View className="flex-row items-center gap-3">
@@ -29,6 +41,9 @@ function PositionHeaderComponent({ tokenXInfo, tokenYInfo, inRange, totalValue }
           </Text>
         </View>
         <Text className="text-white font-bold text-lg">{totalValue}</Text>
+        {upnlValue !== null && upnlPercentage !== null && (
+          <Text className={`text-xs font-bold ${upnlColorClass}`}>{formatUPNLDisplay(upnlValue, upnlPercentage)}</Text>
+        )}
       </View>
     </View>
   )

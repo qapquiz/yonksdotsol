@@ -1,12 +1,16 @@
-import { memo, useMemo } from 'react'
+import { memo, useMemo, useState, useEffect } from 'react'
 import { View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useTokenData } from '../../hooks/positions/useTokenData'
+import { useInitialDeposits } from '../../hooks/positions/useInitialDeposits'
 import {
   calculateClaimedFeesValue,
   calculateCurrentPrice,
+  calculateInitialDepositValue,
   calculateIsInRange,
   calculatePositionTotalValue,
+  calculateUPNLPercentage,
+  calculateUPNLValue,
   calculatePriceRange,
   calculateUnrealizedFeesValue,
   generateLiquidityChartData,
@@ -15,12 +19,14 @@ import { formatTokenAmount } from '../../utils/positions/formatters'
 import { PositionHeader } from './PositionHeader'
 import { LiquidityChart } from './LiquidityChart'
 import { PositionFooter } from './PositionFooter'
+import { env } from '../../config/env'
 
 interface PositionCardProps {
   position: PositionInfo
+  rpcUrl?: string
 }
 
-function PositionCardComponent({ position }: PositionCardProps) {
+function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
   const tokenXMint = position.tokenX.mint.address.toBase58()
   const tokenYMint = position.tokenY.mint.address.toBase58()
 
@@ -28,6 +34,16 @@ function PositionCardComponent({ position }: PositionCardProps) {
 
   const lbPairPosition = position.lbPairPositionsData[0]
   const positionData = lbPairPosition?.positionData
+
+  const effectiveRpcUrl = rpcUrl || env.rpcUrl || ''
+
+  const { initialDeposits } = useInitialDeposits({
+    rpcUrl: effectiveRpcUrl,
+    positionPublicKey: position.publicKey.toBase58(),
+    tokenXDecimals: tokenXInfo?.decimals || 0,
+    tokenYDecimals: tokenYInfo?.decimals || 0,
+    enabled: !isLoading && !!(tokenXInfo && tokenYInfo),
+  })
 
   const totalValue = useMemo(() => {
     if (!positionData) return '$0.00'
@@ -38,6 +54,32 @@ function PositionCardComponent({ position }: PositionCardProps) {
       tokenYInfo,
     )
   }, [positionData, tokenXInfo, tokenYInfo])
+
+  const [upnlValue, setUPNLValue] = useState<number | null>(null)
+  const [upnlPercentage, setUPNLPercentage] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (initialDeposits && tokenXInfo && tokenYInfo && positionData) {
+      const initialValue = calculateInitialDepositValue(
+        initialDeposits.xAmount,
+        initialDeposits.yAmount,
+        tokenXInfo,
+        tokenYInfo,
+      )
+
+      const currentTotalValue = calculatePositionTotalValue(
+        BigInt(positionData.totalXAmount),
+        BigInt(positionData.totalYAmount),
+        tokenXInfo,
+        tokenYInfo,
+      )
+
+      const currentValue = parseFloat(currentTotalValue.replace(/[$,]/g, ''))
+
+      setUPNLValue(calculateUPNLValue(currentValue, initialValue))
+      setUPNLPercentage(calculateUPNLPercentage(currentValue, initialValue))
+    }
+  }, [initialDeposits, tokenXInfo, tokenYInfo, positionData])
 
   const inRange = useMemo(() => {
     if (!positionData) return false
@@ -87,6 +129,7 @@ function PositionCardComponent({ position }: PositionCardProps) {
       tokenYInfo,
     )
   }, [isLoading, positionData, tokenXInfo, tokenYInfo])
+
   const chartData = useMemo(() => {
     if (!positionData) return []
     return generateLiquidityChartData(positionData.positionBinData, positionData.lowerBinId, positionData.upperBinId)
@@ -103,7 +146,14 @@ function PositionCardComponent({ position }: PositionCardProps) {
 
   return (
     <View className="bg-zinc-900 rounded-3xl p-5 mb-4 border border-zinc-800">
-      <PositionHeader tokenXInfo={tokenXInfo} tokenYInfo={tokenYInfo} inRange={inRange} totalValue={totalValue} />
+      <PositionHeader
+        tokenXInfo={tokenXInfo}
+        tokenYInfo={tokenYInfo}
+        inRange={inRange}
+        totalValue={totalValue}
+        upnlValue={upnlValue}
+        upnlPercentage={upnlPercentage}
+      />
 
       <LiquidityChart
         chartBins={chartData}

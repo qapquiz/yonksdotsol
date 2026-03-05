@@ -6,21 +6,21 @@ This file contains build commands and code style guidelines for agentic coding a
 
 ### Primary Commands
 
-- `npm run build` - Type check and Android prebuild
-- `npm run ci` - Run full CI: type check, lint, format check, and build
-- `npm run lint` - Run ESLint with auto-fix
-- `npm run lint:check` - Check ESLint errors without fixing
-- `npm run fmt` - Format code with Prettier
-- `npm run fmt:check` - Check code formatting
+- `bun run build` - Type check and Android prebuild
+- `bun run ci` - Run full CI: type check, lint, format check, and build
+- `bun run lint` - Run ESLint with auto-fix
+- `bun run lint:check` - Check ESLint errors without fixing
+- `bun run fmt` - Format code with Prettier
+- `bun run fmt:check` - Check code formatting
 - `tsc --noEmit` - Type check without emitting files
 
 ### Development
 
-- `npm run dev` - Start Expo dev server with cache reset
-- `npm run android` - Prebuild and run on Android
-- `npm run ios` - Prebuild and run on iOS
-- `npm run web` - Start web dev server
-- `npm start` - Start Expo without dev client
+- `bun run dev` - Start Expo dev server with cache reset
+- `bun run android` - Prebuild and run on Android
+- `bun run ios` - Prebuild and run on iOS
+- `bun run web` - Start web dev server
+- `bun start` - Start Expo without dev client
 
 ### Testing
 
@@ -121,9 +121,9 @@ This file contains build commands and code style guidelines for agentic coding a
 Always run:
 
 1. `tsc --noEmit` - Ensure no type errors
-2. `npm run lint` - Fix linting issues
-3. `npm run fmt` - Format code
-4. `npm run build` - Verify build succeeds
+2. `bun run lint` - Fix linting issues
+3. `bun run fmt` - Format code
+4. `bun run build` - Verify build succeeds
 
 ### Environment Variables
 

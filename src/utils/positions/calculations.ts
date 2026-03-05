@@ -199,3 +199,37 @@ export function calculateActiveBinPosition(chartBins: ChartBinData[], currentAct
 
   return (activeIndex / (chartBins.length - 1)) * 100
 }
+
+export function calculateInitialDepositValue(
+  initialXAmount: bigint,
+  initialYAmount: bigint,
+  tokenXInfo: TokenInfo | null,
+  tokenYInfo: TokenInfo | null,
+): number {
+  if (!tokenXInfo || !tokenYInfo) return 0
+
+  const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
+  const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
+
+  const xAmount = Number(initialXAmount) / Number(xDivisor)
+  const yAmount = Number(initialYAmount) / Number(yDivisor)
+
+  const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token
+  const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token
+
+  return xValueUSD + yValueUSD
+}
+
+export function calculateUPNLValue(currentTotalValue: number, initialDepositValue: number): number {
+  return currentTotalValue - initialDepositValue
+}
+
+export function calculateUPNLPercentage(currentTotalValue: number, initialDepositValue: number): number {
+  if (initialDepositValue === 0) return 0
+  return ((currentTotalValue - initialDepositValue) / initialDepositValue) * 100
+}
+
+export function formatUPNLDisplay(upnlValue: number, upnlPercentage: number): string {
+  const sign = upnlValue >= 0 ? '+' : ''
+  return `${sign}$${Math.abs(upnlValue).toFixed(2)} (${sign}${upnlPercentage.toFixed(2)}%)`
+}
