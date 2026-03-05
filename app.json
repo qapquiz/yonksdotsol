@@ -13,7 +13,11 @@
     "slug": "Yonks",
     "icon": "./assets/images/icon.png",
     "android": {
-      "package": "dev.nullphase.yonks"
+      "package": "dev.nullphase.yonks",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#000000"
+      }
     },
     "extra": {
       "eas": {

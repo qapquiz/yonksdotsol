@@ -6,8 +6,8 @@ import { MobileWalletProvider, createSolanaDevnet } from '@wallet-ui/react-nativ
 
 const cluster = createSolanaDevnet()
 const identity = {
-  name: 'Kit Expo Uniwind',
-  uri: 'https://github.com/beeman/yonksdotsol',
+  name: 'Yonks',
+  uri: 'https://github.com/qapquiz/yonksdotsol',
 }
 
 export default function Layout() {
