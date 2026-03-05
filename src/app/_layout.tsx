@@ -8,6 +8,7 @@ const cluster = createSolanaDevnet()
 const identity = {
   name: 'Yonks',
   uri: 'https://github.com/qapquiz/yonksdotsol',
+  icon: './assets/images/icon.png',
 }
 
 export default function Layout() {

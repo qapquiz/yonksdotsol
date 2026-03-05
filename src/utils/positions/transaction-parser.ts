@@ -52,49 +52,17 @@ export async function fetchPositionTransactionSignatures(
   }
 }
 
-export async function findPositionCreationTransaction(
+export async function calculateTrueCostBasis(
   rpc: ReturnType<typeof createSolanaRpc>,
   positionAddress: string,
   signatures: SignatureWithMetadata[],
-): Promise<SignatureWithMetadata | null> {
-  for (const sig of [...signatures].reverse()) {
-    try {
-      const tx = await rpc
-        .getTransaction(toSignature(sig.signature), {
-          encoding: 'jsonParsed',
-          commitment: 'confirmed',
-        })
-        .send()
-
-      if (!tx) continue
-
-      const message = tx.transaction.message
-
-      for (const ix of message.instructions) {
-        if ('parsed' in ix && ix.program === 'dlmm') {
-          if (ix.parsed.type === 'initializePosition' || ix.parsed.type === 'initializePosition2') {
-            return sig
-          }
-        }
-      }
-    } catch (error) {
-      console.error(`Error parsing transaction ${sig.signature}:`, error)
-      continue
-    }
-  }
-
-  return null
-}
-
-export async function findInitialLiquidityTransaction(
-  rpc: ReturnType<typeof createSolanaRpc>,
-  positionAddress: string,
-  signatures: SignatureWithMetadata[],
-  creationSignature: string,
 ): Promise<InitialDepositsResult | null> {
-  for (const sig of signatures) {
-    if (sig.signature === creationSignature) continue
+  let totalAddedX = 0n
+  let totalAddedY = 0n
+  let totalRemovedX = 0n
+  let totalRemovedY = 0n
 
+  for (const sig of signatures) {
     try {
       const tx = await rpc
         .getTransaction(toSignature(sig.signature), {
@@ -109,12 +77,23 @@ export async function findInitialLiquidityTransaction(
 
       for (const ix of message.instructions) {
         if ('parsed' in ix && ix.program === 'dlmm') {
-          if (ix.parsed.type === 'addLiquidity' || ix.parsed.type === 'addLiquidity2') {
-            const info = ix.parsed.info as any
+          const info = ix.parsed.info as any
+
+          if (ix.parsed.type === 'initializePosition' || ix.parsed.type === 'initializePosition2') {
             const amountX = BigInt(info?.liquidityParameter?.amountX ?? 0)
             const amountY = BigInt(info?.liquidityParameter?.amountY ?? 0)
-
-            return { xAmount: amountX, yAmount: amountY }
+            totalAddedX += amountX
+            totalAddedY += amountY
+          } else if (ix.parsed.type === 'addLiquidity' || ix.parsed.type === 'addLiquidity2') {
+            const amountX = BigInt(info?.liquidityParameter?.amountX ?? 0)
+            const amountY = BigInt(info?.liquidityParameter?.amountY ?? 0)
+            totalAddedX += amountX
+            totalAddedY += amountY
+          } else if (ix.parsed.type === 'removeLiquidity' || ix.parsed.type === 'removeLiquidity2') {
+            const amountX = BigInt(info?.liquidityParameter?.amountX ?? 0)
+            const amountY = BigInt(info?.liquidityParameter?.amountY ?? 0)
+            totalRemovedX += amountX
+            totalRemovedY += amountY
           }
         }
       }
@@ -124,7 +103,14 @@ export async function findInitialLiquidityTransaction(
     }
   }
 
-  return null
+  const netX = totalAddedX - totalRemovedX
+  const netY = totalAddedY - totalRemovedY
+
+  if (netX === 0n && netY === 0n) {
+    return null
+  }
+
+  return { xAmount: netX, yAmount: netY }
 }
 
 export async function getInitialDeposits(
@@ -141,25 +127,14 @@ export async function getInitialDeposits(
       return null
     }
 
-    const creationTx = await findPositionCreationTransaction(rpc, positionAddress, signatures)
+    const costBasis = await calculateTrueCostBasis(rpc, positionAddress, signatures)
 
-    if (!creationTx) {
-      console.warn(`No creation transaction found for position ${positionAddress}`)
-      return { xAmount: 0n, yAmount: 0n }
+    if (!costBasis) {
+      console.warn(`No liquidity found for position ${positionAddress}`)
+      return null
     }
 
-    const liquidityResult = await findInitialLiquidityTransaction(
-      rpc,
-      positionAddress,
-      signatures,
-      creationTx.signature,
-    )
-
-    if (liquidityResult) {
-      return liquidityResult
-    }
-
-    return { xAmount: 0n, yAmount: 0n }
+    return costBasis
   } catch (error) {
     console.error('Error fetching initial deposits:', error)
     return null
