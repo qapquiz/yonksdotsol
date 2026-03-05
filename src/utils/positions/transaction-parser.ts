@@ -9,6 +9,20 @@ export interface SignatureWithMetadata {
   memo: string | null
 }
 
+export interface TransactionWithAmounts {
+  signature: string
+  blockTime: number | null
+  xAmount: bigint
+  yAmount: bigint
+  operation: 'add' | 'remove'
+}
+
+export interface CostBasisWithTransactions {
+  netX: bigint
+  netY: bigint
+  transactions: TransactionWithAmounts[]
+}
+
 export interface InitialDepositsResult {
   xAmount: bigint
   yAmount: bigint
@@ -56,12 +70,12 @@ export async function calculateTrueCostBasis(
   rpc: ReturnType<typeof createSolanaRpc>,
   positionAddress: string,
   signatures: SignatureWithMetadata[],
-): Promise<InitialDepositsResult | null> {
+): Promise<CostBasisWithTransactions | null> {
   let totalAddedX = 0n
   let totalAddedY = 0n
   let totalRemovedX = 0n
   let totalRemovedY = 0n
-
+  const transactions: TransactionWithAmounts[] = []
   for (const sig of signatures) {
     try {
       const tx = await rpc
@@ -84,16 +98,37 @@ export async function calculateTrueCostBasis(
             const amountY = BigInt(info?.liquidityParameter?.amountY ?? 0)
             totalAddedX += amountX
             totalAddedY += amountY
+            transactions.push({
+              signature: sig.signature,
+              blockTime: sig.blockTime,
+              xAmount: amountX,
+              yAmount: amountY,
+              operation: 'add',
+            })
           } else if (ix.parsed.type === 'addLiquidity' || ix.parsed.type === 'addLiquidity2') {
             const amountX = BigInt(info?.liquidityParameter?.amountX ?? 0)
             const amountY = BigInt(info?.liquidityParameter?.amountY ?? 0)
             totalAddedX += amountX
             totalAddedY += amountY
+            transactions.push({
+              signature: sig.signature,
+              blockTime: sig.blockTime,
+              xAmount: amountX,
+              yAmount: amountY,
+              operation: 'add',
+            })
           } else if (ix.parsed.type === 'removeLiquidity' || ix.parsed.type === 'removeLiquidity2') {
             const amountX = BigInt(info?.liquidityParameter?.amountX ?? 0)
             const amountY = BigInt(info?.liquidityParameter?.amountY ?? 0)
             totalRemovedX += amountX
             totalRemovedY += amountY
+            transactions.push({
+              signature: sig.signature,
+              blockTime: sig.blockTime,
+              xAmount: amountX,
+              yAmount: amountY,
+              operation: 'remove',
+            })
           }
         }
       }
@@ -110,7 +145,7 @@ export async function calculateTrueCostBasis(
     return null
   }
 
-  return { xAmount: netX, yAmount: netY }
+  return { netX, netY, transactions }
 }
 
 export async function getInitialDeposits(
@@ -118,7 +153,7 @@ export async function getInitialDeposits(
   positionAddress: string,
   tokenXDecimals: number,
   tokenYDecimals: number,
-): Promise<InitialDepositsResult | null> {
+): Promise<CostBasisWithTransactions | null> {
   try {
     const signatures = await fetchPositionTransactionSignatures(rpc, positionAddress, 100)
 

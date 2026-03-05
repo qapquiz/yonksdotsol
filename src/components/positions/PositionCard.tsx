@@ -3,10 +3,10 @@ import { View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useTokenData } from '../../hooks/positions/useTokenData'
 import { useInitialDeposits } from '../../hooks/positions/useInitialDeposits'
+import { useHistoricalInitialValue } from '../../hooks/positions/useHistoricalInitialValue'
 import {
   calculateClaimedFeesValue,
   calculateCurrentPrice,
-  calculateInitialDepositValue,
   calculateIsInRange,
   calculatePositionTotalValue,
   calculateUPNLPercentage,
@@ -37,12 +37,21 @@ function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
 
   const effectiveRpcUrl = rpcUrl || env.rpcUrl || ''
 
-  const { initialDeposits } = useInitialDeposits({
+  const { costBasis } = useInitialDeposits({
     rpcUrl: effectiveRpcUrl,
     positionPublicKey: position.publicKey.toBase58(),
     tokenXDecimals: tokenXInfo?.decimals || 0,
     tokenYDecimals: tokenYInfo?.decimals || 0,
     enabled: !isLoading && !!(tokenXInfo && tokenYInfo),
+  })
+
+  const poolAddress = (position.lbPair as any).publicKey?.toBase58() || ''
+  const { initialValue: historicalInitialValue } = useHistoricalInitialValue({
+    poolAddress,
+    costBasis,
+    tokenXDecimals: tokenXInfo?.decimals || 0,
+    tokenYDecimals: tokenYInfo?.decimals || 0,
+    enabled: !isLoading && !!(tokenXInfo && tokenYInfo && costBasis),
   })
 
   const totalValue = useMemo(() => {
@@ -59,14 +68,7 @@ function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
   const [upnlPercentage, setUPNLPercentage] = useState<number | null>(null)
 
   useEffect(() => {
-    if (initialDeposits && tokenXInfo && tokenYInfo && positionData) {
-      const initialValue = calculateInitialDepositValue(
-        initialDeposits.xAmount,
-        initialDeposits.yAmount,
-        tokenXInfo,
-        tokenYInfo,
-      )
-
+    if (historicalInitialValue > 0 && tokenXInfo && tokenYInfo && positionData) {
       const currentTotalValue = calculatePositionTotalValue(
         BigInt(positionData.totalXAmount),
         BigInt(positionData.totalYAmount),
@@ -76,10 +78,10 @@ function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
 
       const currentValue = parseFloat(currentTotalValue.replace(/[$,]/g, ''))
 
-      setUPNLValue(calculateUPNLValue(currentValue, initialValue))
-      setUPNLPercentage(calculateUPNLPercentage(currentValue, initialValue))
+      setUPNLValue(calculateUPNLValue(currentValue, historicalInitialValue))
+      setUPNLPercentage(calculateUPNLPercentage(currentValue, historicalInitialValue))
     }
-  }, [initialDeposits, tokenXInfo, tokenYInfo, positionData])
+  }, [historicalInitialValue, tokenXInfo, tokenYInfo, positionData])
 
   const inRange = useMemo(() => {
     if (!positionData) return false

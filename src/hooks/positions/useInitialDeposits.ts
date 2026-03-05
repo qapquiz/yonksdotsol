@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { createSolanaRpc } from '@solana/kit'
-import { getInitialDeposits, type InitialDepositsResult } from '../../utils/positions/transaction-parser'
+import { getInitialDeposits, type CostBasisWithTransactions } from '../../utils/positions/transaction-parser'
 import { CacheManager } from '../../utils/cache/CacheManager'
 import { getInitialDepositsKey } from '../../utils/cache/cacheKeys'
 import { CACHE_TTL } from '../../config/cache'
@@ -14,7 +14,7 @@ interface UseInitialDepositsProps {
 }
 
 interface UseInitialDepositsResult {
-  initialDeposits: InitialDepositsResult | null
+  costBasis: CostBasisWithTransactions | null
   isLoading: boolean
   error: Error | null
 }
@@ -27,7 +27,7 @@ export function useInitialDeposits({
   enabled = true,
 }: UseInitialDepositsProps): UseInitialDepositsResult {
   const [state, setState] = useState<UseInitialDepositsResult>({
-    initialDeposits: null,
+    costBasis: null,
     isLoading: false,
     error: null,
   })
@@ -40,11 +40,11 @@ export function useInitialDeposits({
 
       const cacheKey = getInitialDepositsKey(positionPublicKey)
       const cacheManager = CacheManager.getInstance()
-      const cachedValue = cacheManager.get<InitialDepositsResult>(cacheKey)
+      const cachedValue = cacheManager.get<CostBasisWithTransactions>(cacheKey)
 
       if (cachedValue !== null) {
         setState({
-          initialDeposits: cachedValue,
+          costBasis: cachedValue,
           isLoading: false,
           error: null,
         })
@@ -60,13 +60,13 @@ export function useInitialDeposits({
         if (result !== null && isMounted) {
           cacheManager.set(cacheKey, result, CACHE_TTL.INITIAL_DEPOSITS)
           setState({
-            initialDeposits: result,
+            costBasis: result,
             isLoading: false,
             error: null,
           })
         } else if (isMounted) {
           setState({
-            initialDeposits: null,
+            costBasis: null,
             isLoading: false,
             error: null,
           })
@@ -74,7 +74,7 @@ export function useInitialDeposits({
       } catch (error) {
         if (isMounted) {
           setState({
-            initialDeposits: null,
+            costBasis: null,
             isLoading: false,
             error: error instanceof Error ? error : new Error(String(error)),
           })
