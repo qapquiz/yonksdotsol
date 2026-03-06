@@ -51,6 +51,7 @@ function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
     costBasis,
     tokenXDecimals: tokenXInfo?.decimals || 0,
     tokenYDecimals: tokenYInfo?.decimals || 0,
+    tokenYSymbol: tokenYInfo?.symbol || 'unknown',
     enabled: !isLoading && !!(tokenXInfo && tokenYInfo && costBasis),
   })
 

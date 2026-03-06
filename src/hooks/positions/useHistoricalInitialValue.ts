@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { fetchPoolPriceAtTimestamp } from '../../utils/positions/meteora-ohlcv'
+import { fetchHistoricalSOLPrice } from '../../utils/positions/pyth-benchmarks'
 import type { CostBasisWithTransactions } from '../../utils/positions/transaction-parser'
 
 const BATCH_SIZE = 5
+const RATE_LIMIT_DELAY = 1000
 
 interface UseHistoricalInitialValueResult {
   initialValue: number
@@ -15,6 +17,7 @@ interface UseHistoricalInitialValueProps {
   costBasis: CostBasisWithTransactions | null
   tokenXDecimals: number
   tokenYDecimals: number
+  tokenYSymbol: string
   enabled?: boolean
 }
 
@@ -23,6 +26,7 @@ export function useHistoricalInitialValue({
   costBasis,
   tokenXDecimals,
   tokenYDecimals,
+  tokenYSymbol,
   enabled = true,
 }: UseHistoricalInitialValueProps): UseHistoricalInitialValueResult {
   const [state, setState] = useState<UseHistoricalInitialValueResult>({
@@ -52,6 +56,18 @@ export function useHistoricalInitialValue({
           return
         }
 
+        const tokenType = tokenYSymbol.toLowerCase()
+        const isSol = tokenType === 'sol'
+        const isUsdc = tokenType === 'usdc'
+        const isSolOrUsdc = isSol || isUsdc
+
+        if (!isSolOrUsdc) {
+          if (isMounted) {
+            setState({ initialValue: 0, isLoading: false, error: null })
+          }
+          return
+        }
+
         let initialValueUSD = 0
         let foundAllPrices = true
 
@@ -60,13 +76,19 @@ export function useHistoricalInitialValue({
 
           const pricePromises = batch.map(async (tx) => {
             const poolPrice = await fetchPoolPriceAtTimestamp(poolAddress, tx.blockTime!, '5m')
-            return { tx, poolPrice }
+            let solUsdPrice: number | null = 1
+
+            if (isSol) {
+              solUsdPrice = await fetchHistoricalSOLPrice(tx.blockTime!)
+            }
+
+            return { tx, poolPrice, solUsdPrice }
           })
 
           const priceResults = await Promise.all(pricePromises)
 
-          for (const { tx, poolPrice } of priceResults) {
-            if (poolPrice === null) {
+          for (const { tx, poolPrice, solUsdPrice } of priceResults) {
+            if (poolPrice === null || (isSol && solUsdPrice === null)) {
               foundAllPrices = false
               break
             }
@@ -74,13 +96,22 @@ export function useHistoricalInitialValue({
             const xDivisor = 10n ** BigInt(tokenXDecimals)
             const yDivisor = 10n ** BigInt(tokenYDecimals)
 
-            const xAmountUSD = (Number(tx.xAmount) / Number(xDivisor)) * poolPrice
-            const yAmountUSD = (Number(tx.yAmount) / Number(yDivisor)) * (1 / poolPrice)
-
-            initialValueUSD += xAmountUSD + yAmountUSD
+            if (isSol) {
+              const xAmountUSD = (Number(tx.xAmount) / Number(xDivisor)) * poolPrice * solUsdPrice!
+              const yAmountUSD = (Number(tx.yAmount) / Number(yDivisor)) * solUsdPrice!
+              initialValueUSD += xAmountUSD + yAmountUSD
+            } else if (isUsdc) {
+              const xAmountUSD = (Number(tx.xAmount) / Number(xDivisor)) * poolPrice
+              const yAmountUSD = (Number(tx.yAmount) / Number(yDivisor)) * 1
+              initialValueUSD += xAmountUSD + yAmountUSD
+            }
           }
 
           if (!foundAllPrices) break
+
+          if (i + BATCH_SIZE < addTransactions.length) {
+            await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_DELAY))
+          }
         }
 
         if (isMounted) {
@@ -114,7 +145,7 @@ export function useHistoricalInitialValue({
     return () => {
       isMounted = false
     }
-  }, [poolAddress, costBasis, tokenXDecimals, tokenYDecimals, enabled])
+  }, [poolAddress, costBasis, tokenXDecimals, tokenYDecimals, tokenYSymbol, enabled])
 
   return state
 }

@@ -1,5 +1,6 @@
 const INITIAL_DEPOSITS_KEY = 'initial_deposits'
 const OHLCV_KEY = 'ohlcv'
+const PYTH_KEY = 'pyth_price'
 
 export function getInitialDepositsKey(positionAddress: string): string {
   return `${INITIAL_DEPOSITS_KEY}:${positionAddress}`
@@ -7,6 +8,10 @@ export function getInitialDepositsKey(positionAddress: string): string {
 
 export function getOHLCVKey(poolAddress: string, dateStr: string): string {
   return `${OHLCV_KEY}:${poolAddress}:${dateStr}`
+}
+
+export function getPythPriceKey(tokenSymbol: string, dateStr: string): string {
+  return `${PYTH_KEY}:${tokenSymbol}:${dateStr}`
 }
 
 export function isInitialDepositsKey(key: string): boolean {
