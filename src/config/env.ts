@@ -8,4 +8,5 @@
 
 export const env = {
   rpcUrl: process.env.EXPO_PUBLIC_RPC_URL,
+  heliusApiKey: process.env.EXPO_PUBLIC_HELIUS_API_KEY,
 }

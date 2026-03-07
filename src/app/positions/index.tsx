@@ -8,9 +8,10 @@ import PositionCardSkeleton from '../../components/positions/PositionCardSkeleto
 interface PositionsListProps {
   positions: Map<string, PositionInfo>
   isLoadingPositions: boolean
+  ownerAddress?: string
 }
 
-export default function PositionsList({ positions, isLoadingPositions }: PositionsListProps) {
+export default function PositionsList({ positions, isLoadingPositions, ownerAddress }: PositionsListProps) {
   const positionsArray = useMemo(() => Array.from(positions.values()), [positions])
 
   if (isLoadingPositions) {
@@ -53,7 +54,7 @@ export default function PositionsList({ positions, isLoadingPositions }: Positio
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {positionsArray.map((position) => (
-          <PositionCard key={position.publicKey.toString()} position={position} />
+          <PositionCard key={position.publicKey.toString()} position={position} ownerAddress={ownerAddress} />
         ))}
         {/* Add bottom padding for scroll */}
         <View className="h-20" />

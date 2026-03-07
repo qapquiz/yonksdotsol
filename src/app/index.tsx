@@ -118,7 +118,7 @@ export default function App() {
           <RefreshControl refreshing={isLoadingPositions} onRefresh={handleRefresh} tintColor="#8FA893" />
         }
       >
-        <PositionsList positions={positions} isLoadingPositions={isLoadingPositions} />
+        <PositionsList positions={positions} isLoadingPositions={isLoadingPositions} ownerAddress={account?.address} />
       </ScrollView>
 
       <StatusBar style="auto" />

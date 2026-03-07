@@ -2,8 +2,7 @@ import { memo, useMemo, useState, useEffect } from 'react'
 import { View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useTokenData } from '../../hooks/positions/useTokenData'
-import { useInitialDeposits } from '../../hooks/positions/useInitialDeposits'
-import { useHistoricalInitialValue } from '../../hooks/positions/useHistoricalInitialValue'
+import { useInitialDepositsHelius } from '../../hooks/positions/useInitialDepositsHelius'
 import {
   calculateClaimedFeesValue,
   calculateCurrentPrice,
@@ -19,14 +18,14 @@ import { formatTokenAmount } from '../../utils/positions/formatters'
 import { PositionHeader } from './PositionHeader'
 import { LiquidityChart } from './LiquidityChart'
 import { PositionFooter } from './PositionFooter'
-import { env } from '../../config/env'
 
 interface PositionCardProps {
   position: PositionInfo
   rpcUrl?: string
+  ownerAddress?: string
 }
 
-function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
+function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardProps) {
   const tokenXMint = position.tokenX.mint.address.toBase58()
   const tokenYMint = position.tokenY.mint.address.toBase58()
 
@@ -35,24 +34,33 @@ function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
   const lbPairPosition = position.lbPairPositionsData[0]
   const positionData = lbPairPosition?.positionData
 
-  const effectiveRpcUrl = rpcUrl || env.rpcUrl || ''
+  const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()
+  const pairAddress = (position.lbPair as any).publicKey?.toBase58() || ''
 
-  const { costBasis } = useInitialDeposits({
-    rpcUrl: effectiveRpcUrl,
+  console.log('PositionCard: addresses', {
     positionPublicKey: position.publicKey.toBase58(),
-    tokenXDecimals: tokenXInfo?.decimals || 0,
-    tokenYDecimals: tokenYInfo?.decimals || 0,
-    enabled: !isLoading && !!(tokenXInfo && tokenYInfo),
+    lbPairPositionPublicKey: lbPairPosition?.publicKey.toBase58(),
+    positionAddress,
+    pairAddress,
+  })
+  console.log('PositionCard: useInitialDepositsHelius conditions', {
+    positionAddress,
+    pairAddress,
+    ownerAddress,
+    isLoading,
+    hasTokenXInfo: !!tokenXInfo,
+    hasTokenYInfo: !!tokenYInfo,
+    shouldFetch: !isLoading && !!(tokenXInfo && tokenYInfo) && !!ownerAddress,
   })
 
-  const poolAddress = (position.lbPair as any).publicKey?.toBase58() || ''
-  const { initialValue: historicalInitialValue } = useHistoricalInitialValue({
-    poolAddress,
-    costBasis,
-    tokenXDecimals: tokenXInfo?.decimals || 0,
-    tokenYDecimals: tokenYInfo?.decimals || 0,
-    tokenYSymbol: tokenYInfo?.symbol || 'unknown',
-    enabled: !isLoading && !!(tokenXInfo && tokenYInfo && costBasis),
+  const { totalValue: initialDepositsValue } = useInitialDepositsHelius({
+    positionAddress: positionAddress,
+    ownerAddress: ownerAddress || '',
+    enabled: !isLoading && !!(tokenXInfo && tokenYInfo) && !!ownerAddress,
+  })
+
+  console.log('PositionCard: hook result', {
+    initialDepositsValue,
   })
 
   const totalValue = useMemo(() => {
@@ -69,7 +77,7 @@ function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
   const [upnlPercentage, setUPNLPercentage] = useState<number | null>(null)
 
   useEffect(() => {
-    if (historicalInitialValue > 0 && tokenXInfo && tokenYInfo && positionData) {
+    if (initialDepositsValue > 0 && tokenXInfo && tokenYInfo && positionData) {
       const currentTotalValue = calculatePositionTotalValue(
         BigInt(positionData.totalXAmount),
         BigInt(positionData.totalYAmount),
@@ -79,10 +87,10 @@ function PositionCardComponent({ position, rpcUrl }: PositionCardProps) {
 
       const currentValue = parseFloat(currentTotalValue.replace(/[$,]/g, ''))
 
-      setUPNLValue(calculateUPNLValue(currentValue, historicalInitialValue))
-      setUPNLPercentage(calculateUPNLPercentage(currentValue, historicalInitialValue))
+      setUPNLValue(calculateUPNLValue(currentValue, initialDepositsValue))
+      setUPNLPercentage(calculateUPNLPercentage(currentValue, initialDepositsValue))
     }
-  }, [historicalInitialValue, tokenXInfo, tokenYInfo, positionData])
+  }, [initialDepositsValue, tokenXInfo, tokenYInfo, positionData])
 
   const inRange = useMemo(() => {
     if (!positionData) return false
