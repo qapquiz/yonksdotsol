@@ -1,15 +1,13 @@
-import { memo, useMemo, useState, useEffect } from 'react'
+import { memo, useMemo } from 'react'
 import { View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useTokenData } from '../../hooks/positions/useTokenData'
-import { useInitialDepositsHelius } from '../../hooks/positions/useInitialDepositsHelius'
+import { useCometUpnl } from '../../hooks/positions/useCometUpnl'
 import {
   calculateClaimedFeesValue,
   calculateCurrentPrice,
   calculateIsInRange,
   calculatePositionTotalValue,
-  calculateUPNLPercentage,
-  calculateUPNLValue,
   calculatePriceRange,
   calculateUnrealizedFeesValue,
   generateLiquidityChartData,
@@ -43,24 +41,15 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
     positionAddress,
     pairAddress,
   })
-  console.log('PositionCard: useInitialDepositsHelius conditions', {
-    positionAddress,
-    pairAddress,
-    ownerAddress,
-    isLoading,
-    hasTokenXInfo: !!tokenXInfo,
-    hasTokenYInfo: !!tokenYInfo,
-    shouldFetch: !isLoading && !!(tokenXInfo && tokenYInfo) && !!ownerAddress,
+
+  const { data: upnlData, isLoading: upnlLoading } = useCometUpnl({
+    walletAddress: ownerAddress || '',
+    enabled: !isLoading && !!ownerAddress,
   })
 
-  const { totalValue: initialDepositsValue } = useInitialDepositsHelius({
-    positionAddress: positionAddress,
-    ownerAddress: ownerAddress || '',
-    enabled: !isLoading && !!(tokenXInfo && tokenYInfo) && !!ownerAddress,
-  })
-
-  console.log('PositionCard: hook result', {
-    initialDepositsValue,
+  console.log('PositionCard: upnlData', {
+    upnlData,
+    upnlLoading,
   })
 
   const totalValue = useMemo(() => {
@@ -73,24 +62,8 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
     )
   }, [positionData, tokenXInfo, tokenYInfo])
 
-  const [upnlValue, setUPNLValue] = useState<number | null>(null)
-  const [upnlPercentage, setUPNLPercentage] = useState<number | null>(null)
-
-  useEffect(() => {
-    if (initialDepositsValue > 0 && tokenXInfo && tokenYInfo && positionData) {
-      const currentTotalValue = calculatePositionTotalValue(
-        BigInt(positionData.totalXAmount),
-        BigInt(positionData.totalYAmount),
-        tokenXInfo,
-        tokenYInfo,
-      )
-
-      const currentValue = parseFloat(currentTotalValue.replace(/[$,]/g, ''))
-
-      setUPNLValue(calculateUPNLValue(currentValue, initialDepositsValue))
-      setUPNLPercentage(calculateUPNLPercentage(currentValue, initialDepositsValue))
-    }
-  }, [initialDepositsValue, tokenXInfo, tokenYInfo, positionData])
+  const upnlValue = upnlData?.upnl ?? null
+  const upnlPercentage = upnlData?.upnlPercent ?? null
 
   const inRange = useMemo(() => {
     if (!positionData) return false
@@ -164,6 +137,7 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
         totalValue={totalValue}
         upnlValue={upnlValue}
         upnlPercentage={upnlPercentage}
+        upnlIsSol={true}
       />
 
       <LiquidityChart

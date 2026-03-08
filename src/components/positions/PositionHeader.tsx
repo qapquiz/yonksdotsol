@@ -3,6 +3,7 @@ import { Text, View } from 'react-native'
 import type { TokenInfo } from '../../tokens'
 import { TokenIcons } from './TokenIcons'
 import { formatUPNLDisplay } from '../../utils/positions/calculations'
+import { formatUPNLDisplaySol } from '../../utils/positions/formatters'
 
 interface PositionHeaderProps {
   tokenXInfo: TokenInfo | null
@@ -11,6 +12,7 @@ interface PositionHeaderProps {
   totalValue: string
   upnlValue: number | null
   upnlPercentage: number | null
+  upnlIsSol?: boolean
 }
 
 function PositionHeaderComponent({
@@ -20,6 +22,7 @@ function PositionHeaderComponent({
   totalValue,
   upnlValue,
   upnlPercentage,
+  upnlIsSol = false,
 }: PositionHeaderProps) {
   const upnlColorClass = upnlValue !== null ? (upnlValue >= 0 ? 'text-emerald-400' : 'text-red-400') : ''
 
@@ -42,7 +45,9 @@ function PositionHeaderComponent({
         </View>
         <Text className="text-white font-bold text-lg">{totalValue}</Text>
         {upnlValue !== null && upnlPercentage !== null && (
-          <Text className={`text-xs font-bold ${upnlColorClass}`}>{formatUPNLDisplay(upnlValue, upnlPercentage)}</Text>
+          <Text className={`text-xs font-bold ${upnlColorClass}`}>
+            {upnlIsSol ? formatUPNLDisplaySol(upnlValue, upnlPercentage) : formatUPNLDisplay(upnlValue, upnlPercentage)}
+          </Text>
         )}
       </View>
     </View>

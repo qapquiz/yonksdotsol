@@ -22,3 +22,9 @@ export function getPythPriceKey(tokenSymbol: string, dateStr: string): string {
 export function isInitialDepositsKey(key: string): boolean {
   return key.startsWith(INITIAL_DEPOSITS_KEY + ':') || key.startsWith(HELIUS_INITIAL_DEPOSITS_KEY + ':')
 }
+
+const COMET_UPNL_KEY = 'comet_upnl'
+
+export function getCometUpnlKey(walletAddress: string): string {
+  return `${COMET_UPNL_KEY}:${walletAddress}`
+}

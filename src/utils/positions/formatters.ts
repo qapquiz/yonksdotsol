@@ -41,3 +41,8 @@ export function formatFees(feeX: any, feeY: any): string {
   if (feeY && feeY.toString() !== '0') fees.push(`Y: ${feeY.toString()}`)
   return fees.length > 0 ? fees.join(' | ') : 'None'
 }
+
+export function formatUPNLDisplaySol(upnl: number, percent: number): string {
+  const sign = upnl >= 0 ? '+' : ''
+  return `${sign}${Math.abs(upnl).toFixed(4)} SOL (${sign}${percent.toFixed(2)}%)`
+}
