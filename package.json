@@ -27,7 +27,7 @@
     "tailwind"
   ],
   "main": "./index.js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.1",
     "@meteora-ag/dlmm": "^1.9.3",
@@ -39,6 +39,7 @@
     "expo": "^55.0.4",
     "expo-constants": "~55.0.7",
     "expo-dev-client": "~55.0.10",
+    "expo-insights": "~55.0.10",
     "expo-linking": "~55.0.7",
     "expo-router": "~55.0.3",
     "expo-status-bar": "~55.0.4",
