@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react'
-import { View } from 'react-native'
+import { Text, View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useTokenData } from '../../hooks/positions/useTokenData'
 import { useCometUpnl } from '../../hooks/positions/useCometUpnl'
@@ -116,15 +116,78 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
 
   const chartData = useMemo(() => {
     if (!positionData) return []
-    return generateLiquidityChartData(positionData.positionBinData, positionData.lowerBinId, positionData.upperBinId)
+    const data = generateLiquidityChartData(
+      positionData.positionBinData,
+      positionData.lowerBinId,
+      positionData.upperBinId,
+    )
+    console.log('PositionCard: chartData debug', {
+      lowerBinId: positionData.lowerBinId,
+      upperBinId: positionData.upperBinId,
+      binDataCount: positionData.positionBinData.length,
+      chartDataCount: data.length,
+      chartDataSample: data.slice(0, 5),
+      chartDataLast: data.slice(-5),
+    })
+    return data
   }, [positionData])
 
   const priceRange = useMemo(() => {
     if (!positionData) return { minPrice: '0', maxPrice: '0', maxLiquidity: 0 }
-    return calculatePriceRange(chartData, positionData.positionBinData)
+    const range = calculatePriceRange(chartData, positionData.positionBinData)
+    console.log('PositionCard: priceRange debug', {
+      minPrice: range.minPrice,
+      maxPrice: range.maxPrice,
+      maxLiquidity: range.maxLiquidity,
+    })
+    return range
   }, [chartData, positionData])
 
   const activeIdNum = useMemo(() => Number(position.lbPair.activeId), [position.lbPair.activeId])
+
+  const debugInfo = useMemo(() => {
+    if (!positionData) return ''
+    const totalLiquidity = chartData.reduce((sum, b) => sum + b.liquidity, 0)
+    const binsWithLiquidity = chartData.filter((b) => b.liquidity > 0).length
+    return `Bins: ${chartData.length} | Active: ${binsWithLiquidity} | Liquidity: ${totalLiquidity} | ActiveId: ${activeIdNum}`
+  }, [chartData, positionData, activeIdNum])
+
+  useMemo(() => {
+    if (chartData.length === 0) return
+    const maxLiquidity = Math.max(...chartData.map((b) => b.liquidity), 1)
+    const width = 50
+    const height = 10
+    const step = Math.max(1, Math.floor(chartData.length / width))
+
+    let ascii = '\n=== LIQUIDITY SHAPE ===\n'
+
+    // Build vertical slices
+    for (let h = height; h >= 0; h--) {
+      let row = ''
+      for (let i = 0; i < chartData.length; i += step) {
+        const bin = chartData[i]
+        const threshold = (h / height) * maxLiquidity
+        if (bin.liquidity >= threshold) {
+          if (bin.binId === activeIdNum) {
+            row += '●'
+          } else if (bin.binId < activeIdNum) {
+            row += '▓'
+          } else {
+            row += '░'
+          }
+        } else {
+          row += ' '
+        }
+      }
+      ascii += row + '\n'
+    }
+
+    // X-axis labels
+    ascii += '-'.repeat(Math.ceil(chartData.length / step)) + '\n'
+    ascii += `Bin range: ${chartData[0]?.binId} - ${chartData[chartData.length - 1]?.binId}\n`
+    ascii += `Active: ${activeIdNum} | Min: ${priceRange.minPrice} | Max: ${priceRange.maxPrice}\n`
+    console.log(ascii)
+  }, [chartData, activeIdNum, priceRange])
 
   if (!lbPairPosition) return null
 
@@ -148,6 +211,8 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
         maxPrice={priceRange.maxPrice}
         maxLiquidity={priceRange.maxLiquidity}
       />
+
+      <Text className="text-zinc-600 text-[10px] font-mono mb-2">{debugInfo}</Text>
 
       <PositionFooter
         unrealizedFeesDisplay={unrealizedFeesDisplay}
