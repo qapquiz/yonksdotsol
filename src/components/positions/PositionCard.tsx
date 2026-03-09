@@ -8,9 +8,8 @@ import {
   calculateCurrentPrice,
   calculateIsInRange,
   calculatePositionTotalValue,
-  calculatePriceRange,
   calculateUnrealizedFeesValue,
-  generateLiquidityChartData,
+  generateLiquidityShape,
 } from '../../utils/positions/calculations'
 import { formatTokenAmount } from '../../utils/positions/formatters'
 import { PositionHeader } from './PositionHeader'
@@ -114,17 +113,19 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
     )
   }, [isLoading, positionData, tokenXInfo, tokenYInfo])
 
-  const chartData = useMemo(() => {
-    if (!positionData) return []
-    return generateLiquidityChartData(positionData.positionBinData, positionData.lowerBinId, positionData.upperBinId)
-  }, [positionData])
-
-  const priceRange = useMemo(() => {
-    if (!positionData) return { minPrice: '0', maxPrice: '0', maxLiquidity: 0 }
-    return calculatePriceRange(chartData, positionData.positionBinData)
-  }, [chartData, positionData])
-
   const activeIdNum = useMemo(() => Number(position.lbPair.activeId), [position.lbPair.activeId])
+
+  const liquidityShape = useMemo(() => {
+    if (!positionData || !tokenXInfo || !tokenYInfo) return null
+    return generateLiquidityShape(
+      positionData,
+      positionAddress,
+      pairAddress,
+      activeIdNum,
+      tokenXInfo.decimals,
+      tokenYInfo.decimals,
+    )
+  }, [positionData, tokenXInfo, tokenYInfo, positionAddress, pairAddress, activeIdNum])
 
   if (!lbPairPosition) return null
 
@@ -140,14 +141,7 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
         upnlIsSol={true}
       />
 
-      <LiquidityChart
-        chartBins={chartData}
-        currentActiveId={activeIdNum}
-        currentPrice={currentPrice}
-        minPrice={priceRange.minPrice}
-        maxPrice={priceRange.maxPrice}
-        maxLiquidity={priceRange.maxLiquidity}
-      />
+      <LiquidityChart liquidityShape={liquidityShape} currentPrice={currentPrice} />
 
       <PositionFooter
         unrealizedFeesDisplay={unrealizedFeesDisplay}

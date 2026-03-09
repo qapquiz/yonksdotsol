@@ -1,14 +1,10 @@
 import { memo, useMemo } from 'react'
 import { Text, View, Platform } from 'react-native'
-import type { ChartBinData } from '../../utils/positions/calculations'
+import type { LiquidityShape, ChartBinData } from '../../utils/positions/calculations'
 
 interface LiquidityChartProps {
-  chartBins: ChartBinData[]
-  currentActiveId: number
+  liquidityShape: LiquidityShape | null
   currentPrice: string
-  minPrice: string
-  maxPrice: string
-  maxLiquidity: number
 }
 
 // Block characters for liquidity depth
@@ -18,35 +14,33 @@ const TARGET_WIDTH = 45 // Target character width for the chart
 function getBlockChar(liquidity: number, maxLiquidity: number): string {
   if (liquidity === 0 || maxLiquidity === 0) return ' '
 
-  // Map liquidity > 0 to index 1..7
   const ratio = liquidity / maxLiquidity
   const index = Math.max(1, Math.ceil(ratio * (BLOCK_CHARS.length - 1)))
   return BLOCK_CHARS[index]
 }
 
-function LiquidityChartComponent({
-  chartBins,
-  currentActiveId,
-  currentPrice,
-  minPrice,
-  maxPrice,
-  maxLiquidity,
-}: LiquidityChartProps) {
+function LiquidityChartComponent({ liquidityShape, currentPrice }: LiquidityChartProps) {
+  const chartBins = useMemo(() => liquidityShape?.binDistribution || [], [liquidityShape])
+  const currentActiveId = liquidityShape?.currentActiveId || 0
+  const maxLiquidity = liquidityShape ? Math.max(...chartBins.map((b) => b.tokenXAmount + b.tokenYAmount)) : 0
+  const minPrice = chartBins.length > 0 ? chartBins[0].price.toPrecision(6) : '0'
+  const maxPrice = chartBins.length > 0 ? chartBins[chartBins.length - 1].price.toPrecision(6) : '0'
+
   // Resample bins to fit TARGET_WIDTH to avoid wrapping or truncation
   const resampledData = useMemo(() => {
     if (chartBins.length === 0) return []
 
     // If we have fewer bins than target, just use them (centered by layout)
     if (chartBins.length <= TARGET_WIDTH) {
-      return chartBins.map((b) => ({
-        liquidity: b.liquidity,
+      return chartBins.map((b: ChartBinData) => ({
+        liquidity: b.tokenXAmount + b.tokenYAmount,
         isActive: b.binId === currentActiveId,
         isLeft: b.binId < currentActiveId,
       }))
     }
 
     // Downsample: Group bins into buckets
-    const result = []
+    const result: any[] = []
     const step = chartBins.length / TARGET_WIDTH
 
     for (let i = 0; i < TARGET_WIDTH; i++) {
@@ -57,13 +51,13 @@ function LiquidityChartComponent({
       if (slice.length === 0) continue
 
       // Use max liquidity in the bucket to preserve peaks
-      const maxSliceLiquidity = Math.max(...slice.map((b) => b.liquidity))
+      const maxSliceLiquidity = Math.max(...slice.map((b: ChartBinData) => b.tokenXAmount + b.tokenYAmount))
 
       // If the bucket contains the active bin, mark the whole char as active
-      const hasActive = slice.some((b) => b.binId === currentActiveId)
+      const hasActive = slice.some((b: ChartBinData) => b.binId === currentActiveId)
 
       // If all bins in bucket are to the left, color it left (green)
-      const isLeft = slice.every((b) => b.binId < currentActiveId)
+      const isLeft = slice.every((b: ChartBinData) => b.binId < currentActiveId)
 
       result.push({
         liquidity: maxSliceLiquidity,
@@ -75,7 +69,7 @@ function LiquidityChartComponent({
   }, [chartBins, currentActiveId])
 
   const chartTextComponents = useMemo(() => {
-    return resampledData.map((bin, i) => {
+    return resampledData.map((bin: any, i: number) => {
       const char = getBlockChar(bin.liquidity, maxLiquidity)
       const { isActive, isLeft } = bin
 

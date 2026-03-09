@@ -2,8 +2,25 @@ import type { TokenInfo } from '../../tokens'
 
 export interface ChartBinData {
   binId: number
-  liquidity: number
+  tokenXAmount: number
+  tokenYAmount: number
   price: number
+}
+
+export interface LiquidityShape {
+  positionAddress: string
+  pairAddress: string
+  binRange: {
+    minBinId: number
+    maxBinId: number
+    totalBins: number
+  }
+  binDistribution: ChartBinData[]
+  tokenTotals: {
+    tokenX: number
+    tokenY: number
+  }
+  currentActiveId: number
 }
 
 export interface PriceRange {
@@ -112,15 +129,20 @@ export function generateLiquidityChartData(
   positionBinData: any[],
   lowerBinId: number,
   upperBinId: number,
+  tokenXDecimal: number,
+  tokenYDecimal: number,
 ): ChartBinData[] {
   const binMap = new Map(positionBinData.map((b) => [Number(b.binId), b]))
 
   const chartBins: ChartBinData[] = []
   for (let i = lowerBinId; i <= upperBinId; i++) {
     const bin = binMap.get(i)
+    const tokenXAmount = bin ? Number(BigInt(bin.positionXAmount)) / 10 ** tokenXDecimal : 0
+    const tokenYAmount = bin ? Number(BigInt(bin.positionYAmount)) / 10 ** tokenYDecimal : 0
     chartBins.push({
       binId: i,
-      liquidity: bin ? Number(bin.positionLiquidity) : 0,
+      tokenXAmount,
+      tokenYAmount,
       price: bin ? Number(bin.pricePerToken) : 0,
     })
   }
@@ -143,7 +165,7 @@ export function calculatePriceRange(chartBins: ChartBinData[], positionBinData: 
         : '0'
       : '0'
 
-  const maxLiquidity = chartBins.length > 0 ? Math.max(...chartBins.map((b) => b.liquidity)) : 0
+  const maxLiquidity = chartBins.length > 0 ? Math.max(...chartBins.map((b) => b.tokenXAmount + b.tokenYAmount)) : 0
 
   return {
     minPrice,
@@ -198,6 +220,50 @@ export function calculateActiveBinPosition(chartBins: ChartBinData[], currentAct
   if (activeIndex === -1 || chartBins.length === 0) return 50
 
   return (activeIndex / (chartBins.length - 1)) * 100
+}
+
+export function generateLiquidityShape(
+  positionData: any,
+  positionAddress: string,
+  pairAddress: string,
+  currentActiveId: number,
+  tokenXDecimal: number,
+  tokenYDecimal: number,
+): LiquidityShape | null {
+  if (!positionData) return null
+
+  const minBinId = positionData.lowerBinId
+  const maxBinId = positionData.upperBinId
+  const totalBins = maxBinId - minBinId + 1
+
+  const binDistribution = generateLiquidityChartData(
+    positionData.positionBinData,
+    minBinId,
+    maxBinId,
+    tokenXDecimal,
+    tokenYDecimal,
+  )
+
+  const tokenTotals = binDistribution.reduce(
+    (acc, bin) => ({
+      tokenX: acc.tokenX + bin.tokenXAmount,
+      tokenY: acc.tokenY + bin.tokenYAmount,
+    }),
+    { tokenX: 0, tokenY: 0 },
+  )
+
+  return {
+    positionAddress,
+    pairAddress,
+    binRange: {
+      minBinId,
+      maxBinId,
+      totalBins,
+    },
+    binDistribution,
+    tokenTotals,
+    currentActiveId,
+  }
 }
 
 export function calculateInitialDepositValue(
