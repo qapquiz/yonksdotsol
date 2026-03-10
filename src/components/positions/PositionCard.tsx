@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react'
 import { View } from 'react-native'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useTokenData } from '../../hooks/positions/useTokenData'
-import { useCometUpnl } from '../../hooks/positions/useCometUpnl'
+import { useMetCometUpnl } from '../../hooks/positions/useMetCometUpnl'
 import {
   calculateClaimedFeesValue,
   calculateCurrentPrice,
@@ -41,7 +41,7 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
     pairAddress,
   })
 
-  const { data: upnlData, isLoading: upnlLoading } = useCometUpnl({
+  const { data: upnlData, isLoading: upnlLoading } = useMetCometUpnl({
     walletAddress: ownerAddress || '',
     enabled: !isLoading && !!ownerAddress,
   })

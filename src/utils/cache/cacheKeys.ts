@@ -23,8 +23,8 @@ export function isInitialDepositsKey(key: string): boolean {
   return key.startsWith(INITIAL_DEPOSITS_KEY + ':') || key.startsWith(HELIUS_INITIAL_DEPOSITS_KEY + ':')
 }
 
-const COMET_UPNL_KEY = 'comet_upnl'
+const METCOMET_UPNL_KEY = 'metcomet_upnl'
 
-export function getCometUpnlKey(walletAddress: string): string {
-  return `${COMET_UPNL_KEY}:${walletAddress}`
+export function getMetCometUpnlKey(walletAddress: string): string {
+  return `${METCOMET_UPNL_KEY}:${walletAddress}`
 }

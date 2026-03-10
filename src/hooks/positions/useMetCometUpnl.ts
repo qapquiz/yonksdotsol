@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { getUpnl, type UpnlResult } from 'comet'
+import { getUpnl, type UpnlResult } from 'metcomet'
 import { CacheManager } from '../../utils/cache/CacheManager'
-import { getCometUpnlKey } from '../../utils/cache/cacheKeys'
+import { getMetCometUpnlKey } from '../../utils/cache/cacheKeys'
 import { CACHE_TTL } from '../../config/cache'
 
 export type { UpnlResult }
 
-interface UseCometUpnlProps {
+interface UseMetCometUpnlProps {
   walletAddress: string
   enabled?: boolean
 }
 
-interface UseCometUpnlResult {
+interface UseMetCometUpnlResult {
   data: UpnlResult | null
   isLoading: boolean
   error: Error | null
 }
 
-export function useCometUpnl({ walletAddress, enabled = true }: UseCometUpnlProps): UseCometUpnlResult {
-  const [state, setState] = useState<UseCometUpnlResult>({
+export function useMetCometUpnl({ walletAddress, enabled = true }: UseMetCometUpnlProps): UseMetCometUpnlResult {
+  const [state, setState] = useState<UseMetCometUpnlResult>({
     data: null,
     isLoading: false,
     error: null,
@@ -47,9 +47,9 @@ export function useCometUpnl({ walletAddress, enabled = true }: UseCometUpnlProp
         return
       }
 
-      const cacheKey = getCometUpnlKey(walletAddress)
+      const cacheKey = getMetCometUpnlKey(walletAddress)
       const cacheManager = CacheManager.getInstance()
-      const cachedValue = cacheManager.get<UseCometUpnlResult>(cacheKey)
+      const cachedValue = cacheManager.get<UseMetCometUpnlResult>(cacheKey)
 
       if (cachedValue !== null) {
         setState({
@@ -72,7 +72,7 @@ export function useCometUpnl({ walletAddress, enabled = true }: UseCometUpnlProp
           heliusApiKey,
         })
 
-        const newState: UseCometUpnlResult = {
+        const newState: UseMetCometUpnlResult = {
           data: result,
           isLoading: false,
           error: null,
