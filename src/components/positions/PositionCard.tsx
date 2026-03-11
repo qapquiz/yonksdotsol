@@ -13,7 +13,7 @@ import {
 } from '../../utils/positions/calculations'
 import { formatTokenAmount } from '../../utils/positions/formatters'
 import { PositionHeader } from './PositionHeader'
-import { LiquidityChart } from './LiquidityChart'
+import { LiquidityBarChart } from './LiquidityBarChart'
 import { PositionFooter } from './PositionFooter'
 
 interface PositionCardProps {
@@ -141,7 +141,7 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
         upnlIsSol={true}
       />
 
-      <LiquidityChart liquidityShape={liquidityShape} currentPrice={currentPrice} />
+      <LiquidityBarChart liquidityShape={liquidityShape} currentPrice={currentPrice} />
 
       <PositionFooter
         unrealizedFeesDisplay={unrealizedFeesDisplay}
