@@ -36,14 +36,7 @@ export function useInitialDepositsHelius({
     let isMounted = true
 
     const fetchDeposits = async () => {
-      console.log('useInitialDepositsHelius called', {
-        positionAddress,
-        ownerAddress,
-        enabled,
-      })
-
       if (!enabled) {
-        console.log('useInitialDepositsHelius: disabled, skipping fetch')
         return
       }
 
@@ -81,12 +74,6 @@ export function useInitialDepositsHelius({
         const totalTokenValue = result.initialDeposits.reduce((sum, deposit) => sum + deposit.uiAmount, 0)
 
         const totalValue = totalTokenValue
-
-        console.log(
-          `Initial deposit for ${positionAddress}:`,
-          `$${totalValue.toFixed(2)}`,
-          `(Tokens only, native SOL excluded)`,
-        )
 
         const newState: UseInitialDepositsHeliusResult = {
           initialDeposits: result.initialDeposits,

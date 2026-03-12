@@ -94,11 +94,6 @@ export async function getPositionInitialDepositHeliusEnhanced(
   ownerAddress: string,
   apiKey: string,
 ): Promise<PositionInitialDeposit> {
-  console.log('getPositionInitialDepositHeliusEnhanced called with:', {
-    positionAddress,
-    ownerAddress,
-  })
-
   const deposits = new Map<string, number>()
   const decimalsMap = new Map<string, number>()
   let nativeSolDeposits = 0
@@ -115,7 +110,6 @@ export async function getPositionInitialDepositHeliusEnhanced(
     }
 
     totalTxFetched += transactions.length
-    console.log(`Fetched ${transactions.length} transactions, total: ${totalTxFetched}`)
 
     if (!firstSignature && transactions[0]) {
       firstSignature = transactions[0].signature
@@ -155,11 +149,6 @@ export async function getPositionInitialDepositHeliusEnhanced(
     }
   }
 
-  console.log('Finished fetching transactions:', {
-    totalTransactions: totalTxFetched,
-    liquidityTransactionsFound: totalTxFetched,
-  })
-
   const initialDeposits: InitialDeposit[] = []
 
   for (const [mint, amount] of deposits.entries()) {
@@ -183,14 +172,6 @@ export async function getPositionInitialDepositHeliusEnhanced(
   }
 
   const totalTokenValue = initialDeposits.reduce((sum, deposit) => sum + deposit.uiAmount, 0)
-
-  console.log('Initial deposits result:', {
-    positionAddress,
-    initialDeposits,
-    totalTokenValue: `$${totalTokenValue.toFixed(2)}`,
-    nativeSolDepositsExcluded: true,
-    creationTx: firstSignature,
-  })
 
   return result
 }

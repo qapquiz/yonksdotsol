@@ -34,21 +34,9 @@ function PositionCardComponent({ position, rpcUrl, ownerAddress }: PositionCardP
   const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()
   const pairAddress = (position.lbPair as any).publicKey?.toBase58() || ''
 
-  console.log('PositionCard: addresses', {
-    positionPublicKey: position.publicKey.toBase58(),
-    lbPairPositionPublicKey: lbPairPosition?.publicKey.toBase58(),
-    positionAddress,
-    pairAddress,
-  })
-
   const { data: upnlData, isLoading: upnlLoading } = useMetCometUpnl({
     walletAddress: ownerAddress || '',
     enabled: !isLoading && !!ownerAddress,
-  })
-
-  console.log('PositionCard: upnlData', {
-    upnlData,
-    upnlLoading,
   })
 
   const totalValue = useMemo(() => {
