@@ -100,7 +100,6 @@ export async function getPositionInitialDepositHeliusEnhanced(
 
   let before: string | undefined = undefined
   let firstSignature = ''
-  let totalTxFetched = 0
 
   while (true) {
     const transactions = await getEnhancedTransactions(positionAddress, apiKey, before)
@@ -108,8 +107,6 @@ export async function getPositionInitialDepositHeliusEnhanced(
     if (!transactions || transactions.length === 0) {
       break
     }
-
-    totalTxFetched += transactions.length
 
     if (!firstSignature && transactions[0]) {
       firstSignature = transactions[0].signature
@@ -122,8 +119,8 @@ export async function getPositionInitialDepositHeliusEnhanced(
         if (tokenTransfer.fromUserAccount === ownerAddress) {
           const amount = tokenTransfer.tokenAmount
           const mint = tokenTransfer.mint
-          deposits.set(mint, (deposits.get(mint) || 0) + amount * Math.pow(10, 9))
-          decimalsMap.set(mint, 9)
+          deposits.set(mint, (deposits.get(mint) || 0) + amount)
+          decimalsMap.set(mint, 0)
         }
       }
 
@@ -158,7 +155,7 @@ export async function getPositionInitialDepositHeliusEnhanced(
         tokenMint: mint,
         amount: amount,
         decimals: decimals,
-        uiAmount: amount / Math.pow(10, decimals),
+        uiAmount: amount,
       })
     }
   }
@@ -170,8 +167,6 @@ export async function getPositionInitialDepositHeliusEnhanced(
     nativeSolDeposits,
     creationTx: firstSignature,
   }
-
-  const totalTokenValue = initialDeposits.reduce((sum, deposit) => sum + deposit.uiAmount, 0)
 
   return result
 }
