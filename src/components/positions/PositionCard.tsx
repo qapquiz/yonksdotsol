@@ -20,17 +20,18 @@ import { PositionHeader } from './PositionHeader'
 
 interface PositionCardProps {
   position: PositionInfo
+  lbPositionIndex?: number
   rpcUrl?: string
   ownerAddress?: string
 }
 
-function PositionCardComponent({ position, ownerAddress }: PositionCardProps) {
+function PositionCardComponent({ position, lbPositionIndex = 0, ownerAddress }: PositionCardProps) {
   const tokenXMint = position.tokenX.mint.address.toBase58()
   const tokenYMint = position.tokenY.mint.address.toBase58()
 
   const { tokenXInfo, tokenYInfo, isLoading } = useTokenData(tokenXMint, tokenYMint)
 
-  const lbPairPosition = position.lbPairPositionsData[0]
+  const lbPairPosition = position.lbPairPositionsData[lbPositionIndex]
   const positionData = lbPairPosition?.positionData
 
   const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()

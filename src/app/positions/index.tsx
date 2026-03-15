@@ -53,9 +53,16 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {positionsArray.map((position) => (
-          <PositionCard key={position.publicKey.toString()} position={position} ownerAddress={ownerAddress} />
-        ))}
+        {positionsArray.map((position) =>
+          position.lbPairPositionsData.map((lbPosition, idx) => (
+            <PositionCard
+              key={`${position.publicKey.toString()}-${idx}`}
+              position={position}
+              lbPositionIndex={idx}
+              ownerAddress={ownerAddress}
+            />
+          )),
+        )}
         {/* Add bottom padding for scroll */}
         <View className="h-20" />
       </ScrollView>
