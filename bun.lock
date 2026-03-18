@@ -13,7 +13,7 @@
         "buffer": "^6.0.3",
         "expo": "^55.0.4",
         "expo-constants": "~55.0.7",
-        "expo-dev-client": "~55.0.13",
+        "expo-dev-client": "~55.0.16",
         "expo-font": "~55.0.4",
         "expo-insights": "~55.0.10",
         "expo-linking": "~55.0.7",
@@ -1095,11 +1095,11 @@
 
     "expo-constants": ["expo-constants@55.0.7", "", { "dependencies": { "@expo/config": "~55.0.8", "@expo/env": "~2.1.1" }, "peerDependencies": { "expo": "*", "react-native": "*" } }, "sha512-kdcO4TsQRRqt0USvjaY5vgQMO9H52K3kBZ/ejC7F6rz70mv08GoowrZ1CYOr5O4JpPDRlIpQfZJUucaS/c+KWQ=="],
 
-    "expo-dev-client": ["expo-dev-client@55.0.14", "", { "dependencies": { "expo-dev-launcher": "55.0.15", "expo-dev-menu": "55.0.13", "expo-dev-menu-interface": "55.0.1", "expo-manifests": "~55.0.9", "expo-updates-interface": "~55.1.3" }, "peerDependencies": { "expo": "*" } }, "sha512-DfpQBlH3OX0XT64jdUJCz745ljlKQ61HTfbDgThM9+WTrmKtWK69iYfyYRDv1OAJw8qoqnMBqCFOPvm535efiw=="],
+    "expo-dev-client": ["expo-dev-client@55.0.16", "", { "dependencies": { "expo-dev-launcher": "55.0.17", "expo-dev-menu": "55.0.14", "expo-dev-menu-interface": "55.0.1", "expo-manifests": "~55.0.9", "expo-updates-interface": "~55.1.3" }, "peerDependencies": { "expo": "*" } }, "sha512-PbbzWcmvm0Cqp5Y33hLxAX5ewsyph32e8UQL6gwz5iL8KL7JSi/Zbnotr+3cCeEUpLmRBF9pAigm6evAod7PIg=="],
 
-    "expo-dev-launcher": ["expo-dev-launcher@55.0.15", "", { "dependencies": { "@expo/schema-utils": "^55.0.2", "expo-dev-menu": "55.0.13", "expo-manifests": "~55.0.9" }, "peerDependencies": { "expo": "*" } }, "sha512-95Kt3Ti3XO7M1QHrB3lFAkwjjI5xu6stFbmqL/TOPnQAD9+/C0Y8NVt+77XzOe2W6aqiGriFyFAcIm+yqa9Qtg=="],
+    "expo-dev-launcher": ["expo-dev-launcher@55.0.17", "", { "dependencies": { "@expo/schema-utils": "^55.0.2", "expo-dev-menu": "55.0.14", "expo-manifests": "~55.0.9" }, "peerDependencies": { "expo": "*" } }, "sha512-ZiEPC6lYpWk5WDWAyHnBqSjCf2Mq/QBuuYxtKeV0s9FWzGCFDxB39W2oH2UmDve9PosnC3zCloX99IoJCdJmAw=="],
 
-    "expo-dev-menu": ["expo-dev-menu@55.0.13", "", { "dependencies": { "expo-dev-menu-interface": "55.0.1" }, "peerDependencies": { "expo": "*" } }, "sha512-Z+YrgAAWrkdauiSWXvy6XWocXj/4n/ZHG0qBBHsSc9Q/NLHHX/hId98Qe0SPq6CdjinbzemUNAKF5/5dCRXOkQ=="],
+    "expo-dev-menu": ["expo-dev-menu@55.0.14", "", { "dependencies": { "expo-dev-menu-interface": "55.0.1" }, "peerDependencies": { "expo": "*" } }, "sha512-1YgtX6ejSTxIX4P6A+zWnP4ZKbikO+j8dd1ebpSacyHfdnF7kAKXf2nwUjlTBvmbd2zFtofSs7VHQJAIRpWsvA=="],
 
     "expo-dev-menu-interface": ["expo-dev-menu-interface@55.0.1", "", { "peerDependencies": { "expo": "*" } }, "sha512-FkNtwq1q6NmYoy28pj+ZLuHmirJgc039pQbJ167MZJIaprLcMN1yy67qA7xBHK+FNJ8AN8kGCtMTPByg5UC72A=="],
 
