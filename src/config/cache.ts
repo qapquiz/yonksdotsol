@@ -1,5 +1,5 @@
 export const CACHE_TTL = {
-  INITIAL_DEPOSITS: 15 * 60 * 1000,
+  UPNL_PER_POSITION: 15 * 60 * 1000,
   OHLCV_PRICE: Infinity,
   PYTH_PRICE: Infinity,
 }

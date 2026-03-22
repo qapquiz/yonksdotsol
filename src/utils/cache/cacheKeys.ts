@@ -1,14 +1,9 @@
-const INITIAL_DEPOSITS_KEY = 'initial_deposits'
-const HELIUS_INITIAL_DEPOSITS_KEY = 'helius_initial_deposits'
+const UPNL_PER_POSITION_KEY = 'upnl_per_position'
 const OHLCV_KEY = 'ohlcv'
 const PYTH_KEY = 'pyth_price'
 
-export function getInitialDepositsKey(positionAddress: string): string {
-  return `${INITIAL_DEPOSITS_KEY}:${positionAddress}`
-}
-
-export function getInitialDepositsHeliusKey(positionAddress: string): string {
-  return `${HELIUS_INITIAL_DEPOSITS_KEY}:${positionAddress}`
+export function getUpnlPerPositionKey(walletAddress: string): string {
+  return `${UPNL_PER_POSITION_KEY}:${walletAddress}`
 }
 
 export function getOHLCVKey(poolAddress: string, dateStr: string): string {
@@ -17,14 +12,4 @@ export function getOHLCVKey(poolAddress: string, dateStr: string): string {
 
 export function getPythPriceKey(tokenSymbol: string, dateStr: string): string {
   return `${PYTH_KEY}:${tokenSymbol}:${dateStr}`
-}
-
-export function isInitialDepositsKey(key: string): boolean {
-  return key.startsWith(INITIAL_DEPOSITS_KEY + ':') || key.startsWith(HELIUS_INITIAL_DEPOSITS_KEY + ':')
-}
-
-const METCOMET_UPNL_KEY = 'metcomet_upnl'
-
-export function getMetCometUpnlKey(walletAddress: string): string {
-  return `${METCOMET_UPNL_KEY}:${walletAddress}`
 }

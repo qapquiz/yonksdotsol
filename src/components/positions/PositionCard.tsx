@@ -1,16 +1,14 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { memo, useMemo } from 'react'
 import { View } from 'react-native'
-import { useInitialDepositsHelius } from '../../hooks/positions/useInitialDepositsHelius'
+import type { PositionUpnl } from '../../hooks/positions/useUpnlPerPosition'
 import { useTokenData } from '../../hooks/positions/useTokenData'
 import {
-  calculateClaimedFeesValue,
   calculateCurrentPrice,
   calculateIsInRange,
   calculatePositionTotalValue,
   calculateUnrealizedFeesValue,
-  calculateUPNLPercentage,
-  calculateUPNLValue,
+  calculateClaimedFeesValue,
   generateLiquidityShape,
 } from '../../utils/positions/calculations'
 import { formatTokenAmount } from '../../utils/positions/formatters'
@@ -21,11 +19,10 @@ import { PositionHeader } from './PositionHeader'
 interface PositionCardProps {
   position: PositionInfo
   lbPositionIndex?: number
-  rpcUrl?: string
-  ownerAddress?: string
+  upnlData?: PositionUpnl | null
 }
 
-function PositionCardComponent({ position, lbPositionIndex = 0, ownerAddress }: PositionCardProps) {
+function PositionCardComponent({ position, lbPositionIndex = 0, upnlData }: PositionCardProps) {
   const tokenXMint = position.tokenX.mint.address.toBase58()
   const tokenYMint = position.tokenY.mint.address.toBase58()
 
@@ -37,34 +34,6 @@ function PositionCardComponent({ position, lbPositionIndex = 0, ownerAddress }: 
   const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()
   const pairAddress = (position.lbPair as any).publicKey?.toBase58() || ''
 
-  const { initialDeposits, isLoading: depositsLoading } = useInitialDepositsHelius({
-    positionAddress,
-    ownerAddress: ownerAddress || '',
-    enabled: !!ownerAddress,
-  })
-
-  const initialDepositValue = useMemo(() => {
-    if (depositsLoading || !tokenXInfo || !tokenYInfo) return 0
-    let totalValue = 0
-    for (const deposit of initialDeposits) {
-      if (deposit.tokenMint === tokenXMint) {
-        totalValue += deposit.uiAmount * tokenXInfo.price_info.price_per_token
-      } else if (deposit.tokenMint === tokenYMint) {
-        totalValue += deposit.uiAmount * tokenYInfo.price_info.price_per_token
-      }
-    }
-    return totalValue
-  }, [initialDeposits, depositsLoading, tokenXInfo, tokenYInfo, tokenXMint, tokenYMint])
-
-  const currentValueNumber = useMemo(() => {
-    if (!positionData || !tokenXInfo || !tokenYInfo) return 0
-    const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
-    const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
-    const xAmount = Number(positionData.totalXAmount) / Number(xDivisor)
-    const yAmount = Number(positionData.totalYAmount) / Number(yDivisor)
-    return xAmount * tokenXInfo.price_info.price_per_token + yAmount * tokenYInfo.price_info.price_per_token
-  }, [positionData, tokenXInfo, tokenYInfo])
-
   const totalValue = useMemo(() => {
     if (!positionData) return '$0.00'
     return calculatePositionTotalValue(
@@ -74,16 +43,6 @@ function PositionCardComponent({ position, lbPositionIndex = 0, ownerAddress }: 
       tokenYInfo,
     )
   }, [positionData, tokenXInfo, tokenYInfo])
-
-  const upnlValue = useMemo(() => {
-    if (initialDepositValue === 0 || currentValueNumber === 0) return null
-    return calculateUPNLValue(currentValueNumber, initialDepositValue)
-  }, [currentValueNumber, initialDepositValue])
-
-  const upnlPercentage = useMemo(() => {
-    if (initialDepositValue === 0 || currentValueNumber === 0) return null
-    return calculateUPNLPercentage(currentValueNumber, initialDepositValue)
-  }, [currentValueNumber, initialDepositValue])
 
   const inRange = useMemo(() => {
     if (!positionData) return false
@@ -157,8 +116,8 @@ function PositionCardComponent({ position, lbPositionIndex = 0, ownerAddress }: 
         tokenYInfo={tokenYInfo}
         inRange={inRange}
         totalValue={totalValue}
-        upnlValue={upnlValue}
-        upnlPercentage={upnlPercentage}
+        upnlValue={upnlData?.upnl ?? null}
+        upnlPercentage={upnlData?.upnlPercent ?? null}
         upnlIsSol={true}
       />
 

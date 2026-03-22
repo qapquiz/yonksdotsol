@@ -1,25 +1,28 @@
 import { useState, useEffect } from 'react'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { getUpnl, type UpnlResult } from 'metcomet'
+import { getUpnlPerPosition, type PositionUpnl } from 'metcomet'
 import { CacheManager } from '../../utils/cache/CacheManager'
-import { getMetCometUpnlKey } from '../../utils/cache/cacheKeys'
+import { getUpnlPerPositionKey } from '../../utils/cache/cacheKeys'
 import { CACHE_TTL } from '../../config/cache'
 
-export type { UpnlResult }
+export type { PositionUpnl }
 
-interface UseMetCometUpnlProps {
+interface UseUpnlPerPositionProps {
   walletAddress: string
   enabled?: boolean
 }
 
-interface UseMetCometUpnlResult {
-  data: UpnlResult | null
+interface UseUpnlPerPositionResult {
+  data: Map<string, PositionUpnl> | null
   isLoading: boolean
   error: Error | null
 }
 
-export function useMetCometUpnl({ walletAddress, enabled = true }: UseMetCometUpnlProps): UseMetCometUpnlResult {
-  const [state, setState] = useState<UseMetCometUpnlResult>({
+export function useUpnlPerPosition({
+  walletAddress,
+  enabled = true,
+}: UseUpnlPerPositionProps): UseUpnlPerPositionResult {
+  const [state, setState] = useState<UseUpnlPerPositionResult>({
     data: null,
     isLoading: false,
     error: null,
@@ -47,9 +50,9 @@ export function useMetCometUpnl({ walletAddress, enabled = true }: UseMetCometUp
         return
       }
 
-      const cacheKey = getMetCometUpnlKey(walletAddress)
+      const cacheKey = getUpnlPerPositionKey(walletAddress)
       const cacheManager = CacheManager.getInstance()
-      const cachedValue = cacheManager.get<UseMetCometUpnlResult>(cacheKey)
+      const cachedValue = cacheManager.get<UseUpnlPerPositionResult>(cacheKey)
 
       if (cachedValue !== null) {
         setState({
@@ -66,20 +69,27 @@ export function useMetCometUpnl({ walletAddress, enabled = true }: UseMetCometUp
         const connection = new Connection(rpcUrl)
         const publicKey = new PublicKey(walletAddress)
 
-        const result = await getUpnl({
+        const result = await getUpnlPerPosition({
           connection,
           walletAddress: publicKey,
           heliusApiKey,
         })
 
-        const newState: UseMetCometUpnlResult = {
-          data: result,
+        const dataMap = new Map<string, PositionUpnl>()
+        if (result) {
+          for (const pos of result) {
+            dataMap.set(pos.positionAddress, pos)
+          }
+        }
+
+        const newState: UseUpnlPerPositionResult = {
+          data: dataMap,
           isLoading: false,
           error: null,
         }
 
         if (isMounted) {
-          cacheManager.set(cacheKey, newState, CACHE_TTL.INITIAL_DEPOSITS)
+          cacheManager.set(cacheKey, newState, CACHE_TTL.UPNL_PER_POSITION)
           setState(newState)
         }
       } catch (error) {

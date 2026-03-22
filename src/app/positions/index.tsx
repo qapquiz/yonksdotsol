@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
+import { useUpnlPerPosition } from '../../hooks/positions/useUpnlPerPosition'
 
 interface PositionsListProps {
   positions: Map<string, PositionInfo>
@@ -14,7 +15,12 @@ interface PositionsListProps {
 export default function PositionsList({ positions, isLoadingPositions, ownerAddress }: PositionsListProps) {
   const positionsArray = useMemo(() => Array.from(positions.values()), [positions])
 
-  if (isLoadingPositions) {
+  const { data: upnlData, isLoading: upnlLoading } = useUpnlPerPosition({
+    walletAddress: ownerAddress || '',
+    enabled: !!ownerAddress,
+  })
+
+  if (isLoadingPositions || upnlLoading) {
     return (
       <View className="flex-1 px-4 pt-6">
         <View className="flex-row justify-between items-center mb-6">
@@ -54,14 +60,17 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {positionsArray.map((position) =>
-          position.lbPairPositionsData.map((lbPosition, idx) => (
-            <PositionCard
-              key={`${position.publicKey.toString()}-${idx}`}
-              position={position}
-              lbPositionIndex={idx}
-              ownerAddress={ownerAddress}
-            />
-          )),
+          position.lbPairPositionsData.map((lbPosition, idx) => {
+            const positionAddress = lbPosition.publicKey.toBase58()
+            return (
+              <PositionCard
+                key={`${position.publicKey.toString()}-${idx}`}
+                position={position}
+                lbPositionIndex={idx}
+                upnlData={upnlData?.get(positionAddress) ?? null}
+              />
+            )
+          }),
         )}
         {/* Add bottom padding for scroll */}
         <View className="h-20" />

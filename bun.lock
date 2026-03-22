@@ -20,7 +20,7 @@
         "expo-router": "~55.0.7",
         "expo-status-bar": "~55.0.4",
         "expo-system-ui": "~55.0.10",
-        "metcomet": "^0.1.2",
+        "metcomet": "^0.2.2",
         "react": "19.2.0",
         "react-dom": "19.2.0",
         "react-native": "0.83.2",
@@ -1479,7 +1479,7 @@
 
     "merge-stream": ["merge-stream@2.0.0", "", {}, "sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w=="],
 
-    "metcomet": ["metcomet@0.1.2", "", { "dependencies": { "@coral-xyz/anchor": "^0.32.1", "@meteora-ag/dlmm": "^1.9.4", "@solana/web3.js": "^1.98.4" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-rtqLrVi8zx3CSh9+xui/VrnNJWkLVqJ5oZLijQ6WuHtZxwK18MqV5Js450HbzAIJDciqTjLA7mIeWN6Rj2uWBQ=="],
+    "metcomet": ["metcomet@0.2.2", "", { "dependencies": { "@coral-xyz/anchor": "^0.32.1", "@meteora-ag/dlmm": "^1.9.4", "@solana/web3.js": "^1.98.4" }, "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-JRr1BdW2CwoW0W99wnNXwa6YKxbwWjkCFg94psJzmKBq+/yfHbVzIPID+MsPXVMhDEQiv+sMZlsj0p+zSJzrRw=="],
 
     "methods": ["methods@1.1.2", "", {}, "sha512-iclAHeNqNm68zFtnZ0e+1L2yUIdvzNoauKU4WBA3VvH/vPFieF7qfRlwUZU+DA9P9bPXIS90ulxoUoCH23sV2w=="],
 
