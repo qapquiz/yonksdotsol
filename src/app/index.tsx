@@ -9,6 +9,7 @@ import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { env } from '../config/env'
 import { CacheManager } from '../utils/cache/CacheManager'
+import { getUpnlPerPositionKey } from '../utils/cache/cacheKeys'
 import PositionsList from './positions'
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
   const [positions, setPositions] = useState<Map<string, PositionInfo>>(new Map())
   const [isLoadingPositions, setIsLoadingPositions] = useState(true)
   const previousAccountRef = useRef<string | null>(null)
+  const lastUpnlRefreshRef = useRef<number>(0)
   const getPositions = useCallback(async (connection: Connection, wallet: PublicKey) => {
     setIsLoadingPositions(true)
     try {
@@ -32,6 +34,11 @@ export default function App() {
 
   const handleRefresh = useCallback(() => {
     if (account?.address) {
+      const now = Date.now()
+      if (now - lastUpnlRefreshRef.current > 30 * 1000) {
+        CacheManager.getInstance().delete(getUpnlPerPositionKey(account.address))
+        lastUpnlRefreshRef.current = now
+      }
       getPositions(connection, new PublicKey(account.address))
     }
   }, [connection, account?.address, getPositions])

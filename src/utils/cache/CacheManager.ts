@@ -62,6 +62,10 @@ export class CacheManager {
     return true
   }
 
+  delete(key: string): void {
+    this.cache.delete(key)
+  }
+
   clear(): void {
     this.cache.clear()
   }

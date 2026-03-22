@@ -116,8 +116,8 @@ function PositionCardComponent({ position, lbPositionIndex = 0, upnlData }: Posi
         tokenYInfo={tokenYInfo}
         inRange={inRange}
         totalValue={totalValue}
-        upnlValue={upnlData?.upnl ?? null}
-        upnlPercentage={upnlData?.upnlPercent ?? null}
+        upnlValue={upnlData?.upnlWithFees ?? null}
+        upnlPercentage={upnlData?.upnlWithFeesPercent ?? null}
         upnlIsSol={true}
       />
 
