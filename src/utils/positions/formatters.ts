@@ -35,7 +35,7 @@ export function shortenPublicKey(key: string, chars = 8): string {
   return `${key.slice(0, chars)}...${key.slice(-chars)}`
 }
 
-export function formatFees(feeX: any, feeY: any): string {
+export function formatFees(feeX: string | bigint, feeY: string | bigint): string {
   const fees = []
   if (feeX && feeX.toString() !== '0') fees.push(`X: ${feeX.toString()}`)
   if (feeY && feeY.toString() !== '0') fees.push(`Y: ${feeY.toString()}`)
