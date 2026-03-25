@@ -1,4 +1,4 @@
-import { Feather, Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import DLMM from '@meteora-ag/dlmm'
 import { Connection, PublicKey } from '@solana/web3.js'
@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { PixelAvatar } from '../components/ui/PixelAvatar'
 import { env } from '../config/env'
 import { CacheManager } from '../utils/cache/CacheManager'
 import { getUpnlPerPositionKey } from '../utils/cache/cacheKeys'
@@ -89,7 +90,7 @@ export default function App() {
                 account ? 'bg-app-primary-dim' : 'bg-app-surface-highlight'
               }`}
             >
-              <Feather name="user" size={20} color={account ? '#8FA893' : '#999999'} />
+              <PixelAvatar size={24} variant="bot" connected={!!account} />
             </View>
             <View>
               <Text className="text-xs font-bold uppercase tracking-wider text-app-text-secondary">
@@ -102,10 +103,6 @@ export default function App() {
             </View>
           </View>
           <View className="flex-row items-center gap-3">
-            {/*<View className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight">
-							<Feather name="bell" size={20} color="#999999" />
-						</View>
-						*/}
             <Pressable
               onPress={account ? disconnect : handleConnectWallet}
               disabled={isConnecting}
