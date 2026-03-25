@@ -117,6 +117,24 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
         <View className="h-[120px] items-center justify-center">
           <Text className="text-zinc-500 text-xs">No liquidity data</Text>
         </View>
+        <View className="flex-row justify-between px-1 mt-2">
+          <Text className="text-zinc-600 text-[10px] font-mono">-</Text>
+          <Text className="text-zinc-600 text-[10px] font-mono">-</Text>
+        </View>
+        <View className="flex-row items-center justify-center mt-2 space-x-4 gap-4">
+          <View className="flex-row items-center">
+            <View className="w-2 h-2 rounded-sm bg-emerald-500 mr-1.5" />
+            <Text className="text-zinc-400 text-[10px]">Below Price</Text>
+          </View>
+          <View className="flex-row items-center">
+            <View className="w-2 h-2 rounded-sm bg-cyan-400 mr-1.5" />
+            <Text className="text-cyan-400 text-[10px]">Active</Text>
+          </View>
+          <View className="flex-row items-center">
+            <View className="w-2 h-2 rounded-sm bg-zinc-600 mr-1.5" />
+            <Text className="text-zinc-400 text-[10px]">Above Price</Text>
+          </View>
+        </View>
       </View>
     )
   }

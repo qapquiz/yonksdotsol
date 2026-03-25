@@ -31,7 +31,7 @@ export default function PositionCardSkeleton() {
           <View className="w-24 h-5 rounded-lg bg-zinc-800" />
         </View>
 
-        <View className="w-full h-40 rounded-2xl bg-zinc-800 mb-4" />
+        <View className="w-full h-[168px] rounded-2xl bg-zinc-800 mb-3" />
 
         <View className="flex-row items-center justify-between">
           <View className="w-32 h-4 rounded-lg bg-zinc-800" />
