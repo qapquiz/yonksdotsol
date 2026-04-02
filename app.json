@@ -13,6 +13,7 @@
     "slug": "Yonks",
     "icon": "./assets/images/icon.png",
     "android": {
+      "versionCode": 4,
       "package": "dev.nullphase.yonks",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
