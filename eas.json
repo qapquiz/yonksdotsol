@@ -16,6 +16,7 @@
       "autoIncrement": true
     },
     "dapp-store": {
+      "autoIncrement": true,
       "android": {
         "buildType": "apk"
       },
