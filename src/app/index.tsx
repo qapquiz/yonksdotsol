@@ -90,7 +90,7 @@ export default function App() {
                 account ? 'bg-app-primary-dim' : 'bg-app-surface-highlight'
               }`}
             >
-              <PixelAvatar size={24} variant="bot" connected={!!account} />
+              <PixelAvatar size={24} variant="cat" connected={!!account} />
             </View>
             <View>
               <Text className="text-xs font-bold uppercase tracking-wider text-app-text-secondary">
