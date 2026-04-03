@@ -1,9 +1,10 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useMemo } from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
+import { useBatchTokenData } from '../../hooks/positions/useBatchTokenData'
 import { useUpnlPerPosition } from '../../hooks/positions/useUpnlPerPosition'
 
 interface PositionsListProps {
@@ -20,6 +21,21 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     enabled: !!ownerAddress,
   })
 
+  // Collect unique token mints across all positions
+  const uniqueMints = useMemo(() => {
+    const mintSet = new Set<string>()
+    for (const position of positionsArray) {
+      mintSet.add(position.tokenX.mint.address.toBase58())
+      mintSet.add(position.tokenY.mint.address.toBase58())
+    }
+    return Array.from(mintSet)
+  }, [positionsArray])
+
+  const { tokenData, isLoading: tokenLoading } = useBatchTokenData({
+    mints: uniqueMints,
+    enabled: positionsArray.length > 0,
+  })
+
   if (isLoadingPositions || upnlLoading) {
     return (
       <View className="flex-1 px-4 pt-6">
@@ -28,12 +44,10 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
             <Text className="text-xl font-bold text-white">Active Positions</Text>
           </View>
         </View>
-        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-          {[1, 2, 3].map((key) => (
-            <PositionCardSkeleton key={key} />
-          ))}
-          <View className="h-20" />
-        </ScrollView>
+        {[1, 2, 3].map((key) => (
+          <PositionCardSkeleton key={key} />
+        ))}
+        <View className="h-20" />
       </View>
     )
   }
@@ -58,23 +72,25 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
 				*/}
       </View>
 
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {positionsArray.map((position) =>
-          position.lbPairPositionsData.map((lbPosition, idx) => {
-            const positionAddress = lbPosition.publicKey.toBase58()
-            return (
-              <PositionCard
-                key={`${position.publicKey.toString()}-${idx}`}
-                position={position}
-                lbPositionIndex={idx}
-                upnlData={upnlData?.get(positionAddress) ?? null}
-              />
-            )
-          }),
-        )}
-        {/* Add bottom padding for scroll */}
-        <View className="h-20" />
-      </ScrollView>
+      {positionsArray.map((position) =>
+        position.lbPairPositionsData.map((lbPosition, idx) => {
+          const positionAddress = lbPosition.publicKey.toBase58()
+          const tokenXMint = position.tokenX.mint.address.toBase58()
+          const tokenYMint = position.tokenY.mint.address.toBase58()
+          return (
+            <PositionCard
+              key={`${position.publicKey.toString()}-${idx}`}
+              position={position}
+              lbPositionIndex={idx}
+              upnlData={upnlData?.get(positionAddress) ?? null}
+              tokenXInfo={tokenData.get(tokenXMint) ?? null}
+              tokenYInfo={tokenData.get(tokenYMint) ?? null}
+            />
+          )
+        }),
+      )}
+      {/* Add bottom padding for scroll */}
+      <View className="h-20" />
     </View>
   )
 }

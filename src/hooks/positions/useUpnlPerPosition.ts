@@ -1,9 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { getUpnlPerPosition, type PositionUpnl } from 'metcomet'
+import { env } from '../../config/env'
 import { CacheManager } from '../../utils/cache/CacheManager'
 import { getUpnlPerPositionKey } from '../../utils/cache/cacheKeys'
 import { CACHE_TTL } from '../../config/cache'
+
+let sharedConnection: Connection | null = null
+
+function getSharedConnection(): Connection {
+  if (!sharedConnection) {
+    sharedConnection = new Connection(env.rpcUrl || '')
+  }
+  return sharedConnection
+}
 
 export type { PositionUpnl }
 
@@ -36,10 +46,9 @@ export function useUpnlPerPosition({
         return
       }
 
-      const rpcUrl = process.env.EXPO_PUBLIC_RPC_URL
-      const heliusApiKey = process.env.EXPO_PUBLIC_HELIUS_API_KEY
+      const heliusApiKey = env.heliusApiKey
 
-      if (!rpcUrl || !heliusApiKey) {
+      if (!env.rpcUrl || !heliusApiKey) {
         if (isMounted) {
           setState((prev) => ({
             ...prev,
@@ -66,7 +75,7 @@ export function useUpnlPerPosition({
       setState((prev) => ({ ...prev, isLoading: true, error: null }))
 
       try {
-        const connection = new Connection(rpcUrl)
+        const connection = getSharedConnection()
         const publicKey = new PublicKey(walletAddress)
 
         const result = await getUpnlPerPosition({

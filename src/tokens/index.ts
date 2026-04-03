@@ -12,9 +12,17 @@ export interface TokenInfo {
   }
 }
 
+const TOKEN_CACHE_TTL = 60 * 1000 // 1 minute
 const pendingRequests = new Map<string, Promise<TokenInfo>>()
+const responseCache = new Map<string, { data: TokenInfo; expiresAt: number }>()
 
 export const fetchTokenPriceData = async (mint: string): Promise<TokenInfo> => {
+  const cached = responseCache.get(mint)
+  if (cached && Date.now() < cached.expiresAt) {
+    return cached.data
+  }
+  responseCache.delete(mint)
+
   const existing = pendingRequests.get(mint)
   if (existing) {
     return existing
@@ -50,7 +58,7 @@ export const fetchTokenPriceData = async (mint: string): Promise<TokenInfo> => {
         throw new Error(data.error.message || 'RPC error')
       }
 
-      return {
+      const tokenInfo: TokenInfo = {
         mint: data.result.id,
         symbol: data.result.token_info.symbol,
         supply: data.result.token_info.supply,
@@ -58,6 +66,9 @@ export const fetchTokenPriceData = async (mint: string): Promise<TokenInfo> => {
         decimals: data.result.token_info.decimals,
         price_info: data.result.token_info.price_info,
       } as TokenInfo
+
+      responseCache.set(mint, { data: tokenInfo, expiresAt: Date.now() + TOKEN_CACHE_TTL })
+      return tokenInfo
     } finally {
       pendingRequests.delete(mint)
     }

@@ -6,10 +6,10 @@ export function getUpnlPerPositionKey(walletAddress: string): string {
   return `${UPNL_PER_POSITION_KEY}:${walletAddress}`
 }
 
-export function getOHLCVKey(poolAddress: string, dateStr: string): string {
-  return `${OHLCV_KEY}:${poolAddress}:${dateStr}`
+export function getOHLCVKey(poolAddress: string, hourBucket: string): string {
+  return `${OHLCV_KEY}:${poolAddress}:${hourBucket}`
 }
 
-export function getPythPriceKey(tokenSymbol: string, dateStr: string): string {
-  return `${PYTH_KEY}:${tokenSymbol}:${dateStr}`
+export function getPythPriceKey(tokenSymbol: string, hourBucket: string): string {
+  return `${PYTH_KEY}:${tokenSymbol}:${hourBucket}`
 }

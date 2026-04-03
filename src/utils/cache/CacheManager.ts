@@ -7,6 +7,8 @@ export class CacheManager {
   private static instance: CacheManager
   private cache: Map<string, CacheEntry<any>> = new Map()
   private readonly DEFAULT_TTL = 15 * 60 * 1000
+  private cleanupCounter = 0
+  private readonly CLEANUP_INTERVAL = 50
 
   private constructor() {}
 
@@ -18,7 +20,7 @@ export class CacheManager {
   }
 
   get<T>(key: string): T | null {
-    this.cleanup()
+    this.maybeCleanup()
 
     const entry = this.cache.get(key)
 
@@ -35,7 +37,7 @@ export class CacheManager {
   }
 
   set<T>(key: string, value: T, ttl?: number): void {
-    this.cleanup()
+    this.maybeCleanup()
 
     const entry: CacheEntry<T> = {
       value,
@@ -46,7 +48,7 @@ export class CacheManager {
   }
 
   has(key: string): boolean {
-    this.cleanup()
+    this.maybeCleanup()
 
     const entry = this.cache.get(key)
 
@@ -80,6 +82,14 @@ export class CacheManager {
     })
 
     keysToDelete.forEach((key) => this.cache.delete(key))
+  }
+
+  private maybeCleanup(): void {
+    this.cleanupCounter++
+    if (this.cleanupCounter >= this.CLEANUP_INTERVAL) {
+      this.cleanupCounter = 0
+      this.cleanup()
+    }
   }
 
   private isExpired(entry: CacheEntry<any>): boolean {

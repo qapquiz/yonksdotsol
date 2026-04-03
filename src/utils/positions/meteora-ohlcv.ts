@@ -24,8 +24,8 @@ export async function fetchPoolPriceAtTimestamp(
   targetTimestamp: number,
   timeframe: '5m' | '30m' | '1h' | '2h' | '4h' | '12h' | '24h' = '5m',
 ): Promise<number | null> {
-  const dateStr = new Date(targetTimestamp * 1000).toISOString().split('T')[0]
-  const cacheKey = getOHLCVKey(poolAddress, dateStr)
+  const hourBucket = Math.floor(targetTimestamp / 3600)
+  const cacheKey = getOHLCVKey(poolAddress, String(hourBucket))
 
   const cacheManager = CacheManager.getInstance()
   const cachedPrice = cacheManager.get<number>(cacheKey)

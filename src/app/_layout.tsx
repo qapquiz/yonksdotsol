@@ -2,10 +2,11 @@ import '../global.css'
 
 import { Slot } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { MobileWalletProvider, createSolanaDevnet } from '@wallet-ui/react-native-kit'
+import { MobileWalletProvider, createSolanaMainnet } from '@wallet-ui/react-native-kit'
 import { LoadingProvider } from '../contexts/LoadingContext'
+import { env } from '../config/env'
 
-const cluster = createSolanaDevnet()
+const cluster = createSolanaMainnet({ url: env.rpcUrl || '' })
 const identity = {
   name: 'Yonks',
   uri: 'https://github.com/qapquiz/yonksdotsol',

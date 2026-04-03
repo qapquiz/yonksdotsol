@@ -2,7 +2,7 @@ import type { PositionInfo } from '@meteora-ag/dlmm'
 import { memo, useMemo } from 'react'
 import { View } from 'react-native'
 import type { PositionUpnl } from '../../hooks/positions/useUpnlPerPosition'
-import { useTokenData } from '../../hooks/positions/useTokenData'
+import type { TokenInfo } from '../../tokens'
 import {
   calculateCurrentPrice,
   calculateIsInRange,
@@ -13,6 +13,7 @@ import {
 } from '../../utils/positions/calculations'
 import { formatTokenAmount } from '../../utils/positions/formatters'
 import { LiquidityBarChart } from './LiquidityBarChart'
+import { PositionCardSkeleton } from './PositionCardSkeleton'
 import { PositionFooter } from './PositionFooter'
 import { PositionHeader } from './PositionHeader'
 
@@ -20,14 +21,11 @@ interface PositionCardProps {
   position: PositionInfo
   lbPositionIndex?: number
   upnlData?: PositionUpnl | null
+  tokenXInfo: TokenInfo | null
+  tokenYInfo: TokenInfo | null
 }
 
-function PositionCardComponent({ position, lbPositionIndex = 0, upnlData }: PositionCardProps) {
-  const tokenXMint = position.tokenX.mint.address.toBase58()
-  const tokenYMint = position.tokenY.mint.address.toBase58()
-
-  const { tokenXInfo, tokenYInfo, isLoading } = useTokenData(tokenXMint, tokenYMint)
-
+function PositionCardComponent({ position, lbPositionIndex = 0, upnlData, tokenXInfo, tokenYInfo }: PositionCardProps) {
   const lbPairPosition = position.lbPairPositionsData[lbPositionIndex]
   const positionData = lbPairPosition?.positionData
 
@@ -52,46 +50,38 @@ function PositionCardComponent({ position, lbPositionIndex = 0, upnlData }: Posi
   const currentPrice = useMemo(() => calculateCurrentPrice(tokenXInfo, tokenYInfo), [tokenXInfo, tokenYInfo])
 
   const unrealizedFeesDisplay = useMemo(() => {
-    if (isLoading) return 'Loading...'
-    if (!tokenXInfo || !tokenYInfo) return 'Loading...'
-    if (!positionData) return 'Loading...'
+    if (!tokenXInfo || !tokenYInfo || !positionData) return '-'
     const feeX = formatTokenAmount(positionData.feeX.toString(), tokenXInfo.decimals)
     const feeY = formatTokenAmount(positionData.feeY.toString(), tokenYInfo.decimals)
     return `${feeX} ${tokenXInfo.symbol} / ${feeY} ${tokenYInfo.symbol}`
-  }, [isLoading, positionData, tokenXInfo, tokenYInfo])
+  }, [positionData, tokenXInfo, tokenYInfo])
 
   const claimedFeesDisplay = useMemo(() => {
-    if (isLoading) return 'Loading...'
-    if (!tokenXInfo || !tokenYInfo) return 'Loading...'
-    if (!positionData) return 'Loading...'
+    if (!tokenXInfo || !tokenYInfo || !positionData) return '-'
     const claimedFeeX = formatTokenAmount(positionData.totalClaimedFeeXAmount.toString(), tokenXInfo.decimals)
     const claimedFeeY = formatTokenAmount(positionData.totalClaimedFeeYAmount.toString(), tokenYInfo.decimals)
     return `${claimedFeeX} ${tokenXInfo.symbol} / ${claimedFeeY} ${tokenYInfo.symbol}`
-  }, [isLoading, positionData, tokenXInfo, tokenYInfo])
+  }, [positionData, tokenXInfo, tokenYInfo])
 
   const unrealizedFeesValue = useMemo(() => {
-    if (isLoading) return '$0.00'
-    if (!tokenXInfo || !tokenYInfo) return '$0.00'
-    if (!positionData) return '$0.00'
+    if (!tokenXInfo || !tokenYInfo || !positionData) return '$0.00'
     return calculateUnrealizedFeesValue(
       BigInt(positionData.feeX.toString()),
       BigInt(positionData.feeY.toString()),
       tokenXInfo,
       tokenYInfo,
     )
-  }, [isLoading, positionData, tokenXInfo, tokenYInfo])
+  }, [positionData, tokenXInfo, tokenYInfo])
 
   const claimedFeesValue = useMemo(() => {
-    if (isLoading) return '$0.00'
-    if (!tokenXInfo || !tokenYInfo) return '$0.00'
-    if (!positionData) return '$0.00'
+    if (!tokenXInfo || !tokenYInfo || !positionData) return '$0.00'
     return calculateClaimedFeesValue(
       BigInt(positionData.totalClaimedFeeXAmount.toString()),
       BigInt(positionData.totalClaimedFeeYAmount.toString()),
       tokenXInfo,
       tokenYInfo,
     )
-  }, [isLoading, positionData, tokenXInfo, tokenYInfo])
+  }, [positionData, tokenXInfo, tokenYInfo])
 
   const activeIdNum = useMemo(() => Number(position.lbPair.activeId), [position.lbPair.activeId])
 
@@ -108,6 +98,11 @@ function PositionCardComponent({ position, lbPositionIndex = 0, upnlData }: Posi
   }, [positionData, tokenXInfo, tokenYInfo, positionAddress, pairAddress, activeIdNum])
 
   if (!lbPairPosition) return null
+
+  // Show skeleton while token data is loading
+  if (!tokenXInfo && !tokenYInfo) {
+    return <PositionCardSkeleton />
+  }
 
   return (
     <View className="bg-zinc-900 rounded-3xl p-5 mb-4 border border-zinc-800">

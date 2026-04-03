@@ -4,7 +4,7 @@ import { View } from 'react-native'
 
 const SHIMMER_DURATION = 2000
 
-export default function PositionCardSkeleton() {
+export function PositionCardSkeleton() {
   const shimmerValue = useSharedValue(0)
 
   useEffect(() => {
@@ -41,3 +41,5 @@ export default function PositionCardSkeleton() {
     </View>
   )
 }
+
+export default PositionCardSkeleton

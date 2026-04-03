@@ -18,8 +18,8 @@ interface PythBenchmarkResponse {
 }
 
 export async function fetchHistoricalSOLPrice(timestamp: number): Promise<number | null> {
-  const dateStr = new Date(timestamp * 1000).toISOString().split('T')[0]
-  const cacheKey = getPythPriceKey('SOL', dateStr)
+  const hourBucket = Math.floor(timestamp / 3600)
+  const cacheKey = getPythPriceKey('SOL', String(hourBucket))
 
   const cacheManager = CacheManager.getInstance()
   const cachedPrice = cacheManager.get<number>(cacheKey)
