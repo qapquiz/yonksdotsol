@@ -1,5 +1,5 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PositionCard from '../../components/positions/PositionCard'
@@ -16,7 +16,12 @@ interface PositionsListProps {
 export default function PositionsList({ positions, isLoadingPositions, ownerAddress }: PositionsListProps) {
   const positionsArray = useMemo(() => Array.from(positions.values()), [positions])
 
-  const { data: upnlData, isLoading: upnlLoading } = useUpnlPerPosition({
+  const positionCount = useMemo(
+    () => positionsArray.reduce((sum, p) => sum + p.lbPairPositionsData.length, 0),
+    [positionsArray],
+  )
+
+  const { data: upnlData } = useUpnlPerPosition({
     walletAddress: ownerAddress || '',
     enabled: !!ownerAddress,
   })
@@ -31,38 +36,44 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     return Array.from(mintSet)
   }, [positionsArray])
 
-  const { tokenData, isLoading: tokenLoading } = useBatchTokenData({
+  const { tokenData } = useBatchTokenData({
     mints: uniqueMints,
     enabled: positionsArray.length > 0,
   })
 
-  if (isLoadingPositions || upnlLoading) {
-    return (
-      <View className="flex-1 px-4 pt-6">
-        <View className="flex-row justify-between items-center mb-6">
-          <View className="flex-row items-center gap-2">
-            <Text className="text-xl font-bold text-white">Active Positions</Text>
-          </View>
-        </View>
-        {[1, 2, 3].map((key) => (
-          <PositionCardSkeleton key={key} />
-        ))}
-        <View className="h-20" />
-      </View>
-    )
+  // Track whether we've completed at least one positions fetch
+  const hasLoadedOnce = useRef(false)
+  if (!isLoadingPositions) {
+    hasLoadedOnce.current = true
   }
 
+  // Skeleton only on true first load — empty state stays during refresh
   if (positionsArray.length === 0) {
+    if (!hasLoadedOnce.current) {
+      return (
+        <View className="px-4 pt-6">
+          <View className="flex-row justify-between items-center mb-6">
+            <View className="flex-row items-center gap-2">
+              <Text className="text-xl font-bold text-white">Active Positions</Text>
+            </View>
+          </View>
+          {[1, 2, 3].map((key) => (
+            <PositionCardSkeleton key={key} />
+          ))}
+          <View className="h-20" />
+        </View>
+      )
+    }
     return <EmptyState />
   }
 
   return (
-    <View className="flex-1 px-4 pt-6">
+    <View className="px-4 pt-6">
       <View className="flex-row justify-between items-center mb-6">
         <View className="flex-row items-center gap-2">
           <Text className="text-xl font-bold text-white">Active Positions</Text>
           <View className="bg-zinc-800 rounded-full w-6 h-6 items-center justify-center">
-            <Text className="text-zinc-400 text-xs font-bold">{positionsArray.length}</Text>
+            <Text className="text-zinc-400 text-xs font-bold">{positionCount}</Text>
           </View>
         </View>
         {/*

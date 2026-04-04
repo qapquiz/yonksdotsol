@@ -13,8 +13,26 @@ export interface TokenInfo {
 }
 
 const TOKEN_CACHE_TTL = 60 * 1000 // 1 minute
+const MAX_CACHE_SIZE = 200
 const pendingRequests = new Map<string, Promise<TokenInfo>>()
 const responseCache = new Map<string, { data: TokenInfo; expiresAt: number }>()
+
+function evictExpired(): void {
+  const now = Date.now()
+  for (const [key, entry] of responseCache) {
+    if (now >= entry.expiresAt) {
+      responseCache.delete(key)
+    }
+  }
+}
+
+function evictOldest(): void {
+  if (responseCache.size < MAX_CACHE_SIZE) return
+  const firstKey = responseCache.keys().next().value
+  if (firstKey !== undefined) {
+    responseCache.delete(firstKey)
+  }
+}
 
 export const fetchTokenPriceData = async (mint: string): Promise<TokenInfo> => {
   const cached = responseCache.get(mint)
@@ -67,6 +85,8 @@ export const fetchTokenPriceData = async (mint: string): Promise<TokenInfo> => {
         price_info: data.result.token_info.price_info,
       } as TokenInfo
 
+      evictExpired()
+      evictOldest()
       responseCache.set(mint, { data: tokenInfo, expiresAt: Date.now() + TOKEN_CACHE_TTL })
       return tokenInfo
     } finally {

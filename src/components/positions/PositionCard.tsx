@@ -13,7 +13,7 @@ import {
 } from '../../utils/positions/calculations'
 import { formatTokenAmount } from '../../utils/positions/formatters'
 import { LiquidityBarChart } from './LiquidityBarChart'
-import { PositionCardSkeleton } from './PositionCardSkeleton'
+import PositionCardSkeleton from './PositionCardSkeleton'
 import { PositionFooter } from './PositionFooter'
 import { PositionHeader } from './PositionHeader'
 

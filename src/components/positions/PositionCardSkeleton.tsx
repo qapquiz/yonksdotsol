@@ -1,10 +1,10 @@
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import Animated, { useAnimatedStyle, withRepeat, withTiming, useSharedValue } from 'react-native-reanimated'
 import { View } from 'react-native'
 
 const SHIMMER_DURATION = 2000
 
-export function PositionCardSkeleton() {
+function PositionCardSkeleton() {
   const shimmerValue = useSharedValue(0)
 
   useEffect(() => {
@@ -42,4 +42,4 @@ export function PositionCardSkeleton() {
   )
 }
 
-export default PositionCardSkeleton
+export default memo(PositionCardSkeleton)

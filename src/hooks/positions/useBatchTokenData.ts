@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchTokenPriceData, type TokenInfo } from '../../tokens'
 
 interface UseBatchTokenDataProps {
@@ -14,19 +14,23 @@ interface UseBatchTokenDataResult {
 
 export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): UseBatchTokenDataResult {
   const [tokenData, setTokenData] = useState<Map<string, TokenInfo>>(new Map())
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
-  const pendingRef = useRef(0)
 
   useEffect(() => {
     if (!enabled || mints.length === 0) {
       setTokenData(new Map())
+      setIsLoading(false)
       setError(null)
       return
     }
 
     let isMounted = true
+    let pending = mints.length
+    let firstError: Error | null = null
+
+    setIsLoading(true)
     setError(null)
-    pendingRef.current = mints.length
 
     const newMap = new Map<string, TokenInfo>()
     setTokenData(newMap)
@@ -37,15 +41,22 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
           if (!isMounted) return
           newMap.set(mint, tokenInfo)
           setTokenData(new Map(newMap))
-          pendingRef.current--
-          if (pendingRef.current === 0) {
-            setError(null)
+          pending--
+          if (pending === 0 && isMounted) {
+            setIsLoading(false)
+            setError(firstError)
           }
         })
         .catch((err) => {
           if (!isMounted) return
-          pendingRef.current--
-          setError((prev) => (prev ? prev : err instanceof Error ? err : new Error(String(err))))
+          if (!firstError) {
+            firstError = err instanceof Error ? err : new Error(String(err))
+          }
+          pending--
+          if (pending === 0 && isMounted) {
+            setIsLoading(false)
+            setError(firstError)
+          }
         })
     }
 
@@ -54,9 +65,5 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
     }
   }, [mints, enabled])
 
-  return {
-    tokenData,
-    isLoading: pendingRef.current > 0 && tokenData.size === 0,
-    error,
-  }
+  return { tokenData, isLoading, error }
 }

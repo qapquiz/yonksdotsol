@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import { Text, View } from 'react-native'
 
-export default function EmptyState() {
+function EmptyState() {
   return (
     <View className="flex-1 items-center justify-center py-12">
       <Text className="text-6xl mb-4">📊</Text>
@@ -11,3 +12,5 @@ export default function EmptyState() {
     </View>
   )
 }
+
+export default memo(EmptyState)
