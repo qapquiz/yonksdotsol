@@ -2,6 +2,7 @@ import type { PositionInfo } from '@meteora-ag/dlmm'
 import { useMemo, useRef } from 'react'
 import { Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
+import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useBatchTokenData } from '../../hooks/positions/useBatchTokenData'
@@ -21,10 +22,45 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     [positionsArray],
   )
 
-  const { data: upnlData } = useUpnlPerPosition({
+  const { data: upnlData, isLoading: isLoadingUpnl } = useUpnlPerPosition({
     walletAddress: ownerAddress || '',
     enabled: !!ownerAddress,
   })
+
+  // Aggregate portfolio-level uPnL from all positions
+  const portfolioSummary = useMemo(() => {
+    if (!upnlData || upnlData.size === 0) {
+      return {
+        totalPnlSol: 0,
+        totalPnlPercent: 0,
+        totalValueSol: 0,
+        totalInitialDepositSol: 0,
+        totalUnclaimedFeesSol: 0,
+      }
+    }
+
+    let totalPnlSol = 0
+    let totalValueSol = 0
+    let totalInitialDepositSol = 0
+    let totalUnclaimedFeesSol = 0
+
+    for (const upnl of upnlData.values()) {
+      totalPnlSol += upnl.upnlWithFees
+      totalValueSol += upnl.currentValueInSol
+      totalInitialDepositSol += upnl.initialDepositInSol
+      totalUnclaimedFeesSol += upnl.unclaimedFeesInSol
+    }
+
+    const totalPnlPercent = totalInitialDepositSol > 0 ? (totalPnlSol / totalInitialDepositSol) * 100 : 0
+
+    return {
+      totalPnlSol,
+      totalPnlPercent,
+      totalValueSol,
+      totalInitialDepositSol,
+      totalUnclaimedFeesSol,
+    }
+  }, [upnlData])
 
   // Collect unique token mints across all positions
   const uniqueMints = useMemo(() => {
@@ -82,6 +118,8 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
         </TouchableOpacity>
 				*/}
       </View>
+
+      <PortfolioSummary {...portfolioSummary} positionCount={positionCount} isLoading={isLoadingUpnl && !upnlData} />
 
       {positionsArray.map((position) =>
         position.lbPairPositionsData.map((lbPosition, idx) => {
