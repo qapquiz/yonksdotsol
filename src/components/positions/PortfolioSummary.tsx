@@ -11,14 +11,35 @@ interface PortfolioSummaryProps {
   isLoading: boolean
 }
 
-function formatSol(value: number): string {
-  if (Math.abs(value) >= 1) {
-    return `${value.toFixed(2)} SOL`
+function countLeadingZeros(value: number): number {
+  if (value >= 0.01) return 0
+  const str = value.toFixed(9).replace(/0+$/, '')
+  const decimalPart = str.split('.')[1] || ''
+  const match = decimalPart.match(/^0*/)
+  return match ? match[0].length : 0
+}
+
+function SolValue({ value, className }: { value: number; className?: string }) {
+  const leadingZeros = countLeadingZeros(value)
+
+  // Only use subscript notation when toFixed(4) can't capture the first significant digit
+  if (leadingZeros < 4) {
+    return <Text className={className}>{value.toFixed(4)}</Text>
   }
-  if (Math.abs(value) >= 0.001) {
-    return `${value.toFixed(4)} SOL`
-  }
-  return `${value.toFixed(6)} SOL`
+
+  const str = value.toFixed(9).replace(/0+$/, '')
+  const decimalPart = str.split('.')[1] || ''
+  const rawDigits = decimalPart.slice(leadingZeros)
+  const significantDigits = (rawDigits + '0000').slice(0, 4)
+  const additionalZeros = leadingZeros - 2
+
+  return (
+    <Text className={className}>
+      0.00
+      <Text className="text-[10px]">{additionalZeros}</Text>
+      {significantDigits}
+    </Text>
+  )
 }
 
 function PortfolioSummaryComponent({
@@ -63,10 +84,11 @@ function PortfolioSummaryComponent({
 
       {/* Main PnL display */}
       <View className="mb-4">
-        <Text className={`text-2xl font-bold ${pnlColorClass}`}>
-          {sign}
-          {formatSol(totalPnlSol)}
-        </Text>
+        <View className="flex-row items-baseline">
+          {sign && <Text className={`text-2xl font-bold ${pnlColorClass}`}>{sign}</Text>}
+          <SolValue value={Math.abs(totalPnlSol)} className={`text-2xl font-bold ${pnlColorClass}`} />
+          <Text className={`text-sm font-bold ${pnlColorClass} ml-0.5 opacity-60`}>SOL</Text>
+        </View>
         <Text className={`text-sm font-bold ${pnlColorClass}`}>
           {sign}
           {totalPnlPercent.toFixed(2)}%
@@ -77,15 +99,24 @@ function PortfolioSummaryComponent({
       <View className="flex-row justify-between">
         <View>
           <Text className="text-zinc-500 text-[10px] font-bold tracking-wider mb-1">VALUE</Text>
-          <Text className="text-white text-sm font-bold">{formatSol(totalValueSol)}</Text>
+          <View className="flex-row items-baseline">
+            <SolValue value={totalValueSol} className="text-white text-sm font-bold" />
+            <Text className="text-white text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
+          </View>
         </View>
         <View>
           <Text className="text-zinc-500 text-[10px] font-bold tracking-wider mb-1">DEPOSITED</Text>
-          <Text className="text-zinc-300 text-sm font-bold">{formatSol(totalInitialDepositSol)}</Text>
+          <View className="flex-row items-baseline">
+            <SolValue value={totalInitialDepositSol} className="text-zinc-300 text-sm font-bold" />
+            <Text className="text-zinc-300 text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
+          </View>
         </View>
         <View>
-          <Text className="text-zinc-500 text-[10px] font-bold tracking-wider mb-1">FEES</Text>
-          <Text className="text-emerald-400 text-sm font-bold">+{formatSol(totalUnclaimedFeesSol)}</Text>
+          <Text className="text-zinc-500 text-[10px] font-bold tracking-wider mb-1">UNCLAIMED FEES</Text>
+          <View className="flex-row items-baseline">
+            <SolValue value={totalUnclaimedFeesSol} className="text-white text-sm font-bold" />
+            <Text className="text-white text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
+          </View>
         </View>
       </View>
     </View>

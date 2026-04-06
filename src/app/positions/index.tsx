@@ -7,6 +7,7 @@ import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useBatchTokenData } from '../../hooks/positions/useBatchTokenData'
 import { useUpnlPerPosition } from '../../hooks/positions/useUpnlPerPosition'
+import { calculateIsInRange } from '../../utils/positions/calculations'
 
 interface PositionsListProps {
   positions: Map<string, PositionInfo>
@@ -77,6 +78,21 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     enabled: positionsArray.length > 0,
   })
 
+  // Count out-of-range positions
+  const outOfRangeCount = useMemo(() => {
+    let count = 0
+    for (const position of positionsArray) {
+      const activeId = Number(position.lbPair.activeId)
+      for (const lbPosition of position.lbPairPositionsData) {
+        const pd = lbPosition.positionData
+        if (pd && !calculateIsInRange(activeId, pd.lowerBinId, pd.upperBinId)) {
+          count++
+        }
+      }
+    }
+    return count
+  }, [positionsArray])
+
   // Track whether we've completed at least one positions fetch
   const hasLoadedOnce = useRef(false)
   if (!isLoadingPositions) {
@@ -88,11 +104,6 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     if (!hasLoadedOnce.current) {
       return (
         <View className="px-4 pt-6">
-          <View className="flex-row justify-between items-center mb-6">
-            <View className="flex-row items-center gap-2">
-              <Text className="text-xl font-bold text-white">Active Positions</Text>
-            </View>
-          </View>
           {[1, 2, 3].map((key) => (
             <PositionCardSkeleton key={key} />
           ))}
@@ -105,21 +116,16 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
 
   return (
     <View className="px-4 pt-6">
-      <View className="flex-row justify-between items-center mb-6">
-        <View className="flex-row items-center gap-2">
-          <Text className="text-xl font-bold text-white">Active Positions</Text>
-          <View className="bg-zinc-800 rounded-full w-6 h-6 items-center justify-center">
-            <Text className="text-zinc-400 text-xs font-bold">{positionCount}</Text>
-          </View>
-        </View>
-        {/*
-        <TouchableOpacity>
-           <Text className="text-zinc-500 text-xs font-bold tracking-wider">MANAGE {'>'}</Text>
-        </TouchableOpacity>
-				*/}
-      </View>
-
       <PortfolioSummary {...portfolioSummary} positionCount={positionCount} isLoading={isLoadingUpnl && !upnlData} />
+
+      {outOfRangeCount > 0 && (
+        <View className="flex-row items-center gap-2 mb-4 px-1">
+          <Text className="text-orange-500 text-xs">⚠</Text>
+          <Text className="text-orange-400 text-xs font-bold">
+            {outOfRangeCount} {outOfRangeCount === 1 ? 'position' : 'positions'} out of range
+          </Text>
+        </View>
+      )}
 
       {positionsArray.map((position) =>
         position.lbPairPositionsData.map((lbPosition, idx) => {
