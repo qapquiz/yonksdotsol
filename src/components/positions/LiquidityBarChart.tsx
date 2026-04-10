@@ -12,6 +12,12 @@ const CHART_HEIGHT = 120
 const CHART_PADDING = { top: 10, bottom: 10, left: 0, right: 0 }
 const BAR_GAP_RATIO = 0.3
 
+// Bar colors — aligned with app palette
+const BAR_COLOR_DEFAULT = '#3f3f46' // zinc-700 — above active bin
+const BAR_COLOR_ACTIVE = '#22d3ee' // cyan-400 — active bin
+const BAR_COLOR_BELOW = '#10b981' // emerald-500 — below active bin
+const GRID_LINE_COLOR = 'rgba(63, 63, 70, 0.3)'
+
 function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityBarChartProps) {
   const [containerWidth, setContainerWidth] = useState(0)
 
@@ -30,11 +36,11 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
       const isActive = bin.binId === currentActiveId
       const isLeft = bin.binId < currentActiveId
 
-      let color = 'rgb(63, 63, 70)'
+      let color = BAR_COLOR_DEFAULT
       if (isActive) {
-        color = 'rgb(34, 211, 238)'
+        color = BAR_COLOR_ACTIVE
       } else if (isLeft) {
-        color = 'rgb(16, 185, 129)'
+        color = BAR_COLOR_BELOW
       }
 
       return {
@@ -85,15 +91,7 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
     const gridLines = [0, 25, 50, 75, 100].map((percent) => {
       const y = CHART_PADDING.top + chartInnerHeight - (percent / 100) * chartInnerHeight
       return (
-        <Line
-          key={`grid-${percent}`}
-          x1="0"
-          y1={y}
-          x2={chartWidth}
-          y2={y}
-          stroke="rgba(63, 63, 70, 0.3)"
-          strokeWidth="1"
-        />
+        <Line key={`grid-${percent}`} x1="0" y1={y} x2={chartWidth} y2={y} stroke={GRID_LINE_COLOR} strokeWidth="1" />
       )
     })
 
@@ -107,32 +105,32 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
 
   if (chartData.length === 0) {
     return (
-      <View className="bg-zinc-950/50 rounded-xl p-4 mb-6 border border-zinc-800/50">
+      <View className="bg-app-bg/50 rounded-xl p-4 mb-6 border border-app-border/50">
         <View className="flex-row justify-between items-start mb-3">
-          <Text className="text-zinc-500 text-[10px] font-bold tracking-widest">LIQUIDITY SHAPE</Text>
-          <View className="bg-zinc-900 px-2 py-1 rounded border border-zinc-800">
-            <Text className="text-zinc-300 text-[10px] font-mono">{currentPrice}</Text>
+          <Text className="text-app-text-muted text-[10px] font-bold tracking-widest">LIQUIDITY SHAPE</Text>
+          <View className="bg-app-surface px-2 py-1 rounded border border-app-border">
+            <Text className="text-app-text-secondary text-[10px] font-mono">{currentPrice}</Text>
           </View>
         </View>
         <View className="h-[120px] items-center justify-center">
-          <Text className="text-zinc-500 text-xs">No liquidity data</Text>
+          <Text className="text-app-text-muted text-xs">No liquidity data</Text>
         </View>
         <View className="flex-row justify-between px-1 mt-2">
-          <Text className="text-zinc-600 text-[10px] font-mono">-</Text>
-          <Text className="text-zinc-600 text-[10px] font-mono">-</Text>
+          <Text className="text-app-text-muted text-[10px] font-mono">-</Text>
+          <Text className="text-app-text-muted text-[10px] font-mono">-</Text>
         </View>
-        <View className="flex-row items-center justify-center mt-2 space-x-4 gap-4">
+        <View className="flex-row items-center justify-center mt-2 gap-4">
           <View className="flex-row items-center">
             <View className="w-2 h-2 rounded-sm bg-emerald-500 mr-1.5" />
-            <Text className="text-zinc-400 text-[10px]">Below Price</Text>
+            <Text className="text-app-text-secondary text-[10px]">Below Price</Text>
           </View>
           <View className="flex-row items-center">
             <View className="w-2 h-2 rounded-sm bg-cyan-400 mr-1.5" />
             <Text className="text-cyan-400 text-[10px]">Active</Text>
           </View>
           <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-zinc-600 mr-1.5" />
-            <Text className="text-zinc-400 text-[10px]">Above Price</Text>
+            <View className="w-2 h-2 rounded-sm bg-app-text-muted mr-1.5" />
+            <Text className="text-app-text-secondary text-[10px]">Above Price</Text>
           </View>
         </View>
       </View>
@@ -140,11 +138,11 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
   }
 
   return (
-    <View className="bg-zinc-950/50 rounded-xl p-4 mb-6 border border-zinc-800/50">
+    <View className="bg-app-bg/50 rounded-xl p-4 mb-6 border border-app-border/50">
       <View className="flex-row justify-between items-start mb-3">
-        <Text className="text-zinc-500 text-[10px] font-bold tracking-widest">LIQUIDITY SHAPE</Text>
-        <View className="bg-zinc-900 px-2 py-1 rounded border border-zinc-800">
-          <Text className="text-zinc-300 text-[10px] font-mono">{currentPrice}</Text>
+        <Text className="text-app-text-muted text-[10px] font-bold tracking-widest">LIQUIDITY SHAPE</Text>
+        <View className="bg-app-surface px-2 py-1 rounded border border-app-border">
+          <Text className="text-app-text-secondary text-[10px] font-mono">{currentPrice}</Text>
         </View>
       </View>
 
@@ -159,23 +157,23 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
       </View>
 
       <View className="flex-row justify-between px-1 mt-2">
-        <Text className="text-zinc-600 text-[10px] font-mono">{minPrice}</Text>
-        <Text className="text-zinc-600 text-[10px] font-mono">{maxPrice}</Text>
+        <Text className="text-app-text-muted text-[10px] font-mono">{minPrice}</Text>
+        <Text className="text-app-text-muted text-[10px] font-mono">{maxPrice}</Text>
       </View>
 
       {activeBinIndex >= 0 && (
-        <View className="flex-row items-center justify-center mt-2 space-x-4 gap-4">
+        <View className="flex-row items-center justify-center mt-2 gap-4">
           <View className="flex-row items-center">
             <View className="w-2 h-2 rounded-sm bg-emerald-500 mr-1.5" />
-            <Text className="text-zinc-400 text-[10px]">Below Price</Text>
+            <Text className="text-app-text-secondary text-[10px]">Below Price</Text>
           </View>
           <View className="flex-row items-center">
             <View className="w-2 h-2 rounded-sm bg-cyan-400 mr-1.5" />
             <Text className="text-cyan-400 text-[10px]">Active</Text>
           </View>
           <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-zinc-600 mr-1.5" />
-            <Text className="text-zinc-400 text-[10px]">Above Price</Text>
+            <View className="w-2 h-2 rounded-sm bg-app-text-muted mr-1.5" />
+            <Text className="text-app-text-secondary text-[10px]">Above Price</Text>
           </View>
         </View>
       )}

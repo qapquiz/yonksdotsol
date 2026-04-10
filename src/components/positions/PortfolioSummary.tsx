@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { Text, View } from 'react-native'
+import { ShimmerBlock } from '../ui/ShimmerBlock'
 
 interface PortfolioSummaryProps {
   totalPnlSol: number
@@ -53,34 +54,34 @@ function PortfolioSummaryComponent({
 }: PortfolioSummaryProps) {
   if (isLoading) {
     return (
-      <View className="bg-zinc-900 rounded-3xl p-5 mb-4 border border-zinc-800">
+      <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
         {/* Title row — matches real: text + badge */}
         <View className="flex-row items-center gap-2 mb-3">
-          <Text className="text-zinc-500 text-[10px] font-bold tracking-wider">PORTFOLIO SUMMARY</Text>
-          <View className="bg-zinc-800 rounded-full w-5 h-5 items-center justify-center">
-            <Text className="text-zinc-500 text-[10px] font-bold">{positionCount}</Text>
+          <Text className="text-app-text-muted text-[10px] font-bold tracking-wider">PORTFOLIO SUMMARY</Text>
+          <View className="bg-app-surface-highlight rounded-full w-5 h-5 items-center justify-center">
+            <Text className="text-app-text-muted text-[10px] font-bold">{positionCount}</Text>
           </View>
         </View>
 
-        {/* PnL block — matches real: text-2xl row (~8px) + percentage line (~6px) + mb-4 */}
+        {/* PnL block */}
         <View className="mb-4">
-          <View className="h-8 bg-zinc-800 rounded-lg mb-1.5" />
-          <View className="h-5 bg-zinc-800 rounded-lg w-24" />
+          <ShimmerBlock className="h-8 bg-app-border rounded-lg mb-1.5" />
+          <ShimmerBlock className="h-5 bg-app-border rounded-lg w-24" />
         </View>
 
-        {/* Stats row — matches real: 3 columns, each label + value */}
+        {/* Stats row */}
         <View className="flex-row justify-between">
           <View className="items-start">
-            <View className="h-3 bg-zinc-800 rounded w-14 mb-1.5" />
-            <View className="h-4 bg-zinc-800 rounded w-16" />
+            <ShimmerBlock className="h-3 bg-app-border rounded w-14 mb-1.5" />
+            <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
           </View>
           <View className="items-start">
-            <View className="h-3 bg-zinc-800 rounded w-20 mb-1.5" />
-            <View className="h-4 bg-zinc-800 rounded w-16" />
+            <ShimmerBlock className="h-3 bg-app-border rounded w-20 mb-1.5" />
+            <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
           </View>
           <View className="items-start">
-            <View className="h-3 bg-zinc-800 rounded w-24 mb-1.5" />
-            <View className="h-4 bg-zinc-800 rounded w-16" />
+            <ShimmerBlock className="h-3 bg-app-border rounded w-24 mb-1.5" />
+            <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
           </View>
         </View>
       </View>
@@ -92,11 +93,11 @@ function PortfolioSummaryComponent({
   const sign = isProfit ? '+' : ''
 
   return (
-    <View className="bg-zinc-900 rounded-3xl p-5 mb-4 border border-zinc-800">
+    <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
       <View className="flex-row items-center gap-2 mb-3">
-        <Text className="text-zinc-500 text-[10px] font-bold tracking-wider">PORTFOLIO SUMMARY</Text>
-        <View className="bg-zinc-800 rounded-full w-5 h-5 items-center justify-center">
-          <Text className="text-zinc-400 text-[10px] font-bold">{positionCount}</Text>
+        <Text className="text-app-text-muted text-[10px] font-bold tracking-wider">PORTFOLIO SUMMARY</Text>
+        <View className="bg-app-surface-highlight rounded-full w-5 h-5 items-center justify-center">
+          <Text className="text-app-text-secondary text-[10px] font-bold">{positionCount}</Text>
         </View>
       </View>
 
@@ -116,24 +117,24 @@ function PortfolioSummaryComponent({
       {/* Stats row */}
       <View className="flex-row justify-between">
         <View>
-          <Text className="text-zinc-500 text-[10px] font-bold tracking-wider mb-1">VALUE</Text>
+          <Text className="text-app-text-muted text-[10px] font-bold tracking-wider mb-1">VALUE</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalValueSol} className="text-white text-sm font-bold" />
-            <Text className="text-white text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
+            <SolValue value={totalValueSol} className="text-app-text text-sm font-bold" />
+            <Text className="text-app-text text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
           </View>
         </View>
         <View>
-          <Text className="text-zinc-500 text-[10px] font-bold tracking-wider mb-1">DEPOSITED</Text>
+          <Text className="text-app-text-muted text-[10px] font-bold tracking-wider mb-1">DEPOSITED</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalInitialDepositSol} className="text-zinc-300 text-sm font-bold" />
-            <Text className="text-zinc-300 text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
+            <SolValue value={totalInitialDepositSol} className="text-app-text text-sm font-bold" />
+            <Text className="text-app-text text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
           </View>
         </View>
         <View>
-          <Text className="text-zinc-500 text-[10px] font-bold tracking-wider mb-1">UNCLAIMED FEES</Text>
+          <Text className="text-app-text-muted text-[10px] font-bold tracking-wider mb-1">UNCLAIMED FEES</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalUnclaimedFeesSol} className="text-white text-sm font-bold" />
-            <Text className="text-white text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
+            <SolValue value={totalUnclaimedFeesSol} className="text-app-text text-sm font-bold" />
+            <Text className="text-app-text text-[10px] font-bold ml-0.5 opacity-60">SOL</Text>
           </View>
         </View>
       </View>

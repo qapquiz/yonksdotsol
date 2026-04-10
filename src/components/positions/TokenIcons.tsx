@@ -14,26 +14,26 @@ function TokenIconsComponent({ tokenXInfo, tokenYInfo }: TokenIconsProps) {
   const TokenXIcon =
     tokenXInfo?.cdn_url && !xError ? (
       <Image
-        className="w-8 h-8 rounded-full bg-zinc-700 border border-zinc-900 z-10"
+        className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight z-10"
         source={{ uri: tokenXInfo.cdn_url }}
         onError={() => setXError(true)}
       />
     ) : (
-      <View className="w-8 h-8 rounded-full bg-zinc-700 border border-zinc-900 z-10 items-center justify-center">
-        <Text className="text-white text-xs font-bold">{tokenXInfo?.symbol?.[0] || '?'}</Text>
+      <View className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight z-10 items-center justify-center">
+        <Text className="text-app-text text-xs font-bold">{tokenXInfo?.symbol?.[0] || '?'}</Text>
       </View>
     )
 
   const TokenYIcon =
     tokenYInfo?.cdn_url && !yError ? (
       <Image
-        className="w-8 h-8 rounded-full bg-zinc-600 border border-zinc-900 -ml-3"
+        className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight -ml-3"
         source={{ uri: tokenYInfo.cdn_url }}
         onError={() => setYError(true)}
       />
     ) : (
-      <View className="w-8 h-8 rounded-full bg-zinc-600 border border-zinc-900 -ml-3 items-center justify-center">
-        <Text className="text-white text-xs font-bold">{tokenYInfo?.symbol?.[0] || '?'}</Text>
+      <View className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight -ml-3 items-center justify-center">
+        <Text className="text-app-text text-xs font-bold">{tokenYInfo?.symbol?.[0] || '?'}</Text>
       </View>
     )
 

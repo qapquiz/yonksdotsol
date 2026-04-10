@@ -31,10 +31,9 @@ function PositionHeaderComponent({
       <View className="flex-row items-center gap-3 flex-1 min-w-0">
         <TokenIcons tokenXInfo={tokenXInfo} tokenYInfo={tokenYInfo} />
         <View className="flex-1 min-w-0">
-          <Text className="text-white font-bold text-lg" numberOfLines={1}>
+          <Text className="text-app-text font-bold text-lg" numberOfLines={1}>
             {tokenXInfo?.symbol} / {tokenYInfo?.symbol}
           </Text>
-          <Text className="text-zinc-500 text-xs font-medium">KEEP PRINTING</Text>
         </View>
       </View>
       <View className="items-end gap-1 flex-shrink-0">
@@ -43,7 +42,7 @@ function PositionHeaderComponent({
             {inRange ? 'IN RANGE' : 'OUT OF RANGE'}
           </Text>
         </View>
-        <Text className="text-white font-bold text-lg">{totalValue}</Text>
+        <Text className="text-app-text font-bold text-lg">{totalValue}</Text>
         {upnlValue !== null && upnlPercentage !== null && (
           <Text className={`text-xs font-bold ${upnlColorClass}`}>
             {upnlIsSol ? formatUPNLDisplaySol(upnlValue, upnlPercentage) : formatUPNLDisplay(upnlValue, upnlPercentage)}

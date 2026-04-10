@@ -17,33 +17,22 @@ function PositionFooterComponent({
   return (
     <View>
       <View className="mb-4">
-        <Text className="text-zinc-500 text-[10px] font-bold mb-1 tracking-wider">UNREALIZED FEES</Text>
+        <Text className="text-app-text-muted text-[10px] font-bold mb-1 tracking-wider">UNREALIZED FEES</Text>
         <View className="flex-row items-center gap-1">
-          <Text className="text-white font-bold text-sm">{unrealizedFeesDisplay}</Text>
+          <Text className="text-app-text font-bold text-sm">{unrealizedFeesDisplay}</Text>
           <Text className="text-emerald-400 text-xs">✨</Text>
         </View>
-        <Text className="text-zinc-400 text-xs mt-1">{unrealizedFeesValue}</Text>
+        <Text className="text-app-text-secondary text-xs mt-1">{unrealizedFeesValue}</Text>
       </View>
 
       <View>
-        <Text className="text-zinc-500 text-[10px] font-bold mb-1 tracking-wider">CLAIMED FEES</Text>
+        <Text className="text-app-text-muted text-[10px] font-bold mb-1 tracking-wider">CLAIMED FEES</Text>
         <View className="flex-row items-center gap-1">
-          <Text className="text-white font-bold text-sm">{claimedFeesDisplay}</Text>
+          <Text className="text-app-text font-bold text-sm">{claimedFeesDisplay}</Text>
           <Text className="text-amber-400 text-xs">💰</Text>
         </View>
-        <Text className="text-zinc-400 text-xs mt-1">{claimedFeesValue}</Text>
+        <Text className="text-app-text-secondary text-xs mt-1">{claimedFeesValue}</Text>
       </View>
-
-      {/*
-			<View className="flex-row gap-2">
-				<TouchableOpacity className="bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700">
-					<Text className="text-zinc-300 font-bold text-xs">CLAIM</Text>
-				</TouchableOpacity>
-				<TouchableOpacity className="bg-zinc-800 px-4 py-2 rounded-lg border border-zinc-700">
-					<Text className="text-zinc-300 font-bold text-xs">ADD</Text>
-				</TouchableOpacity>
-			</View>
-			*/}
     </View>
   )
 }

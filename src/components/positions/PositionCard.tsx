@@ -105,7 +105,7 @@ function PositionCardComponent({ position, lbPositionIndex = 0, upnlData, tokenX
   }
 
   return (
-    <View className="bg-zinc-900 rounded-3xl p-5 mb-4 border border-zinc-800">
+    <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
       <PositionHeader
         tokenXInfo={tokenXInfo}
         tokenYInfo={tokenYInfo}
