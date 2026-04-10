@@ -117,7 +117,7 @@ export default function App() {
       </View>
 
       <ScrollView
-        className="flex-1 px-4 pt-4"
+        className="flex-1 px-4 pt-2"
         refreshControl={
           <RefreshControl refreshing={isLoadingPositions} onRefresh={handleRefresh} tintColor="#8FA893" />
         }

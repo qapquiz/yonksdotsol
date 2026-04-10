@@ -103,7 +103,7 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
   if (positionsArray.length === 0) {
     if (!hasLoadedOnce.current) {
       return (
-        <View className="px-4 pt-6">
+        <View>
           {[1, 2, 3].map((key) => (
             <PositionCardSkeleton key={key} />
           ))}
@@ -115,7 +115,7 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
   }
 
   return (
-    <View className="px-4 pt-6">
+    <View>
       <PortfolioSummary {...portfolioSummary} positionCount={positionCount} isLoading={isLoadingUpnl && !upnlData} />
 
       {outOfRangeCount > 0 && (
