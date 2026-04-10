@@ -26,26 +26,39 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
     }
 
     let isMounted = true
-    let pending = mints.length
-    let firstError: Error | null = null
 
     setIsLoading(true)
     setError(null)
 
-    const newMap = new Map<string, TokenInfo>()
-    setTokenData(newMap)
+    const accumulated = new Map<string, TokenInfo>()
+    let pending = mints.length
+    let firstError: Error | null = null
+    let flushScheduled = false
+
+    const flush = () => {
+      if (!isMounted) return
+      flushScheduled = false
+      setTokenData(new Map(accumulated))
+      if (pending === 0) {
+        setIsLoading(false)
+        setError(firstError)
+      }
+    }
+
+    const scheduleFlush = () => {
+      if (!flushScheduled) {
+        flushScheduled = true
+        queueMicrotask(flush)
+      }
+    }
 
     for (const mint of mints) {
       fetchTokenPriceData(mint)
-        .then((tokenInfo) => {
+        .then((info) => {
           if (!isMounted) return
-          newMap.set(mint, tokenInfo)
-          setTokenData(new Map(newMap))
+          accumulated.set(mint, info)
           pending--
-          if (pending === 0 && isMounted) {
-            setIsLoading(false)
-            setError(firstError)
-          }
+          scheduleFlush()
         })
         .catch((err) => {
           if (!isMounted) return
@@ -53,10 +66,7 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
             firstError = err instanceof Error ? err : new Error(String(err))
           }
           pending--
-          if (pending === 0 && isMounted) {
-            setIsLoading(false)
-            setError(firstError)
-          }
+          scheduleFlush()
         })
     }
 

@@ -1,19 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { getUpnlPerPosition, type PositionUpnl } from 'metcomet'
 import { env } from '../../config/env'
+import { getSharedConnection } from '../../config/connection'
 import { CacheManager } from '../../utils/cache/CacheManager'
 import { getUpnlPerPositionKey } from '../../utils/cache/cacheKeys'
 import { CACHE_TTL } from '../../config/cache'
-
-let sharedConnection: Connection | null = null
-
-function getSharedConnection(): Connection {
-  if (!sharedConnection) {
-    sharedConnection = new Connection(env.rpcUrl || '')
-  }
-  return sharedConnection
-}
 
 export type { PositionUpnl }
 

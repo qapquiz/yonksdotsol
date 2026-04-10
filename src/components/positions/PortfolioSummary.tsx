@@ -54,16 +54,34 @@ function PortfolioSummaryComponent({
   if (isLoading) {
     return (
       <View className="bg-zinc-900 rounded-3xl p-5 mb-4 border border-zinc-800">
-        <View className="flex-row items-center gap-2 mb-4">
+        {/* Title row — matches real: text + badge */}
+        <View className="flex-row items-center gap-2 mb-3">
           <Text className="text-zinc-500 text-[10px] font-bold tracking-wider">PORTFOLIO SUMMARY</Text>
           <View className="bg-zinc-800 rounded-full w-5 h-5 items-center justify-center">
             <Text className="text-zinc-500 text-[10px] font-bold">{positionCount}</Text>
           </View>
         </View>
-        <View className="h-8 bg-zinc-800 rounded-lg mb-3" />
+
+        {/* PnL block — matches real: text-2xl row (~8px) + percentage line (~6px) + mb-4 */}
+        <View className="mb-4">
+          <View className="h-8 bg-zinc-800 rounded-lg mb-1.5" />
+          <View className="h-5 bg-zinc-800 rounded-lg w-24" />
+        </View>
+
+        {/* Stats row — matches real: 3 columns, each label + value */}
         <View className="flex-row justify-between">
-          <View className="h-4 bg-zinc-800 rounded w-20" />
-          <View className="h-4 bg-zinc-800 rounded w-20" />
+          <View className="items-start">
+            <View className="h-3 bg-zinc-800 rounded w-14 mb-1.5" />
+            <View className="h-4 bg-zinc-800 rounded w-16" />
+          </View>
+          <View className="items-start">
+            <View className="h-3 bg-zinc-800 rounded w-20 mb-1.5" />
+            <View className="h-4 bg-zinc-800 rounded w-16" />
+          </View>
+          <View className="items-start">
+            <View className="h-3 bg-zinc-800 rounded w-24 mb-1.5" />
+            <View className="h-4 bg-zinc-800 rounded w-16" />
+          </View>
         </View>
       </View>
     )

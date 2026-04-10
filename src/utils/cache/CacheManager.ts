@@ -6,6 +6,7 @@ interface CacheEntry<T> {
 export class CacheManager {
   private static instance: CacheManager
   private cache: Map<string, CacheEntry<any>> = new Map()
+  private pending: Map<string, Promise<any>> = new Map()
   private readonly DEFAULT_TTL = 15 * 60 * 1000
   private cleanupCounter = 0
   private readonly CLEANUP_INTERVAL = 50
@@ -70,6 +71,7 @@ export class CacheManager {
 
   clear(): void {
     this.cache.clear()
+    this.pending.clear()
   }
 
   invalidatePattern(pattern: string): void {
@@ -82,6 +84,36 @@ export class CacheManager {
     })
 
     keysToDelete.forEach((key) => this.cache.delete(key))
+  }
+
+  /**
+   * Returns the cached value if present and fresh, otherwise calls `fetchFn`,
+   * caches the result, and returns it. Deduplicates concurrent calls for the
+   * same key so only one in-flight request exists at a time.
+   */
+  async getOrFetch<T>(key: string, fetchFn: () => Promise<T>, ttl?: number): Promise<T> {
+    const cached = this.get<T>(key)
+    if (cached !== null) {
+      return cached
+    }
+
+    // Dedup: reuse in-flight promise if one already exists for this key
+    const pending = this.pending.get(key)
+    if (pending) {
+      return pending as Promise<T>
+    }
+
+    const promise = fetchFn()
+      .then((value) => {
+        this.set(key, value, ttl)
+        return value
+      })
+      .finally(() => {
+        this.pending.delete(key)
+      })
+
+    this.pending.set(key, promise)
+    return promise
   }
 
   private maybeCleanup(): void {

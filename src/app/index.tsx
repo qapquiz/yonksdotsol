@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons'
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import DLMM from '@meteora-ag/dlmm'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { StatusBar } from 'expo-status-bar'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { PixelAvatar } from '../components/ui/PixelAvatar'
-import { env } from '../config/env'
+import { getSharedConnection } from '../config/connection'
 import { CacheManager } from '../utils/cache/CacheManager'
 import { getUpnlPerPositionKey } from '../utils/cache/cacheKeys'
 import PositionsList from './positions'
@@ -16,15 +16,14 @@ import PositionsList from './positions'
 export default function App() {
   const { account, disconnect, signIn } = useMobileWallet()
   const [isConnecting, setIsConnecting] = useState(false)
-  const connection = useMemo(() => new Connection(env.rpcUrl || ''), [])
   const [positions, setPositions] = useState<Map<string, PositionInfo>>(new Map())
   const [isLoadingPositions, setIsLoadingPositions] = useState(true)
   const previousAccountRef = useRef<string | null>(null)
   const lastUpnlRefreshRef = useRef<number>(0)
-  const getPositions = useCallback(async (connection: Connection, wallet: PublicKey) => {
+  const getPositions = useCallback(async (wallet: PublicKey) => {
     setIsLoadingPositions(true)
     try {
-      const pos = await DLMM.getAllLbPairPositionsByUser(connection, wallet)
+      const pos = await DLMM.getAllLbPairPositionsByUser(getSharedConnection(), wallet)
       setPositions(pos)
     } catch (e) {
       console.error(e)
@@ -40,9 +39,9 @@ export default function App() {
         CacheManager.getInstance().delete(getUpnlPerPositionKey(account.address))
         lastUpnlRefreshRef.current = now
       }
-      getPositions(connection, new PublicKey(account.address))
+      getPositions(new PublicKey(account.address))
     }
-  }, [connection, account?.address, getPositions])
+  }, [account?.address, getPositions])
   const handleConnectWallet = useCallback(async () => {
     setIsConnecting(true)
     try {
@@ -77,8 +76,8 @@ export default function App() {
       return
     }
 
-    getPositions(connection, new PublicKey(account.address))
-  }, [connection, account?.address, getPositions])
+    getPositions(new PublicKey(account.address))
+  }, [account?.address, getPositions])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#050505' }}>

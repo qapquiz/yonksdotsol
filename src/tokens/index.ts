@@ -1,4 +1,7 @@
 import { env } from '../config/env'
+import { CacheManager } from '../utils/cache/CacheManager'
+import { getTokenDataKey } from '../utils/cache/cacheKeys'
+import { CACHE_TTL } from '../config/cache'
 
 export interface TokenInfo {
   mint: string
@@ -12,88 +15,49 @@ export interface TokenInfo {
   }
 }
 
-const TOKEN_CACHE_TTL = 60 * 1000 // 1 minute
-const MAX_CACHE_SIZE = 200
-const pendingRequests = new Map<string, Promise<TokenInfo>>()
-const responseCache = new Map<string, { data: TokenInfo; expiresAt: number }>()
-
-function evictExpired(): void {
-  const now = Date.now()
-  for (const [key, entry] of responseCache) {
-    if (now >= entry.expiresAt) {
-      responseCache.delete(key)
-    }
-  }
-}
-
-function evictOldest(): void {
-  if (responseCache.size < MAX_CACHE_SIZE) return
-  const firstKey = responseCache.keys().next().value
-  if (firstKey !== undefined) {
-    responseCache.delete(firstKey)
-  }
-}
-
-export const fetchTokenPriceData = async (mint: string): Promise<TokenInfo> => {
-  const cached = responseCache.get(mint)
-  if (cached && Date.now() < cached.expiresAt) {
-    return cached.data
-  }
-  responseCache.delete(mint)
-
-  const existing = pendingRequests.get(mint)
-  if (existing) {
-    return existing
-  }
-
-  const requestPromise = (async () => {
-    try {
-      const response = await fetch(env.rpcUrl || '', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+async function fetchTokenFromRpc(mint: string): Promise<TokenInfo> {
+  const response = await fetch(env.rpcUrl || '', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: '1',
+      method: 'getAsset',
+      params: {
+        id: mint,
+        displayOptions: {
+          showFungible: true,
         },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          id: '1',
-          method: 'getAsset',
-          params: {
-            id: mint,
-            displayOptions: {
-              showFungible: true,
-            },
-          },
-        }),
-      })
+      },
+    }),
+  })
 
-      if (!response.ok) {
-        throw new Error(`HTTP error: ${response.status}`)
-      }
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`)
+  }
 
-      const data = await response.json()
+  const data = await response.json()
 
-      if (data.error) {
-        throw new Error(data.error.message || 'RPC error')
-      }
+  if (data.error) {
+    throw new Error(data.error.message || 'RPC error')
+  }
 
-      const tokenInfo: TokenInfo = {
-        mint: data.result.id,
-        symbol: data.result.token_info.symbol,
-        supply: data.result.token_info.supply,
-        cdn_url: data.result.content.links.image,
-        decimals: data.result.token_info.decimals,
-        price_info: data.result.token_info.price_info,
-      } as TokenInfo
+  return {
+    mint: data.result.id,
+    symbol: data.result.token_info.symbol,
+    supply: data.result.token_info.supply,
+    cdn_url: data.result.content.links.image,
+    decimals: data.result.token_info.decimals,
+    price_info: data.result.token_info.price_info,
+  } as TokenInfo
+}
 
-      evictExpired()
-      evictOldest()
-      responseCache.set(mint, { data: tokenInfo, expiresAt: Date.now() + TOKEN_CACHE_TTL })
-      return tokenInfo
-    } finally {
-      pendingRequests.delete(mint)
-    }
-  })()
-
-  pendingRequests.set(mint, requestPromise)
-  return requestPromise
+export const fetchTokenPriceData = (mint: string): Promise<TokenInfo> => {
+  return CacheManager.getInstance().getOrFetch(
+    getTokenDataKey(mint),
+    () => fetchTokenFromRpc(mint),
+    CACHE_TTL.TOKEN_DATA,
+  )
 }
