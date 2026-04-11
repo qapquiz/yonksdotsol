@@ -116,6 +116,43 @@ This file contains build commands and code style guidelines for agentic coding a
 - `/src/utils/` - Pure utility functions
 - `/src/config/` - Configuration and constants
 
+## React Native + Solana/Anchor SDK Compatibility
+
+The Solana SDK (`@solana/web3.js`), Anchor (`@coral-xyz/anchor`), and Meteora DLMM rely on Node.js `Buffer` methods that don't exist on `Uint8Array` in React Native's JSC/Hermes engine. All patches live in `polyfill.js`.
+
+### Required Polyfills (already in `polyfill.js`)
+
+1. **`Buffer.prototype.subarray`** — must return Buffer (not plain Uint8Array). Fixes Anchor discriminator extraction.
+2. **`Buffer.prototype.slice`** — same requirement. Fixes SDKs that use `.slice()` instead of `.subarray()`.
+3. **`Uint8Array.prototype.equals`** — Anchor compares discriminators with `.equals()`, which plain Uint8Array lacks.
+4. **Buffer read/write methods on Uint8Array** — `readIntLE`, `readUIntLE`, `readDoubleBE`, etc. Injected by forwarding to a Buffer view. Fixes `buffer-layout` deserialization.
+
+### When Encountering "X is not a function" from Solana SDKs
+
+1. Check if the error involves a Buffer method (`equals`, `readIntLE`, `slice`, `subarray`, `copy`, `fill`, etc.)
+2. Add the missing method to the polyfill — use `Object.setPrototypeOf(result, Buffer.prototype)` for subarray/slice, or the Buffer-from-view pattern for read/write methods
+3. **Do NOT fork the SDK** — maintenance burden is not worth it
+4. **Do NOT switch from `@craftzdog/react-native-buffer` to `buffer`** — the C++ implementation is needed for performance
+5. **Do NOT change the polyfill load order** — `react-native-get-random-values` must be first, `install()` must be last
+
+### Key Files
+
+- `polyfill.js` — ALL React Native / Solana compatibility patches
+- `index.js` — imports polyfill before anything else (`import './polyfill'`)
+- `metro.config.js` — Uniwind CSS processing via `withUniwindConfig`
+
+## Architecture Documentation
+
+For system-level patterns (Connection lifecycle, caching strategy, data flow, module ownership), see `docs/architecture.md`.
+
+For visual design rules (color tokens, contrast, skeleton patterns), see `docs/theme-guide.md`.
+
+For Meteora DLMM data structures (PositionInfo, TokenInfo, PositionUpnl), see `docs/data-model.md`.
+
+For loading state behavior (skeleton vs empty vs data), see `docs/loading-states.md`.
+
+For number formatting conventions (SOL, USD, percentages, fees), see `docs/number-formatting.md`.
+
 ### Before Committing
 
 Always run:
@@ -131,3 +168,4 @@ Always run:
 - Prefix with `EXPO_PUBLIC_` for client-side access
 - Example: `EXPO_PUBLIC_RPC_URL=https://...`
 - Use via `process.env.EXPO_PUBLIC_RPC_URL`
+- Access via `src/config/env.ts` (`env.rpcUrl`, `env.heliusApiKey`) — never use `process.env` directly in components
