@@ -43,7 +43,7 @@ function PositionHeaderComponent({
           </Text>
         </View>
         <Text className="text-app-text font-bold text-lg">{totalValue}</Text>
-        {upnlValue !== null && upnlPercentage !== null && (
+        {upnlValue != null && upnlPercentage != null && (
           <Text className={`text-xs font-bold ${upnlColorClass}`}>
             {upnlIsSol ? formatUPNLDisplaySol(upnlValue, upnlPercentage) : formatUPNLDisplay(upnlValue, upnlPercentage)}
           </Text>

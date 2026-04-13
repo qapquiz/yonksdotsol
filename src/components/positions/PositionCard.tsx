@@ -1,7 +1,7 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import { View } from 'react-native'
-import type { PositionUpnl } from '../../hooks/positions/useUpnlPerPosition'
+import { usePnLStore, selectPositionPnL } from '../../stores/pnlStore'
 import type { TokenInfo } from '../../tokens'
 import {
   calculateCurrentPrice,
@@ -20,17 +20,35 @@ import { PositionHeader } from './PositionHeader'
 interface PositionCardProps {
   position: PositionInfo
   lbPositionIndex?: number
-  upnlData?: PositionUpnl | null
   tokenXInfo: TokenInfo | null
   tokenYInfo: TokenInfo | null
+  walletAddress?: string
+  poolAddress: string
 }
 
-function PositionCardComponent({ position, lbPositionIndex = 0, upnlData, tokenXInfo, tokenYInfo }: PositionCardProps) {
+function PositionCardComponent({
+  position,
+  lbPositionIndex = 0,
+  tokenXInfo,
+  tokenYInfo,
+  walletAddress,
+  poolAddress,
+}: PositionCardProps) {
   const lbPairPosition = position.lbPairPositionsData[lbPositionIndex]
   const positionData = lbPairPosition?.positionData
 
   const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()
-  const pairAddress = (position.lbPair as any).publicKey?.toBase58() || ''
+  const wallet = walletAddress || ''
+
+  // Fetch PnL for this pool when card mounts
+  useEffect(() => {
+    if (wallet && poolAddress) {
+      usePnLStore.getState().fetchPoolPnL(poolAddress, wallet)
+    }
+  }, [poolAddress, wallet])
+
+  // Get pool PnL entry from store (same source as PortfolioSummary)
+  const pnlData = usePnLStore(selectPositionPnL(poolAddress, wallet, positionAddress))
 
   const totalValue = useMemo(() => {
     if (!positionData) return '$0.00'
@@ -90,12 +108,12 @@ function PositionCardComponent({ position, lbPositionIndex = 0, upnlData, tokenX
     return generateLiquidityShape(
       positionData,
       positionAddress,
-      pairAddress,
+      poolAddress,
       activeIdNum,
       tokenXInfo.decimals,
       tokenYInfo.decimals,
     )
-  }, [positionData, tokenXInfo, tokenYInfo, positionAddress, pairAddress, activeIdNum])
+  }, [positionData, tokenXInfo, tokenYInfo, positionAddress, poolAddress, activeIdNum])
 
   if (!lbPairPosition) return null
 
@@ -111,8 +129,8 @@ function PositionCardComponent({ position, lbPositionIndex = 0, upnlData, tokenX
         tokenYInfo={tokenYInfo}
         inRange={inRange}
         totalValue={totalValue}
-        upnlValue={upnlData?.upnlWithFees ?? null}
-        upnlPercentage={upnlData?.upnlWithFeesPercent ?? null}
+        upnlValue={pnlData?.pnlSol ?? null}
+        upnlPercentage={pnlData?.pnlSolPctChange ?? null}
         upnlIsSol={true}
       />
 

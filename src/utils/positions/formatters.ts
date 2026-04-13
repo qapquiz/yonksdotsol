@@ -42,7 +42,14 @@ export function formatFees(feeX: string | bigint, feeY: string | bigint): string
   return fees.length > 0 ? fees.join(' | ') : 'None'
 }
 
-export function formatUPNLDisplaySol(upnl: number, percent: number): string {
+export function formatUPNLDisplaySol(upnl: number | undefined | null, percent: number | undefined | null): string {
+  if (upnl == null || percent == null) return ''
   const sign = upnl >= 0 ? '+' : ''
-  return `${sign}${Math.abs(upnl).toFixed(4)} SOL (${sign}${percent.toFixed(2)}%)`
+  return `${sign}${Math.abs(upnl).toFixed(4)} SOL (${sign}${Number(percent).toFixed(2)}%)`
+}
+
+export function formatUPNLDisplay(upnl: number | undefined | null, percent: number | undefined | null): string {
+  if (upnl == null || percent == null) return ''
+  const sign = upnl >= 0 ? '+' : ''
+  return `${sign}$${Math.abs(upnl).toFixed(2)} (${sign}${Number(percent).toFixed(2)}%)`
 }

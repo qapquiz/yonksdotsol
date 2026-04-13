@@ -6,7 +6,6 @@ import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useBatchTokenData } from '../../hooks/positions/useBatchTokenData'
-import { useUpnlPerPosition } from '../../hooks/positions/useUpnlPerPosition'
 import { calculateIsInRange } from '../../utils/positions/calculations'
 
 interface PositionsListProps {
@@ -16,52 +15,19 @@ interface PositionsListProps {
 }
 
 export default function PositionsList({ positions, isLoadingPositions, ownerAddress }: PositionsListProps) {
-  const positionsArray = useMemo(() => Array.from(positions.values()), [positions])
+  // Keep entries to preserve pair address (Map key)
+  const positionsEntries = useMemo(() => Array.from(positions.entries()), [positions])
+  const positionsArray = useMemo(() => positionsEntries.map(([, pos]) => pos), [positionsEntries])
+
+  // Extract pool addresses for PnL fetching
+  const poolAddresses = useMemo(() => positionsEntries.map(([pairAddress]) => pairAddress), [positionsEntries])
 
   const positionCount = useMemo(
     () => positionsArray.reduce((sum, p) => sum + p.lbPairPositionsData.length, 0),
     [positionsArray],
   )
 
-  const { data: upnlData, isLoading: isLoadingUpnl } = useUpnlPerPosition({
-    walletAddress: ownerAddress || '',
-    enabled: !!ownerAddress,
-  })
-
-  // Aggregate portfolio-level uPnL from all positions
-  const portfolioSummary = useMemo(() => {
-    if (!upnlData || upnlData.size === 0) {
-      return {
-        totalPnlSol: 0,
-        totalPnlPercent: 0,
-        totalValueSol: 0,
-        totalInitialDepositSol: 0,
-        totalUnclaimedFeesSol: 0,
-      }
-    }
-
-    let totalPnlSol = 0
-    let totalValueSol = 0
-    let totalInitialDepositSol = 0
-    let totalUnclaimedFeesSol = 0
-
-    for (const upnl of upnlData.values()) {
-      totalPnlSol += upnl.upnlWithFees
-      totalValueSol += upnl.currentValueInSol
-      totalInitialDepositSol += upnl.initialDepositInSol
-      totalUnclaimedFeesSol += upnl.unclaimedFeesInSol
-    }
-
-    const totalPnlPercent = totalInitialDepositSol > 0 ? (totalPnlSol / totalInitialDepositSol) * 100 : 0
-
-    return {
-      totalPnlSol,
-      totalPnlPercent,
-      totalValueSol,
-      totalInitialDepositSol,
-      totalUnclaimedFeesSol,
-    }
-  }, [upnlData])
+  const wallet = ownerAddress || ''
 
   // Collect unique token mints across all positions
   const uniqueMints = useMemo(() => {
@@ -116,7 +82,7 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
 
   return (
     <View>
-      <PortfolioSummary {...portfolioSummary} positionCount={positionCount} isLoading={isLoadingUpnl && !upnlData} />
+      <PortfolioSummary walletAddress={wallet} positionCount={positionCount} poolAddresses={poolAddresses} />
 
       {outOfRangeCount > 0 && (
         <View className="flex-row items-center gap-2 mb-4 px-1">
@@ -127,9 +93,8 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
         </View>
       )}
 
-      {positionsArray.map((position) =>
+      {positionsEntries.map(([pairAddress, position]) =>
         position.lbPairPositionsData.map((lbPosition, idx) => {
-          const positionAddress = lbPosition.publicKey.toBase58()
           const tokenXMint = position.tokenX.mint.address.toBase58()
           const tokenYMint = position.tokenY.mint.address.toBase58()
           return (
@@ -137,9 +102,10 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
               key={`${position.publicKey.toString()}-${idx}`}
               position={position}
               lbPositionIndex={idx}
-              upnlData={upnlData?.get(positionAddress) ?? null}
               tokenXInfo={tokenData.get(tokenXMint) ?? null}
               tokenYInfo={tokenData.get(tokenYMint) ?? null}
+              walletAddress={ownerAddress}
+              poolAddress={pairAddress}
             />
           )
         }),
