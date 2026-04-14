@@ -1,8 +1,6 @@
 import { create } from 'zustand'
-import { PublicKey } from '@solana/web3.js'
-import { fetchPositionPnL, getUpnlPerPosition, type PositionPnLData, type PositionUpnl } from 'metcomet'
+import { fetchPositionPnL, type PositionPnLData } from 'metcomet'
 import { env } from '../config/env'
-import { getSharedConnection } from '../config/connection'
 
 const TTL_MS = 60_000
 
@@ -11,48 +9,17 @@ interface PnLCacheEntry {
   timestamp: number
 }
 
-interface UpnlCacheEntry {
-  positions: PositionUpnl[]
-  timestamp: number
-}
-
-interface PortfolioSummary {
-  totalPnlSol: number
-  totalPnlPercent: number
-  totalValueSol: number
-  totalInitialDepositSol: number
-  totalUnclaimedFeesSol: number
-}
-
 interface PnLStore {
-  // Per-pool PnL: poolAddress:walletAddress → PositionPnLData[] (for cards)
-  poolPnLData: Map<string, PnLCacheEntry>
-
-  // Per-wallet uPnL: walletAddress → PositionUpnl[] (for portfolio summary)
-  walletUpnlData: Map<string, UpnlCacheEntry>
-
-  // Pending requests
-  pendingPoolPnL: Map<string, Promise<PositionPnLData[] | null>>
-  pendingUpnl: Map<string, Promise<PositionUpnl[] | null>>
-
-  // Fetch PnL for a specific pool (for PositionCard)
+  poolPnLData: Record<string, PnLCacheEntry>
+  pendingPoolPnL: Record<string, Promise<PositionPnLData[] | null>>
   fetchPoolPnL: (poolAddress: string, walletAddress: string) => Promise<PositionPnLData[] | null>
-
-  // Fetch uPnL for a wallet (for PortfolioSummary)
-  fetchWalletUpnl: (walletAddress: string) => Promise<PositionUpnl[] | null>
-
-  // Invalidate all cached data for a wallet (for pull-to-refresh)
   invalidateWallet: (walletAddress: string) => void
-
-  // Clear all cached data
   clearAll: () => void
 }
 
 export const usePnLStore = create<PnLStore>((set, get) => ({
-  poolPnLData: new Map(),
-  walletUpnlData: new Map(),
-  pendingPoolPnL: new Map(),
-  pendingUpnl: new Map(),
+  poolPnLData: {},
+  pendingPoolPnL: {},
 
   fetchPoolPnL: async (poolAddress: string, walletAddress: string) => {
     if (!env.heliusApiKey) {
@@ -62,150 +29,65 @@ export const usePnLStore = create<PnLStore>((set, get) => ({
     const cacheKey = `${poolAddress}:${walletAddress}`
     const state = get()
 
-    // Check cache (with TTL)
-    const cached = state.poolPnLData.get(cacheKey)
+    const cached = state.poolPnLData[cacheKey]
     if (cached && Date.now() - cached.timestamp < TTL_MS) {
       return cached.positions
     }
 
-    // Check if already pending
-    const existingRequest = state.pendingPoolPnL.get(cacheKey)
+    const existingRequest = state.pendingPoolPnL[cacheKey]
     if (existingRequest) {
       return existingRequest
     }
 
-    // Create new request
     const requestPromise = fetchPositionPnL({
       poolAddress,
       user: walletAddress,
       status: 'all',
     }).then((response) => response?.positions ?? null)
 
-    // Store pending promise
-    set((s) => {
-      const newPending = new Map(s.pendingPoolPnL)
-      newPending.set(cacheKey, requestPromise)
-      return { pendingPoolPnL: newPending }
-    })
+    set((s) => ({
+      pendingPoolPnL: { ...s.pendingPoolPnL, [cacheKey]: requestPromise },
+    }))
 
     try {
       const positions = await requestPromise
 
-      // Cache result
-      set((s) => {
-        const newPoolPnLData = new Map(s.poolPnLData)
-        newPoolPnLData.set(cacheKey, {
-          positions: positions ?? [],
-          timestamp: Date.now(),
-        })
-        return { poolPnLData: newPoolPnLData }
-      })
+      set((s) => ({
+        poolPnLData: {
+          ...s.poolPnLData,
+          [cacheKey]: { positions: positions ?? [], timestamp: Date.now() },
+        },
+      }))
 
       return positions
     } finally {
       set((s) => {
-        const newPending = new Map(s.pendingPoolPnL)
-        newPending.delete(cacheKey)
-        return { pendingPoolPnL: newPending }
-      })
-    }
-  },
-
-  fetchWalletUpnl: async (walletAddress: string) => {
-    if (!env.heliusApiKey || !env.rpcUrl) {
-      return null
-    }
-
-    const state = get()
-
-    // Check cache (with TTL)
-    const cached = state.walletUpnlData.get(walletAddress)
-    if (cached && Date.now() - cached.timestamp < TTL_MS) {
-      return cached.positions
-    }
-
-    // Check if already pending
-    const existingRequest = state.pendingUpnl.get(walletAddress)
-    if (existingRequest) {
-      return existingRequest
-    }
-
-    // Create new request
-    const requestPromise = (async () => {
-      if (!env.heliusApiKey) return null
-      const connection = getSharedConnection()
-      const publicKey = new PublicKey(walletAddress)
-      return getUpnlPerPosition({
-        connection,
-        walletAddress: publicKey,
-        heliusApiKey: env.heliusApiKey,
-      })
-    })()
-
-    // Store pending promise
-    set((s) => {
-      const newPending = new Map(s.pendingUpnl)
-      newPending.set(walletAddress, requestPromise)
-      return { pendingUpnl: newPending }
-    })
-
-    try {
-      const positions = await requestPromise
-
-      // Cache result
-      set((s) => {
-        const newWalletUpnlData = new Map(s.walletUpnlData)
-        newWalletUpnlData.set(walletAddress, {
-          positions: positions ?? [],
-          timestamp: Date.now(),
-        })
-        return { walletUpnlData: newWalletUpnlData }
-      })
-
-      return positions
-    } finally {
-      set((s) => {
-        const newPending = new Map(s.pendingUpnl)
-        newPending.delete(walletAddress)
-        return { pendingUpnl: newPending }
+        const { [cacheKey]: _, ...rest } = s.pendingPoolPnL
+        return { pendingPoolPnL: rest }
       })
     }
   },
 
   invalidateWallet: (walletAddress: string) => {
     set((s) => {
-      // Clear pool PnL data for this wallet
-      const newPoolPnLData = new Map(s.poolPnLData)
-      for (const [key] of newPoolPnLData) {
+      const newPoolPnLData = { ...s.poolPnLData }
+      for (const key of Object.keys(newPoolPnLData)) {
         if (key.endsWith(`:${walletAddress}`)) {
-          newPoolPnLData.delete(key)
+          delete newPoolPnLData[key]
         }
       }
-
-      // Clear wallet uPnL data
-      const newWalletUpnlData = new Map(s.walletUpnlData)
-      newWalletUpnlData.delete(walletAddress)
-
-      return { poolPnLData: newPoolPnLData, walletUpnlData: newWalletUpnlData }
+      return { poolPnLData: newPoolPnLData }
     })
   },
 
   clearAll: () => {
     set({
-      poolPnLData: new Map(),
-      walletUpnlData: new Map(),
-      pendingPoolPnL: new Map(),
-      pendingUpnl: new Map(),
+      poolPnLData: {},
+      pendingPoolPnL: {},
     })
   },
 }))
 
-// Selectors
-
-/**
- * Get a single position's PnL data from the store.
- * Used by PositionCard.
- */
 export function selectPositionPnL(
   poolAddress: string,
   walletAddress: string,
@@ -213,20 +95,26 @@ export function selectPositionPnL(
 ): (state: PnLStore) => PositionPnLData | null {
   return (state) => {
     const cacheKey = `${poolAddress}:${walletAddress}`
-    const entry = state.poolPnLData.get(cacheKey)
+    const entry = state.poolPnLData[cacheKey]
     if (!entry) return null
     return entry.positions.find((p) => p.positionAddress === positionAddress) ?? null
   }
 }
 
-/**
- * Get portfolio summary for a wallet.
- * Used by PortfolioSummary.
- */
-export function selectPortfolioSummary(walletAddress: string): (state: PnLStore) => PortfolioSummary {
+export interface PoolPnLSummary {
+  totalPnlSol: number
+  totalPnlPercent: number
+  totalValueSol: number
+  totalInitialDepositSol: number
+  totalUnclaimedFeesSol: number
+}
+
+export function selectPoolPnLSummary(
+  walletAddress: string,
+  poolAddresses: string[],
+): (state: PnLStore) => PoolPnLSummary {
   return (state) => {
-    const entry = state.walletUpnlData.get(walletAddress)
-    if (!entry) {
+    if (!walletAddress || poolAddresses.length === 0) {
       return {
         totalPnlSol: 0,
         totalPnlPercent: 0,
@@ -236,66 +124,82 @@ export function selectPortfolioSummary(walletAddress: string): (state: PnLStore)
       }
     }
 
-    let totalPnlSol = 0
-    let totalValueSol = 0
-    let totalInitialDepositSol = 0
-    let totalUnclaimedFeesSol = 0
+    let pnlSol = 0
+    let valueSol = 0
+    let initialDepositSol = 0
+    let feesSol = 0
+    let hasData = false
+    let weightedPnlPercentSum = 0
+    let totalWeight = 0
 
-    for (const pos of entry.positions) {
-      totalPnlSol += pos.upnlWithFees
-      totalValueSol += pos.currentValueInSol
-      totalInitialDepositSol += pos.initialDepositInSol
-      totalUnclaimedFeesSol += pos.unclaimedFeesInSol
-    }
+    for (const poolAddress of poolAddresses) {
+      const cacheKey = `${poolAddress}:${walletAddress}`
+      const entry = state.poolPnLData[cacheKey]
+      if (!entry) continue
 
-    const totalPnlPercent = totalInitialDepositSol > 0 ? (totalPnlSol / totalInitialDepositSol) * 100 : 0
+      hasData = true
+      for (const pos of entry.positions) {
+        const posPnlSol = pos.pnlSol != null ? Number(pos.pnlSol) : 0
+        pnlSol += posPnlSol
 
-    return {
-      totalPnlSol,
-      totalPnlPercent,
-      totalValueSol,
-      totalInitialDepositSol,
-      totalUnclaimedFeesSol,
-    }
-  }
-}
+        let posValueSol = 0
+        if (pos.unrealizedPnl?.balancesSol) {
+          posValueSol = parseFloat(pos.unrealizedPnl.balancesSol)
+          valueSol += posValueSol
+        } else if (pos.unrealizedPnl?.balances) {
+          posValueSol = pos.unrealizedPnl.balances / 200
+          valueSol += posValueSol
+        }
 
-/**
- * Check if any pool PnL data exists for a wallet (for loading state)
- */
-export function selectHasPoolPnLData(walletAddress: string): (state: PnLStore) => boolean {
-  return (state) => {
-    for (const key of state.poolPnLData.keys()) {
-      if (key.endsWith(`:${walletAddress}`)) {
-        return true
+        const posInitialDeposit = pos.allTimeDeposits.total.sol
+          ? parseFloat(pos.allTimeDeposits.total.sol)
+          : posValueSol - posPnlSol
+        initialDepositSol += posInitialDeposit
+
+        const posPct = pos.pnlSolPctChange != null ? Number(pos.pnlSolPctChange) : null
+        if (posPct != null && posInitialDeposit > 0) {
+          weightedPnlPercentSum += posPct * Math.abs(posInitialDeposit)
+          totalWeight += Math.abs(posInitialDeposit)
+        }
+
+        const feeXSol = pos.unrealizedPnl?.unclaimedFeeTokenX?.amountSol
+          ? parseFloat(pos.unrealizedPnl.unclaimedFeeTokenX.amountSol)
+          : 0
+        const feeYSol = pos.unrealizedPnl?.unclaimedFeeTokenY?.amountSol
+          ? parseFloat(pos.unrealizedPnl.unclaimedFeeTokenY.amountSol)
+          : 0
+        feesSol += feeXSol + feeYSol
       }
     }
+
+    if (!hasData) {
+      return {
+        totalPnlSol: 0,
+        totalPnlPercent: 0,
+        totalValueSol: 0,
+        totalInitialDepositSol: 0,
+        totalUnclaimedFeesSol: 0,
+      }
+    }
+
+    const pnlPercent = totalWeight > 0 ? weightedPnlPercentSum / totalWeight : 0
+
+    return {
+      totalPnlSol: pnlSol,
+      totalPnlPercent: pnlPercent,
+      totalValueSol: valueSol,
+      totalInitialDepositSol: initialDepositSol,
+      totalUnclaimedFeesSol: feesSol,
+    }
+  }
+}
+
+export function selectHasPoolData(walletAddress: string, poolAddresses: string[]): (state: PnLStore) => boolean {
+  return (state) => {
+    if (!walletAddress) return false
+    for (const poolAddress of poolAddresses) {
+      if (`${poolAddress}:${walletAddress}` in state.poolPnLData) return true
+    }
     return false
-  }
-}
-
-/**
- * Check if wallet uPnL data exists (for PortfolioSummary loading)
- */
-export function selectHasWalletUpnlData(walletAddress: string): (state: PnLStore) => boolean {
-  return (state) => {
-    return state.walletUpnlData.has(walletAddress)
-  }
-}
-
-/**
- * Get a single position's PnL data from the wallet uPnL store.
- * Used by PositionCard to ensure consistency with PortfolioSummary.
- *
- * Returns the same data source as PortfolioSummary (upnlWithFees).
- */
-export function selectPositionUpnlFromWallet(
-  walletAddress: string,
-  positionAddress: string,
-): (state: PnLStore) => PositionUpnl | null {
-  return (state) => {
-    const entry = state.walletUpnlData.get(walletAddress)
-    if (!entry) return null
-    return entry.positions.find((p) => p.positionAddress === positionAddress) ?? null
   }
 }

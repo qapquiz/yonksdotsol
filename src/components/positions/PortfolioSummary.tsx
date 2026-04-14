@@ -1,7 +1,8 @@
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useEffect } from 'react'
 import { Text, View } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
-import { usePnLStore } from '../../stores/pnlStore'
+import { usePnLStore, selectPoolPnLSummary, selectHasPoolData } from '../../stores/pnlStore'
 
 interface PortfolioSummaryProps {
   walletAddress?: string
@@ -18,13 +19,11 @@ function countLeadingZeros(value: number): number {
 }
 
 function SolValue({ value, className }: { value: number; className?: string }) {
-  // Handle NaN, Infinity, and other non-finite values
   if (!Number.isFinite(value)) {
     return <Text className={className}>0.0000</Text>
   }
   const leadingZeros = countLeadingZeros(value)
 
-  // Only use subscript notation when toFixed(4) can't capture the first significant digit
   if (leadingZeros < 4) {
     return <Text className={className}>{value.toFixed(4)}</Text>
   }
@@ -47,127 +46,24 @@ function SolValue({ value, className }: { value: number; className?: string }) {
 function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses }: PortfolioSummaryProps) {
   const wallet = walletAddress || ''
 
-  // Get fetch action and pool data from store
   const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
-  const poolPnLData = usePnLStore((state) => state.poolPnLData)
+  const summary = usePnLStore(useShallow(selectPoolPnLSummary(wallet, poolAddresses)))
+  const hasAnyPoolData = usePnLStore(selectHasPoolData(wallet, poolAddresses))
 
-  // Fetch PnL for all pools when component mounts
   useEffect(() => {
     if (wallet && poolAddresses.length > 0) {
-      // Fetch all pools in parallel
       poolAddresses.forEach((poolAddress) => {
         fetchPoolPnL(poolAddress, wallet)
       })
     }
   }, [wallet, poolAddresses, fetchPoolPnL])
 
-  // Compute portfolio summary from pool PnL data
-  // Uses weighted average of position percentages to match position card display
-  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol } = useMemo(() => {
-    if (!wallet || poolAddresses.length === 0) {
-      return {
-        totalPnlSol: 0,
-        totalPnlPercent: 0,
-        totalValueSol: 0,
-        totalInitialDepositSol: 0,
-        totalUnclaimedFeesSol: 0,
-      }
-    }
-
-    let pnlSol = 0
-    let valueSol = 0
-    let initialDepositSol = 0
-    let feesSol = 0
-    let hasData = false
-
-    // Track for weighted average calculation (matching position card percentages)
-    let weightedPnlPercentSum = 0
-    let totalWeight = 0
-
-    for (const poolAddress of poolAddresses) {
-      const cacheKey = `${poolAddress}:${wallet}`
-      const entry = poolPnLData.get(cacheKey)
-      if (!entry) continue
-
-      hasData = true
-      for (const pos of entry.positions) {
-        // PnL in SOL - parse as number in case API returns string
-        const posPnlSol = pos.pnlSol != null ? Number(pos.pnlSol) : 0
-        pnlSol += posPnlSol
-
-        // Current value in SOL (convert from USD if balancesSol not available)
-        let posValueSol = 0
-        if (pos.unrealizedPnl?.balancesSol) {
-          posValueSol = parseFloat(pos.unrealizedPnl.balancesSol)
-          valueSol += posValueSol
-        } else if (pos.unrealizedPnl?.balances) {
-          // Rough estimate: convert USD to SOL
-          posValueSol = pos.unrealizedPnl.balances / 200
-          valueSol += posValueSol
-        }
-
-        // Initial deposit from allTimeDeposits (actual historical deposit in SOL)
-        const posInitialDeposit = pos.allTimeDeposits.total.sol
-          ? parseFloat(pos.allTimeDeposits.total.sol)
-          : posValueSol - posPnlSol
-        initialDepositSol += posInitialDeposit
-
-        // Use the position's pnlSolPctChange for weighted average (matches position card)
-        const posPct = pos.pnlSolPctChange != null ? Number(pos.pnlSolPctChange) : null
-        if (posPct != null && posInitialDeposit > 0) {
-          // Weight by absolute value of initial deposit for weighted average
-          weightedPnlPercentSum += posPct * Math.abs(posInitialDeposit)
-          totalWeight += Math.abs(posInitialDeposit)
-        }
-
-        // Unclaimed fees in SOL (sum of tokenX and tokenY amounts converted to SOL)
-        const feeXSol = pos.unrealizedPnl?.unclaimedFeeTokenX?.amountSol
-          ? parseFloat(pos.unrealizedPnl.unclaimedFeeTokenX.amountSol)
-          : 0
-        const feeYSol = pos.unrealizedPnl?.unclaimedFeeTokenY?.amountSol
-          ? parseFloat(pos.unrealizedPnl.unclaimedFeeTokenY.amountSol)
-          : 0
-        feesSol += feeXSol + feeYSol
-      }
-    }
-
-    if (!hasData) {
-      return {
-        totalPnlSol: 0,
-        totalPnlPercent: 0,
-        totalValueSol: 0,
-        totalInitialDepositSol: 0,
-        totalUnclaimedFeesSol: 0,
-      }
-    }
-
-    // Use weighted average of position percentages (matches position card display)
-    const pnlPercent = totalWeight > 0 ? weightedPnlPercentSum / totalWeight : 0
-
-    return {
-      totalPnlSol: pnlSol,
-      totalPnlPercent: pnlPercent,
-      totalValueSol: valueSol,
-      totalInitialDepositSol: initialDepositSol,
-      totalUnclaimedFeesSol: feesSol,
-    }
-  }, [wallet, poolAddresses, poolPnLData])
-
-  // Loading while we have positions but no PnL data yet
-  const hasAnyPoolData = useMemo(() => {
-    if (!wallet) return false
-    for (const poolAddress of poolAddresses) {
-      const cacheKey = `${poolAddress}:${wallet}`
-      if (poolPnLData.has(cacheKey)) return true
-    }
-    return false
-  }, [wallet, poolAddresses, poolPnLData])
+  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol } = summary
 
   const isLoading = positionCount > 0 && !hasAnyPoolData
   if (isLoading) {
     return (
       <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
-        {/* Title row — matches real: text + badge */}
         <View className="flex-row items-center gap-2 mb-3">
           <Text className="text-app-text-muted text-[10px] font-bold tracking-wider">PORTFOLIO SUMMARY</Text>
           <View className="bg-app-surface-highlight rounded-full w-5 h-5 items-center justify-center">
@@ -175,13 +71,11 @@ function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses
           </View>
         </View>
 
-        {/* PnL block */}
         <View className="mb-4">
           <ShimmerBlock className="h-8 bg-app-border rounded-lg mb-1.5" />
           <ShimmerBlock className="h-5 bg-app-border rounded-lg w-24" />
         </View>
 
-        {/* Stats row */}
         <View className="flex-row justify-between">
           <View className="items-start">
             <ShimmerBlock className="h-3 bg-app-border rounded w-14 mb-1.5" />
@@ -213,7 +107,6 @@ function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses
         </View>
       </View>
 
-      {/* Main PnL display */}
       <View className="mb-4">
         <View className="flex-row items-baseline">
           {sign && <Text className={`text-2xl font-bold ${pnlColorClass}`}>{sign}</Text>}
@@ -226,7 +119,6 @@ function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses
         </Text>
       </View>
 
-      {/* Stats row */}
       <View className="flex-row justify-between">
         <View>
           <Text className="text-app-text-muted text-[10px] font-bold tracking-wider mb-1">VALUE</Text>
