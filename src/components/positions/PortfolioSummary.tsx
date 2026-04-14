@@ -10,7 +10,7 @@ interface PortfolioSummaryProps {
 }
 
 function countLeadingZeros(value: number): number {
-  if (value >= 0.01) return 0
+  if (!Number.isFinite(value) || value >= 0.01) return 0
   const str = value.toFixed(9).replace(/0+$/, '')
   const decimalPart = str.split('.')[1] || ''
   const match = decimalPart.match(/^0*/)
@@ -18,6 +18,10 @@ function countLeadingZeros(value: number): number {
 }
 
 function SolValue({ value, className }: { value: number; className?: string }) {
+  // Handle NaN, Infinity, and other non-finite values
+  if (!Number.isFinite(value)) {
+    return <Text className={className}>0.0000</Text>
+  }
   const leadingZeros = countLeadingZeros(value)
 
   // Only use subscript notation when toFixed(4) can't capture the first significant digit
@@ -43,18 +47,19 @@ function SolValue({ value, className }: { value: number; className?: string }) {
 function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses }: PortfolioSummaryProps) {
   const wallet = walletAddress || ''
 
+  // Get fetch action and pool data from store
+  const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
+  const poolPnLData = usePnLStore((state) => state.poolPnLData)
+
   // Fetch PnL for all pools when component mounts
   useEffect(() => {
     if (wallet && poolAddresses.length > 0) {
       // Fetch all pools in parallel
       poolAddresses.forEach((poolAddress) => {
-        usePnLStore.getState().fetchPoolPnL(poolAddress, wallet)
+        fetchPoolPnL(poolAddress, wallet)
       })
     }
-  }, [wallet, poolAddresses])
-
-  // Get pool PnL data from store
-  const poolPnLData = usePnLStore((state) => state.poolPnLData)
+  }, [wallet, poolAddresses, fetchPoolPnL])
 
   // Compute portfolio summary from pool PnL data
   // Uses weighted average of position percentages to match position card display
@@ -86,8 +91,8 @@ function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses
 
       hasData = true
       for (const pos of entry.positions) {
-        // PnL in SOL
-        const posPnlSol = pos.pnlSol ?? 0
+        // PnL in SOL - parse as number in case API returns string
+        const posPnlSol = pos.pnlSol != null ? Number(pos.pnlSol) : 0
         pnlSol += posPnlSol
 
         // Current value in SOL (convert from USD if balancesSol not available)
@@ -108,7 +113,7 @@ function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses
         initialDepositSol += posInitialDeposit
 
         // Use the position's pnlSolPctChange for weighted average (matches position card)
-        const posPct = pos.pnlSolPctChange
+        const posPct = pos.pnlSolPctChange != null ? Number(pos.pnlSolPctChange) : null
         if (posPct != null && posInitialDeposit > 0) {
           // Weight by absolute value of initial deposit for weighted average
           weightedPnlPercentSum += posPct * Math.abs(posInitialDeposit)

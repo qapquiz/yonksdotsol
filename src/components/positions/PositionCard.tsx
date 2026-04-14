@@ -40,15 +40,16 @@ function PositionCardComponent({
   const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()
   const wallet = walletAddress || ''
 
+  // Get fetch action and PnL data from store
+  const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
+  const pnlData = usePnLStore(selectPositionPnL(poolAddress, wallet, positionAddress))
+
   // Fetch PnL for this pool when card mounts
   useEffect(() => {
     if (wallet && poolAddress) {
-      usePnLStore.getState().fetchPoolPnL(poolAddress, wallet)
+      fetchPoolPnL(poolAddress, wallet)
     }
-  }, [poolAddress, wallet])
-
-  // Get pool PnL entry from store (same source as PortfolioSummary)
-  const pnlData = usePnLStore(selectPositionPnL(poolAddress, wallet, positionAddress))
+  }, [poolAddress, wallet, fetchPoolPnL])
 
   const totalValue = useMemo(() => {
     if (!positionData) return '$0.00'
