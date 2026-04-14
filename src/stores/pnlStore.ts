@@ -42,7 +42,7 @@ export const usePnLStore = create<PnLStore>((set, get) => ({
     const requestPromise = fetchPositionPnL({
       poolAddress,
       user: walletAddress,
-      status: 'all',
+      status: 'open',
     }).then((response) => response?.positions ?? null)
 
     set((s) => ({
