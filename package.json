@@ -31,6 +31,7 @@
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.1",
     "@meteora-ag/dlmm": "^1.9.4",
+    "@shopify/flash-list": "^2.3.1",
     "@solana/kit": "^6.3.0",
     "@solana/web3.js": "^1.98.4",
     "@wallet-ui/react-native-kit": "^4.0.1",
