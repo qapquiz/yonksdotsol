@@ -123,10 +123,53 @@ This document tracks React Native performance changes made to the positions list
 
 ---
 
+### 6. Batch Token Data Fetching (Single State Update)
+
+**Commit:** pending
+**Files:** `src/hooks/positions/useBatchTokenData.ts`
+
+#### What changed
+
+- **Before:** Each token fetch resolved independently and called `scheduleFlush()` → `queueMicrotask` → `setTokenData(new Map(accumulated))`. With 10 tokens, this produced up to 10 state updates, each creating a new Map and triggering a re-render cascade through `positions/index.tsx` → `FlashList` → `renderItem`.
+- **After:** All token fetches run in parallel via `Promise.allSettled`. A single `setTokenData(data)` call fires when all fetches complete (or fail). One state update, one re-render.
+
+- Error handling preserved: first error from any rejected promise is captured and surfaced via `error` state.
+
+#### What to test
+
+| Scenario | What to look for |
+|----------|-----------------|
+| App load with positions | All token symbols, icons, and prices appear in position cards |
+| Some tokens fail to load | Cards for failed tokens show fallback (?) initial, other cards unaffected |
+| Pull-to-refresh | Token data refreshes correctly |
+| Rapid wallet switch | No stale token data from previous wallet |
+
+---
+
+### 7. PixelAvatar: 36 Native Views → Single SVG
+
+**Commit:** pending
+**Files:** `src/components/ui/PixelAvatar.tsx`
+
+#### What changed
+
+- **Before:** 6×6 grid of `<View>` elements (36 native views) with inline `style` objects per pixel. Heavy for a small avatar icon used in the header.
+- **After:** Single `<Svg>` component with `<Rect>` elements for non-transparent pixels. ~20 SVG rects instead of 36 native `View` nodes. Uses `viewBox` for crisp scaling.
+
+#### What to test
+
+| Scenario | What to look for |
+|----------|-----------------|
+| Avatar rendering (connected) | Green pixel cat avatar visible in header |
+| Avatar rendering (disconnected) | Gray pixel cat avatar visible |
+| Size scaling | `size` prop scales the avatar correctly |
+| All variants | Switch variant prop — bot, alien, ghost, robot, cat all render correctly |
+
+---
+
 ## Known Considerations
 
 - **FlashList v2** removed `estimatedItemSize` — it auto-measures items now. If first render appears sparse (shows 1–2 items then fills in), we can tune `initialDrawBatchSize`.
-- **`renderItem`** depends on `tokenData` in its `useCallback` deps. When token data updates (new Map), all items re-render. This is correct behavior — tokens arriving progressively should update cards. A future optimization could make `tokenData` a Zustand store for finer-grained subscriptions.
 - **Skeleton state** (first-load) still uses a plain `View` with `.map()` — this is intentional since it's only 3 lightweight skeleton cards.
 
 ## Related Docs

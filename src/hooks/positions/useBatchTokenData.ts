@@ -30,45 +30,27 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
     setIsLoading(true)
     setError(null)
 
-    const accumulated = new Map<string, TokenInfo>()
-    let pending = mints.length
-    let firstError: Error | null = null
-    let flushScheduled = false
+    const settled = Promise.allSettled(mints.map((mint) => fetchTokenPriceData(mint).then((info) => [mint, info] as const)))
 
-    const flush = () => {
+    settled.then((results) => {
       if (!isMounted) return
-      flushScheduled = false
-      setTokenData(new Map(accumulated))
-      if (pending === 0) {
-        setIsLoading(false)
-        setError(firstError)
-      }
-    }
 
-    const scheduleFlush = () => {
-      if (!flushScheduled) {
-        flushScheduled = true
-        queueMicrotask(flush)
-      }
-    }
+      const data = new Map<string, TokenInfo>()
+      let firstError: Error | null = null
 
-    for (const mint of mints) {
-      fetchTokenPriceData(mint)
-        .then((info) => {
-          if (!isMounted) return
-          accumulated.set(mint, info)
-          pending--
-          scheduleFlush()
-        })
-        .catch((err) => {
-          if (!isMounted) return
-          if (!firstError) {
-            firstError = err instanceof Error ? err : new Error(String(err))
-          }
-          pending--
-          scheduleFlush()
-        })
-    }
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          const [mint, info] = result.value
+          data.set(mint, info)
+        } else if (!firstError) {
+          firstError = result.reason instanceof Error ? result.reason : new Error(String(result.reason))
+        }
+      }
+
+      setTokenData(data)
+      setIsLoading(false)
+      setError(firstError)
+    })
 
     return () => {
       isMounted = false
