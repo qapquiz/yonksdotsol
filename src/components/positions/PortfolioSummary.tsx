@@ -10,37 +10,38 @@ interface PortfolioSummaryProps {
   poolAddresses: string[]
 }
 
-function countLeadingZeros(value: number): number {
-  if (!Number.isFinite(value) || value >= 0.01) return 0
+function formatSmallValue(value: number): { leadingText: string; superscript: string; digits: string } | null {
+  if (!Number.isFinite(value) || value >= 0.01) return null
   const str = value.toFixed(9).replace(/0+$/, '')
   const decimalPart = str.split('.')[1] || ''
   const match = decimalPart.match(/^0*/)
-  return match ? match[0].length : 0
-}
-
-function SolValue({ value, className }: { value: number; className?: string }) {
-  if (!Number.isFinite(value)) {
-    return <Text className={className}>0.0000</Text>
-  }
-  const leadingZeros = countLeadingZeros(value)
-
-  if (leadingZeros < 4) {
-    return <Text className={className}>{value.toFixed(4)}</Text>
-  }
-
-  const str = value.toFixed(9).replace(/0+$/, '')
-  const decimalPart = str.split('.')[1] || ''
+  const leadingZeros = match ? match[0].length : 0
+  if (leadingZeros < 4) return null
   const rawDigits = decimalPart.slice(leadingZeros)
   const significantDigits = (rawDigits + '0000').slice(0, 4)
   const additionalZeros = leadingZeros - 2
+  return { leadingText: '0.00', superscript: String(additionalZeros), digits: significantDigits }
+}
 
-  return (
-    <Text className={className}>
-      0.00
-      <Text className="text-[10px]">{additionalZeros}</Text>
-      {significantDigits}
-    </Text>
-  )
+function SolValue({ value, className }: { value: number; className?: string }) {
+  const content = useMemo(() => {
+    if (!Number.isFinite(value)) return <Text className={className}>0.0000</Text>
+
+    const small = formatSmallValue(value)
+    if (!small) {
+      return <Text className={className}>{value.toFixed(4)}</Text>
+    }
+
+    return (
+      <Text className={className}>
+        {small.leadingText}
+        <Text className="text-[10px]">{small.superscript}</Text>
+        {small.digits}
+      </Text>
+    )
+  }, [value, className])
+
+  return content
 }
 
 function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses }: PortfolioSummaryProps) {

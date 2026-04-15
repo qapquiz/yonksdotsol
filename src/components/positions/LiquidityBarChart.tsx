@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 import { Text, View } from 'react-native'
 import { Line, Rect, Svg } from 'react-native-svg'
 import type { LiquidityShape } from '../../utils/positions/calculations'
@@ -20,6 +20,10 @@ const GRID_LINE_COLOR = 'rgba(63, 63, 70, 0.3)'
 
 function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityBarChartProps) {
   const [containerWidth, setContainerWidth] = useState(0)
+
+  const handleLayout = useCallback((event: { nativeEvent: { layout: { width: number } } }) => {
+    setContainerWidth(event.nativeEvent.layout.width)
+  }, [])
 
   const chartData = useMemo(() => {
     if (!liquidityShape?.binDistribution || liquidityShape.binDistribution.length === 0) {
@@ -148,10 +152,7 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
 
       <View
         className="w-full"
-        onLayout={(event) => {
-          const { width } = event.nativeEvent.layout
-          setContainerWidth(width)
-        }}
+        onLayout={handleLayout}
       >
         {svgContent}
       </View>
