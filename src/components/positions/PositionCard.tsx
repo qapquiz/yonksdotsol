@@ -1,5 +1,5 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { View } from 'react-native'
 import { usePnLStore, selectPositionPnL } from '../../stores/pnlStore'
 import type { TokenInfo } from '../../tokens'
@@ -40,16 +40,12 @@ function PositionCardComponent({
   const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()
   const wallet = walletAddress || ''
 
-  // Get fetch action and PnL data from store
-  const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
-  const pnlData = usePnLStore(selectPositionPnL(poolAddress, wallet, positionAddress))
-
-  // Fetch PnL for this pool when card mounts
-  useEffect(() => {
-    if (wallet && poolAddress) {
-      fetchPoolPnL(poolAddress, wallet)
-    }
-  }, [poolAddress, wallet, fetchPoolPnL])
+  // Memoize selector to avoid creating a new function on every render
+  const pnlSelector = useMemo(
+    () => selectPositionPnL(poolAddress, wallet, positionAddress),
+    [poolAddress, wallet, positionAddress],
+  )
+  const pnlData = usePnLStore(pnlSelector)
 
   const totalValue = useMemo(() => {
     if (!positionData) return '$0.00'

@@ -1,11 +1,12 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useBatchTokenData } from '../../hooks/positions/useBatchTokenData'
+import { usePnLStore } from '../../stores/pnlStore'
 import { calculateIsInRange } from '../../utils/positions/calculations'
 
 interface PositionsListProps {
@@ -43,6 +44,17 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     mints: uniqueMints,
     enabled: positionsArray.length > 0,
   })
+
+  // Single orchestration point for PnL fetching — avoids duplicate
+  // fetches from each PositionCard + PortfolioSummary
+  const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
+  useEffect(() => {
+    if (wallet && poolAddresses.length > 0) {
+      poolAddresses.forEach((poolAddress) => {
+        fetchPoolPnL(poolAddress, wallet)
+      })
+    }
+  }, [wallet, poolAddresses, fetchPoolPnL])
 
   // Count out-of-range positions
   const outOfRangeCount = useMemo(() => {

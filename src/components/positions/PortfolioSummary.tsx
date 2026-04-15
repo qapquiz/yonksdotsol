@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { memo, useMemo } from 'react'
 import { Text, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
@@ -46,17 +46,11 @@ function SolValue({ value, className }: { value: number; className?: string }) {
 function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses }: PortfolioSummaryProps) {
   const wallet = walletAddress || ''
 
-  const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
   const summary = usePnLStore(useShallow(selectPoolPnLSummary(wallet, poolAddresses)))
-  const hasAnyPoolData = usePnLStore(selectHasPoolData(wallet, poolAddresses))
 
-  useEffect(() => {
-    if (wallet && poolAddresses.length > 0) {
-      poolAddresses.forEach((poolAddress) => {
-        fetchPoolPnL(poolAddress, wallet)
-      })
-    }
-  }, [wallet, poolAddresses, fetchPoolPnL])
+  // Memoize selector to avoid creating a new function on every render
+  const hasPoolDataSelector = useMemo(() => selectHasPoolData(wallet, poolAddresses), [wallet, poolAddresses])
+  const hasAnyPoolData = usePnLStore(hasPoolDataSelector)
 
   const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol } = summary
 
