@@ -63,6 +63,66 @@ This document tracks React Native performance changes made to the positions list
 
 ---
 
+### 3. Remove Dead LoadingContext
+
+**Commit:** `ef9d46b`
+**Files:** `src/contexts/LoadingContext.tsx` (deleted), `src/app/_layout.tsx`
+
+#### What changed
+
+- **Before:** `LoadingProvider` wrapped the entire component tree in `_layout.tsx`. It provided `isGlobalLoading` state and `setGlobalLoading` via React Context. However, `useGlobalLoading()` was never called anywhere in the codebase — the context was dead code.
+- **After:** Deleted `LoadingContext.tsx` and removed `LoadingProvider` from `_layout.tsx`. If global loading state is ever needed, it should use Zustand (atomic subscriptions) instead of Context (whole-tree re-renders).
+
+#### What to test
+
+| Scenario | What to look for |
+|----------|-----------------|
+| App launch | No crash, screens load normally |
+| Wallet connect/disconnect | Flow works same as before |
+| Existing loading states | Skeleton cards and shimmer blocks still appear during data fetches |
+
+---
+
+### 4. Memoize onLayout in LiquidityBarChart
+
+**Commit:** `ef9d46b`
+**Files:** `src/components/positions/LiquidityBarChart.tsx`
+
+#### What changed
+
+- **Before:** `onLayout` was an inline arrow function on the `View` wrapping the chart SVG. A new function was created on every render, which triggers React's reconciliation to see if the prop changed.
+- **After:** `onLayout` handler wrapped in `useCallback` with `[]` deps. The function reference is stable across renders — React skips the prop diff.
+
+#### What to test
+
+| Scenario | What to look for |
+|----------|-----------------|
+| Chart rendering | SVG bars render at correct width after layout measurement |
+| Screen rotation | Chart re-measures and redraws correctly |
+
+---
+
+### 5. Memoize SolValue Formatting in PortfolioSummary
+
+**Commit:** `ef9d46b`
+**Files:** `src/components/positions/PortfolioSummary.tsx`
+
+#### What changed
+
+- **Before:** `SolValue` ran string operations (`.toFixed(9)`, `.replace()`, regex `.match()`, `.slice()`) on every render. Called 4+ times per `PortfolioSummary` render for PnL, value, deposited, and unclaimed fees.
+- **After:** `SolValue` wraps its output in `useMemo` keyed on `[value, className]`. String formatting only runs when the value actually changes. Extracted `formatSmallValue()` helper to keep the memo body clean.
+
+#### What to test
+
+| Scenario | What to look for |
+|----------|-----------------|
+| Normal SOL values (≥0.01) | Display as before, e.g. `1.2345` |
+| Small SOL values (<0.01) | Display superscript format, e.g. `0.00⁴1234` |
+| Zero / NaN / Infinity | Falls back to `0.0000` |
+| PnL color changes | Positive = emerald, negative = red, same as before |
+
+---
+
 ## Known Considerations
 
 - **FlashList v2** removed `estimatedItemSize` — it auto-measures items now. If first render appears sparse (shows 1–2 items then fills in), we can tune `initialDrawBatchSize`.
