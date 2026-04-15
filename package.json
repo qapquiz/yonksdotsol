@@ -31,6 +31,7 @@
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.1",
     "@meteora-ag/dlmm": "^1.9.4",
+    "@shopify/flash-list": "2.0.2",
     "@solana/kit": "^6.3.0",
     "@solana/web3.js": "^1.98.4",
     "@wallet-ui/react-native-kit": "^4.0.1",
@@ -40,6 +41,7 @@
     "expo-constants": "~55.0.13",
     "expo-dev-client": "~55.0.24",
     "expo-font": "~55.0.6",
+    "expo-image": "~55.0.8",
     "expo-insights": "~55.0.16",
     "expo-linking": "~55.0.12",
     "expo-router": "~55.0.11",

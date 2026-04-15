@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { fetchTokenPriceData, type TokenInfo } from '../../tokens'
 
 interface UseBatchTokenDataProps {
@@ -17,6 +17,10 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
+  // Keep a ref to mints so the effect can compare stably
+  const mintsRef = useRef(mints)
+  mintsRef.current = mints
+
   useEffect(() => {
     if (!enabled || mints.length === 0) {
       setTokenData(new Map())
@@ -26,49 +30,38 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
     }
 
     let isMounted = true
-
     setIsLoading(true)
     setError(null)
 
-    const accumulated = new Map<string, TokenInfo>()
-    let pending = mints.length
-    let firstError: Error | null = null
-    let flushScheduled = false
-
-    const flush = () => {
-      if (!isMounted) return
-      flushScheduled = false
-      setTokenData(new Map(accumulated))
-      if (pending === 0) {
-        setIsLoading(false)
-        setError(firstError)
-      }
-    }
-
-    const scheduleFlush = () => {
-      if (!flushScheduled) {
-        flushScheduled = true
-        queueMicrotask(flush)
-      }
-    }
-
-    for (const mint of mints) {
+    const promises = mints.map((mint) =>
       fetchTokenPriceData(mint)
-        .then((info) => {
-          if (!isMounted) return
-          accumulated.set(mint, info)
-          pending--
-          scheduleFlush()
-        })
+        .then((info) => [mint, info] as const)
         .catch((err) => {
-          if (!isMounted) return
-          if (!firstError) {
-            firstError = err instanceof Error ? err : new Error(String(err))
+          return [mint, err instanceof Error ? err : new Error(String(err))] as const
+        }),
+    )
+
+    Promise.allSettled(promises).then((results) => {
+      if (!isMounted) return
+
+      const data = new Map<string, TokenInfo>()
+      let firstError: Error | null = null
+
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          const [mint, value] = result.value
+          if (value instanceof Error) {
+            if (!firstError) firstError = value
+          } else {
+            data.set(mint, value)
           }
-          pending--
-          scheduleFlush()
-        })
-    }
+        }
+      }
+
+      setTokenData(data)
+      setIsLoading(false)
+      setError(firstError)
+    })
 
     return () => {
       isMounted = false

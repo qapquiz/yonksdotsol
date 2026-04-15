@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import { Text, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
@@ -46,17 +46,8 @@ function SolValue({ value, className }: { value: number; className?: string }) {
 function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses }: PortfolioSummaryProps) {
   const wallet = walletAddress || ''
 
-  const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
   const summary = usePnLStore(useShallow(selectPoolPnLSummary(wallet, poolAddresses)))
   const hasAnyPoolData = usePnLStore(selectHasPoolData(wallet, poolAddresses))
-
-  useEffect(() => {
-    if (wallet && poolAddresses.length > 0) {
-      poolAddresses.forEach((poolAddress) => {
-        fetchPoolPnL(poolAddress, wallet)
-      })
-    }
-  }, [wallet, poolAddresses, fetchPoolPnL])
 
   const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol } = summary
 
@@ -109,7 +100,7 @@ function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses
 
       <View className="mb-4">
         <View className="flex-row items-baseline">
-          {sign && <Text className={`text-2xl font-bold ${pnlColorClass}`}>{sign}</Text>}
+          {sign ? <Text className={`text-2xl font-bold ${pnlColorClass}`}>{sign}</Text> : null}
           <SolValue value={Math.abs(totalPnlSol)} className={`text-2xl font-bold ${pnlColorClass}`} />
           <Text className={`text-sm font-bold ${pnlColorClass} ml-0.5 opacity-60`}>SOL</Text>
         </View>

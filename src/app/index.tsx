@@ -5,7 +5,7 @@ import { PublicKey } from '@solana/web3.js'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { StatusBar } from 'expo-status-bar'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { PixelAvatar } from '../components/ui/PixelAvatar'
 import { getSharedConnection } from '../config/connection'
@@ -80,7 +80,7 @@ export default function App() {
   }, [account?.address, getPositions])
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#050505' }}>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: '#050505' }}>
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
@@ -115,14 +115,14 @@ export default function App() {
         </View>
       </View>
 
-      <ScrollView
-        className="flex-1 px-4 pt-2"
-        refreshControl={
-          <RefreshControl refreshing={isLoadingPositions} onRefresh={handleRefresh} tintColor="#8FA893" />
-        }
-      >
-        <PositionsList positions={positions} isLoadingPositions={isLoadingPositions} ownerAddress={account?.address} />
-      </ScrollView>
+      <View className="flex-1">
+        <PositionsList
+          positions={positions}
+          isLoadingPositions={isLoadingPositions}
+          ownerAddress={account?.address}
+          onRefresh={handleRefresh}
+        />
+      </View>
 
       <StatusBar style="auto" />
     </SafeAreaView>

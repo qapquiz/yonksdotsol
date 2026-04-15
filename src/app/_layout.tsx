@@ -15,7 +15,7 @@ const identity = {
 
 export default function Layout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView className="flex-1">
       <LoadingProvider>
         <MobileWalletProvider cluster={cluster} identity={identity}>
           <Slot />

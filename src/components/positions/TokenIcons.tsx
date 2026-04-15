@@ -1,5 +1,6 @@
-import { memo, useState } from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image } from 'expo-image'
+import { memo } from 'react'
+import { Text, View } from 'react-native'
 import type { TokenInfo } from '../../tokens'
 
 interface TokenIconsProps {
@@ -7,40 +8,47 @@ interface TokenIconsProps {
   tokenYInfo: TokenInfo | null
 }
 
-function TokenIconsComponent({ tokenXInfo, tokenYInfo }: TokenIconsProps) {
-  const [xError, setXError] = useState(false)
-  const [yError, setYError] = useState(false)
+const FALLBACK_BLURHASH = 'LEHV6nWB2yk8pyo0adR*.7kCMdnj'
 
-  const TokenXIcon =
-    tokenXInfo?.cdn_url && !xError ? (
-      <Image
-        className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight z-10"
-        source={{ uri: tokenXInfo.cdn_url }}
-        onError={() => setXError(true)}
-      />
-    ) : (
-      <View className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight z-10 items-center justify-center">
-        <Text className="text-app-text text-xs font-bold">{tokenXInfo?.symbol?.[0] || '?'}</Text>
+function TokenIcon({
+  tokenInfo,
+  zIndex,
+  marginLeft,
+  recyclingKey,
+}: {
+  tokenInfo: TokenInfo | null
+  zIndex: string
+  marginLeft: string
+  recyclingKey: string
+}) {
+  if (!tokenInfo?.cdn_url) {
+    return (
+      <View
+        className={`w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight items-center justify-center ${marginLeft} ${zIndex}`}
+      >
+        <Text className="text-app-text text-xs font-bold">{tokenInfo?.symbol?.[0] || '?'}</Text>
       </View>
     )
-
-  const TokenYIcon =
-    tokenYInfo?.cdn_url && !yError ? (
-      <Image
-        className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight -ml-3"
-        source={{ uri: tokenYInfo.cdn_url }}
-        onError={() => setYError(true)}
-      />
-    ) : (
-      <View className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight -ml-3 items-center justify-center">
-        <Text className="text-app-text text-xs font-bold">{tokenYInfo?.symbol?.[0] || '?'}</Text>
-      </View>
-    )
+  }
 
   return (
+    <Image
+      className={`w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight ${marginLeft} ${zIndex}`}
+      source={{ uri: tokenInfo.cdn_url }}
+      placeholder={{ blurhash: FALLBACK_BLURHASH }}
+      contentFit="cover"
+      cachePolicy="memory-disk"
+      recyclingKey={recyclingKey}
+      transition={200}
+    />
+  )
+}
+
+function TokenIconsComponent({ tokenXInfo, tokenYInfo }: TokenIconsProps) {
+  return (
     <View className="flex-row">
-      {TokenXIcon}
-      {TokenYIcon}
+      <TokenIcon tokenInfo={tokenXInfo} zIndex="z-10" marginLeft="" recyclingKey={tokenXInfo?.mint ?? 'x-unknown'} />
+      <TokenIcon tokenInfo={tokenYInfo} zIndex="" marginLeft="-ml-3" recyclingKey={tokenYInfo?.mint ?? 'y-unknown'} />
     </View>
   )
 }
