@@ -167,7 +167,11 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
         </View>
       )
     }
-    return <EmptyState />
+    return (
+      <View className="flex-1 px-4 pt-2">
+        <EmptyState />
+      </View>
+    )
   }
 
   return (
