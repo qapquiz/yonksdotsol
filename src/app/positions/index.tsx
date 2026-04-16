@@ -1,20 +1,36 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
-import { useMemo, useRef } from 'react'
-import { Text, View } from 'react-native'
+import { FlashList } from '@shopify/flash-list'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { RefreshControl, Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useBatchTokenData } from '../../hooks/positions/useBatchTokenData'
+import { usePnLStore } from '../../stores/pnlStore'
 import { calculateIsInRange } from '../../utils/positions/calculations'
+
+type ListItem =
+  | { type: 'summary'; id: string }
+  | { type: 'warning'; id: string; count: number }
+  | {
+      type: 'position'
+      id: string
+      position: PositionInfo
+      lbPositionIndex: number
+      poolAddress: string
+      tokenXMint: string
+      tokenYMint: string
+    }
 
 interface PositionsListProps {
   positions: Map<string, PositionInfo>
   isLoadingPositions: boolean
   ownerAddress?: string
+  onRefresh?: () => void
 }
 
-export default function PositionsList({ positions, isLoadingPositions, ownerAddress }: PositionsListProps) {
+export default function PositionsList({ positions, isLoadingPositions, ownerAddress, onRefresh }: PositionsListProps) {
   // Keep entries to preserve pair address (Map key)
   const positionsEntries = useMemo(() => Array.from(positions.entries()), [positions])
   const positionsArray = useMemo(() => positionsEntries.map(([, pos]) => pos), [positionsEntries])
@@ -44,6 +60,17 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     enabled: positionsArray.length > 0,
   })
 
+  // Single orchestration point for PnL fetching — avoids duplicate
+  // fetches from each PositionCard + PortfolioSummary
+  const fetchPoolPnL = usePnLStore((state) => state.fetchPoolPnL)
+  useEffect(() => {
+    if (wallet && poolAddresses.length > 0) {
+      poolAddresses.forEach((poolAddress) => {
+        fetchPoolPnL(poolAddress, wallet)
+      })
+    }
+  }, [wallet, poolAddresses, fetchPoolPnL])
+
   // Count out-of-range positions
   const outOfRangeCount = useMemo(() => {
     let count = 0
@@ -58,6 +85,69 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     }
     return count
   }, [positionsArray])
+
+  // Build flat data array for FlashList
+  const listData = useMemo(() => {
+    const items: ListItem[] = []
+
+    items.push({ type: 'summary', id: 'portfolio-summary' })
+
+    if (outOfRangeCount > 0) {
+      items.push({ type: 'warning', id: 'out-of-range-warning', count: outOfRangeCount })
+    }
+
+    for (const [pairAddress, position] of positionsEntries) {
+      for (let idx = 0; idx < position.lbPairPositionsData.length; idx++) {
+        items.push({
+          type: 'position',
+          id: `${position.publicKey.toString()}-${idx}`,
+          position,
+          lbPositionIndex: idx,
+          poolAddress: pairAddress,
+          tokenXMint: position.tokenX.mint.address.toBase58(),
+          tokenYMint: position.tokenY.mint.address.toBase58(),
+        })
+      }
+    }
+
+    return items
+  }, [positionsEntries, outOfRangeCount])
+
+  const renderItem = useCallback(
+    ({ item }: { item: ListItem }) => {
+      switch (item.type) {
+        case 'summary':
+          return (
+            <PortfolioSummary
+              walletAddress={wallet}
+              positionCount={positionCount}
+              poolAddresses={poolAddresses}
+            />
+          )
+        case 'warning':
+          return (
+            <View className="flex-row items-center gap-2 mb-4 px-1">
+              <Text className="text-orange-500 text-xs">⚠</Text>
+              <Text className="text-orange-400 text-xs font-bold">
+                {item.count} {item.count === 1 ? 'position' : 'positions'} out of range
+              </Text>
+            </View>
+          )
+        case 'position':
+          return (
+            <PositionCard
+              position={item.position}
+              lbPositionIndex={item.lbPositionIndex}
+              tokenXInfo={tokenData.get(item.tokenXMint) ?? null}
+              tokenYInfo={tokenData.get(item.tokenYMint) ?? null}
+              walletAddress={ownerAddress}
+              poolAddress={item.poolAddress}
+            />
+          )
+      }
+    },
+    [wallet, positionCount, poolAddresses, tokenData, ownerAddress],
+  )
 
   // Track whether we've completed at least one positions fetch
   const hasLoadedOnce = useRef(false)
@@ -77,41 +167,26 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
         </View>
       )
     }
-    return <EmptyState />
+    return (
+      <View className="flex-1 px-4 pt-2">
+        <EmptyState />
+      </View>
+    )
   }
 
   return (
-    <View>
-      <PortfolioSummary walletAddress={wallet} positionCount={positionCount} poolAddresses={poolAddresses} />
-
-      {outOfRangeCount > 0 && (
-        <View className="flex-row items-center gap-2 mb-4 px-1">
-          <Text className="text-orange-500 text-xs">⚠</Text>
-          <Text className="text-orange-400 text-xs font-bold">
-            {outOfRangeCount} {outOfRangeCount === 1 ? 'position' : 'positions'} out of range
-          </Text>
-        </View>
-      )}
-
-      {positionsEntries.map(([pairAddress, position]) =>
-        position.lbPairPositionsData.map((lbPosition, idx) => {
-          const tokenXMint = position.tokenX.mint.address.toBase58()
-          const tokenYMint = position.tokenY.mint.address.toBase58()
-          return (
-            <PositionCard
-              key={`${position.publicKey.toString()}-${idx}`}
-              position={position}
-              lbPositionIndex={idx}
-              tokenXInfo={tokenData.get(tokenXMint) ?? null}
-              tokenYInfo={tokenData.get(tokenYMint) ?? null}
-              walletAddress={ownerAddress}
-              poolAddress={pairAddress}
-            />
-          )
-        }),
-      )}
-      {/* Add bottom padding for scroll */}
-      <View className="h-20" />
-    </View>
+    <FlashList
+      data={listData}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.id}
+      getItemType={(item) => item.type}
+      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8 }}
+      ListFooterComponent={<View className="h-20" />}
+      refreshControl={
+        onRefresh ? (
+          <RefreshControl refreshing={isLoadingPositions} onRefresh={onRefresh} tintColor="#8FA893" />
+        ) : undefined
+      }
+    />
   )
 }

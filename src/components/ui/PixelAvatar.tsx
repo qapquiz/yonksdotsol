@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { View } from 'react-native'
+import { Rect, Svg } from 'react-native-svg'
 
 interface PixelAvatarProps {
   size?: number
@@ -55,28 +55,27 @@ function PixelAvatarComponent({ size = 40, variant = 'bot', connected = false }:
   const pixelSize = size / 6
   const primaryColor = connected ? '#8FA893' : '#999999'
   const secondaryColor = connected ? '#2a332c' : '#1a1a1a'
+  const rx = pixelSize / 6
 
   return (
-    <View style={{ width: size, height: size }}>
-      {pattern.map((row, rowIndex) => (
-        <View key={rowIndex} style={{ flexDirection: 'row' }}>
-          {row.map((pixel, colIndex) => {
-            const backgroundColor = pixel === 0 ? 'transparent' : pixel === 2 ? secondaryColor : primaryColor
-            return (
-              <View
-                key={colIndex}
-                style={{
-                  width: pixelSize,
-                  height: pixelSize,
-                  backgroundColor,
-                  borderRadius: pixelSize / 6,
-                }}
-              />
-            )
-          })}
-        </View>
-      ))}
-    </View>
+    <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      {pattern.map((row, rowIdx) =>
+        row.map((pixel, colIdx) => {
+          if (pixel === 0) return null
+          return (
+            <Rect
+              key={`${rowIdx}-${colIdx}`}
+              x={colIdx * pixelSize}
+              y={rowIdx * pixelSize}
+              width={pixelSize}
+              height={pixelSize}
+              fill={pixel === 2 ? secondaryColor : primaryColor}
+              rx={rx}
+            />
+          )
+        }),
+      )}
+    </Svg>
   )
 }
 

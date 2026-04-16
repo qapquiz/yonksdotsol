@@ -3,7 +3,6 @@ import '../global.css'
 import { Slot } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MobileWalletProvider, createSolanaMainnet } from '@wallet-ui/react-native-kit'
-import { LoadingProvider } from '../contexts/LoadingContext'
 import { env } from '../config/env'
 
 const cluster = createSolanaMainnet({ url: env.rpcUrl || '' })
@@ -16,11 +15,9 @@ const identity = {
 export default function Layout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <LoadingProvider>
-        <MobileWalletProvider cluster={cluster} identity={identity}>
-          <Slot />
-        </MobileWalletProvider>
-      </LoadingProvider>
+      <MobileWalletProvider cluster={cluster} identity={identity}>
+        <Slot />
+      </MobileWalletProvider>
     </GestureHandlerRootView>
   )
 }
