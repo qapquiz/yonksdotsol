@@ -13,7 +13,10 @@
     "lint": "expo lint --fix",
     "lint:check": "expo lint",
     "start": "expo start",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "displayName": "Uniwind Mobile Kit Expo example",
   "description": "A template for building a Solana mobile app with Expo, React Native, Solana Kit, and Uniwind.",
@@ -65,11 +68,19 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/react-native": "^13.3.3",
     "@types/react": "~19.2.10",
+    "@types/react-test-renderer": "^19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~55.0.0",
+    "happy-dom": "^20.9.0",
+    "jsdom": "^29.0.2",
     "prettier": "^3.8.1",
-    "typescript": "~5.9.2"
+    "react-test-renderer": "^19.2.5",
+    "typescript": "~5.9.2",
+    "vitest": "^4.1.4"
   },
   "private": true
 }
