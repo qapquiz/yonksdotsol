@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { Rect, Svg } from 'react-native-svg'
+import { useSettingsStore } from '../../stores/settingsStore'
 
 interface PixelAvatarProps {
   size?: number
@@ -51,10 +52,15 @@ const AVATARS = {
 }
 
 function PixelAvatarComponent({ size = 40, variant = 'bot', connected = false }: PixelAvatarProps) {
+  const theme = useSettingsStore((s) => s.theme)
   const pattern = AVATARS[variant]
   const pixelSize = size / 6
-  const primaryColor = connected ? '#8FA893' : '#999999'
-  const secondaryColor = connected ? '#2a332c' : '#1a1a1a'
+  const primaryColor = connected
+    ? theme === 'dark' ? '#8FA893' : '#6b8f71'
+    : theme === 'dark' ? '#999999' : '#666666'
+  const secondaryColor = connected
+    ? theme === 'dark' ? '#2a332c' : '#dce8de'
+    : theme === 'dark' ? '#1a1a1a' : '#eeeeee'
   const rx = pixelSize / 6
 
   return (

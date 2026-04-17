@@ -8,6 +8,7 @@ import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useBatchTokenData } from '../../hooks/positions/useBatchTokenData'
 import { usePnLStore } from '../../stores/pnlStore'
+import { useSettingsStore } from '../../stores/settingsStore'
 import { calculateIsInRange } from '../../utils/positions/calculations'
 
 type ListItem =
@@ -37,6 +38,8 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
 
   // Extract pool addresses for PnL fetching
   const poolAddresses = useMemo(() => positionsEntries.map(([pairAddress]) => pairAddress), [positionsEntries])
+
+  const theme = useSettingsStore((s) => s.theme)
 
   const positionCount = useMemo(
     () => positionsArray.reduce((sum, p) => sum + p.lbPairPositionsData.length, 0),
@@ -184,7 +187,7 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
       ListFooterComponent={<View className="h-20" />}
       refreshControl={
         onRefresh ? (
-          <RefreshControl refreshing={isLoadingPositions} onRefresh={onRefresh} tintColor="#8FA893" />
+          <RefreshControl refreshing={isLoadingPositions} onRefresh={onRefresh} tintColor={theme === 'dark' ? '#8FA893' : '#6b8f71'} />
         ) : undefined
       }
     />

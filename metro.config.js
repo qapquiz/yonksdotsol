@@ -10,6 +10,7 @@ const uniwindConfig = withUniwindConfig(config, {
   cssEntryFile: './src/global.css',
   // optional: path to typings
   dtsFile: './src/uniwind-types.d.ts',
+
 })
 
 module.exports = uniwindConfig
