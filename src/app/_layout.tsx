@@ -1,8 +1,11 @@
+import { useEffect } from 'react'
 import '../global.css'
 
 import { Slot } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MobileWalletProvider, createSolanaMainnet } from '@wallet-ui/react-native-kit'
+import { Uniwind } from 'uniwind'
+import { useSettingsStore } from '../stores/settingsStore'
 import { env } from '../config/env'
 
 const cluster = createSolanaMainnet({ url: env.rpcUrl || '' })
@@ -13,6 +16,13 @@ const identity = {
 }
 
 export default function Layout() {
+  const theme = useSettingsStore((s) => s.theme)
+
+  // Sync settings store theme → Uniwind
+  useEffect(() => {
+    Uniwind.setTheme(theme)
+  }, [theme])
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <MobileWalletProvider cluster={cluster} identity={identity}>

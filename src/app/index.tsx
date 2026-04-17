@@ -4,16 +4,26 @@ import DLMM from '@meteora-ag/dlmm'
 import { PublicKey } from '@solana/web3.js'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { StatusBar } from 'expo-status-bar'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { PixelAvatar } from '../components/ui/PixelAvatar'
 import { getSharedConnection } from '../config/connection'
+import { useSettingsStore } from '../stores/settingsStore'
 import { CacheManager } from '../utils/cache/CacheManager'
 import { getUpnlPerPositionKey } from '../utils/cache/cacheKeys'
 import PositionsList from './positions'
 
 export default function App() {
+  const theme = useSettingsStore((s) => s.theme)
+  const themeColors = useMemo(
+    () => ({
+      bg: theme === 'dark' ? '#050505' : '#f5f5f5',
+      primary: theme === 'dark' ? '#8FA893' : '#6b8f71',
+      textSecondary: theme === 'dark' ? '#999999' : '#666666',
+    }),
+    [theme],
+  )
   const { account, disconnect, signIn } = useMobileWallet()
   const [isConnecting, setIsConnecting] = useState(false)
   const [positions, setPositions] = useState<Map<string, PositionInfo>>(new Map())
@@ -80,7 +90,7 @@ export default function App() {
   }, [account?.address, getPositions])
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#050505' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.bg }}>
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
@@ -109,7 +119,7 @@ export default function App() {
                 account ? 'border border-app-primary' : ''
               } ${isConnecting ? 'opacity-50' : ''}`}
             >
-              <Ionicons name="wallet-outline" size={20} color={account ? '#8FA893' : '#999999'} />
+              <Ionicons name="wallet-outline" size={20} color={account ? themeColors.primary : themeColors.textSecondary} />
             </Pressable>
           </View>
         </View>
@@ -124,7 +134,7 @@ export default function App() {
         />
       </View>
 
-      <StatusBar style="auto" />
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
     </SafeAreaView>
   )
 }
