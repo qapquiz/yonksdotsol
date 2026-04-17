@@ -1,55 +1,44 @@
 @import 'tailwindcss';
 @import 'uniwind';
 
-@theme {
-  --color-app-bg: initial;
-  --color-app-surface: initial;
-  --color-app-surface-highlight: initial;
-  --color-app-primary: initial;
-  --color-app-primary-dim: initial;
-  --color-app-primary-dark: initial;
-  --color-app-secondary: initial;
-  --color-app-secondary-dim: initial;
-  --color-app-text: initial;
-  --color-app-text-secondary: initial;
-  --color-app-text-muted: initial;
-  --color-app-border: initial;
-}
+@layer theme {
+  :root {
+    @variant dark {
+      --color-app-bg: #050505;
+      --color-app-surface: #111111;
+      --color-app-surface-highlight: #1a1a1a;
 
-@variant dark {
-  --color-app-bg: #050505;
-  --color-app-surface: #111111;
-  --color-app-surface-highlight: #1a1a1a;
+      --color-app-primary: #8fa893;
+      --color-app-primary-dim: #2a332c;
+      --color-app-primary-dark: #3e4f43;
 
-  --color-app-primary: #8fa893;
-  --color-app-primary-dim: #2a332c;
-  --color-app-primary-dark: #3e4f43;
+      --color-app-secondary: #d4955f;
+      --color-app-secondary-dim: #332619;
 
-  --color-app-secondary: #d4955f;
-  --color-app-secondary-dim: #332619;
+      --color-app-text: #ffffff;
+      --color-app-text-secondary: #999999;
+      --color-app-text-muted: #555555;
 
-  --color-app-text: #ffffff;
-  --color-app-text-secondary: #999999;
-  --color-app-text-muted: #555555;
+      --color-app-border: #222222;
+    }
 
-  --color-app-border: #222222;
-}
+    @variant light {
+      --color-app-bg: #f5f5f5;
+      --color-app-surface: #ffffff;
+      --color-app-surface-highlight: #eeeeee;
 
-@variant light {
-  --color-app-bg: #f5f5f5;
-  --color-app-surface: #ffffff;
-  --color-app-surface-highlight: #eeeeee;
+      --color-app-primary: #6b8f71;
+      --color-app-primary-dim: #dce8de;
+      --color-app-primary-dark: #a3c4a8;
 
-  --color-app-primary: #6b8f71;
-  --color-app-primary-dim: #dce8de;
-  --color-app-primary-dark: #a3c4a8;
+      --color-app-secondary: #c07a3e;
+      --color-app-secondary-dim: #f5e6d5;
 
-  --color-app-secondary: #c07a3e;
-  --color-app-secondary-dim: #f5e6d5;
+      --color-app-text: #1a1a1a;
+      --color-app-text-secondary: #666666;
+      --color-app-text-muted: #999999;
 
-  --color-app-text: #1a1a1a;
-  --color-app-text-secondary: #666666;
-  --color-app-text-muted: #999999;
-
-  --color-app-border: #e0e0e0;
+      --color-app-border: #e0e0e0;
+    }
+  }
 }
