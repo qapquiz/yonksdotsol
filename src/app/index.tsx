@@ -16,6 +16,7 @@ import PositionsList from './positions'
 
 export default function App() {
   const theme = useSettingsStore((s) => s.theme)
+  const toggleTheme = useSettingsStore((s) => s.toggleTheme)
   const themeColors = useMemo(
     () => ({
       bg: theme === 'dark' ? '#050505' : '#f5f5f5',
@@ -112,6 +113,16 @@ export default function App() {
             </View>
           </View>
           <View className="flex-row items-center gap-3">
+            <Pressable
+              onPress={toggleTheme}
+              className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
+            >
+              <Ionicons
+                name={theme === 'dark' ? 'sunny-outline' : 'moon-outline'}
+                size={20}
+                color={themeColors.primary}
+              />
+            </Pressable>
             <Pressable
               onPress={account ? disconnect : handleConnectWallet}
               disabled={isConnecting}
