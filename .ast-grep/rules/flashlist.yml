@@ -1,0 +1,4 @@
+id: flashlist-usage
+language: tsx
+rule:
+  pattern: <FlashList />

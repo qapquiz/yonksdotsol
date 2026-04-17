@@ -1,0 +1,4 @@
+id: async-await-callbacks
+language: tsx
+rule:
+  pattern: useCallback(async ($$$) => { $$$ await $$$ $$$ }, $$$)

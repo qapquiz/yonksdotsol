@@ -1,0 +1,11 @@
+# Zustand store patterns
+rules:
+  # Find Zustand store creation
+  - id: zustand-store
+    language: tsx
+    pattern: create
+
+  # Find store selectors
+  - id: store-selector
+    language: tsx
+    pattern: use$STORE((state) => $$$)

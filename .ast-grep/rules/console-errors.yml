@@ -1,0 +1,4 @@
+id: console-error
+language: tsx
+rule:
+  pattern: console.error($$$)

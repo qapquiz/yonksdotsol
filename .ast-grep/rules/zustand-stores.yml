@@ -1,0 +1,4 @@
+id: zustand-store-creation
+language: tsx
+rule:
+  pattern: use$NAME = create$$$($$$)

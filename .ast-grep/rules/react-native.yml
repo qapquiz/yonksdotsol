@@ -1,0 +1,31 @@
+# React Native component patterns
+rules:
+  # Find Pressable components
+  - id: pressable
+    language: tsx
+    pattern: <Pressable $$$ />
+
+  # Find FlashList usage
+  - id: flash-list
+    language: tsx
+    pattern: <FlashList $$$ />
+
+  # Find FlatList usage
+  - id: flat-list
+    language: tsx
+    pattern: <FlatList $$$ />
+
+  # Find ScrollView usage
+  - id: scroll-view
+    language: tsx
+    pattern: <ScrollView $$$ />
+
+  # Find Text components
+  - id: text-component
+    language: tsx
+    pattern: <Text $$$>$X</Text>
+
+  # Find View components
+  - id: view-component
+    language: tsx
+    pattern: <View $$$ />

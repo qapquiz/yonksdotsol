@@ -1,0 +1,4 @@
+id: memo-components
+language: tsx
+rule:
+  pattern: memo($COMPONENT)

@@ -153,6 +153,10 @@ For loading state behavior (skeleton vs empty vs data), see `docs/loading-states
 
 For number formatting conventions (SOL, USD, percentages, fees), see `docs/number-formatting.md`.
 
+For ast-grep code search patterns and rules, see `docs/wiki/guides/ast-grep.md`.
+
+For project knowledge base (entities, concepts, guides), see `docs/wiki/index.md`.
+
 ### Before Committing
 
 Always run:
