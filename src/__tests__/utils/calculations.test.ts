@@ -18,26 +18,28 @@ import {
 
 // Mock TokenInfo for tests
 const mockTokenX: TokenInfo = {
-  address: 'So11111111111111111111111111111111111111112',
+  mint: 'So11111111111111111111111111111111111111112',
   symbol: 'SOL',
-  name: 'Solana',
+  supply: 1_000_000_000,
   decimals: 9,
+  cdn_url: 'https://example.com/sol.png',
   price_info: {
     price_per_token: 1.5,
-    total_price: 1.5,
+    currency: 'USD',
   },
-} as TokenInfo
+}
 
 const mockTokenY: TokenInfo = {
-  address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+  mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
   symbol: 'USDC',
-  name: 'USD Coin',
+  supply: 1_000_000_000,
   decimals: 6,
+  cdn_url: 'https://example.com/usdc.png',
   price_info: {
     price_per_token: 1.0,
-    total_price: 1.0,
+    currency: 'USD',
   },
-} as TokenInfo
+}
 
 describe('calculatePositionTotalValue', () => {
   it('returns $0.00 when tokenXInfo is null', () => {
@@ -151,8 +153,8 @@ describe('calculateCurrentPrice', () => {
   })
 
   it('handles equal prices', () => {
-    const tokenA = { ...mockTokenX, price_info: { price_per_token: 1.0, total_price: 1.0 } } as TokenInfo
-    const tokenB = { ...mockTokenY, price_info: { price_per_token: 1.0, total_price: 1.0 } } as TokenInfo
+    const tokenA = { ...mockTokenX, price_info: { price_per_token: 1.0, currency: 'USD' } } satisfies TokenInfo
+    const tokenB = { ...mockTokenY, price_info: { price_per_token: 1.0, currency: 'USD' } } satisfies TokenInfo
     const result = calculateCurrentPrice(tokenA, tokenB)
     expect(result).toBe('$1.00')
   })
@@ -211,10 +213,7 @@ describe('calculatePriceRange', () => {
       { binId: 101, positionXAmountInSOL: 2, positionYAmountInSOL: 2, price: 1.6 },
     ]
 
-    const mockPositionData = [
-      { pricePerToken: 1.5 },
-      { pricePerToken: 1.6 },
-    ] as any[]
+    const mockPositionData = [{ pricePerToken: 1.5 }, { pricePerToken: 1.6 }] as any[]
 
     const result = calculatePriceRange(mockChartBins, mockPositionData)
 

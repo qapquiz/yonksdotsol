@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import type { PositionPnLData } from 'metcomet'
 import { usePnLStore, selectPositionPnL, selectPoolPnLSummary, selectHasPoolData } from '../../stores/pnlStore'
 import { fetchPositionPnL } from 'metcomet'
 
@@ -14,19 +15,46 @@ vi.mock('../../config/env', () => ({
   },
 }))
 
-const mockPositionPnLData = {
+const zeroTokenAmount = { amount: '0', amountSol: null, usd: '0' }
+const zeroTokenPairWithTotal = {
+  tokenX: { ...zeroTokenAmount },
+  tokenY: { ...zeroTokenAmount },
+  total: { usd: '0', sol: null },
+}
+
+const mockPositionPnLData: PositionPnLData = {
   positionAddress: 'pos123',
+  minPrice: '0.5',
+  maxPrice: '2.0',
+  lowerBinId: 40,
+  upperBinId: 60,
+  feePerTvl24h: '0.01',
+  isClosed: false,
+  pnlUsd: '50',
+  pnlPctChange: '10.5',
   pnlSol: 0.5,
   pnlSolPctChange: 10.5,
-  unrealizedPnl: {
-    balancesSol: '1.5',
-    balances: 300,
-    unclaimedFeeTokenX: { amountSol: '0.1' },
-    unclaimedFeeTokenY: { amountSol: '0.05' },
-  },
   allTimeDeposits: {
-    total: { sol: '1.0' },
+    ...zeroTokenPairWithTotal,
+    total: { usd: '100', sol: '1.0' },
   },
+  allTimeWithdrawals: { ...zeroTokenPairWithTotal },
+  allTimeFees: { ...zeroTokenPairWithTotal },
+  unrealizedPnl: {
+    balances: 300,
+    balancesSol: '1.5',
+    balanceTokenX: { ...zeroTokenAmount },
+    balanceTokenY: { ...zeroTokenAmount },
+    unclaimedFeeTokenX: { amount: '100', amountSol: '0.1', usd: '10' },
+    unclaimedFeeTokenY: { amount: '50', amountSol: '0.05', usd: '5' },
+    unclaimedRewardTokenX: { ...zeroTokenAmount },
+    unclaimedRewardTokenY: { ...zeroTokenAmount },
+  },
+  isOutOfRange: false,
+  poolActiveBinId: 50,
+  poolActivePrice: '1.0',
+  createdAt: 1700000000,
+  closedAt: null,
 }
 
 describe('pnlStore', () => {
@@ -251,15 +279,20 @@ describe('selectPoolPnLSummary', () => {
         'pool1:wallet1': {
           positions: [
             {
+              ...mockPositionPnLData,
               positionAddress: 'pos1',
               pnlSol: 0.5,
               pnlSolPctChange: 10,
               unrealizedPnl: {
+                ...mockPositionPnLData.unrealizedPnl!,
                 balancesSol: '2.0',
-                unclaimedFeeTokenX: { amountSol: '0.1' },
-                unclaimedFeeTokenY: { amountSol: '0.05' },
+                unclaimedFeeTokenX: { amount: '100', amountSol: '0.1', usd: '10' },
+                unclaimedFeeTokenY: { amount: '50', amountSol: '0.05', usd: '5' },
               },
-              allTimeDeposits: { total: { sol: '1.5' } },
+              allTimeDeposits: {
+                ...mockPositionPnLData.allTimeDeposits,
+                total: { usd: '150', sol: '1.5' },
+              },
             },
           ],
           timestamp: Date.now(),
@@ -282,11 +315,18 @@ describe('selectPoolPnLSummary', () => {
         'pool1:wallet1': {
           positions: [
             {
+              ...mockPositionPnLData,
               positionAddress: 'pos1',
               pnlSol: 0.5,
               pnlSolPctChange: 10,
-              unrealizedPnl: { balancesSol: '2.0' },
-              allTimeDeposits: { total: { sol: '1.5' } },
+              unrealizedPnl: {
+                ...mockPositionPnLData.unrealizedPnl!,
+                balancesSol: '2.0',
+              },
+              allTimeDeposits: {
+                ...mockPositionPnLData.allTimeDeposits,
+                total: { usd: '150', sol: '1.5' },
+              },
             },
           ],
           timestamp: Date.now(),
@@ -294,11 +334,18 @@ describe('selectPoolPnLSummary', () => {
         'pool2:wallet1': {
           positions: [
             {
+              ...mockPositionPnLData,
               positionAddress: 'pos2',
               pnlSol: -0.2,
               pnlSolPctChange: -5,
-              unrealizedPnl: { balancesSol: '3.0' },
-              allTimeDeposits: { total: { sol: '3.2' } },
+              unrealizedPnl: {
+                ...mockPositionPnLData.unrealizedPnl!,
+                balancesSol: '3.0',
+              },
+              allTimeDeposits: {
+                ...mockPositionPnLData.allTimeDeposits,
+                total: { usd: '320', sol: '3.2' },
+              },
             },
           ],
           timestamp: Date.now(),
