@@ -160,7 +160,7 @@ export default function PositionsList({
 
   if (showSkeleton) {
     return (
-      <View>
+      <View className="px-4 pt-2">
         {[1, 2, 3].map((key) => (
           <PositionCardSkeleton key={key} />
         ))}

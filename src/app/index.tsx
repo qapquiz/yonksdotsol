@@ -25,13 +25,18 @@ export default function App() {
     }),
     [theme],
   )
-  const { account, disconnect, signIn } = useMobileWallet()
+  const { account, accounts, disconnect, signIn } = useMobileWallet()
   const [isConnecting, setIsConnecting] = useState(false)
   const [positions, setPositions] = useState<Map<string, PositionInfo>>(new Map())
   const [isLoadingPositions, setIsLoadingPositions] = useState(true)
-  const [walletResolved, setWalletResolved] = useState(false)
   const previousAccountRef = useRef<string | null>(null)
   const lastUpnlRefreshRef = useRef<number>(0)
+  const [walletCheckTimedOut, setWalletCheckTimedOut] = useState(false)
+  const walletCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // accounts is null until wallet provider finishes checking for existing auth
+  // Fallback to timeout in case provider doesn't update accounts
+  const walletResolved = accounts !== null || walletCheckTimedOut
   const getPositions = useCallback(async (wallet: PublicKey) => {
     setIsLoadingPositions(true)
     try {
@@ -70,6 +75,21 @@ export default function App() {
     }
   }, [signIn, disconnect])
 
+  // Fallback timeout in case wallet provider doesn't update accounts state
+  useEffect(() => {
+    walletCheckTimeoutRef.current = setTimeout(() => {
+      if (accounts === null) {
+        setWalletCheckTimedOut(true)
+      }
+    }, 500)
+
+    return () => {
+      if (walletCheckTimeoutRef.current) {
+        clearTimeout(walletCheckTimeoutRef.current)
+      }
+    }
+  }, [accounts])
+
   useEffect(() => {
     const currentAddress = account?.address ?? null
 
@@ -82,17 +102,19 @@ export default function App() {
 
     previousAccountRef.current = currentAddress
 
-    if (account?.address === undefined) {
+    // If we have an account, fetch positions
+    if (account?.address) {
+      // Clear timeout since we have a connection
+      if (walletCheckTimeoutRef.current) {
+        clearTimeout(walletCheckTimeoutRef.current)
+      }
+      getPositions(new PublicKey(account.address))
+    } else if (walletResolved) {
+      // Wallet checked but not connected - clear positions
       setPositions(new Map())
-      setWalletResolved(true)
       setIsLoadingPositions(false)
-      return
     }
-
-    setWalletResolved(true)
-
-    getPositions(new PublicKey(account.address))
-  }, [account?.address, getPositions])
+  }, [account?.address, walletResolved, getPositions])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.bg }}>
@@ -112,7 +134,9 @@ export default function App() {
                   ? 'Connecting...'
                   : account
                     ? `${account.address.slice(0, 4)}...${account.address.slice(-4)}`
-                    : 'Not Connected'}
+                    : walletResolved
+                      ? 'Not Connected'
+                      : '...'}
               </Text>
             </View>
           </View>
