@@ -141,21 +141,30 @@ The Solana SDK (`@solana/web3.js`), Anchor (`@coral-xyz/anchor`), and Meteora DL
 - `index.js` — imports polyfill before anything else (`import './polyfill'`)
 - `metro.config.js` — Uniwind CSS processing via `withUniwindConfig`
 
-## Architecture Documentation
+## Documentation
 
-For system-level patterns (Connection lifecycle, caching strategy, data flow, module ownership), see `docs/architecture.md`.
+### Source of truth: `docs/wiki/`
 
-For visual design rules (color tokens, contrast, skeleton patterns), see `docs/theme-guide.md`.
+The wiki is the single source of truth. Open `docs/wiki/` as an Obsidian vault for graph view.
 
-For Meteora DLMM data structures (PositionInfo, TokenInfo, PositionUpnl), see `docs/data-model.md`.
+- **Index**: `docs/wiki/index.md` — content catalog
+- **Schema**: `docs/wiki/WIKI_SCHEMA.md` — page conventions and maintenance instructions
 
-For loading state behavior (skeleton vs empty vs data), see `docs/loading-states.md`.
+Quick links by topic:
 
-For number formatting conventions (SOL, USD, percentages, fees), see `docs/number-formatting.md`.
+| Topic                              | Wiki Page                                                       |
+| ---------------------------------- | --------------------------------------------------------------- |
+| Connection, caching, data flow     | [[Connection Lifecycle]], [[Caching Strategy]]                  |
+| Color tokens, contrast, skeletons  | [[Theming]], [[Skeleton Loading]]                               |
+| PositionInfo, TokenInfo structure  | [[PositionInfo]], [[Position Architecture]]                     |
+| Loading states (skeleton/empty)    | [[Loading States]]                                              |
+| Number formatting (SOL, USD, %)    | [[Number Formatting]]                                           |
+| Code search patterns               | [[ast-grep]]                                                    |
+| Render optimization                | [[Performance Optimizations]]                                   |
 
-For ast-grep code search patterns and rules, see `docs/wiki/guides/ast-grep.md`.
+### Staging area: `docs/raw/`
 
-For project knowledge base (entities, concepts, guides), see `docs/wiki/index.md`.
+Drop unprocessed notes and reference material here. After processing into the wiki, the raw file stays for reference. See `docs/raw/README.md`.
 
 ### Before Committing
 

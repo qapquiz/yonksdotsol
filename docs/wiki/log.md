@@ -54,4 +54,12 @@ Replaced `hasLoadedOnce` ref with `walletResolved` prop:
 
 - Old pattern caused empty-state flash on cold start (wallet starts undefined → loading false → empty → wallet loads → skeleton → data)
 - New pattern: skeleton stays until `walletResolved=true` AND fetch completes
-- Updated loading-states.md, Skeleton Loading concept, architecture data flow
+- Updated Loading States guide, Skeleton Loading concept, architecture data flow
+
+## [2026-04-18] refactor | Flatten docs — wiki as single source of truth
+
+- `docs/wiki/` is now the single source of truth (Obsidian-ready)
+- `docs/raw/` repurposed as staging inbox (drop unprocessed info, agent processes into wiki)
+- Updated `AGENTS.md` pointers from `docs/raw/*.md` → `docs/wiki/` pages
+- Updated `docs/wiki/index.md` — replaced raw sources table with staging area note
+- Updated `docs/raw/README.md` — status table + workflow instructions
