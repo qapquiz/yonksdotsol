@@ -35,6 +35,8 @@
         "expo-font",
         {
           "fonts": [
+            "./assets/fonts/Geist-Bold.ttf",
+            "./assets/fonts/Geist-Regular.ttf",
             "./assets/fonts/GeistPixel-Square.ttf"
           ]
         }
