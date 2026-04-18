@@ -17,10 +17,12 @@ Guide to skeleton, empty, and data state patterns.
 
 ### 1. Skeleton (First Load)
 
-Shown when `isLoadingPositions=true` AND no data has ever loaded:
+Shown until wallet status is resolved AND first fetch completes:
 
 ```typescript
-if (!hasLoadedOnce.current) {
+const showSkeleton = !walletResolved || (positionsArray.length === 0 && isLoadingPositions)
+
+if (showSkeleton) {
   return (
     <View>
       {[1, 2, 3].map((key) => (
@@ -33,10 +35,12 @@ if (!hasLoadedOnce.current) {
 
 ### 2. Empty (No Positions)
 
-Shown after load completes with zero positions:
+Shown after wallet resolved, fetch complete, and zero positions:
 
 ```typescript
-if (positionsArray.length === 0 && hasLoadedOnce.current) {
+const showEmpty = walletResolved && !isLoadingPositions && positionsArray.length === 0
+
+if (showEmpty) {
   return <EmptyState />
 }
 ```
@@ -53,16 +57,24 @@ Normal rendering with `FlashList`:
 />
 ```
 
-## Key Pattern: hasLoadedOnce
+## Key Pattern: walletResolved
 
 ```typescript
-const hasLoadedOnce = useRef(false)
-if (!isLoadingPositions) {
-  hasLoadedOnce.current = true
+// In parent (App):
+const [walletResolved, setWalletResolved] = useState(false)
+
+// Set to true once wallet session is known (connected or not)
+if (account?.address === undefined) {
+  setWalletResolved(true) // no wallet
+  return
 }
+setWalletResolved(true) // wallet connected
+
+// Pass to PositionsList as prop
+<PositionsList walletResolved={walletResolved} ... />
 ```
 
-This prevents skeleton from showing during refresh — skeleton only shows on true first load.
+This prevents the empty-state → skeleton → data flash caused by the wallet session loading asynchronously. Without it, the wallet starts as `undefined`, triggering `setIsLoadingPositions(false)` before the real fetch begins.
 
 ## See Also
 

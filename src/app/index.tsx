@@ -29,6 +29,7 @@ export default function App() {
   const [isConnecting, setIsConnecting] = useState(false)
   const [positions, setPositions] = useState<Map<string, PositionInfo>>(new Map())
   const [isLoadingPositions, setIsLoadingPositions] = useState(true)
+  const [walletResolved, setWalletResolved] = useState(false)
   const previousAccountRef = useRef<string | null>(null)
   const lastUpnlRefreshRef = useRef<number>(0)
   const getPositions = useCallback(async (wallet: PublicKey) => {
@@ -83,9 +84,12 @@ export default function App() {
 
     if (account?.address === undefined) {
       setPositions(new Map())
+      setWalletResolved(true)
       setIsLoadingPositions(false)
       return
     }
+
+    setWalletResolved(true)
 
     getPositions(new PublicKey(account.address))
   }, [account?.address, getPositions])
@@ -130,7 +134,11 @@ export default function App() {
                 account ? 'border border-app-primary' : ''
               } ${isConnecting ? 'opacity-50' : ''}`}
             >
-              <Ionicons name="wallet-outline" size={20} color={account ? themeColors.primary : themeColors.textSecondary} />
+              <Ionicons
+                name="wallet-outline"
+                size={20}
+                color={account ? themeColors.primary : themeColors.textSecondary}
+              />
             </Pressable>
           </View>
         </View>
@@ -140,6 +148,7 @@ export default function App() {
         <PositionsList
           positions={positions}
           isLoadingPositions={isLoadingPositions}
+          walletResolved={walletResolved}
           ownerAddress={account?.address}
           onRefresh={handleRefresh}
         />

@@ -7,25 +7,31 @@ UX state machine for the positions list. Follow these rules to avoid flicker.
 ```
          [component mounts]
                 │
-         hasLoadedOnce = false
+         walletResolved = false
          positions.size = 0
+                │
+         ┌──────────────────────────────────────────┐
+         │  Show skeleton (3 × PositionCardSkeleton) │
+         │  until walletResolved AND fetch completes  │
+         └──────────────────┬───────────────────────┘
+                            │
+         [wallet status known]
+                │
+         walletResolved = true
                 │
        ┌────────┴────────┐
        │  still loading?  │
-       ├───── YES ────────┤──→ Show skeleton (3 × PositionCardSkeleton)
-       └───── NO ─────────┘──→ Show EmptyState
-                │
-         [fetch completes]
+       ├───── YES ────────┤──→ Keep showing skeleton
+       └───── NO ─────────┘
                 │
        ┌────────┴────────┐
-       │  has data?      │
+       │  has data?       │
        ├───── YES ────────┤──→ Show cards + PortfolioSummary
        └───── NO ─────────┘──→ Show EmptyState
                 │
-         hasLoadedOnce = true
+         [pull-to-refresh]
                 │
        ┌────────┴────────┐
-       │  pull-to-refresh │
        ├───── any ────────┤──→ Keep showing current state
        │                   │    (RefreshControl spinner is enough feedback)
        └───────────────────┘
@@ -33,38 +39,43 @@ UX state machine for the positions list. Follow these rules to avoid flicker.
 
 ## Rules
 
-1. **Skeleton = first load only** — when `!hasLoadedOnce.current && positions.size === 0`
+1. **Skeleton until wallet resolved** — `!walletResolved || (positions.size === 0 && isLoadingPositions)`
 2. **Never swap data → skeleton → data on refresh** — this causes visible flicker
-3. **`hasLoadedOnce`** stays `true` until component unmounts (wallet disconnect)
-4. **EmptyState is stable** — if user has no positions and pulls to refresh, empty state stays put
+3. **`walletResolved`** is set by the parent (`App`) once the wallet status is known (connected or not)
+4. **EmptyState only after resolved + not loading** — `walletResolved && !isLoadingPositions && positions.size === 0`
 5. **PortfolioSummary loading** — controlled independently by `isLoadingUpnl && !upnlData`
 
 ## Implementation Pattern
 
 ```tsx
-const hasLoadedOnce = useRef(false)
-if (!isLoadingPositions) {
-  hasLoadedOnce.current = true
-}
+// In parent (App):
+const [walletResolved, setWalletResolved] = useState(false)
 
-if (positionsArray.length === 0) {
-  if (!hasLoadedOnce.current) {
-    return <Skeleton />
-  }
-  return <EmptyState />
+// In the effect that watches account?.address:
+if (account?.address === undefined) {
+  setWalletResolved(true)  // wallet session loaded, no wallet connected
+  return
 }
+setWalletResolved(true)  // wallet session loaded, wallet connected
+getPositions(...)
 
+// In PositionsList:
+const showSkeleton = !walletResolved || (positionsArray.length === 0 && isLoadingPositions)
+const showEmpty = walletResolved && !isLoadingPositions && positionsArray.length === 0
+
+if (showSkeleton) return <Skeleton />
+if (showEmpty) return <EmptyState />
 return <DataView />
 ```
 
 ## What NOT to Do
 
-| ❌ Wrong                                      | Why                                                   |
-| --------------------------------------------- | ----------------------------------------------------- |
-| `if (isLoading) return <Skeleton />`          | Swaps real data for skeleton on every refresh         |
-| `if (isLoading && !data) return <Skeleton />` | Can't distinguish first load from refresh-while-empty |
-| Setting `hasLoadedOnce` in useEffect          | Too late — causes an extra render cycle               |
-| Showing skeleton during UPNL loading          | UPNL loads independently; cards can render without it |
+| ❌ Wrong                                                | Why                                                   |
+| ------------------------------------------------------- | ----------------------------------------------------- |
+| `if (isLoading) return <Skeleton />`                     | Swaps real data for skeleton on every refresh         |
+| `if (isLoading && !data) return <Skeleton />`            | Can't distinguish first load from refresh-while-empty |
+| Using `hasLoadedOnce` ref that flips during wallet init  | Wallet starts as undefined → sets false → true again  |
+| Showing skeleton during UPNL loading                     | UPNL loads independently; cards can render without it  |
 
 ## Progressive Loading Order
 

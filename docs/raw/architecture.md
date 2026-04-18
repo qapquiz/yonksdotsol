@@ -50,7 +50,8 @@ CacheManager (singleton)
 App (index.tsx)
   │  fetches positions via DLMM SDK
   │  manages wallet state + pull-to-refresh
-  │  passes Map<PositionInfo> + isLoadingPositions + ownerAddress
+  │  tracks walletResolved (wallet session loaded)
+  │  passes Map<PositionInfo> + isLoadingPositions + walletResolved + ownerAddress
   ▼
 PositionsList (positions/index.tsx)
   │  aggregates unique mints → useBatchTokenData (batch fetch)

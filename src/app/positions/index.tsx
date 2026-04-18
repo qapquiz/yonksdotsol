@@ -1,6 +1,6 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import { FlashList } from '@shopify/flash-list'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { RefreshControl, Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PortfolioSummary from '../../components/positions/PortfolioSummary'
@@ -27,11 +27,18 @@ type ListItem =
 interface PositionsListProps {
   positions: Map<string, PositionInfo>
   isLoadingPositions: boolean
+  walletResolved: boolean
   ownerAddress?: string
   onRefresh?: () => void
 }
 
-export default function PositionsList({ positions, isLoadingPositions, ownerAddress, onRefresh }: PositionsListProps) {
+export default function PositionsList({
+  positions,
+  isLoadingPositions,
+  walletResolved,
+  ownerAddress,
+  onRefresh,
+}: PositionsListProps) {
   // Keep entries to preserve pair address (Map key)
   const positionsEntries = useMemo(() => Array.from(positions.entries()), [positions])
   const positionsArray = useMemo(() => positionsEntries.map(([, pos]) => pos), [positionsEntries])
@@ -120,13 +127,7 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     ({ item }: { item: ListItem }) => {
       switch (item.type) {
         case 'summary':
-          return (
-            <PortfolioSummary
-              walletAddress={wallet}
-              positionCount={positionCount}
-              poolAddresses={poolAddresses}
-            />
-          )
+          return <PortfolioSummary walletAddress={wallet} positionCount={positionCount} poolAddresses={poolAddresses} />
         case 'warning':
           return (
             <View className="flex-row items-center gap-2 mb-4 px-1">
@@ -152,24 +153,23 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
     [wallet, positionCount, poolAddresses, tokenData, ownerAddress],
   )
 
-  // Track whether we've completed at least one positions fetch
-  const hasLoadedOnce = useRef(false)
-  if (!isLoadingPositions) {
-    hasLoadedOnce.current = true
+  // Show skeleton until wallet status is resolved AND first fetch completes
+  // This prevents the empty-state → skeleton → data flash on cold start
+  const showSkeleton = !walletResolved || (positionsArray.length === 0 && isLoadingPositions)
+  const showEmpty = walletResolved && !isLoadingPositions && positionsArray.length === 0
+
+  if (showSkeleton) {
+    return (
+      <View>
+        {[1, 2, 3].map((key) => (
+          <PositionCardSkeleton key={key} />
+        ))}
+        <View className="h-20" />
+      </View>
+    )
   }
 
-  // Skeleton only on true first load — empty state stays during refresh
-  if (positionsArray.length === 0) {
-    if (!hasLoadedOnce.current) {
-      return (
-        <View>
-          {[1, 2, 3].map((key) => (
-            <PositionCardSkeleton key={key} />
-          ))}
-          <View className="h-20" />
-        </View>
-      )
-    }
+  if (showEmpty) {
     return (
       <View className="flex-1 px-4 pt-2">
         <EmptyState />
@@ -187,7 +187,11 @@ export default function PositionsList({ positions, isLoadingPositions, ownerAddr
       ListFooterComponent={<View className="h-20" />}
       refreshControl={
         onRefresh ? (
-          <RefreshControl refreshing={isLoadingPositions} onRefresh={onRefresh} tintColor={theme === 'dark' ? '#8FA893' : '#6b8f71'} />
+          <RefreshControl
+            refreshing={isLoadingPositions}
+            onRefresh={onRefresh}
+            tintColor={theme === 'dark' ? '#8FA893' : '#6b8f71'}
+          />
         ) : undefined
       }
     />

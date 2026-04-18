@@ -13,6 +13,7 @@ Chronological record of wiki activity. Append-only.
 ## [2026-04-18] init | Wiki structure created
 
 Created LLM Wiki structure based on LLM Wiki pattern:
+
 - Created `docs/wiki/` directory with entities/, concepts/, guides/
 - Created [[WIKI_SCHEMA|schema]] with maintenance instructions
 - Created [[index]] as content catalog
@@ -21,6 +22,7 @@ Created LLM Wiki structure based on LLM Wiki pattern:
 ## [2026-04-18] create | Entity pages
 
 Created initial entity pages from existing docs:
+
 - [[Connection]] - from architecture.md
 - [[CacheManager]] - from architecture.md + CACHING_STRATEGY.md
 - [[PositionInfo]] - from data-model.md
@@ -30,6 +32,7 @@ Created initial entity pages from existing docs:
 ## [2026-04-18] create | Concept pages
 
 Created initial concept pages:
+
 - [[Caching Strategy]] - from CACHING_STRATEGY.md, CACHING_SUMMARY.md
 - [[Theming]] - from theme-guide.md
 - [[Connection Lifecycle]] - from architecture.md
@@ -39,7 +42,16 @@ Created initial concept pages:
 ## [2026-04-18] create | Guide pages
 
 Migrated guide pages:
+
 - [[ast-grep]] - from ast-grep-cheatsheet.md
 - [[Number Formatting]] - from number-formatting.md
 - [[Loading States]] - from loading-states.md
 - [[Performance Optimizations]] - from perf-optimizations.md
+
+## [2026-04-18] update | Loading state pattern
+
+Replaced `hasLoadedOnce` ref with `walletResolved` prop:
+
+- Old pattern caused empty-state flash on cold start (wallet starts undefined → loading false → empty → wallet loads → skeleton → data)
+- New pattern: skeleton stays until `walletResolved=true` AND fetch completes
+- Updated loading-states.md, Skeleton Loading concept, architecture data flow
