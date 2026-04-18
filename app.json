@@ -18,7 +18,9 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#000000"
       },
-      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"]
+      "blockedPermissions": [
+        "android.permission.SYSTEM_ALERT_WINDOW"
+      ]
     },
     "extra": {
       "eas": {
@@ -26,6 +28,20 @@
       }
     },
     "owner": "armariya",
-    "plugins": ["expo-router", "expo-asset", "expo-font"]
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/GeistPixel-Square.ttf"
+          ]
+        }
+      ]
+    ],
+    "ios": {
+      "bundleIdentifier": "dev.nullphase.yonks"
+    }
   }
 }
