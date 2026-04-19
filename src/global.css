@@ -11,8 +11,8 @@
   :root {
     @variant dark {
       --color-app-bg: #050505;
-      --color-app-surface: #111111;
-      --color-app-surface-highlight: #1a1a1a;
+      --color-app-surface: #151515;
+      --color-app-surface-highlight: #252525;
 
       --color-app-primary: #8fa893;
       --color-app-primary-dim: #2a332c;
@@ -22,10 +22,10 @@
       --color-app-secondary-dim: #332619;
 
       --color-app-text: #ffffff;
-      --color-app-text-secondary: #999999;
-      --color-app-text-muted: #555555;
+      --color-app-text-secondary: #aaaaaa;
+      --color-app-text-muted: #777777;
 
-      --color-app-border: #222222;
+      --color-app-border: #333333;
     }
 
     @variant light {
