@@ -3,6 +3,8 @@
 
 @theme {
   --font-pixel: 'GeistPixel-Square';
+  --font-sans: 'Geist-Regular';
+  --font-sans-bold: 'Geist-Bold';
 }
 
 @layer theme {

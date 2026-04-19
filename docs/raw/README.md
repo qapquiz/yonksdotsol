@@ -15,7 +15,7 @@ Staging area for unprocessed info. Drop notes, reference material, or raw docs h
 | `CACHING_STRATEGY.md`      | [[Caching Strategy]] (wiki)                               | ✅      |
 | `CACHING_SUMMARY.md`       | [[Caching Strategy]] (wiki)                               | ✅      |
 | `CACHING_QUICK_START.md`   | [[Caching Strategy]] (wiki)                               | ✅      |
-| `testing-plan.md`          | —                                                         | 📥 new  |
+| `testing-plan.md`          | [[Testing]] (wiki)                                       | ✅      |
 
 ## Workflow
 
