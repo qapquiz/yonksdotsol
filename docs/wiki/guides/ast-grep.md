@@ -65,13 +65,13 @@ rule:
 
 Located in `.ast-grep/rules/`:
 
-| Rule File | Purpose |
-|-----------|---------|
-| `memo-components.yml` | Find memo-wrapped components |
-| `console-errors.yml` | Find console.error calls |
-| `async-await.yml` | Find async callbacks with await |
-| `zustand-stores.yml` | Find Zustand store creation |
-| `flashlist.yml` | Find FlashList usage |
+| Rule File             | Purpose                         |
+| --------------------- | ------------------------------- |
+| `memo-components.yml` | Find memo-wrapped components    |
+| `console-errors.yml`  | Find console.error calls        |
+| `async-await.yml`     | Find async callbacks with await |
+| `zustand-stores.yml`  | Find Zustand store creation     |
+| `flashlist.yml`       | Find FlashList usage            |
 
 ## Project Stats
 

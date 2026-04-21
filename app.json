@@ -18,9 +18,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#000000"
       },
-      "blockedPermissions": [
-        "android.permission.SYSTEM_ALERT_WINDOW"
-      ]
+      "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"]
     },
     "extra": {
       "eas": {
@@ -38,6 +36,29 @@
             "./assets/fonts/Geist-Bold.ttf",
             "./assets/fonts/Geist-Regular.ttf",
             "./assets/fonts/GeistPixel-Square.ttf"
+          ]
+        }
+      ],
+      [
+        "react-native-android-widget",
+        {
+          "fonts": [
+            "./assets/fonts/Geist-Bold.ttf",
+            "./assets/fonts/Geist-Regular.ttf",
+            "./assets/fonts/GeistPixel-Square.ttf"
+          ],
+          "widgets": [
+            {
+              "name": "Portfolio",
+              "label": "Yonks Portfolio",
+              "minWidth": "300dp",
+              "minHeight": "48dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 1,
+              "resizeMode": "horizontal",
+              "description": "Portfolio PnL at a glance",
+              "updatePeriodMillis": 1800000
+            }
           ]
         }
       ]

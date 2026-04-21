@@ -1,7 +1,7 @@
 ---
 title: PositionInfo
 type: entity
-location: "@meteora-ag/dlmm"
+location: '@meteora-ag/dlmm'
 created: 2026-04-18
 updated: 2026-04-18
 tags: [meteora, dlmm, positions, data-model]
@@ -45,12 +45,12 @@ PositionInfo {
 
 ## Key Relationships
 
-| Concept | How to Calculate | Common Mistake |
-|---------|------------------|----------------|
-| **Pair count** | `positionsArray.length` | Don't use as position count |
-| **Position count** | `positions.reduce((s, p) => s + p.lbPairPositionsData.length, 0)` | `positions.length` only counts pairs |
-| **In-range check** | `calculateIsInRange(activeId, lowerBinId, upperBinId)` | Must check per lbPosition |
-| **Position address** | `lbPosition.publicKey.toBase58()` | NOT `position.publicKey` |
+| Concept              | How to Calculate                                                  | Common Mistake                       |
+| -------------------- | ----------------------------------------------------------------- | ------------------------------------ |
+| **Pair count**       | `positionsArray.length`                                           | Don't use as position count          |
+| **Position count**   | `positions.reduce((s, p) => s + p.lbPairPositionsData.length, 0)` | `positions.length` only counts pairs |
+| **In-range check**   | `calculateIsInRange(activeId, lowerBinId, upperBinId)`            | Must check per lbPosition            |
+| **Position address** | `lbPosition.publicKey.toBase58()`                                 | NOT `position.publicKey`             |
 
 ## Critical Insight: One Pair → Many Positions
 

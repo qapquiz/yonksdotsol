@@ -27,11 +27,11 @@ interface LiquidityBarChartProps {
 
 ### Bar Colors
 
-| State | Color | Hex |
-| ----- | ----- | --- |
+| State            | Color   | Hex       |
+| ---------------- | ------- | --------- |
 | Below active bin | Emerald | `#10b981` |
-| Active bin | Cyan | `#22d3ee` |
-| Above active bin | Zinc | `#3f3f46` |
+| Active bin       | Cyan    | `#22d3ee` |
+| Above active bin | Zinc    | `#3f3f46` |
 
 ### Layout
 

@@ -51,11 +51,11 @@ for (const [pairAddress, position] of positionsEntries) {
 
 ## Common Mistakes
 
-| Mistake | Correct |
-|---------|---------|
-| Using `positions.length` as position count | Use `positions.reduce((s, p) => s + p.lbPairPositionsData.length, 0)` |
-| Using `position.publicKey` as position address | Use `lbPosition.publicKey` |
-| Checking range per pair | Check per `lbPosition.positionData` |
+| Mistake                                        | Correct                                                               |
+| ---------------------------------------------- | --------------------------------------------------------------------- |
+| Using `positions.length` as position count     | Use `positions.reduce((s, p) => s + p.lbPairPositionsData.length, 0)` |
+| Using `position.publicKey` as position address | Use `lbPosition.publicKey`                                            |
+| Checking range per pair                        | Check per `lbPosition.positionData`                                   |
 
 ## See Also
 

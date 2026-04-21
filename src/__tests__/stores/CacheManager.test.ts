@@ -166,10 +166,7 @@ describe('CacheManager', () => {
       })
 
       // Start two concurrent requests
-      const [result1, result2] = await Promise.all([
-        cache.getOrFetch('key', fetchFn),
-        cache.getOrFetch('key', fetchFn),
-      ])
+      const [result1, result2] = await Promise.all([cache.getOrFetch('key', fetchFn), cache.getOrFetch('key', fetchFn)])
 
       expect(result1).toBe('fetched')
       expect(result2).toBe('fetched')

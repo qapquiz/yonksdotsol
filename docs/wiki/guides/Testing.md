@@ -16,12 +16,12 @@ The project uses Vitest for fast, compatible testing with Expo. Tests are organi
 
 ## Testing Stack
 
-| Tool | Purpose |
-| ---- | ------- |
-| **Vitest** | Fast test runner (compatible with Expo) |
-| **@testing-library/react-native** | Component testing |
-| **react-test-renderer** | Component rendering |
-| **happy-dom** | DOM environment for tests |
+| Tool                              | Purpose                                 |
+| --------------------------------- | --------------------------------------- |
+| **Vitest**                        | Fast test runner (compatible with Expo) |
+| **@testing-library/react-native** | Component testing                       |
+| **react-test-renderer**           | Component rendering                     |
+| **happy-dom**                     | DOM environment for tests               |
 
 ## Commands
 
@@ -67,10 +67,12 @@ The setup file provides:
 Pure functions with clear inputs/outputs. No mocking required.
 
 **Files:**
+
 - `src/__tests__/utils/calculations.test.ts`
 - `src/__tests__/utils/formatters.test.ts`
 
 **Key Functions Tested:**
+
 - `calculatePositionTotalValue` — Position value calculation
 - `calculateUnrealizedFeesValue` — Fee value calculation
 - `calculateIsInRange` — Active bin range check
@@ -82,11 +84,13 @@ Pure functions with clear inputs/outputs. No mocking required.
 Zustand store state management with mocked dependencies.
 
 **Files:**
+
 - `src/__tests__/stores/pnlStore.test.ts`
 - `src/__tests__/stores/CacheManager.test.ts`
 - `src/__tests__/stores/settingsStore.test.ts`
 
 **Key Behaviors Tested:**
+
 - Cache TTL and expiration
 - Request deduplication
 - Error handling
@@ -97,9 +101,11 @@ Zustand store state management with mocked dependencies.
 Custom React hooks with mocked data sources.
 
 **Files:**
+
 - `src/__tests__/hooks/useBatchTokenData.test.ts`
 
 **Key Behaviors Tested:**
+
 - Loading states
 - Data fetching
 - Error handling
@@ -110,9 +116,11 @@ Custom React hooks with mocked data sources.
 UI components with mocked props and stores.
 
 **Files:**
+
 - `src/__tests__/components/positions/PositionCard.test.tsx`
 
 **Key Behaviors Tested:**
+
 - Skeleton vs data rendering
 - Conditional UI elements
 - Value formatting
@@ -163,12 +171,12 @@ it('should fetch data', async () => {
 
 ## Coverage Goals
 
-| Category | Target |
-| -------- | ------ |
-| Utility functions | 95%+ |
-| Store logic | 90%+ |
-| Hooks | 80%+ |
-| Components | 70%+ |
+| Category          | Target |
+| ----------------- | ------ |
+| Utility functions | 95%+   |
+| Store logic       | 90%+   |
+| Hooks             | 80%+   |
+| Components        | 70%+   |
 
 ## CI Integration
 
