@@ -120,11 +120,9 @@ describe('pnlStore', () => {
     })
 
     it('deduplicates concurrent requests', async () => {
-      let resolveCount = 0
       vi.mocked(fetchPositionPnL).mockImplementation(() => {
         return new Promise((resolve) => {
           setTimeout(() => {
-            resolveCount++
             resolve({ positions: [mockPositionPnLData] } as any)
           }, 10)
         })

@@ -155,11 +155,9 @@ describe('CacheManager', () => {
     })
 
     it('deduplicates concurrent calls', async () => {
-      let resolveCount = 0
       const fetchFn = vi.fn().mockImplementation(() => {
         return new Promise((resolve) => {
           setTimeout(() => {
-            resolveCount++
             resolve('fetched')
           }, 10)
         })
