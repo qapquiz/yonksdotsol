@@ -25,6 +25,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
             totalPnlSol={data.totalPnlSol}
             totalPnlPercent={data.totalPnlPercent}
             totalValueSol={data.totalValueSol}
+            totalInitialDepositSol={data.totalInitialDepositSol}
             totalUnclaimedFeesSol={data.totalUnclaimedFeesSol}
             positionCount={data.positionCount}
             lastUpdated={lastUpdated}
@@ -36,6 +37,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
             totalPnlSol={data.totalPnlSol}
             totalPnlPercent={data.totalPnlPercent}
             totalValueSol={data.totalValueSol}
+            totalInitialDepositSol={data.totalInitialDepositSol}
             totalUnclaimedFeesSol={data.totalUnclaimedFeesSol}
             positionCount={data.positionCount}
             lastUpdated={lastUpdated}

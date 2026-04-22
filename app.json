@@ -52,9 +52,9 @@
               "name": "Portfolio",
               "label": "Yonks Portfolio",
               "minWidth": "300dp",
-              "minHeight": "48dp",
+              "minHeight": "110dp",
               "targetCellWidth": 4,
-              "targetCellHeight": 1,
+              "targetCellHeight": 2,
               "resizeMode": "horizontal",
               "description": "Portfolio PnL at a glance",
               "updatePeriodMillis": 1800000

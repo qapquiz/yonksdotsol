@@ -77,6 +77,7 @@ export async function updatePortfolioWidget(summary: PoolPnLSummary, positionCou
             totalPnlSol={summary.totalPnlSol}
             totalPnlPercent={summary.totalPnlPercent}
             totalValueSol={summary.totalValueSol}
+            totalInitialDepositSol={summary.totalInitialDepositSol}
             totalUnclaimedFeesSol={summary.totalUnclaimedFeesSol}
             positionCount={positionCount}
             lastUpdated={lastUpdated}
@@ -88,6 +89,7 @@ export async function updatePortfolioWidget(summary: PoolPnLSummary, positionCou
             totalPnlSol={summary.totalPnlSol}
             totalPnlPercent={summary.totalPnlPercent}
             totalValueSol={summary.totalValueSol}
+            totalInitialDepositSol={summary.totalInitialDepositSol}
             totalUnclaimedFeesSol={summary.totalUnclaimedFeesSol}
             positionCount={positionCount}
             lastUpdated={lastUpdated}
