@@ -42,11 +42,13 @@ function PositionHeaderComponent({
           </Text>
         </View>
         <Text className="text-app-text font-pixel text-lg">{totalValue}</Text>
-        {upnlValue != null && upnlPercentage != null && (
-          <Text className={`text-xs font-pixel ${upnlColorClass}`}>
-            {upnlIsSol ? formatUPNLDisplaySol(upnlValue, upnlPercentage) : formatUPNLDisplay(upnlValue, upnlPercentage)}
-          </Text>
-        )}
+        <Text className={`text-xs font-pixel ${upnlValue != null ? upnlColorClass : 'opacity-0'}`}>
+          {upnlValue != null && upnlPercentage != null
+            ? upnlIsSol
+              ? formatUPNLDisplaySol(upnlValue, upnlPercentage)
+              : formatUPNLDisplay(upnlValue, upnlPercentage)
+            : '+0.0000 SOL (+0.00%)'}
+        </Text>
       </View>
     </View>
   )

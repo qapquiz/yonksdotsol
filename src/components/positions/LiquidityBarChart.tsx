@@ -150,7 +150,7 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
         </View>
       </View>
 
-      <View className="w-full" onLayout={handleLayout}>
+      <View className="w-full" style={{ height: CHART_HEIGHT }} onLayout={handleLayout}>
         {svgContent}
       </View>
 
@@ -159,22 +159,20 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
         <Text className="text-app-text-muted text-[10px] font-mono">{maxPrice}</Text>
       </View>
 
-      {activeBinIndex >= 0 && (
-        <View className="flex-row items-center justify-center mt-2 gap-4">
-          <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-emerald-500 mr-1.5" />
-            <Text className="text-app-text-secondary text-[10px]">Below Price</Text>
-          </View>
-          <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-cyan-400 mr-1.5" />
-            <Text className="text-cyan-400 text-[10px]">Active</Text>
-          </View>
-          <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-app-text-muted mr-1.5" />
-            <Text className="text-app-text-secondary text-[10px]">Above Price</Text>
-          </View>
+      <View className="flex-row items-center justify-center mt-2 gap-4">
+        <View className="flex-row items-center">
+          <View className="w-2 h-2 rounded-sm bg-emerald-500 mr-1.5" />
+          <Text className="text-app-text-secondary text-[10px]">Below Price</Text>
         </View>
-      )}
+        <View className="flex-row items-center">
+          <View className="w-2 h-2 rounded-sm bg-cyan-400 mr-1.5" />
+          <Text className="text-cyan-400 text-[10px]">Active</Text>
+        </View>
+        <View className="flex-row items-center">
+          <View className="w-2 h-2 rounded-sm bg-app-text-muted mr-1.5" />
+          <Text className="text-app-text-secondary text-[10px]">Above Price</Text>
+        </View>
+      </View>
     </View>
   )
 }
