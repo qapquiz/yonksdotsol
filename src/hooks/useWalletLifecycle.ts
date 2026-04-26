@@ -37,10 +37,14 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
     }
   }, [accounts])
 
-  // Clear timeout when account resolves
+  // Once we've seen a valid account, wallet is permanently "ready"
+  // so disconnect never causes walletReady to flip back to false
   useEffect(() => {
-    if (account?.address && timeoutRef.current) {
-      clearTimeout(timeoutRef.current)
+    if (account?.address) {
+      setWalletCheckTimedOut(true)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
     }
   }, [account?.address])
 
