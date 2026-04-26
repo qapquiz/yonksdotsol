@@ -15,7 +15,11 @@ export interface TokenInfo {
   }
 }
 
-async function fetchTokenFromRpc(mint: string): Promise<TokenInfo> {
+/**
+ * Pure fetch — calls RPC and parses the response.
+ * No caching, no singleton. Fully testable.
+ */
+export async function fetchTokenFromRpc(mint: string): Promise<TokenInfo> {
   const response = await fetch(env.rpcUrl || '', {
     method: 'POST',
     headers: {

@@ -23,14 +23,14 @@ docs/
 
 ## When to Update the Wiki
 
-| Trigger | Action |
-|---------|--------|
-| New component/hook/store created | Create entity page |
-| New pattern discovered | Create concept page |
-| New tool/workflow learned | Create guide page |
-| Code changed in existing entity | Update that entity's page |
-| Question answered from wiki | Log it in log.md |
-| Bug fix reveals new insight | Update relevant page |
+| Trigger                          | Action                    |
+| -------------------------------- | ------------------------- |
+| New component/hook/store created | Create entity page        |
+| New pattern discovered           | Create concept page       |
+| New tool/workflow learned        | Create guide page         |
+| Code changed in existing entity  | Update that entity's page |
+| Question answered from wiki      | Log it in log.md          |
+| Bug fix reveals new insight      | Update relevant page      |
 
 ## Page Templates
 
@@ -38,7 +38,7 @@ docs/
 
 For concrete things: components, hooks, stores, utilities.
 
-```markdown
+````markdown
 ---
 title: EntityName
 type: entity
@@ -56,20 +56,26 @@ related:
 Brief description.
 
 ## Location
+
 `src/path/to/file.ts`
 
 ## Responsibilities
+
 - What it does
 - What it owns
 
 ## Usage
+
 ```typescript
 // Code example
 ```
+````
 
 ## See Also
+
 - [[RelatedPage]] — context
-```
+
+````
 
 ### Concept Page (`concepts/`)
 
@@ -99,7 +105,7 @@ How it's implemented.
 
 ## See Also
 - [[EntityA]] — implements this
-```
+````
 
 ### Guide Page (`guides/`)
 
@@ -122,9 +128,11 @@ related:
 What this helps you do.
 
 ## Quick Reference
+
 Common commands/patterns.
 
 ## See Also
+
 - [[EntityName]] — relevant entity
 ```
 
@@ -143,6 +151,7 @@ Add to `docs/wiki/index.md` under appropriate section:
 
 ```markdown
 ## Entities
+
 | [[NewPage]] | Description | `location` |
 ```
 
@@ -159,7 +168,7 @@ Description of what was done.
 ## Wikilink Syntax
 
 ```markdown
-[[PageName]]              # Link to page
+[[PageName]] # Link to page
 [[PageName|Display Text]] # Custom display text
 ```
 
@@ -169,16 +178,16 @@ Obsidian resolves `[[CacheManager]]` to `entities/CacheManager.md` automatically
 
 Use consistent tags across pages:
 
-| Tag | Meaning |
-|-----|---------|
-| `solana` | Solana-related |
+| Tag       | Meaning             |
+| --------- | ------------------- |
+| `solana`  | Solana-related      |
 | `caching` | Caching/performance |
-| `ui` | UI/component |
-| `state` | State management |
-| `zustand` | Zustand stores |
-| `react` | React patterns |
-| `meteora` | Meteora DLMM |
-| `tools` | Development tools |
+| `ui`      | UI/component        |
+| `state`   | State management    |
+| `zustand` | Zustand stores      |
+| `react`   | React patterns      |
+| `meteora` | Meteora DLMM        |
+| `tools`   | Development tools   |
 
 ## Health Checks
 

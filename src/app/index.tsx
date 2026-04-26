@@ -1,198 +1,92 @@
-import { Ionicons } from "@expo/vector-icons";
-import type { PositionInfo } from "@meteora-ag/dlmm";
-import DLMM from "@meteora-ag/dlmm";
-import { PublicKey } from "@solana/web3.js";
-import { useMobileWallet } from "@wallet-ui/react-native-kit";
-import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { PixelAvatar } from "../components/ui/PixelAvatar";
-import { getSharedConnection } from "../config/connection";
-import { useSettingsStore } from "../stores/settingsStore";
-import { CacheManager } from "../utils/cache/CacheManager";
-import { getUpnlPerPositionKey } from "../utils/cache/cacheKeys";
-import PositionsList from "./positions";
+import { Ionicons } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
+import { useMemo } from 'react'
+import { Pressable, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { PixelAvatar } from '../components/ui/PixelAvatar'
+import { usePositionFetch } from '../hooks/positions/usePositionFetch'
+import { useSettingsStore } from '../stores/settingsStore'
+import { useWalletLifecycle } from '../hooks/useWalletLifecycle'
+import PositionsList from './positions'
 
 export default function App() {
-	const theme = useSettingsStore((s) => s.theme);
-	const toggleTheme = useSettingsStore((s) => s.toggleTheme);
-	const themeColors = useMemo(
-		() => ({
-			bg: theme === "dark" ? "#050505" : "#f5f5f5",
-			primary: theme === "dark" ? "#8FA893" : "#6b8f71",
-			textSecondary: theme === "dark" ? "#999999" : "#666666",
-		}),
-		[theme],
-	);
-	const { account, accounts, disconnect, signIn } = useMobileWallet();
-	const [isConnecting, setIsConnecting] = useState(false);
-	const [positions, setPositions] = useState<Map<string, PositionInfo>>(
-		new Map(),
-	);
-	const [isLoadingPositions, setIsLoadingPositions] = useState(true);
-	const previousAccountRef = useRef<string | null>(null);
-	const lastUpnlRefreshRef = useRef<number>(0);
-	const [walletCheckTimedOut, setWalletCheckTimedOut] = useState(false);
-	const walletCheckTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-		null,
-	);
+  const theme = useSettingsStore((s) => s.theme)
+  const toggleTheme = useSettingsStore((s) => s.toggleTheme)
+  const themeColors = useMemo(
+    () => ({
+      bg: theme === 'dark' ? '#050505' : '#f5f5f5',
+      primary: theme === 'dark' ? '#8FA893' : '#6b8f71',
+      textSecondary: theme === 'dark' ? '#999999' : '#666666',
+    }),
+    [theme],
+  )
 
-	// accounts is null until wallet provider finishes checking for existing auth
-	// Fallback to timeout in case provider doesn't update accounts
-	const walletResolved = accounts !== null || walletCheckTimedOut;
-	const getPositions = useCallback(async (wallet: PublicKey) => {
-		setIsLoadingPositions(true);
-		try {
-			const pos = await DLMM.getAllLbPairPositionsByUser(
-				getSharedConnection(),
-				wallet,
-			);
-			setPositions(pos);
-		} catch (e) {
-			console.error(e);
-		} finally {
-			setIsLoadingPositions(false);
-		}
-	}, []);
+  const { walletReady, walletAddress, isConnecting, handleConnect, handleDisconnect } = useWalletLifecycle()
+  const { positions, isLoading, refresh } = usePositionFetch(walletAddress)
 
-	const handleRefresh = useCallback(() => {
-		if (account?.address) {
-			const now = Date.now();
-			if (now - lastUpnlRefreshRef.current > 30 * 1000) {
-				CacheManager.getInstance().delete(
-					getUpnlPerPositionKey(account.address),
-				);
-				lastUpnlRefreshRef.current = now;
-			}
-			getPositions(new PublicKey(account.address));
-		}
-	}, [account?.address, getPositions]);
-	const handleConnectWallet = useCallback(async () => {
-		setIsConnecting(true);
-		try {
-			await signIn({
-				domain: "yonksdotsol.app",
-				statement: "Sign in to access your DLMM positions",
-				version: "1",
-			});
-		} catch (error) {
-			console.error("Wallet connection failed:", error);
-			await disconnect().catch(() => {});
-		} finally {
-			setIsConnecting(false);
-		}
-	}, [signIn, disconnect]);
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.bg }}>
+      <View className="px-4 py-4">
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            <View
+              className={`h-10 w-10 items-center justify-center rounded-full ${
+                walletAddress ? 'bg-app-primary-dim' : 'bg-app-surface-highlight'
+              }`}
+            >
+              <PixelAvatar size={24} variant="cat" connected={!!walletAddress} />
+            </View>
+            <View>
+              <Text className="text-xs font-sans-bold uppercase tracking-wider text-app-text-secondary">
+                {isConnecting
+                  ? 'Connecting...'
+                  : walletAddress
+                    ? `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`
+                    : walletReady
+                      ? 'Not Connected'
+                      : '...'}
+              </Text>
+            </View>
+          </View>
+          <View className="flex-row items-center gap-3">
+            <Pressable
+              onPress={toggleTheme}
+              className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
+            >
+              <Ionicons
+                name={theme === 'dark' ? 'sunny-outline' : 'moon-outline'}
+                size={20}
+                color={themeColors.primary}
+              />
+            </Pressable>
+            <Pressable
+              onPress={walletAddress ? handleDisconnect : handleConnect}
+              disabled={isConnecting}
+              className={`h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80 ${
+                walletAddress ? 'border border-app-primary' : ''
+              } ${isConnecting ? 'opacity-50' : ''}`}
+            >
+              <Ionicons
+                name="wallet-outline"
+                size={20}
+                color={walletAddress ? themeColors.primary : themeColors.textSecondary}
+              />
+            </Pressable>
+          </View>
+        </View>
+      </View>
 
-	// Fallback timeout in case wallet provider doesn't update accounts state
-	useEffect(() => {
-		walletCheckTimeoutRef.current = setTimeout(() => {
-			if (accounts === null) {
-				setWalletCheckTimedOut(true);
-			}
-		}, 500);
+      <View className="flex-1">
+        <PositionsList
+          positions={positions}
+          isLoadingPositions={isLoading}
+          walletResolved={walletReady}
+          ownerAddress={walletAddress}
+          onRefresh={refresh}
+        />
+      </View>
 
-		return () => {
-			if (walletCheckTimeoutRef.current) {
-				clearTimeout(walletCheckTimeoutRef.current);
-			}
-		};
-	}, [accounts]);
-
-	useEffect(() => {
-		const currentAddress = account?.address ?? null;
-
-		if (
-			currentAddress !== null &&
-			currentAddress !== previousAccountRef.current
-		) {
-			const wasConnected = previousAccountRef.current !== null;
-			if (wasConnected) {
-				CacheManager.getInstance().invalidatePattern("initial_deposits:");
-			}
-		}
-
-		previousAccountRef.current = currentAddress;
-
-		// If we have an account, fetch positions
-		if (account?.address) {
-			// Clear timeout since we have a connection
-			if (walletCheckTimeoutRef.current) {
-				clearTimeout(walletCheckTimeoutRef.current);
-			}
-			getPositions(new PublicKey(account.address));
-		} else if (walletResolved) {
-			// Wallet checked but not connected - clear positions
-			setPositions(new Map());
-			setIsLoadingPositions(false);
-		}
-	}, [account?.address, walletResolved, getPositions]);
-
-	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: themeColors.bg }}>
-			<View className="px-4 py-4">
-				<View className="flex-row items-center justify-between">
-					<View className="flex-row items-center gap-3">
-						<View
-							className={`h-10 w-10 items-center justify-center rounded-full ${
-								account ? "bg-app-primary-dim" : "bg-app-surface-highlight"
-							}`}
-						>
-							<PixelAvatar size={24} variant="cat" connected={!!account} />
-						</View>
-						<View>
-							<Text className="text-xs font-sans-bold uppercase tracking-wider text-app-text-secondary">
-								{isConnecting
-									? "Connecting..."
-									: account
-										? `${account.address.slice(0, 4)}...${account.address.slice(-4)}`
-										: walletResolved
-											? "Not Connected"
-											: "..."}
-							</Text>
-						</View>
-					</View>
-					<View className="flex-row items-center gap-3">
-						<Pressable
-							onPress={toggleTheme}
-							className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
-						>
-							<Ionicons
-								name={theme === "dark" ? "sunny-outline" : "moon-outline"}
-								size={20}
-								color={themeColors.primary}
-							/>
-						</Pressable>
-						<Pressable
-							onPress={account ? disconnect : handleConnectWallet}
-							disabled={isConnecting}
-							className={`h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80 ${
-								account ? "border border-app-primary" : ""
-							} ${isConnecting ? "opacity-50" : ""}`}
-						>
-							<Ionicons
-								name="wallet-outline"
-								size={20}
-								color={
-									account ? themeColors.primary : themeColors.textSecondary
-								}
-							/>
-						</Pressable>
-					</View>
-				</View>
-			</View>
-
-			<View className="flex-1">
-				<PositionsList
-					positions={positions}
-					isLoadingPositions={isLoadingPositions}
-					walletResolved={walletResolved}
-					ownerAddress={account?.address}
-					onRefresh={handleRefresh}
-				/>
-			</View>
-
-			<StatusBar style={theme === "dark" ? "light" : "dark"} />
-		</SafeAreaView>
-	);
+      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+    </SafeAreaView>
+  )
 }

@@ -1,3 +1,10 @@
+export function formatUSD(value: number): string {
+  return `$${value.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`
+}
+
 export function formatTokenAmount(amount: string | bigint, decimals: number): string {
   let amountValue: bigint
   if (typeof amount === 'string') {

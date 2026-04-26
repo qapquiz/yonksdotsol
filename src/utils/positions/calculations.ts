@@ -1,5 +1,6 @@
 import { PositionBinData, PositionData } from '@meteora-ag/dlmm'
 import type { TokenInfo } from '../../tokens'
+import { formatUSD } from './formatters'
 
 export interface ChartBinData {
   binId: number
@@ -36,29 +37,28 @@ export interface PriceTick {
   isCurrent: boolean
 }
 
+/** Core: convert a pair of raw BigInt token amounts to their combined USD value */
+export function calculateTokenPairUSD(
+  xRaw: bigint,
+  yRaw: bigint,
+  tokenXInfo: TokenInfo | null,
+  tokenYInfo: TokenInfo | null,
+): number {
+  if (!tokenXInfo || !tokenYInfo) return 0
+
+  const xAmount = Number(xRaw) / Number(10n ** BigInt(tokenXInfo.decimals))
+  const yAmount = Number(yRaw) / Number(10n ** BigInt(tokenYInfo.decimals))
+
+  return xAmount * tokenXInfo.price_info.price_per_token + yAmount * tokenYInfo.price_info.price_per_token
+}
+
 export function calculatePositionTotalValue(
   totalXAmount: bigint,
   totalYAmount: bigint,
   tokenXInfo: TokenInfo | null,
   tokenYInfo: TokenInfo | null,
 ): string {
-  if (!tokenXInfo || !tokenYInfo) return '$0.00'
-
-  const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
-  const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
-
-  const xAmount = Number(totalXAmount) / Number(xDivisor)
-  const yAmount = Number(totalYAmount) / Number(yDivisor)
-
-  const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token
-  const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token
-
-  const totalValueUSD = xValueUSD + yValueUSD
-
-  return `$${totalValueUSD.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`
+  return formatUSD(calculateTokenPairUSD(totalXAmount, totalYAmount, tokenXInfo, tokenYInfo))
 }
 
 export function calculateUnrealizedFeesValue(
@@ -67,23 +67,7 @@ export function calculateUnrealizedFeesValue(
   tokenXInfo: TokenInfo | null,
   tokenYInfo: TokenInfo | null,
 ): string {
-  if (!tokenXInfo || !tokenYInfo) return '$0.00'
-
-  const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
-  const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
-
-  const xAmount = Number(feeXAmount) / Number(xDivisor)
-  const yAmount = Number(feeYAmount) / Number(yDivisor)
-
-  const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token
-  const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token
-
-  const totalValueUSD = xValueUSD + yValueUSD
-
-  return `$${totalValueUSD.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`
+  return formatUSD(calculateTokenPairUSD(feeXAmount, feeYAmount, tokenXInfo, tokenYInfo))
 }
 
 export function calculateClaimedFeesValue(
@@ -92,23 +76,7 @@ export function calculateClaimedFeesValue(
   tokenXInfo: TokenInfo | null,
   tokenYInfo: TokenInfo | null,
 ): string {
-  if (!tokenXInfo || !tokenYInfo) return '$0.00'
-
-  const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
-  const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
-
-  const xAmount = Number(claimedFeeXAmount) / Number(xDivisor)
-  const yAmount = Number(claimedFeeYAmount) / Number(yDivisor)
-
-  const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token
-  const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token
-
-  const totalValueUSD = xValueUSD + yValueUSD
-
-  return `$${totalValueUSD.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`
+  return formatUSD(calculateTokenPairUSD(claimedFeeXAmount, claimedFeeYAmount, tokenXInfo, tokenYInfo))
 }
 
 export function calculateIsInRange(currentActiveId: number, lowerBinId: number, upperBinId: number): boolean {
@@ -275,18 +243,7 @@ export function calculateInitialDepositValue(
   tokenXInfo: TokenInfo | null,
   tokenYInfo: TokenInfo | null,
 ): number {
-  if (!tokenXInfo || !tokenYInfo) return 0
-
-  const xDivisor = 10n ** BigInt(tokenXInfo.decimals)
-  const yDivisor = 10n ** BigInt(tokenYInfo.decimals)
-
-  const xAmount = Number(initialXAmount) / Number(xDivisor)
-  const yAmount = Number(initialYAmount) / Number(yDivisor)
-
-  const xValueUSD = xAmount * tokenXInfo.price_info.price_per_token
-  const yValueUSD = yAmount * tokenYInfo.price_info.price_per_token
-
-  return xValueUSD + yValueUSD
+  return calculateTokenPairUSD(initialXAmount, initialYAmount, tokenXInfo, tokenYInfo)
 }
 
 export function calculateUPNLValue(currentTotalValue: number, initialDepositValue: number): number {
@@ -296,9 +253,4 @@ export function calculateUPNLValue(currentTotalValue: number, initialDepositValu
 export function calculateUPNLPercentage(currentTotalValue: number, initialDepositValue: number): number {
   if (initialDepositValue === 0) return 0
   return ((currentTotalValue - initialDepositValue) / initialDepositValue) * 100
-}
-
-export function formatUPNLDisplay(upnlValue: number, upnlPercentage: number): string {
-  const sign = upnlValue >= 0 ? '+' : ''
-  return `${sign}$${Math.abs(upnlValue).toFixed(2)} (${sign}${upnlPercentage.toFixed(2)}%)`
 }

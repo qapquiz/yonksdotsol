@@ -152,15 +152,15 @@ The wiki is the single source of truth. Open `docs/wiki/` as an Obsidian vault f
 
 Quick links by topic:
 
-| Topic                              | Wiki Page                                                       |
-| ---------------------------------- | --------------------------------------------------------------- |
-| Connection, caching, data flow     | [[Connection Lifecycle]], [[Caching Strategy]]                  |
-| Color tokens, contrast, skeletons  | [[Theming]], [[Skeleton Loading]]                               |
-| PositionInfo, TokenInfo structure  | [[PositionInfo]], [[Position Architecture]]                     |
-| Loading states (skeleton/empty)    | [[Loading States]]                                              |
-| Number formatting (SOL, USD, %)    | [[Number Formatting]]                                           |
-| Code search patterns               | [[ast-grep]]                                                    |
-| Render optimization                | [[Performance Optimizations]]                                   |
+| Topic                             | Wiki Page                                      |
+| --------------------------------- | ---------------------------------------------- |
+| Connection, caching, data flow    | [[Connection Lifecycle]], [[Caching Strategy]] |
+| Color tokens, contrast, skeletons | [[Theming]], [[Skeleton Loading]]              |
+| PositionInfo, TokenInfo structure | [[PositionInfo]], [[Position Architecture]]    |
+| Loading states (skeleton/empty)   | [[Loading States]]                             |
+| Number formatting (SOL, USD, %)   | [[Number Formatting]]                          |
+| Code search patterns              | [[ast-grep]]                                   |
+| Render optimization               | [[Performance Optimizations]]                  |
 
 ### Staging area: `docs/raw/`
 

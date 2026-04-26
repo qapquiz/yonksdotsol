@@ -44,6 +44,7 @@ The `SolValue` component handles this formatting automatically.
 ### Loading State
 
 Shows shimmer placeholders when:
+
 - `positionCount > 0` AND
 - No pool data exists in store
 

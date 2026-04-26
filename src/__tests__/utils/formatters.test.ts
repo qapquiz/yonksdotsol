@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
+  formatUSD,
   formatTokenAmount,
   formatPriceRange,
   formatTimestamp,
@@ -8,6 +9,28 @@ import {
   formatUPNLDisplaySol,
   formatUPNLDisplay,
 } from '../../utils/positions/formatters'
+
+describe('formatUSD', () => {
+  it('formats zero', () => {
+    expect(formatUSD(0)).toBe('$0.00')
+  })
+
+  it('formats small values', () => {
+    expect(formatUSD(2.5)).toBe('$2.50')
+  })
+
+  it('formats large values with comma grouping', () => {
+    expect(formatUSD(15000)).toBe('$15,000.00')
+  })
+
+  it('formats with many decimal places', () => {
+    expect(formatUSD(1.23456)).toBe('$1.23')
+  })
+
+  it('formats negative values', () => {
+    expect(formatUSD(-100.5)).toBe('$-100.50')
+  })
+})
 
 describe('formatTokenAmount', () => {
   it('formats whole number with 9 decimals', () => {

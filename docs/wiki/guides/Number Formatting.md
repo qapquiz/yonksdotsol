@@ -17,8 +17,8 @@ Formatting conventions for SOL, USD, percentages, and fees.
 ```typescript
 // Large amounts: use compact notation
 formatSol(1234567.89) // "1.23M"
-formatSol(1234.56)    // "1.23K"
-formatSol(1.23456)    // "1.23"
+formatSol(1234.56) // "1.23K"
+formatSol(1.23456) // "1.23"
 ```
 
 ## USD Amounts
@@ -26,14 +26,14 @@ formatSol(1.23456)    // "1.23"
 ```typescript
 // Standard USD formatting
 formatUsd(1234.56) // "$1,234.56"
-formatUsd(0.12)    // "$0.12"
+formatUsd(0.12) // "$0.12"
 ```
 
 ## Percentages
 
 ```typescript
 // Percentage with sign
-formatPercent(0.1234)  // "+12.34%"
+formatPercent(0.1234) // "+12.34%"
 formatPercent(-0.0567) // "-5.67%"
 ```
 

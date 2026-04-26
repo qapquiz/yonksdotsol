@@ -20,17 +20,17 @@ The app uses a token-based theming system with semantic color names defined in `
 
 ## Color Tokens
 
-| Token | Hex | Role |
-|-------|-----|------|
-| `app-bg` | `#050505` | Screen background |
-| `app-surface` | `#111111` | Card backgrounds |
-| `app-surface-highlight` | `#1a1a1a` | Subtle fills, badges |
-| `app-border` | `#222222` | Borders, dividers, skeleton blocks |
-| `app-primary` | `#8FA893` | Brand accent (sage green) |
-| `app-primary-dim` | `#2a332c` | Tinted backgrounds |
-| `app-text` | `#ffffff` | Primary text |
-| `app-text-secondary` | `#999999` | Secondary labels |
-| `app-text-muted` | `#555555` | Section headers, captions |
+| Token                   | Hex       | Role                               |
+| ----------------------- | --------- | ---------------------------------- |
+| `app-bg`                | `#050505` | Screen background                  |
+| `app-surface`           | `#111111` | Card backgrounds                   |
+| `app-surface-highlight` | `#1a1a1a` | Subtle fills, badges               |
+| `app-border`            | `#222222` | Borders, dividers, skeleton blocks |
+| `app-primary`           | `#8FA893` | Brand accent (sage green)          |
+| `app-primary-dim`       | `#2a332c` | Tinted backgrounds                 |
+| `app-text`              | `#ffffff` | Primary text                       |
+| `app-text-secondary`    | `#999999` | Secondary labels                   |
+| `app-text-muted`        | `#555555` | Section headers, captions          |
 
 ## Theme Toggle
 

@@ -46,11 +46,11 @@ This prevents thundering herd when multiple components request the same data.
 
 ## Invalidation Strategies
 
-| Method | Use Case |
-|--------|----------|
-| `delete(key)` | Single key |
+| Method                       | Use Case             |
+| ---------------------------- | -------------------- |
+| `delete(key)`                | Single key           |
 | `invalidatePattern(prefix:)` | All keys with prefix |
-| `clear()` | Nuclear option |
+| `clear()`                    | Nuclear option       |
 
 Example — invalidate all UPNL data when wallet changes:
 

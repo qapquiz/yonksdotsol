@@ -19,13 +19,13 @@ This document tracks React Native performance changes made to the positions list
 
 #### What to test
 
-| Scenario | What to look for |
-|----------|-----------------|
-| App load with positions | Portfolio summary and all position cards render PnL data (SOL value + %) |
-| Pull-to-refresh | PnL values update after refresh |
-| Multiple positions in same pool | Only 1 network request per pool (check network tab or console) |
-| Wallet disconnect → reconnect | Old PnL clears, new wallet PnL loads correctly |
-| Position card mount | No flicker or flash of empty PnL before data arrives |
+| Scenario                        | What to look for                                                         |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| App load with positions         | Portfolio summary and all position cards render PnL data (SOL value + %) |
+| Pull-to-refresh                 | PnL values update after refresh                                          |
+| Multiple positions in same pool | Only 1 network request per pool (check network tab or console)           |
+| Wallet disconnect → reconnect   | Old PnL clears, new wallet PnL loads correctly                           |
+| Position card mount             | No flicker or flash of empty PnL before data arrives                     |
 
 ---
 
@@ -47,19 +47,19 @@ This document tracks React Native performance changes made to the positions list
 
 #### What to test
 
-| Scenario | What to look for |
-|----------|-----------------|
-| Scroll through many positions (5+) | Smooth scrolling, no jank or frame drops |
-| Pull-to-refresh | Spinner appears, positions reload, new data shows |
-| Scroll position memory | After navigating away and back, list doesn't jump to top |
-| Portfolio summary | Renders as first list item, scrolls with the list |
-| Out-of-range warning | Appears between summary and first card when applicable |
-| Card recycling | Cards re-entering viewport show correct data (no stale/merged state) |
-| Card spacing/margins | Same visual appearance as before (16px horizontal padding, 8px top padding) |
-| Bottom padding | 80px (h-20) footer space at bottom of list for scroll comfort |
-| Empty state | Skeleton → empty state transition still works on first load |
-| Single position | List works correctly with only 1 card |
-| Token icons + charts | SVG liquidity charts and token images render after scroll recycle |
+| Scenario                           | What to look for                                                            |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| Scroll through many positions (5+) | Smooth scrolling, no jank or frame drops                                    |
+| Pull-to-refresh                    | Spinner appears, positions reload, new data shows                           |
+| Scroll position memory             | After navigating away and back, list doesn't jump to top                    |
+| Portfolio summary                  | Renders as first list item, scrolls with the list                           |
+| Out-of-range warning               | Appears between summary and first card when applicable                      |
+| Card recycling                     | Cards re-entering viewport show correct data (no stale/merged state)        |
+| Card spacing/margins               | Same visual appearance as before (16px horizontal padding, 8px top padding) |
+| Bottom padding                     | 80px (h-20) footer space at bottom of list for scroll comfort               |
+| Empty state                        | Skeleton → empty state transition still works on first load                 |
+| Single position                    | List works correctly with only 1 card                                       |
+| Token icons + charts               | SVG liquidity charts and token images render after scroll recycle           |
 
 ---
 
@@ -75,11 +75,11 @@ This document tracks React Native performance changes made to the positions list
 
 #### What to test
 
-| Scenario | What to look for |
-|----------|-----------------|
-| App launch | No crash, screens load normally |
-| Wallet connect/disconnect | Flow works same as before |
-| Existing loading states | Skeleton cards and shimmer blocks still appear during data fetches |
+| Scenario                  | What to look for                                                   |
+| ------------------------- | ------------------------------------------------------------------ |
+| App launch                | No crash, screens load normally                                    |
+| Wallet connect/disconnect | Flow works same as before                                          |
+| Existing loading states   | Skeleton cards and shimmer blocks still appear during data fetches |
 
 ---
 
@@ -95,10 +95,10 @@ This document tracks React Native performance changes made to the positions list
 
 #### What to test
 
-| Scenario | What to look for |
-|----------|-----------------|
+| Scenario        | What to look for                                          |
+| --------------- | --------------------------------------------------------- |
 | Chart rendering | SVG bars render at correct width after layout measurement |
-| Screen rotation | Chart re-measures and redraws correctly |
+| Screen rotation | Chart re-measures and redraws correctly                   |
 
 ---
 
@@ -114,12 +114,12 @@ This document tracks React Native performance changes made to the positions list
 
 #### What to test
 
-| Scenario | What to look for |
-|----------|-----------------|
-| Normal SOL values (≥0.01) | Display as before, e.g. `1.2345` |
-| Small SOL values (<0.01) | Display superscript format, e.g. `0.00⁴1234` |
-| Zero / NaN / Infinity | Falls back to `0.0000` |
-| PnL color changes | Positive = emerald, negative = red, same as before |
+| Scenario                  | What to look for                                   |
+| ------------------------- | -------------------------------------------------- |
+| Normal SOL values (≥0.01) | Display as before, e.g. `1.2345`                   |
+| Small SOL values (<0.01)  | Display superscript format, e.g. `0.00⁴1234`       |
+| Zero / NaN / Infinity     | Falls back to `0.0000`                             |
+| PnL color changes         | Positive = emerald, negative = red, same as before |
 
 ---
 
@@ -137,12 +137,12 @@ This document tracks React Native performance changes made to the positions list
 
 #### What to test
 
-| Scenario | What to look for |
-|----------|-----------------|
-| App load with positions | All token symbols, icons, and prices appear in position cards |
+| Scenario                 | What to look for                                                          |
+| ------------------------ | ------------------------------------------------------------------------- |
+| App load with positions  | All token symbols, icons, and prices appear in position cards             |
 | Some tokens fail to load | Cards for failed tokens show fallback (?) initial, other cards unaffected |
-| Pull-to-refresh | Token data refreshes correctly |
-| Rapid wallet switch | No stale token data from previous wallet |
+| Pull-to-refresh          | Token data refreshes correctly                                            |
+| Rapid wallet switch      | No stale token data from previous wallet                                  |
 
 ---
 
@@ -158,12 +158,12 @@ This document tracks React Native performance changes made to the positions list
 
 #### What to test
 
-| Scenario | What to look for |
-|----------|-----------------|
-| Avatar rendering (connected) | Green pixel cat avatar visible in header |
-| Avatar rendering (disconnected) | Gray pixel cat avatar visible |
-| Size scaling | `size` prop scales the avatar correctly |
-| All variants | Switch variant prop — bot, alien, ghost, robot, cat all render correctly |
+| Scenario                        | What to look for                                                         |
+| ------------------------------- | ------------------------------------------------------------------------ |
+| Avatar rendering (connected)    | Green pixel cat avatar visible in header                                 |
+| Avatar rendering (disconnected) | Gray pixel cat avatar visible                                            |
+| Size scaling                    | `size` prop scales the avatar correctly                                  |
+| All variants                    | Switch variant prop — bot, alien, ghost, robot, cat all render correctly |
 
 ---
 

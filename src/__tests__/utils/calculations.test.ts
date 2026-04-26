@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import type { TokenInfo } from '../../tokens'
 import {
+  calculateTokenPairUSD,
   calculatePositionTotalValue,
   calculateUnrealizedFeesValue,
   calculateClaimedFeesValue,
@@ -13,7 +14,6 @@ import {
   calculateInitialDepositValue,
   calculateUPNLValue,
   calculateUPNLPercentage,
-  formatUPNLDisplay,
 } from '../../utils/positions/calculations'
 
 // Mock TokenInfo for tests
@@ -40,6 +40,34 @@ const mockTokenY: TokenInfo = {
     currency: 'USD',
   },
 }
+
+describe('calculateTokenPairUSD', () => {
+  it('returns 0 when both tokens are null', () => {
+    expect(calculateTokenPairUSD(1000n, 2000n, null, null)).toBe(0)
+  })
+
+  it('returns 0 when tokenX is null', () => {
+    expect(calculateTokenPairUSD(1000n, 2000n, null, mockTokenY)).toBe(0)
+  })
+
+  it('returns 0 when tokenY is null', () => {
+    expect(calculateTokenPairUSD(1000n, 2000n, mockTokenX, null)).toBe(0)
+  })
+
+  it('calculates combined USD value', () => {
+    // 1 SOL ($1.5) + 1 USDC ($1.0) = $2.50
+    expect(calculateTokenPairUSD(1000000000n, 1000000n, mockTokenX, mockTokenY)).toBe(2.5)
+  })
+
+  it('handles large values', () => {
+    // 1000 SOL ($1.5) = $1500
+    expect(calculateTokenPairUSD(1000000000000n, 0n, mockTokenX, mockTokenY)).toBe(1500)
+  })
+
+  it('handles zero amounts', () => {
+    expect(calculateTokenPairUSD(0n, 0n, mockTokenX, mockTokenY)).toBe(0)
+  })
+})
 
 describe('calculatePositionTotalValue', () => {
   it('returns $0.00 when tokenXInfo is null', () => {
@@ -334,19 +362,5 @@ describe('calculateUPNLPercentage', () => {
 
   it('calculates -50% loss', () => {
     expect(calculateUPNLPercentage(50, 100)).toBe(-50)
-  })
-})
-
-describe('formatUPNLDisplay (calculations)', () => {
-  it('formats positive display', () => {
-    expect(formatUPNLDisplay(10.5, 5.25)).toBe('+$10.50 (+5.25%)')
-  })
-
-  it('formats negative display', () => {
-    expect(formatUPNLDisplay(-10.5, -5.25)).toBe('$10.50 (-5.25%)')
-  })
-
-  it('formats zero values', () => {
-    expect(formatUPNLDisplay(0, 0)).toBe('+$0.00 (+0.00%)')
   })
 })

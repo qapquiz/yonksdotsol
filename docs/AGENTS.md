@@ -65,17 +65,21 @@ related:
 Brief description of what it is and where it lives.
 
 ## Location
+
 `src/path/to/file.ts`
 
 ## Responsibilities
+
 - What this entity does
 - What it owns
 
 ## Key Relationships
+
 - Depends on X
 - Used by Y
 
 ## See Also
+
 - [[RelatedEntity]] - related entity
 - [[RelatedConcept]] - related concept
 ```
@@ -101,12 +105,15 @@ related:
 What is this concept? Why does it matter?
 
 ## Overview
+
 Explanation of the concept in project context.
 
 ## Implementation
+
 How this concept is implemented in the codebase.
 
 ## See Also
+
 - [[EntityA]] - implements this concept
 - [[OtherConcept]] - related idea
 ```
@@ -132,12 +139,15 @@ related:
 What this guide helps you do.
 
 ## Quick Reference
+
 Common commands/patterns.
 
 ## Detailed Instructions
+
 Step-by-step guidance.
 
 ## See Also
+
 - [[EntityName]] - relevant entity
 - [[ConceptName]] - relevant concept
 ```
@@ -163,6 +173,7 @@ When adding new knowledge:
 ### Lint (Health Check)
 
 Periodically check for:
+
 - Orphan pages (no inbound links)
 - Broken `[[wikilinks]]`
 - Missing cross-references

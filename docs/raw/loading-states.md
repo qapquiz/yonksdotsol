@@ -72,10 +72,10 @@ return <DataView />
 
 | ❌ Wrong                                                | Why                                                   |
 | ------------------------------------------------------- | ----------------------------------------------------- |
-| `if (isLoading) return <Skeleton />`                     | Swaps real data for skeleton on every refresh         |
-| `if (isLoading && !data) return <Skeleton />`            | Can't distinguish first load from refresh-while-empty |
-| Using `hasLoadedOnce` ref that flips during wallet init  | Wallet starts as undefined → sets false → true again  |
-| Showing skeleton during UPNL loading                     | UPNL loads independently; cards can render without it  |
+| `if (isLoading) return <Skeleton />`                    | Swaps real data for skeleton on every refresh         |
+| `if (isLoading && !data) return <Skeleton />`           | Can't distinguish first load from refresh-while-empty |
+| Using `hasLoadedOnce` ref that flips during wallet init | Wallet starts as undefined → sets false → true again  |
+| Showing skeleton during UPNL loading                    | UPNL loads independently; cards can render without it |
 
 ## Progressive Loading Order
 

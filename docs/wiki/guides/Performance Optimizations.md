@@ -17,17 +17,17 @@ Memoization, FlashList, and render optimization patterns.
 
 All expensive components are wrapped with `memo()`:
 
-| Component | File |
-|-----------|------|
-| `PositionCard` | `src/components/positions/PositionCard.tsx` |
-| `PortfolioSummary` | `src/components/positions/PortfolioSummary.tsx` |
-| `LiquidityBarChart` | `src/components/positions/LiquidityBarChart.tsx` |
-| `PositionHeader` | `src/components/positions/PositionHeader.tsx` |
-| `PositionFooter` | `src/components/positions/PositionFooter.tsx` |
-| `TokenIcons` | `src/components/positions/TokenIcons.tsx` |
-| `EmptyState` | `src/components/positions/EmptyState.tsx` |
+| Component              | File                                                |
+| ---------------------- | --------------------------------------------------- |
+| `PositionCard`         | `src/components/positions/PositionCard.tsx`         |
+| `PortfolioSummary`     | `src/components/positions/PortfolioSummary.tsx`     |
+| `LiquidityBarChart`    | `src/components/positions/LiquidityBarChart.tsx`    |
+| `PositionHeader`       | `src/components/positions/PositionHeader.tsx`       |
+| `PositionFooter`       | `src/components/positions/PositionFooter.tsx`       |
+| `TokenIcons`           | `src/components/positions/TokenIcons.tsx`           |
+| `EmptyState`           | `src/components/positions/EmptyState.tsx`           |
 | `PositionCardSkeleton` | `src/components/positions/PositionCardSkeleton.tsx` |
-| `PixelAvatar` | `src/components/ui/PixelAvatar.tsx` |
+| `PixelAvatar`          | `src/components/ui/PixelAvatar.tsx`                 |
 
 ## useCallback
 

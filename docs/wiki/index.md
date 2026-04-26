@@ -43,13 +43,13 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 
 ## Components
 
-| Page                    | Description                              | Location                                    |
-| ----------------------- | ---------------------------------------- | ------------------------------------------- |
-| [[PortfolioSummary]]    | Portfolio PnL summary with SOL values    | `src/components/positions/PortfolioSummary.tsx` |
-| [[LiquidityBarChart]]  | SVG bar chart for liquidity distribution | `src/components/positions/LiquidityBarChart.tsx` |
-| [[PositionCard]]        | Individual position display card         | `src/components/positions/PositionCard.tsx` |
-| [[ShimmerBlock]]        | Skeleton loading animation               | `src/components/ui/ShimmerBlock.tsx`        |
-| [[PixelAvatar]]         | Pixelated avatar component               | `src/components/ui/PixelAvatar.tsx`         |
+| Page                  | Description                              | Location                                         |
+| --------------------- | ---------------------------------------- | ------------------------------------------------ |
+| [[PortfolioSummary]]  | Portfolio PnL summary with SOL values    | `src/components/positions/PortfolioSummary.tsx`  |
+| [[LiquidityBarChart]] | SVG bar chart for liquidity distribution | `src/components/positions/LiquidityBarChart.tsx` |
+| [[PositionCard]]      | Individual position display card         | `src/components/positions/PositionCard.tsx`      |
+| [[ShimmerBlock]]      | Skeleton loading animation               | `src/components/ui/ShimmerBlock.tsx`             |
+| [[PixelAvatar]]       | Pixelated avatar component               | `src/components/ui/PixelAvatar.tsx`              |
 
 ## Raw Staging Area
 

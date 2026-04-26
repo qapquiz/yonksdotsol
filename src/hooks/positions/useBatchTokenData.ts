@@ -30,7 +30,9 @@ export function useBatchTokenData({ mints, enabled }: UseBatchTokenDataProps): U
     setIsLoading(true)
     setError(null)
 
-    const settled = Promise.allSettled(mints.map((mint) => fetchTokenPriceData(mint).then((info) => [mint, info] as const)))
+    const settled = Promise.allSettled(
+      mints.map((mint) => fetchTokenPriceData(mint).then((info) => [mint, info] as const)),
+    )
 
     settled.then((results) => {
       if (!isMounted) return

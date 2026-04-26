@@ -4,18 +4,18 @@ Staging area for unprocessed info. Drop notes, reference material, or raw docs h
 
 ## Status
 
-| File                       | Processed To                                              | Status |
-| -------------------------- | --------------------------------------------------------- | ------ |
-| `architecture.md`          | [[Connection Lifecycle]], [[Caching Strategy]] (wiki)     | ✅      |
-| `data-model.md`            | [[PositionInfo]], [[Position Architecture]] (wiki)        | ✅      |
-| `theme-guide.md`           | [[Theming]], [[Skeleton Loading]] (wiki)                  | ✅      |
-| `loading-states.md`        | [[Loading States]] (wiki)                                 | ✅      |
-| `number-formatting.md`     | [[Number Formatting]] (wiki)                              | ✅      |
-| `perf-optimizations.md`    | [[Performance Optimizations]] (wiki)                      | ✅      |
-| `CACHING_STRATEGY.md`      | [[Caching Strategy]] (wiki)                               | ✅      |
-| `CACHING_SUMMARY.md`       | [[Caching Strategy]] (wiki)                               | ✅      |
-| `CACHING_QUICK_START.md`   | [[Caching Strategy]] (wiki)                               | ✅      |
-| `testing-plan.md`          | [[Testing]] (wiki)                                       | ✅      |
+| File                     | Processed To                                          | Status |
+| ------------------------ | ----------------------------------------------------- | ------ |
+| `architecture.md`        | [[Connection Lifecycle]], [[Caching Strategy]] (wiki) | ✅     |
+| `data-model.md`          | [[PositionInfo]], [[Position Architecture]] (wiki)    | ✅     |
+| `theme-guide.md`         | [[Theming]], [[Skeleton Loading]] (wiki)              | ✅     |
+| `loading-states.md`      | [[Loading States]] (wiki)                             | ✅     |
+| `number-formatting.md`   | [[Number Formatting]] (wiki)                          | ✅     |
+| `perf-optimizations.md`  | [[Performance Optimizations]] (wiki)                  | ✅     |
+| `CACHING_STRATEGY.md`    | [[Caching Strategy]] (wiki)                           | ✅     |
+| `CACHING_SUMMARY.md`     | [[Caching Strategy]] (wiki)                           | ✅     |
+| `CACHING_QUICK_START.md` | [[Caching Strategy]] (wiki)                           | ✅     |
+| `testing-plan.md`        | [[Testing]] (wiki)                                    | ✅     |
 
 ## Workflow
 
