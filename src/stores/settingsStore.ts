@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { createMMKV } from 'react-native-mmkv'
+import type { ThemeMode } from '../config/theme'
 
 const mmkv = createMMKV({ id: 'settings' })
 
@@ -10,7 +11,7 @@ const storage = {
   removeItem: (name: string) => mmkv.remove(name),
 }
 
-export type ThemeMode = 'dark' | 'light'
+export type { ThemeMode }
 
 interface SettingsState {
   // Display preferences

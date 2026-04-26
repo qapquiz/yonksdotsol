@@ -1,63 +1,19 @@
-import type { PositionInfo } from '@meteora-ag/dlmm'
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { View } from 'react-native'
-import { usePnLStore, selectPositionPnL } from '../../stores/pnlStore'
-import { computePositionViewData } from '../../utils/positions/computePositionViewData'
 import type { TokenInfo } from '../../tokens'
+import type { PositionViewModel } from '../../utils/positions/computePositionViewData'
 import { LiquidityBarChart } from './LiquidityBarChart'
 import PositionCardSkeleton from './PositionCardSkeleton'
 import { PositionFooter } from './PositionFooter'
 import { PositionHeader } from './PositionHeader'
 
 interface PositionCardProps {
-  position: PositionInfo
-  lbPositionIndex?: number
+  vm: PositionViewModel
   tokenXInfo: TokenInfo | null
   tokenYInfo: TokenInfo | null
-  walletAddress?: string
-  poolAddress: string
 }
 
-function PositionCardComponent({
-  position,
-  lbPositionIndex = 0,
-  tokenXInfo,
-  tokenYInfo,
-  walletAddress,
-  poolAddress,
-}: PositionCardProps) {
-  const lbPairPosition = position.lbPairPositionsData[lbPositionIndex]
-  const positionData = lbPairPosition?.positionData
-
-  const positionAddress = lbPairPosition?.publicKey.toBase58() || position.publicKey.toBase58()
-  const wallet = walletAddress || ''
-
-  // Memoize selector to avoid creating a new function on every render
-  const pnlSelector = useMemo(
-    () => selectPositionPnL(poolAddress, wallet, positionAddress),
-    [poolAddress, wallet, positionAddress],
-  )
-  const pnlData = usePnLStore(pnlSelector)
-
-  const activeId = useMemo(() => Number(position.lbPair.activeId), [position.lbPair.activeId])
-
-  // Single computation — all derived view data in one pure function
-  const vm = useMemo(
-    () =>
-      computePositionViewData({
-        positionData,
-        activeId,
-        positionAddress,
-        poolAddress,
-        tokenXInfo,
-        tokenYInfo,
-        pnlData,
-      }),
-    [positionData, activeId, positionAddress, poolAddress, tokenXInfo, tokenYInfo, pnlData],
-  )
-
-  if (!lbPairPosition) return null
-
+function PositionCardComponent({ vm, tokenXInfo, tokenYInfo }: PositionCardProps) {
   // Show skeleton while token data is loading
   if (!tokenXInfo && !tokenYInfo) {
     return <PositionCardSkeleton />

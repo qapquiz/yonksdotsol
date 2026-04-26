@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import 'uniwind';
 
+/* Source of truth: src/config/theme.ts — keep color values in sync */
+
 @theme {
   --font-pixel: 'GeistPixel-Square';
   --font-sans: 'Geist-Regular';

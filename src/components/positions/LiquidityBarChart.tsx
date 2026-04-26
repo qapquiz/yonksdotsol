@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { Text, View } from 'react-native'
 import { Line, Rect, Svg } from 'react-native-svg'
-import type { LiquidityShape } from '../../utils/positions/calculations'
+import type { LiquidityShape } from '../../utils/positions/computePositionViewData'
 
 interface LiquidityBarChartProps {
   liquidityShape: LiquidityShape | null

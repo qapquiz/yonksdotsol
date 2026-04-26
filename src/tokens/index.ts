@@ -1,7 +1,4 @@
 import { env } from '../config/env'
-import { CacheManager } from '../utils/cache/CacheManager'
-import { getTokenDataKey } from '../utils/cache/cacheKeys'
-import { CACHE_TTL } from '../config/cache'
 
 export interface TokenInfo {
   mint: string
@@ -56,12 +53,4 @@ export async function fetchTokenFromRpc(mint: string): Promise<TokenInfo> {
     decimals: data.result.token_info.decimals,
     price_info: data.result.token_info.price_info,
   } as TokenInfo
-}
-
-export const fetchTokenPriceData = (mint: string): Promise<TokenInfo> => {
-  return CacheManager.getInstance().getOrFetch(
-    getTokenDataKey(mint),
-    () => fetchTokenFromRpc(mint),
-    CACHE_TTL.TOKEN_DATA,
-  )
 }

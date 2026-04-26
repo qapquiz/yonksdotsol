@@ -1,13 +1,12 @@
 import { memo, useMemo } from 'react'
 import { Text, View } from 'react-native'
-import { useShallow } from 'zustand/react/shallow'
-import { selectHasPoolData, selectPoolPnLSummary, usePnLStore } from '../../stores/pnlStore'
+import type { PortfolioSummaryData } from '../../hooks/usePositionsPage'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
 
 interface PortfolioSummaryProps {
-  walletAddress?: string
+  summary: PortfolioSummaryData | null
+  hasData: boolean
   positionCount: number
-  poolAddresses: string[]
 }
 
 function formatSmallValue(value: number): { leadingText: string; superscript: string; digits: string } | null {
@@ -48,18 +47,8 @@ function SolValue({ value, className }: { value: number; className?: string }) {
   return content
 }
 
-function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses }: PortfolioSummaryProps) {
-  const wallet = walletAddress || ''
-
-  const summary = usePnLStore(useShallow(selectPoolPnLSummary(wallet, poolAddresses)))
-
-  // Memoize selector to avoid creating a new function on every render
-  const hasPoolDataSelector = useMemo(() => selectHasPoolData(wallet, poolAddresses), [wallet, poolAddresses])
-  const hasAnyPoolData = usePnLStore(hasPoolDataSelector)
-
-  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol } = summary
-
-  const isLoading = positionCount > 0 && !hasAnyPoolData
+function PortfolioSummaryComponent({ summary, hasData, positionCount }: PortfolioSummaryProps) {
+  const isLoading = positionCount > 0 && !hasData
   if (isLoading) {
     return (
       <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
@@ -92,6 +81,13 @@ function PortfolioSummaryComponent({ walletAddress, positionCount, poolAddresses
       </View>
     )
   }
+
+  // No data yet (no positions or summary not computed)
+  if (!summary) {
+    return null
+  }
+
+  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol } = summary
 
   const isProfit = totalPnlSol >= 0
   const pnlColorClass = isProfit ? 'text-emerald-400' : 'text-red-400'

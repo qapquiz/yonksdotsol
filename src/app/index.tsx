@@ -1,31 +1,25 @@
 import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
-import { useMemo } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { PixelAvatar } from '../components/ui/PixelAvatar'
-import { usePositionFetch } from '../hooks/positions/usePositionFetch'
+import { usePositionsPage } from '../hooks/usePositionsPage'
 import { useSettingsStore } from '../stores/settingsStore'
+import { useThemeTokens } from '../hooks/useThemeTokens'
 import { useWalletLifecycle } from '../hooks/useWalletLifecycle'
 import PositionsList from './positions'
 
 export default function App() {
   const theme = useSettingsStore((s) => s.theme)
   const toggleTheme = useSettingsStore((s) => s.toggleTheme)
-  const themeColors = useMemo(
-    () => ({
-      bg: theme === 'dark' ? '#050505' : '#f5f5f5',
-      primary: theme === 'dark' ? '#8FA893' : '#6b8f71',
-      textSecondary: theme === 'dark' ? '#999999' : '#666666',
-    }),
-    [theme],
-  )
+  const tokens = useThemeTokens()
 
   const { walletReady, walletAddress, isConnecting, handleConnect, handleDisconnect } = useWalletLifecycle()
-  const { positions, isLoading, refresh } = usePositionFetch(walletAddress)
+
+  const pageData = usePositionsPage(walletAddress, walletReady)
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.bg }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: tokens.bg }}>
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
@@ -53,11 +47,7 @@ export default function App() {
               onPress={toggleTheme}
               className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
             >
-              <Ionicons
-                name={theme === 'dark' ? 'sunny-outline' : 'moon-outline'}
-                size={20}
-                color={themeColors.primary}
-              />
+              <Ionicons name={theme === 'dark' ? 'sunny-outline' : 'moon-outline'} size={20} color={tokens.primary} />
             </Pressable>
             <Pressable
               onPress={walletAddress ? handleDisconnect : handleConnect}
@@ -66,11 +56,7 @@ export default function App() {
                 walletAddress ? 'border border-app-primary' : ''
               } ${isConnecting ? 'opacity-50' : ''}`}
             >
-              <Ionicons
-                name="wallet-outline"
-                size={20}
-                color={walletAddress ? themeColors.primary : themeColors.textSecondary}
-              />
+              <Ionicons name="wallet-outline" size={20} color={walletAddress ? tokens.primary : tokens.textSecondary} />
             </Pressable>
           </View>
         </View>
@@ -78,15 +64,19 @@ export default function App() {
 
       <View className="flex-1">
         <PositionsList
-          positions={positions}
-          isLoadingPositions={isLoading}
-          walletResolved={walletReady}
-          ownerAddress={walletAddress}
-          onRefresh={refresh}
+          positions={pageData.positions}
+          summary={pageData.summary}
+          hasPnLData={pageData.hasPnLData}
+          outOfRangeCount={pageData.outOfRangeCount}
+          positionCount={pageData.positionCount}
+          loading={pageData.loading}
+          walletResolved={pageData.walletResolved}
+          walletAddress={pageData.walletAddress}
+          refresh={pageData.refresh}
         />
       </View>
 
-      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+      <StatusBar style={tokens.statusBar} />
     </SafeAreaView>
   )
 }

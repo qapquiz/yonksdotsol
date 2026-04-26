@@ -20,6 +20,11 @@ export class CacheManager {
     return CacheManager.instance
   }
 
+  /** Create a fresh, independent instance — for testing only */
+  static createFresh(): CacheManager {
+    return new CacheManager()
+  }
+
   get<T>(key: string): T | null {
     this.maybeCleanup()
 
