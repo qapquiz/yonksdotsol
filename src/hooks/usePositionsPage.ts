@@ -1,19 +1,14 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
-import type { PositionPnLData } from 'metcomet'
+import DLMM from '@meteora-ag/dlmm'
+import { PublicKey } from '@solana/web3.js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { getSharedConnection } from '../config/connection'
+import { createDataServices } from '../services/data'
+import { usePnLStore } from '../stores/pnlStore'
 import type { TokenInfo } from '../tokens'
 import { CacheManager } from '../utils/cache/CacheManager'
 import { computePositionViewData, type PositionViewModel } from '../utils/positions/computePositionViewData'
 import { computePoolPnLSummary, findPositionPnL, type PoolPnLSummary } from '../utils/positions/pnlAggregation'
-import { usePnLStore } from '../stores/pnlStore'
-
-// ─── Dependency injection for testing ────────────────────────────────
-
-export interface PositionPipelineDeps {
-  fetchPositions?: (wallet: string) => Promise<Map<string, PositionInfo>>
-  fetchTokenPrices?: (mints: string[]) => Promise<Map<string, TokenInfo>>
-  fetchPoolPnL?: (pool: string, wallet: string) => Promise<PositionPnLData[] | null>
-}
 
 // ─── Public types ────────────────────────────────────────────────────
 
@@ -61,7 +56,6 @@ export interface PositionsPageResult {
 export function usePositionsPage(
   walletAddress: string | undefined,
   walletResolved: boolean,
-  deps?: PositionPipelineDeps,
 ): PositionsPageResult {
   const wallet = walletAddress || ''
 
@@ -69,28 +63,17 @@ export function usePositionsPage(
   const [positions, setPositions] = useState<Map<string, PositionInfo>>(new Map())
   const [isLoading, setIsLoading] = useState(true)
 
-  const fetchPositions = useCallback(
-    async (address: string) => {
-      setIsLoading(true)
-      try {
-        if (deps?.fetchPositions) {
-          const result = await deps.fetchPositions(address)
-          setPositions(result)
-        } else {
-          const DLMM = (await import('@meteora-ag/dlmm')).default
-          const { PublicKey } = await import('@solana/web3.js')
-          const { getSharedConnection } = await import('../config/connection')
-          const result = await DLMM.getAllLbPairPositionsByUser(getSharedConnection(), new PublicKey(address))
-          setPositions(result)
-        }
-      } catch (e) {
-        console.error(e)
-      } finally {
-        setIsLoading(false)
-      }
-    },
-    [deps],
-  )
+  const fetchPositions = useCallback(async (address: string) => {
+    setIsLoading(true)
+    try {
+      const result = await DLMM.getAllLbPairPositionsByUser(getSharedConnection(), new PublicKey(address))
+      setPositions(result)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
 
   // Wallet change → clear old wallet's cache, fetch positions for new wallet
   const prevWalletRef = useRef<string | null>(null)
@@ -155,24 +138,16 @@ export function usePositionsPage(
 
     let isMounted = true
 
-    if (deps?.fetchTokenPrices) {
-      deps.fetchTokenPrices(uniqueMints).then((data) => {
+    createDataServices()
+      .tokens.getPrices(uniqueMints)
+      .then((data) => {
         if (isMounted) setTokenData(data)
       })
-    } else {
-      import('../services/data').then(({ createDataServices }) => {
-        createDataServices()
-          .tokens.getPrices(uniqueMints)
-          .then((data) => {
-            if (isMounted) setTokenData(data)
-          })
-      })
-    }
 
     return () => {
       isMounted = false
     }
-  }, [uniqueMints, positionsArray.length, deps])
+  }, [uniqueMints, positionsArray.length])
 
   // ── PnL fetching ──
   const storeFetchPoolPnL = usePnLStore((s) => s.fetchPoolPnL)
@@ -180,12 +155,11 @@ export function usePositionsPage(
 
   useEffect(() => {
     if (wallet && poolAddresses.length > 0) {
-      const fetchPnL = deps?.fetchPoolPnL ?? storeFetchPoolPnL
       poolAddresses.forEach((poolAddress) => {
-        fetchPnL(poolAddress, wallet)
+        storeFetchPoolPnL(poolAddress, wallet)
       })
     }
-  }, [wallet, poolAddresses, storeFetchPoolPnL, deps])
+  }, [wallet, poolAddresses, storeFetchPoolPnL])
 
   // ── Compute view models ──
   const resolvedPositions = useMemo(() => {
