@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { RefreshControl, Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PortfolioSummary from '../../components/positions/PortfolioSummary'
+import PortfolioSummarySkeleton from '../../components/positions/PortfolioSummarySkeleton'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
@@ -96,9 +97,8 @@ export default function PositionsList({
   if (showSkeleton) {
     return (
       <View className="px-4 pt-2">
-        {[1, 2, 3].map((key) => (
-          <PositionCardSkeleton key={key} />
-        ))}
+        <PortfolioSummarySkeleton />
+        <PositionCardSkeleton />
         <View className="h-20" />
       </View>
     )
