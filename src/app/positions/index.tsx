@@ -25,6 +25,7 @@ interface PositionsListProps {
   outOfRangeCount: number
   positionCount: number
   loading: boolean
+  tokenDataReady: boolean
   walletResolved: boolean
   walletAddress?: string
   refresh: () => void
@@ -37,6 +38,7 @@ export default function PositionsList({
   outOfRangeCount,
   positionCount,
   loading,
+  tokenDataReady,
   walletResolved,
   walletAddress,
   refresh,
@@ -90,8 +92,10 @@ export default function PositionsList({
     [summary, hasPnLData, positionCount],
   )
 
-  // Show skeleton until wallet status is resolved AND first fetch completes
-  const showSkeleton = !walletResolved || (positions.length === 0 && loading)
+  // Show skeleton until wallet is resolved, positions fetch completes, AND token
+  // data is ready.  Waiting for tokenDataReady avoids a blank FlashList frame that
+  // occurs when positions exist but token prices haven't loaded yet.
+  const showSkeleton = !walletResolved || !tokenDataReady || (positions.length === 0 && loading)
   const showEmpty = walletResolved && !loading && positions.length === 0
 
   if (showSkeleton) {

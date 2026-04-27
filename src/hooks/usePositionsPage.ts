@@ -43,6 +43,8 @@ export interface PositionsPageResult {
   positionCount: number
   /** True during initial skeleton load */
   loading: boolean
+  /** True when token prices have been resolved (prevents FlashList blank frame) */
+  tokenDataReady: boolean
   /** Pull-to-refresh handler */
   refresh: () => void
   /** Wallet resolved status */
@@ -90,11 +92,14 @@ export function usePositionsPage(
     if (currentAddress !== null && currentAddress !== prevAddress) {
       fetchPositions(currentAddress)
     } else if (currentAddress === null && prevAddress !== null) {
+      // Wallet disconnected — clear data
       setPositions(new Map())
       setIsLoading(false)
-    } else if (currentAddress === null) {
-      setIsLoading(false)
     }
+    // When currentAddress is null and prevAddress is also null (mount before
+    // wallet resolves), do NOT set isLoading=false.  The parent component keeps
+    // walletResolved=false so the skeleton stays visible.  This avoids a flash
+    // of the empty-state between wallet timeout and address hydration.
 
     prevWalletRef.current = currentAddress
   }, [walletAddress, fetchPositions])
@@ -129,6 +134,10 @@ export function usePositionsPage(
 
   // ── Token data fetching ──
   const [tokenData, setTokenData] = useState<Map<string, TokenInfo>>(new Map())
+  // Only false before the very first token fetch completes.
+  // Once true, stays true — refreshes update tokenData in-place without
+  // flipping this back, so the FlashList isn't replaced by the skeleton.
+  const [tokenDataReady, setTokenDataReady] = useState(false)
 
   useEffect(() => {
     if (positionsArray.length === 0 || uniqueMints.length === 0) {
@@ -141,7 +150,10 @@ export function usePositionsPage(
     createDataServices()
       .tokens.getPrices(uniqueMints)
       .then((data) => {
-        if (isMounted) setTokenData(data)
+        if (isMounted) {
+          setTokenData(data)
+          setTokenDataReady(true)
+        }
       })
 
     return () => {
@@ -243,6 +255,7 @@ export function usePositionsPage(
     poolAddresses,
     positionCount,
     loading: isLoading,
+    tokenDataReady,
     refresh,
     walletResolved,
     walletAddress,

@@ -70,6 +70,7 @@ export default function App() {
           outOfRangeCount={pageData.outOfRangeCount}
           positionCount={pageData.positionCount}
           loading={pageData.loading}
+          tokenDataReady={pageData.tokenDataReady}
           walletResolved={pageData.walletResolved}
           walletAddress={pageData.walletAddress}
           refresh={pageData.refresh}
