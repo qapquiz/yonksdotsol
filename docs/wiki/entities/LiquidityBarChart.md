@@ -1,9 +1,14 @@
 ---
 title: LiquidityBarChart
 type: entity
+location: src/components/positions/LiquidityBarChart.tsx
 created: 2026-04-19
 updated: 2026-04-19
 tags: [component, chart, liquidity, svg]
+related:
+  - PositionInfo
+  - Position Architecture
+  - Number Formatting
 ---
 
 # LiquidityBarChart
@@ -80,7 +85,7 @@ When no data is available:
 
 Uses `onLayout` callback to measure container width and calculate bar widths dynamically.
 
-## Related
+## See Also
 
 - [[PositionInfo]] — Source of liquidity data
 - [[Position Architecture]] — How positions relate to bins

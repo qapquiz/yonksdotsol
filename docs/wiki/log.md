@@ -2,7 +2,7 @@
 title: Wiki Log
 type: log
 created: 2026-04-18
-updated: 2026-04-18
+updated: 2026-04-28
 tags: [log, wiki]
 ---
 
@@ -15,7 +15,7 @@ Chronological record of wiki activity. Append-only.
 Created LLM Wiki structure based on LLM Wiki pattern:
 
 - Created `docs/wiki/` directory with entities/, concepts/, guides/
-- Created [[WIKI_SCHEMA|schema]] with maintenance instructions
+- Created [[WIKI_SCHEMA]] with maintenance instructions
 - Created [[index]] as content catalog
 - Created this log for activity tracking
 
@@ -23,30 +23,30 @@ Created LLM Wiki structure based on LLM Wiki pattern:
 
 Created initial entity pages from existing docs:
 
-- [[Connection]] - from architecture.md
-- [[CacheManager]] - from architecture.md + CACHING_STRATEGY.md
-- [[PositionInfo]] - from data-model.md
-- [[SettingsStore]] - from theme-guide.md
-- [[PnLStore]] - from data-model.md references
+- [[Connection]] — from architecture.md
+- [[CacheManager]] — from architecture.md + CACHING_STRATEGY.md
+- [[PositionInfo]] — from data-model.md
+- [[SettingsStore]] — from theme-guide.md
+- [[PnLStore]] — from data-model.md references
 
 ## [2026-04-18] create | Concept pages
 
 Created initial concept pages:
 
-- [[Caching Strategy]] - from CACHING_STRATEGY.md, CACHING_SUMMARY.md
-- [[Theming]] - from theme-guide.md
-- [[Connection Lifecycle]] - from architecture.md
-- [[Position Architecture]] - from data-model.md
-- [[Skeleton Loading]] - from theme-guide.md, loading-states.md
+- [[Caching Strategy]] — from CACHING_STRATEGY.md, CACHING_SUMMARY.md
+- [[Theming]] — from theme-guide.md
+- [[Connection Lifecycle]] — from architecture.md
+- [[Position Architecture]] — from data-model.md
+- [[Skeleton Loading]] — from theme-guide.md, loading-states.md
 
 ## [2026-04-18] create | Guide pages
 
 Migrated guide pages:
 
-- [[ast-grep]] - from ast-grep-cheatsheet.md
-- [[Number Formatting]] - from number-formatting.md
-- [[Loading States]] - from loading-states.md
-- [[Performance Optimizations]] - from perf-optimizations.md
+- [[ast-grep]] — from ast-grep-cheatsheet.md
+- [[Number Formatting]] — from number-formatting.md
+- [[Loading States]] — from loading-states.md
+- [[Performance Optimizations]] — from perf-optimizations.md
 
 ## [2026-04-18] update | Loading state pattern
 
@@ -63,3 +63,32 @@ Replaced `hasLoadedOnce` ref with `walletResolved` prop:
 - Updated `AGENTS.md` pointers from `docs/raw/*.md` → `docs/wiki/` pages
 - Updated `docs/wiki/index.md` — replaced raw sources table with staging area note
 - Updated `docs/raw/README.md` — status table + workflow instructions
+
+## [2026-04-19] create | PortfolioSummary entity page
+
+Created [[PortfolioSummary]] entity page for the portfolio summary component.
+
+## [2026-04-19] create | LiquidityBarChart entity page
+
+Created [[LiquidityBarChart]] entity page for the liquidity bar chart component.
+
+## [2026-04-28] lint | Wiki audit and entity page completion
+
+Performed full wiki health check following [[WIKI_SCHEMA]]:
+
+- Fixed missing `location` frontmatter on [[PortfolioSummary]] and [[LiquidityBarChart]]
+- Standardized `## See Also` section naming across all pages
+- Created missing entity pages:
+  - [[PositionCard]] — position display card
+  - [[PixelAvatar]] — SVG pixel avatar
+  - [[EmptyState]] — empty state component
+  - [[PositionCardSkeleton]] — position skeleton
+  - [[PortfolioSummarySkeleton]] — summary skeleton
+  - [[PositionHeader]] — card header
+  - [[PositionFooter]] — card footer
+  - [[TokenIcons]] — token icon pair
+  - [[usePositionsPage]] — main positions data hook
+  - [[useWalletLifecycle]] — wallet lifecycle hook
+  - [[computePositionViewData]] — pure view model transformer
+- Updated [[index]] with all new pages and bumped `updated` date
+- Added `related` frontmatter cross-references where missing

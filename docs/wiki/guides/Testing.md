@@ -182,7 +182,7 @@ it('should fetch data', async () => {
 
 Tests run as part of the CI pipeline via `bun run ci` (after type check, lint, and format check).
 
-## Related
+## See Also
 
 - [[Performance Optimizations]] — Test performance considerations
 - [[Caching Strategy]] — CacheManager test patterns

@@ -1,9 +1,14 @@
 ---
 title: PortfolioSummary
 type: entity
+location: src/components/positions/PortfolioSummary.tsx
 created: 2026-04-19
 updated: 2026-04-19
 tags: [component, portfolio, pnl, sol]
+related:
+  - PnLStore
+  - ShimmerBlock
+  - Number Formatting
 ---
 
 # PortfolioSummary
@@ -75,7 +80,7 @@ Returns:
 - Labels: `text-app-text-muted text-[10px] font-pixel tracking-wider`
 - Values: `text-2xl font-pixel`
 
-## Related
+## See Also
 
 - [[PnLStore]] — Data source
 - [[ShimmerBlock]] — Loading skeleton
