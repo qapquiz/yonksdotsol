@@ -66,11 +66,6 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
     return liquidityShape.binDistribution[liquidityShape.binDistribution.length - 1].price.toPrecision(6)
   }, [liquidityShape])
 
-  const activeBinIndex = useMemo(() => {
-    if (!liquidityShape?.currentActiveId || !liquidityShape?.binDistribution) return -1
-    return liquidityShape.binDistribution.findIndex((b) => b.binId === liquidityShape.currentActiveId)
-  }, [liquidityShape])
-
   const svgContent = useMemo(() => {
     if (chartData.length === 0 || containerWidth === 0) return null
 

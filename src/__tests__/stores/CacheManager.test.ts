@@ -171,6 +171,7 @@ describe('CacheManager', () => {
       expect(result1).toBe('fetched')
       expect(result2).toBe('fetched')
       expect(fetchFn).toHaveBeenCalledTimes(1) // Only one fetch
+      expect(resolveCount).toBe(1)
     })
 
     it('propagates fetch errors', async () => {

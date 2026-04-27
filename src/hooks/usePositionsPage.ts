@@ -90,6 +90,10 @@ export function usePositionsPage(
     }
 
     if (currentAddress !== null && currentAddress !== prevAddress) {
+      // Reset the one-way latch so the skeleton covers the token-price gap.
+      // This prevents a blank FlashList frame when switching wallets.
+      setTokenDataReady(false)
+      setPositions(new Map())
       fetchPositions(currentAddress)
     } else if (currentAddress === null && prevAddress !== null) {
       // Wallet disconnected — clear data
@@ -137,6 +141,9 @@ export function usePositionsPage(
   // Only false before the very first token fetch completes.
   // Once true, stays true — refreshes update tokenData in-place without
   // flipping this back, so the FlashList isn't replaced by the skeleton.
+  // Reset to false only on wallet switch (see wallet effect above).
+  // Note: if positions.length === 0, this effect early-returns and never
+  // sets tokenDataReady = true; the consumer must gate on positionCount.
   const [tokenDataReady, setTokenDataReady] = useState(false)
 
   useEffect(() => {
