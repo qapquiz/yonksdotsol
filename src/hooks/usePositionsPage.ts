@@ -108,6 +108,15 @@ export function usePositionsPage(
     prevWalletRef.current = currentAddress
   }, [walletAddress, fetchPositions])
 
+  // When wallet resolves with no address (not connected), signal "done" so the
+  // skeleton goes away and the empty-state appears instead of showing forever.
+  useEffect(() => {
+    if (walletResolved && !walletAddress) {
+      setIsLoading(false)
+      setTokenDataReady(true)
+    }
+  }, [walletResolved, walletAddress])
+
   // Throttled refresh — enforces 30s cooldown between manual refreshes
   const lastRefreshRef = useRef(0)
   const refresh = useCallback(() => {
