@@ -7,6 +7,7 @@
   --font-pixel: 'GeistPixel-Square';
   --font-sans: 'Geist-Regular';
   --font-sans-bold: 'Geist-Bold';
+  --font-mono: 'DepartureMono-Regular';
 }
 
 @layer theme {

@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react'
 import { Text, View } from 'react-native'
 import type { PortfolioSummaryData } from '../../hooks/usePositionsPage'
+import { usePixelFont } from '../../hooks/useFontConfig'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
 
 interface PortfolioSummaryProps {
@@ -17,7 +18,7 @@ function formatSmallValue(value: number): { leadingText: string; superscript: st
   const leadingZeros = match ? match[0].length : 0
   if (leadingZeros < 4) return null
   const rawDigits = decimalPart.slice(leadingZeros)
-  const significantDigits = (rawDigits + '0000').slice(0, 4)
+  const significantDigits = (rawDigits + '0004').slice(0, 4)
   const additionalZeros = leadingZeros - 2
   return {
     leadingText: '0.00',
@@ -26,28 +27,38 @@ function formatSmallValue(value: number): { leadingText: string; superscript: st
   }
 }
 
-function SolValue({ value, className }: { value: number; className?: string }) {
+function SolValue({ value, className, fontFamily }: { value: number; className?: string; fontFamily: string }) {
   const content = useMemo(() => {
-    if (!Number.isFinite(value)) return <Text className={className}>0.0000</Text>
+    if (!Number.isFinite(value))
+      return (
+        <Text className={className} style={{ fontFamily }}>
+          0.0000
+        </Text>
+      )
 
     const small = formatSmallValue(value)
     if (!small) {
-      return <Text className={className}>{value.toFixed(4)}</Text>
+      return (
+        <Text className={className} style={{ fontFamily }}>
+          {value.toFixed(4)}
+        </Text>
+      )
     }
 
     return (
-      <Text className={className}>
+      <Text className={className} style={{ fontFamily }}>
         {small.leadingText}
         <Text className="text-[10px]">{small.superscript}</Text>
         {small.digits}
       </Text>
     )
-  }, [value, className])
+  }, [value, className, fontFamily])
 
   return content
 }
 
 function PortfolioSummaryComponent({ summary, hasData, positionCount }: PortfolioSummaryProps) {
+  const pixelFont = usePixelFont()
   const isLoading = positionCount > 0 && !hasData
   if (isLoading) {
     return (
@@ -104,11 +115,17 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
 
       <View className="mb-4">
         <View className="flex-row items-baseline">
-          {sign && <Text className={`text-2xl font-pixel ${pnlColorClass}`}>{sign}</Text>}
-          <SolValue value={Math.abs(totalPnlSol)} className={`text-2xl font-pixel ${pnlColorClass}`} />
-          <Text className={`text-sm font-pixel ${pnlColorClass} ml-0.5 opacity-60`}>SOL</Text>
+          {sign && (
+            <Text className={`text-2xl ${pnlColorClass}`} style={{ fontFamily: pixelFont }}>
+              {sign}
+            </Text>
+          )}
+          <SolValue value={Math.abs(totalPnlSol)} className={`text-2xl ${pnlColorClass}`} fontFamily={pixelFont} />
+          <Text className={`text-sm ${pnlColorClass} ml-0.5 opacity-60`} style={{ fontFamily: pixelFont }}>
+            SOL
+          </Text>
         </View>
-        <Text className={`text-sm font-pixel ${pnlColorClass}`}>
+        <Text className={`text-sm ${pnlColorClass}`} style={{ fontFamily: pixelFont }}>
           {sign}
           {isNaN(totalPnlPercent) ? '0.00' : totalPnlPercent.toFixed(2)}%
         </Text>
@@ -118,22 +135,28 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
         <View>
           <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">VALUE</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalValueSol} className="text-app-text text-sm font-pixel" />
-            <Text className="text-app-text text-[10px] font-pixel ml-0.5 opacity-60">SOL</Text>
+            <SolValue value={totalValueSol} className="text-app-text text-sm" fontFamily={pixelFont} />
+            <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+              SOL
+            </Text>
           </View>
         </View>
         <View>
           <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">DEPOSITED</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalInitialDepositSol} className="text-app-text text-sm font-pixel" />
-            <Text className="text-app-text text-[10px] font-pixel ml-0.5 opacity-60">SOL</Text>
+            <SolValue value={totalInitialDepositSol} className="text-app-text text-sm" fontFamily={pixelFont} />
+            <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+              SOL
+            </Text>
           </View>
         </View>
         <View>
           <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">UNCLAIMED FEES</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalUnclaimedFeesSol} className="text-app-text text-sm font-pixel" />
-            <Text className="text-app-text text-[10px] font-pixel ml-0.5 opacity-60">SOL</Text>
+            <SolValue value={totalUnclaimedFeesSol} className="text-app-text text-sm" fontFamily={pixelFont} />
+            <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+              SOL
+            </Text>
           </View>
         </View>
       </View>

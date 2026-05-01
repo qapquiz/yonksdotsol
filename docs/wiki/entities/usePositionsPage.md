@@ -34,15 +34,15 @@ Main data orchestration hook for the positions page.
 
 ```typescript
 interface PositionsPageResult {
-  positions: ResolvedPosition[]      // Full view models ready for render
+  positions: ResolvedPosition[] // Full view models ready for render
   summary: PortfolioSummaryData | null
   hasPnLData: boolean
   outOfRangeCount: number
   poolAddresses: string[]
   positionCount: number
-  loading: boolean                   // True during initial skeleton load
-  tokenDataReady: boolean            // Prevents FlashList blank frame
-  refresh: () => void                // Throttled refresh
+  loading: boolean // True during initial skeleton load
+  tokenDataReady: boolean // Prevents FlashList blank frame
+  refresh: () => void // Throttled refresh
   walletResolved: boolean
   walletAddress?: string
 }
@@ -51,6 +51,7 @@ interface PositionsPageResult {
 ## Wallet Change Handling
 
 When wallet changes:
+
 1. Invalidates old wallet's PnL store data
 2. Invalidates old wallet's cache entries via pattern `:${prevWallet}`
 3. Fetches positions for new wallet

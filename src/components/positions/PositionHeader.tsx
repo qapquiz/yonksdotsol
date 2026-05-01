@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Text, View } from 'react-native'
 import type { TokenInfo } from '../../tokens'
+import { usePixelFont } from '../../hooks/useFontConfig'
 import { formatUPNLDisplay, formatUPNLDisplaySol } from '../../utils/positions/formatters'
 import { TokenIcons } from './TokenIcons'
 
@@ -23,6 +24,7 @@ function PositionHeaderComponent({
   upnlPercentage,
   upnlIsSol = false,
 }: PositionHeaderProps) {
+  const pixelFont = usePixelFont()
   const upnlColorClass = upnlValue !== null ? (upnlValue >= 0 ? 'text-emerald-400' : 'text-red-400') : ''
 
   return (
@@ -41,8 +43,13 @@ function PositionHeaderComponent({
             {inRange ? 'IN RANGE' : 'OUT OF RANGE'}
           </Text>
         </View>
-        <Text className="text-app-text font-pixel text-lg">{totalValue}</Text>
-        <Text className={`text-xs font-pixel ${upnlValue != null ? upnlColorClass : 'opacity-0'}`}>
+        <Text className="text-app-text text-lg" style={{ fontFamily: pixelFont }}>
+          {totalValue}
+        </Text>
+        <Text
+          className={`text-xs ${upnlValue != null ? upnlColorClass : 'opacity-0'}`}
+          style={{ fontFamily: pixelFont }}
+        >
           {upnlValue != null && upnlPercentage != null
             ? upnlIsSol
               ? formatUPNLDisplaySol(upnlValue, upnlPercentage)

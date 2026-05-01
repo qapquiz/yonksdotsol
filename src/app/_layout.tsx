@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MobileWalletProvider, createSolanaMainnet } from '@wallet-ui/react-native-kit'
 import { Uniwind } from 'uniwind'
 import { useSettingsStore } from '../stores/settingsStore'
+import { PixelFontProvider } from '../hooks/useFontConfig'
 import { env } from '../config/env'
 
 const cluster = createSolanaMainnet({ url: env.rpcUrl || '' })
@@ -25,9 +26,11 @@ export default function Layout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <MobileWalletProvider cluster={cluster} identity={identity}>
-        <Slot />
-      </MobileWalletProvider>
+      <PixelFontProvider>
+        <MobileWalletProvider cluster={cluster} identity={identity}>
+          <Slot />
+        </MobileWalletProvider>
+      </PixelFontProvider>
     </GestureHandlerRootView>
   )
 }

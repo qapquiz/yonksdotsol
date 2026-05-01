@@ -28,7 +28,7 @@ Manages wallet connection lifecycle with timeout fallback.
 
 ```typescript
 interface UseWalletLifecycleResult {
-  walletReady: boolean          // True once resolved (connected or not)
+  walletReady: boolean // True once resolved (connected or not)
   walletAddress: string | undefined
   isConnecting: boolean
   handleConnect: () => Promise<void>

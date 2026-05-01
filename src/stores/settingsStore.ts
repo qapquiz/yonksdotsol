@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { createMMKV } from 'react-native-mmkv'
 import type { ThemeMode } from '../config/theme'
+import { DEFAULT_PIXEL_FONT } from '../config/fonts'
 
 const mmkv = createMMKV({ id: 'settings' })
 
@@ -18,6 +19,10 @@ interface SettingsState {
   theme: ThemeMode
   setTheme: (theme: ThemeMode) => void
   toggleTheme: () => void
+
+  // Font preferences
+  pixelFont: string
+  setPixelFont: (id: string) => void
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -26,6 +31,9 @@ export const useSettingsStore = create<SettingsState>()(
       theme: 'dark',
       setTheme: (theme) => set({ theme }),
       toggleTheme: () => set({ theme: get().theme === 'dark' ? 'light' : 'dark' }),
+
+      pixelFont: DEFAULT_PIXEL_FONT,
+      setPixelFont: (pixelFont) => set({ pixelFont }),
     }),
     {
       name: 'settings-store',

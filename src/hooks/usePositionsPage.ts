@@ -55,10 +55,7 @@ export interface PositionsPageResult {
 
 // ─── Hook implementation ─────────────────────────────────────────────
 
-export function usePositionsPage(
-  walletAddress: string | undefined,
-  walletResolved: boolean,
-): PositionsPageResult {
+export function usePositionsPage(walletAddress: string | undefined, walletResolved: boolean): PositionsPageResult {
   const wallet = walletAddress || ''
 
   // ── Position fetching ──

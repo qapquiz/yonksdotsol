@@ -28,30 +28,30 @@ Pixelated avatar component rendered with SVG.
 
 ```typescript
 interface PixelAvatarProps {
-  size?: number        // default 40
-  variant?: 'bot' | 'alien' | 'ghost' | 'robot' | 'cat'  // default 'bot'
-  connected?: boolean  // default false
+  size?: number // default 40
+  variant?: 'bot' | 'alien' | 'ghost' | 'robot' | 'cat' // default 'bot'
+  connected?: boolean // default false
 }
 ```
 
 ## Variants
 
-| Variant | Description |
-| ------- | ----------- |
+| Variant | Description             |
+| ------- | ----------------------- |
 | `bot`   | Robot face with antenna |
-| `alien` | Alien with large eyes |
-| `ghost` | Ghost shape |
-| `robot` | Boxy robot |
-| `cat`   | Cat face with ears |
+| `alien` | Alien with large eyes   |
+| `ghost` | Ghost shape             |
+| `robot` | Boxy robot              |
+| `cat`   | Cat face with ears      |
 
 ## Theme Colors
 
-| State           | Primary    | Secondary  |
-| --------------- | ---------- | ---------- |
-| Connected dark  | `#8FA893`  | `#2a332c`  |
-| Connected light | `#6b8f71`  | `#dce8de`  |
-| Disconnected dark | `#999999`| `#1a1a1a`  |
-| Disconnected light| `#666666`| `#eeeeee`  |
+| State              | Primary   | Secondary |
+| ------------------ | --------- | --------- |
+| Connected dark     | `#8FA893` | `#2a332c` |
+| Connected light    | `#6b8f71` | `#dce8de` |
+| Disconnected dark  | `#999999` | `#1a1a1a` |
+| Disconnected light | `#666666` | `#eeeeee` |
 
 ## See Also
 
