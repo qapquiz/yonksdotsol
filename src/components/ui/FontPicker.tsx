@@ -35,7 +35,7 @@ function FontPickerComponent({ visible, onClose }: FontPickerProps) {
 
             {/* Header */}
             <View className="flex-row items-center justify-between mb-5">
-              <Text className="text-app-text text-lg font-sans-bold">Number Font</Text>
+              <Text className="text-app-text text-lg font-sans-bold">Numeric Style</Text>
               <Pressable onPress={onClose} className="p-1">
                 <Ionicons name="close" size={22} color={tokens.textMuted} />
               </Pressable>
