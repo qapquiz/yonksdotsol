@@ -1,5 +1,6 @@
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { getStoredWalletAddress, setStoredWalletAddress } from '../stores/walletStore'
 
 export interface UseWalletLifecycleResult {
   /** True when wallet provider has resolved (accounts !== null or timed out) */
@@ -39,9 +40,11 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
 
   // Once we've seen a valid account, wallet is permanently "ready"
   // so disconnect never causes walletReady to flip back to false
+  // Persist wallet address to MMKV for headless widget access
   useEffect(() => {
     if (account?.address) {
       setWalletCheckTimedOut(true)
+      setStoredWalletAddress(account.address)
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
@@ -67,7 +70,11 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
   }, [signIn, disconnect])
 
   const handleDisconnect = useCallback(async () => {
+    const currentAddress = getStoredWalletAddress()
     await disconnect()
+    if (currentAddress) {
+      setStoredWalletAddress(undefined)
+    }
   }, [disconnect])
 
   return {

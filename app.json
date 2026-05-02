@@ -39,6 +39,24 @@
             "./assets/fonts/GeistPixel-Square.ttf"
           ]
         }
+      ],
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "PortfolioSummary",
+              "label": "Yonks Portfolio",
+              "description": "Shows your Yonks DLMM portfolio PnL summary",
+              "minWidth": "300dp",
+              "minHeight": "180dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 3,
+              "resizeMode": "horizontal|vertical",
+              "updatePeriodMillis": 1800000
+            }
+          ]
+        }
       ]
     ],
     "ios": {
