@@ -49,9 +49,9 @@
               "label": "Yonks Portfolio",
               "description": "Shows your Yonks DLMM portfolio PnL summary",
               "minWidth": "300dp",
-              "minHeight": "180dp",
+              "minHeight": "120dp",
               "targetCellWidth": 4,
-              "targetCellHeight": 3,
+              "targetCellHeight": 2,
               "resizeMode": "horizontal|vertical",
               "updatePeriodMillis": 1800000
             }
