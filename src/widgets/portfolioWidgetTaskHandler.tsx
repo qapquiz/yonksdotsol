@@ -24,7 +24,7 @@ const COLORS = {
 async function fetchPortfolioSummary(walletAddress: string) {
   // Dynamic imports to avoid polyfill issues at module scope in headless context
   const { getSharedConnection } = require('../config/connection')
-  const DLMM = require('@meteora-ag/dlmm').default as typeof import('@meteora-ag/dlmm').default
+  const DLMM = require('@meteora-ag/dlmm')
   const { PublicKey } = require('@solana/web3.js')
   const { createDataServices } = require('../services/data')
   const { fetchPositionPnL } = require('metcomet')
