@@ -67,6 +67,9 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
     try {
       const result = await DLMM.getAllLbPairPositionsByUser(getSharedConnection(), new PublicKey(address))
       setPositions(result)
+      if (result.size === 0) {
+        setTokenDataReady(true)
+      }
     } catch (e) {
       console.error(e)
     } finally {
@@ -92,8 +95,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
       setTokenDataReady(false)
       setPositions(new Map())
       fetchPositions(currentAddress)
-    } else if (currentAddress === null && prevAddress !== null) {
-      // Wallet disconnected — clear data
+} else if (currentAddress === null && prevAddress !== null) {
       setPositions(new Map())
       setIsLoading(false)
     }

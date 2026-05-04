@@ -439,6 +439,98 @@ function ErrorWidget({ message }: { message: string }) {
   )
 }
 
+// ─── Empty / no positions state widget ────────────────────────────────
+
+function NoPositionsWidget({ lastUpdated }: { lastUpdated: string }) {
+	return (
+		<FlexWidget
+			clickAction="OPEN_APP"
+			style={{
+				backgroundColor: COLORS.surface,
+				borderRadius: 24,
+				padding: 20,
+				flexDirection: "column",
+				width: "match_parent",
+			}}
+		>
+			{/* Header row: title + count badge + refresh button */}
+			<FlexWidget
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+					width: "match_parent",
+					marginBottom: 16,
+				}}
+			>
+				<FlexWidget style={{ flexDirection: "row", alignItems: "center" }}>
+					<TextWidget
+						text="PORTFOLIO SUMMARY"
+						style={{
+							fontSize: 10,
+							color: COLORS.textMuted,
+							fontWeight: "700",
+							letterSpacing: 1.5,
+						}}
+					/>
+					<FlexWidget
+						style={{
+							backgroundColor: COLORS.surfaceHighlight,
+							borderRadius: 10,
+							width: 20,
+							height: 20,
+							alignItems: "center",
+							justifyContent: "center",
+							marginLeft: 8,
+						}}
+					>
+						<TextWidget
+							text="0"
+							style={{
+								fontSize: 10,
+								color: COLORS.textSecondary,
+								fontWeight: "700",
+							}}
+						/>
+					</FlexWidget>
+				</FlexWidget>
+				{/* Refresh button */}
+				<FlexWidget
+					clickAction="REFRESH"
+					style={{
+						width: 32,
+						height: 32,
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+				>
+					<SvgWidget svg={REFRESH_ICON_SVG} style={{ width: 18, height: 18 }} />
+				</FlexWidget>
+			</FlexWidget>
+
+			{/* Empty state message */}
+			<TextWidget
+				text="No active positions"
+				style={{
+					fontSize: 14,
+					color: COLORS.textMuted,
+					textAlign: "center",
+					marginBottom: 16,
+				}}
+			/>
+
+			{/* Last updated timestamp */}
+			<TextWidget
+				text={lastUpdated}
+				style={{
+					fontSize: 9,
+					color: COLORS.textMuted,
+				}}
+			/>
+		</FlexWidget>
+	);
+}
+
 // ─── Task handler ────────────────────────────────────────────────────
 
 async function portfolioWidgetTaskHandler({ widgetAction, clickAction, renderWidget }: WidgetTaskHandlerProps) {
@@ -463,6 +555,11 @@ async function portfolioWidgetTaskHandler({ widgetAction, clickAction, renderWid
       hour: '2-digit',
       minute: '2-digit',
     })
+
+    if (!summary || summary.positionCount === 0) {
+      renderWidget(<NoPositionsWidget lastUpdated={`Updated ${lastUpdated}`} />)
+      return
+    }
 
     renderWidget(<PortfolioSummaryWidget summary={summary} lastUpdated={`Updated ${lastUpdated}`} />)
   } catch (e) {
