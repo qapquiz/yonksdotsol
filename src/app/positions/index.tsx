@@ -77,7 +77,9 @@ export default function PositionsList({
         case 'warning':
           return (
             <View className="flex-row items-center gap-2 mb-4 px-1">
-              <Text className="text-orange-500 text-xs font-sans-bold">!</Text>
+              <View className="w-4 h-4 rounded-full bg-orange-500/20 items-center justify-center">
+                <Text className="text-orange-500 text-[10px] font-sans-bold">!</Text>
+              </View>
               <Text className="text-orange-400 text-xs font-sans-bold">
                 {item.count} {item.count === 1 ? 'position' : 'positions'} out of range
               </Text>
