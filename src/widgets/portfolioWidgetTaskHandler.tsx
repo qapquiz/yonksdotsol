@@ -262,28 +262,37 @@ function PortfolioSummaryWidget({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: '#fb923c15',
-            borderRadius: 8,
-            paddingVertical: 6,
-            paddingHorizontal: 10,
             marginBottom: 14,
+            paddingHorizontal: 4,
           }}
         >
-          <TextWidget
-            text="!"
+          {/* Circular badge with ! */}
+          <FlexWidget
             style={{
-              fontSize: 11,
-              color: COLORS.warning,
-              fontWeight: '700',
-              marginRight: 6,
+              width: 16,
+              height: 16,
+              borderRadius: 8,
+              backgroundColor: '#f9731633',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-          />
+          >
+            <TextWidget
+              text="!"
+              style={{
+                fontSize: 10,
+                color: '#f97316',
+                fontWeight: '700',
+              }}
+            />
+          </FlexWidget>
           <TextWidget
-            text={`${summary.outOfRangeCount} ${summary.outOfRangeCount === 1 ? 'position' : 'positions'} out of range`}
+            text={` ${summary.outOfRangeCount} ${summary.outOfRangeCount === 1 ? 'position' : 'positions'} out of range`}
             style={{
-              fontSize: 11,
-              color: COLORS.warning,
+              fontSize: 12,
+              color: '#fb923c',
               fontWeight: '700',
+              marginLeft: 4,
             }}
           />
         </FlexWidget>
