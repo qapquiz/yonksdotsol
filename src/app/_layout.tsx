@@ -7,6 +7,7 @@ import { MobileWalletProvider, createSolanaMainnet } from '@wallet-ui/react-nati
 import { Uniwind } from 'uniwind'
 import { useSettingsStore } from '../stores/settingsStore'
 import { PixelFontProvider } from '../hooks/useFontConfig'
+import { useWidgetSync } from '../hooks/useWidgetSync'
 import { env } from '../config/env'
 
 const cluster = createSolanaMainnet({ url: env.rpcUrl || '' })
@@ -23,6 +24,9 @@ export default function Layout() {
   useEffect(() => {
     Uniwind.setTheme(theme)
   }, [theme])
+
+  // Keep home-screen widget in sync when app is foregrounded
+  useWidgetSync()
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
