@@ -3,6 +3,7 @@
 import type { WidgetInfo, WidgetRepresentation } from 'react-native-android-widget'
 import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget'
 import { getStoredWalletAddress } from '../stores/walletStore'
+import { createPositionPipeline } from '../services/positionPipeline'
 
 // ─── Colors (dark theme) ─────────────────────────────────────────────
 
@@ -443,76 +444,21 @@ function NoPositionsWidget({ lastUpdated }: { lastUpdated: string }) {
 // ─── Data fetching (works in both headless and in-app contexts) ───────
 
 export async function fetchPortfolioSummary(walletAddress: string): Promise<PortfolioSummary | null> {
-  const { getSharedConnection } = require('../config/connection')
-  const DLMM = require('@meteora-ag/dlmm')
-  const { PublicKey } = require('@solana/web3.js')
-  const { createDataServices } = require('../services/data')
-  const { fetchPositionPnL } = require('metcomet')
-  const { computePoolPnLSummary } = require('../utils/positions/pnlAggregation')
+  const pipeline = createPositionPipeline()
+  const result = await pipeline.fetchPortfolioSummary(walletAddress)
 
-  const connection = getSharedConnection()
-  const positionsMap: Map<string, any> = await DLMM.getAllLbPairPositionsByUser(
-    connection,
-    new PublicKey(walletAddress),
-  )
-  const poolAddresses = Array.from(positionsMap.keys())
-
-  if (poolAddresses.length === 0) {
+  if (!result) {
     return null
-  }
-
-  const positionsArray: any[] = Array.from(positionsMap.values())
-  let outOfRangeCount = 0
-  const mintSet = new Set<string>()
-  for (const position of positionsArray) {
-    mintSet.add(position.tokenX.mint.address.toBase58())
-    mintSet.add(position.tokenY.mint.address.toBase58())
-
-    const activeId = Number(position.lbPair?.activeId ?? 0)
-    for (const lbPosition of position.lbPairPositionsData ?? []) {
-      const posData = lbPosition?.positionData
-      if (posData) {
-        const inRange = activeId >= posData.lowerBinId && activeId <= posData.upperBinId
-        if (!inRange) outOfRangeCount++
-      }
-    }
-  }
-  const uniqueMints = Array.from(mintSet)
-
-  const { tokens } = createDataServices()
-  await tokens.getPrices(uniqueMints)
-
-  const allPnL: any[] = []
-  for (const poolAddress of poolAddresses) {
-    try {
-      const result = await fetchPositionPnL({
-        poolAddress,
-        user: walletAddress,
-        status: 'open',
-      })
-      if (result?.positions) {
-        allPnL.push(...result.positions)
-      }
-    } catch (e) {
-      console.error(`Widget: PnL fetch failed for pool ${poolAddress}:`, e)
-    }
-  }
-
-  if (allPnL.length === 0) {
-    return null
-  }
-
-  const summary = computePoolPnLSummary(allPnL)
-
-  let totalPositions = 0
-  for (const position of positionsArray) {
-    totalPositions += position.lbPairPositionsData?.length ?? 0
   }
 
   return {
-    ...summary,
-    positionCount: totalPositions,
-    outOfRangeCount,
+    totalPnlSol: result.totalPnlSol,
+    totalPnlPercent: result.totalPnlPercent,
+    totalValueSol: result.totalValueSol,
+    totalInitialDepositSol: result.totalInitialDepositSol,
+    totalUnclaimedFeesSol: result.totalUnclaimedFeesSol,
+    positionCount: result.positionCount,
+    outOfRangeCount: result.outOfRangeCount,
   }
 }
 

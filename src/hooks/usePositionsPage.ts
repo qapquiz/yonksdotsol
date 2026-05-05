@@ -1,38 +1,17 @@
-import type { PositionInfo } from '@meteora-ag/dlmm'
-import DLMM from '@meteora-ag/dlmm'
-import { PublicKey } from '@solana/web3.js'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { getSharedConnection } from '../config/connection'
-import { createDataServices } from '../services/data'
-import { usePnLStore } from '../stores/pnlStore'
-import type { TokenInfo } from '../tokens'
-import { CacheManager } from '../utils/cache/CacheManager'
-import { computePositionViewData, type PositionViewModel } from '../utils/positions/computePositionViewData'
-import { computePoolPnLSummary, findPositionPnL, type PoolPnLSummary } from '../utils/positions/pnlAggregation'
+import { createPositionPipeline, type PortfolioResult } from '../services/positionPipeline'
+
+// ─── Re-export types for consumers ───────────────────────────────────
+
+export type { ResolvedPosition, PortfolioSummaryData } from '../services/positionPipeline'
 
 // ─── Public types ────────────────────────────────────────────────────
 
-export interface ResolvedPosition {
-  id: string
-  poolAddress: string
-  tokenXMint: string
-  tokenYMint: string
-  tokenXInfo: TokenInfo | null
-  tokenYInfo: TokenInfo | null
-  position: PositionInfo
-  lbPositionIndex: number
-  vm: PositionViewModel
-}
-
-export interface PortfolioSummaryData extends PoolPnLSummary {
-  positionCount: number
-}
-
 export interface PositionsPageResult {
   /** Fully resolved position view models (token data + PnL baked in) */
-  positions: ResolvedPosition[]
+  positions: PortfolioResult['positions']
   /** Aggregated portfolio summary */
-  summary: PortfolioSummaryData | null
+  summary: PortfolioResult['summary']
   /** Whether PnL data has been fetched and is available */
   hasPnLData: boolean
   /** Count of out-of-range positions */
@@ -56,220 +35,79 @@ export interface PositionsPageResult {
 // ─── Hook implementation ─────────────────────────────────────────────
 
 export function usePositionsPage(walletAddress: string | undefined, walletResolved: boolean): PositionsPageResult {
-  const wallet = walletAddress || ''
+  const pipeline = useMemo(() => createPositionPipeline(), [])
 
-  // ── Position fetching ──
-  const [positions, setPositions] = useState<Map<string, PositionInfo>>(new Map())
-  const [isLoading, setIsLoading] = useState(true)
+  const [result, setResult] = useState<PortfolioResult | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [tokenDataReady, setTokenDataReady] = useState(false)
 
-  const fetchPositions = useCallback(async (address: string) => {
-    setIsLoading(true)
-    try {
-      const result = await DLMM.getAllLbPairPositionsByUser(getSharedConnection(), new PublicKey(address))
-      setPositions(result)
-      if (result.size === 0) {
-        setTokenDataReady(true)
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
-  // Wallet change → clear old wallet's cache, fetch positions for new wallet
+  // ── Wallet change: invalidate old data, fetch new ──
   const prevWalletRef = useRef<string | null>(null)
+
   useEffect(() => {
     const currentAddress = walletAddress ?? null
     const prevAddress = prevWalletRef.current
 
     if (prevAddress !== null && prevAddress !== currentAddress) {
-      // Clear old wallet's PnL from Zustand store + CacheManager
-      usePnLStore.getState().invalidateWallet(prevAddress)
-      CacheManager.getInstance().invalidatePattern(`:${prevAddress}`)
+      // Invalidate old wallet's cached data
+      pipeline.invalidateWallet(prevAddress)
     }
 
     if (currentAddress !== null && currentAddress !== prevAddress) {
-      // Reset the one-way latch so the skeleton covers the token-price gap.
-      // This prevents a blank FlashList frame when switching wallets.
+      // Reset loading state, fetch positions
       setTokenDataReady(false)
-      setPositions(new Map())
-      fetchPositions(currentAddress)
-} else if (currentAddress === null && prevAddress !== null) {
-      setPositions(new Map())
-      setIsLoading(false)
+      setLoading(true)
+      setResult(null)
+
+      pipeline.loadPortfolio(currentAddress).then((res) => {
+        setResult(res)
+        setLoading(false)
+        // Signal token data ready: positions exist and at least one has token info,
+        // or there are no positions at all (empty state)
+        setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
+      })
+    } else if (currentAddress === null && prevAddress !== null) {
+      // Disconnected
+      setResult(null)
+      setLoading(false)
     }
-    // When currentAddress is null and prevAddress is also null (mount before
-    // wallet resolves), do NOT set isLoading=false.  The parent component keeps
-    // walletResolved=false so the skeleton stays visible.  This avoids a flash
-    // of the empty-state between wallet timeout and address hydration.
 
     prevWalletRef.current = currentAddress
-  }, [walletAddress, fetchPositions])
+  }, [walletAddress, pipeline])
 
-  // When wallet resolves with no address (not connected), signal "done" so the
-  // skeleton goes away and the empty-state appears instead of showing forever.
+  // ── When wallet resolves with no address, show empty state ──
   useEffect(() => {
     if (walletResolved && !walletAddress) {
-      setIsLoading(false)
+      setLoading(false)
       setTokenDataReady(true)
     }
   }, [walletResolved, walletAddress])
 
-  // Throttled refresh — enforces 30s cooldown between manual refreshes
+  // ── Throttled refresh (30s cooldown) ──
   const lastRefreshRef = useRef(0)
   const refresh = useCallback(() => {
     if (!walletAddress) return
     const now = Date.now()
     if (now - lastRefreshRef.current < 30_000) return
     lastRefreshRef.current = now
-    // Invalidate PnL cache for this wallet so fresh data is fetched
-    CacheManager.getInstance().invalidatePattern(`:${walletAddress}`)
-    usePnLStore.getState().invalidateWallet(walletAddress)
-    fetchPositions(walletAddress)
-  }, [walletAddress, fetchPositions])
 
-  // ── Derived data from positions ──
-  const positionsEntries = useMemo(() => Array.from(positions.entries()), [positions])
-  const positionsArray = useMemo(() => positionsEntries.map(([, pos]) => pos), [positionsEntries])
-
-  const poolAddresses = useMemo(() => positionsEntries.map(([addr]) => addr), [positionsEntries])
-
-  const uniqueMints = useMemo(() => {
-    const mintSet = new Set<string>()
-    for (const position of positionsArray) {
-      mintSet.add(position.tokenX.mint.address.toBase58())
-      mintSet.add(position.tokenY.mint.address.toBase58())
-    }
-    return Array.from(mintSet)
-  }, [positionsArray])
-
-  // ── Token data fetching ──
-  const [tokenData, setTokenData] = useState<Map<string, TokenInfo>>(new Map())
-  // Only false before the very first token fetch completes.
-  // Once true, stays true — refreshes update tokenData in-place without
-  // flipping this back, so the FlashList isn't replaced by the skeleton.
-  // Reset to false only on wallet switch (see wallet effect above).
-  // Note: if positions.length === 0, this effect early-returns and never
-  // sets tokenDataReady = true; the consumer must gate on positionCount.
-  const [tokenDataReady, setTokenDataReady] = useState(false)
-
-  useEffect(() => {
-    if (positionsArray.length === 0 || uniqueMints.length === 0) {
-      setTokenData(new Map())
-      return
-    }
-
-    let isMounted = true
-
-    createDataServices()
-      .tokens.getPrices(uniqueMints)
-      .then((data) => {
-        if (isMounted) {
-          setTokenData(data)
-          setTokenDataReady(true)
-        }
-      })
-
-    return () => {
-      isMounted = false
-    }
-  }, [uniqueMints, positionsArray.length])
-
-  // ── PnL fetching ──
-  const storeFetchPoolPnL = usePnLStore((s) => s.fetchPoolPnL)
-  const poolPnLData = usePnLStore((s) => s.poolPnLData)
-
-  useEffect(() => {
-    if (wallet && poolAddresses.length > 0) {
-      poolAddresses.forEach((poolAddress) => {
-        storeFetchPoolPnL(poolAddress, wallet)
-      })
-    }
-  }, [wallet, poolAddresses, storeFetchPoolPnL])
-
-  // ── Compute view models ──
-  const resolvedPositions = useMemo(() => {
-    const result: ResolvedPosition[] = []
-
-    for (const [pairAddress, position] of positionsEntries) {
-      for (let idx = 0; idx < position.lbPairPositionsData.length; idx++) {
-        const lbPosition = position.lbPairPositionsData[idx]
-        const positionData = lbPosition?.positionData
-        const positionAddress = lbPosition?.publicKey.toBase58() || position.publicKey.toBase58()
-        const activeId = Number(position.lbPair.activeId)
-
-        const tokenXMint = position.tokenX.mint.address.toBase58()
-        const tokenYMint = position.tokenY.mint.address.toBase58()
-        const tokenXInfo = tokenData.get(tokenXMint) ?? null
-        const tokenYInfo = tokenData.get(tokenYMint) ?? null
-
-        // Get PnL data for this position
-        const pnlCacheKey = `pnl:${pairAddress}:${wallet}`
-        const poolPositions = poolPnLData[pnlCacheKey]
-        const pnlData = poolPositions ? findPositionPnL(poolPositions, positionAddress) : null
-
-        const vm = computePositionViewData({
-          positionData,
-          activeId,
-          positionAddress,
-          poolAddress: pairAddress,
-          tokenXInfo,
-          tokenYInfo,
-          pnlData,
-        })
-
-        result.push({
-          id: `${position.publicKey.toString()}-${idx}`,
-          poolAddress: pairAddress,
-          tokenXMint,
-          tokenYMint,
-          tokenXInfo,
-          tokenYInfo,
-          position,
-          lbPositionIndex: idx,
-          vm,
-        })
-      }
-    }
-
-    return result
-  }, [positionsEntries, tokenData, poolPnLData, wallet])
-
-  // ── Compute summary and hasPnLData ──
-  const { summary, hasPnLData } = useMemo(() => {
-    if (poolAddresses.length === 0) return { summary: null, hasPnLData: false }
-
-    const allPositions = poolAddresses.flatMap((pool) => {
-      const key = `pnl:${pool}:${wallet}`
-      return poolPnLData[key] ?? []
+    pipeline.invalidateWallet(walletAddress)
+    setLoading(true)
+    pipeline.loadPortfolio(walletAddress).then((res) => {
+      setResult(res)
+      setLoading(false)
+      setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
     })
-
-    if (allPositions.length === 0) return { summary: null, hasPnLData: false }
-
-    const aggregated = computePoolPnLSummary(allPositions)
-    return {
-      summary: {
-        ...aggregated,
-        positionCount: resolvedPositions.length,
-      },
-      hasPnLData: true,
-    }
-  }, [poolAddresses, wallet, poolPnLData, resolvedPositions.length])
-
-  // ── Out-of-range count ──
-  const outOfRangeCount = useMemo(() => resolvedPositions.filter((p) => !p.vm.inRange).length, [resolvedPositions])
-
-  const positionCount = resolvedPositions.length
+  }, [walletAddress, pipeline])
 
   return {
-    positions: resolvedPositions,
-    summary,
-    hasPnLData,
-    outOfRangeCount,
-    poolAddresses,
-    positionCount,
-    loading: isLoading,
+    positions: result?.positions ?? [],
+    summary: result?.summary ?? null,
+    hasPnLData: result?.hasPnLData ?? false,
+    outOfRangeCount: result?.outOfRangeCount ?? 0,
+    poolAddresses: result?.poolAddresses ?? [],
+    positionCount: result?.positionCount ?? 0,
+    loading,
     tokenDataReady,
     refresh,
     walletResolved,
