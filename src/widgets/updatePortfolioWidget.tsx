@@ -328,29 +328,68 @@ function ErrorWidget({ message }: { message: string }) {
         borderRadius: 24,
         padding: 20,
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: 160,
+        width: 'match_parent',
       }}
     >
-      <TextWidget
-        text="YONKS"
+      <FlexWidget
         style={{
-          fontSize: 14,
-          color: COLORS.primary,
-          fontWeight: '700',
-          letterSpacing: 2,
-          marginBottom: 8,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: 'match_parent',
+          marginBottom: 16,
         }}
-      />
-      <TextWidget
-        text={message}
+      >
+        <FlexWidget style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TextWidget
+            text="PORTFOLIO SUMMARY"
+            style={{
+              fontSize: 10,
+              color: COLORS.textMuted,
+              fontWeight: '700',
+              letterSpacing: 1.5,
+            }}
+          />
+        </FlexWidget>
+        <FlexWidget
+          clickAction="REFRESH"
+          style={{
+            width: 32,
+            height: 32,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <SvgWidget svg={REFRESH_ICON_SVG} style={{ width: 18, height: 18 }} />
+        </FlexWidget>
+      </FlexWidget>
+
+      <FlexWidget
         style={{
-          fontSize: 11,
-          color: COLORS.textMuted,
-          textAlign: 'center',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-      />
+      >
+        <TextWidget
+          text="YONKS"
+          style={{
+            fontSize: 14,
+            color: COLORS.primary,
+            fontWeight: '700',
+            letterSpacing: 2,
+            marginBottom: 8,
+          }}
+        />
+        <TextWidget
+          text={message}
+          style={{
+            fontSize: 11,
+            color: COLORS.textMuted,
+            textAlign: 'center',
+          }}
+        />
+      </FlexWidget>
     </FlexWidget>
   )
 }
