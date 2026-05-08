@@ -1,8 +1,7 @@
 'use no memo'
 
-import type { WidgetInfo, WidgetRepresentation } from 'react-native-android-widget'
+import type { WidgetRepresentation } from 'react-native-android-widget'
 import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget'
-import { getStoredWalletAddress } from '../stores/walletStore'
 import { createPositionPipeline } from '../services/positionPipeline'
 
 // ─── Colors (dark theme) ─────────────────────────────────────────────

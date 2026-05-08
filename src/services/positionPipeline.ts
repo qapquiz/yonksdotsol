@@ -1,9 +1,8 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import DLMM from '@meteora-ag/dlmm'
-import { PublicKey } from '@solana/web3.js'
 import type { PositionPnLData } from 'metcomet'
 import { fetchPositionPnL } from 'metcomet'
-import { Connection } from '@solana/web3.js'
+import { PublicKey, Connection } from '@solana/web3.js'
 
 import { getSharedConnection } from '../config/connection'
 import { env } from '../config/env'
