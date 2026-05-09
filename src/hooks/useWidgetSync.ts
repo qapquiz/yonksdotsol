@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { AppState } from 'react-native'
 import { requestWidgetUpdate } from 'react-native-android-widget'
 import { getStoredWalletAddress } from '../stores/walletStore'
+import { registerWidgetBackgroundSync } from '../tasks/widgetBackgroundSync'
 import { buildErrorWidget, buildWidgetTree, fetchPortfolioSummary } from '../widgets/updatePortfolioWidget'
 
 const WIDGET_NAME = 'PortfolioSummary'
@@ -91,6 +92,9 @@ export function useWidgetSync() {
     }, FOREGROUND_DEBOUNCE_MS)
 
     startPeriodicTimer()
+
+    // Register background fetch so widget updates while app is closed
+    registerWidgetBackgroundSync().catch((e) => console.error('useWidgetSync: failed to register background sync:', e))
 
     return () => {
       subscription.remove()
