@@ -30,7 +30,7 @@
     "tailwind"
   ],
   "main": "./index.js",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.2",
     "@meteora-ag/dlmm": "^1.9.7",
