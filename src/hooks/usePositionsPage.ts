@@ -76,12 +76,11 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
   }, [walletAddress, pipeline])
 
   // ── When wallet resolves with no address, show empty state ──
-  useEffect(() => {
-    if (walletResolved && !walletAddress) {
-      setLoading(false)
-      setTokenDataReady(true)
-    }
-  }, [walletResolved, walletAddress])
+  // Derive state during render instead of in an effect to avoid cascading renders
+  if (walletResolved && !walletAddress) {
+    if (loading) setLoading(false)
+    if (!tokenDataReady) setTokenDataReady(true)
+  }
 
   // ── Throttled refresh (30s cooldown) ──
   const lastRefreshRef = useRef(0)
