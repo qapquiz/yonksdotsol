@@ -50,7 +50,8 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
 
   const pnlSolDisplay = hasData ? formatSolValue(Math.abs(summary.totalPnlSol)) : '—'
   const pnlPctDisplay = hasData
-    ? `${sign}${isNaN(summary.totalPnlPercent) ? '0.00' : summary.totalPnlPercent.toFixed(2)}%`
+    // Math.abs prevents double-minus: sign is '-' and toFixed() already includes '-' for negatives
+    ? `${sign}${isNaN(summary.totalPnlPercent) ? '0.00' : Math.abs(summary.totalPnlPercent).toFixed(2)}%`
     : '—'
   const valueDisplay = hasData ? formatSolValue(summary.totalValueSol) : '—'
   const depositedDisplay = hasData ? formatSolValue(summary.totalInitialDepositSol) : '—'
