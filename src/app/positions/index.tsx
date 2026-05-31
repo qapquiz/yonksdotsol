@@ -1,12 +1,13 @@
 import { FlashList } from '@shopify/flash-list'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import { useClaimFee } from '../../hooks/useClaimFee'
+import { useThemeTokens } from '../../hooks/useThemeTokens'
 import EmptyState from '../../components/positions/EmptyState'
 import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PortfolioSummarySkeleton from '../../components/positions/PortfolioSummarySkeleton'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
-import { useThemeTokens } from '../../hooks/useThemeTokens'
 import type { ResolvedPosition, PortfolioSummaryData } from '../../hooks/usePositionsPage'
 
 interface PositionsListProps {
@@ -36,17 +37,68 @@ export default function PositionsList({
 }: PositionsListProps) {
   const tokens = useThemeTokens()
 
-  const listData = useMemo(
-    () => positions.map((resolved) => ({ id: resolved.id, resolved })),
-    [positions],
+  // Track which position is currently being claimed
+  const [claimingId, setClaimingId] = useState<string | null>(null)
+
+  // Claim fee input for the currently selected position
+  const claimInput = useMemo(() => {
+    if (!claimingId || !walletAddress) return null
+    const pos = positions.find((p) => p.id === claimingId)
+    if (!pos) return null
+
+    const lbPosition = pos.position.lbPairPositionsData[pos.lbPositionIndex]
+    const positionAddress = lbPosition?.publicKey.toBase58() ?? pos.id
+
+    return {
+      pairAddress: pos.poolAddress,
+      positionAddress,
+      ownerAddress: walletAddress,
+    }
+  }, [claimingId, walletAddress, positions])
+
+  const { claiming, claimSignature, error: claimError, claimFee: executeClaim } = useClaimFee(claimInput)
+
+  // When claim completes, clear the claiming state and refresh data
+  const prevClaimingRef = useRef(claiming)
+  if (prevClaimingRef.current && !claiming) {
+    // Claim just finished
+    setClaimingId(null)
+    if (claimSignature) {
+      refresh()
+    }
+  }
+  prevClaimingRef.current = claiming
+
+  const handleClaimFee = useCallback(
+    (positionId: string) => {
+      setClaimingId(positionId)
+      executeClaim()
+    },
+    [executeClaim],
   )
+
+  const listData = useMemo(() => positions.map((resolved) => ({ id: resolved.id, resolved })), [positions])
 
   const renderItem = useCallback(
     ({ item }: { item: (typeof listData)[number] }) => {
       const r = item.resolved
-      return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} />
+      const lbPosition = r.position.lbPairPositionsData[r.lbPositionIndex]
+      const positionData = lbPosition?.positionData
+      const hasFees = positionData ? !positionData.feeX.isZero() || !positionData.feeY.isZero() : false
+      const isClaiming = claimingId === item.id
+
+      return (
+        <PositionCard
+          vm={r.vm}
+          tokenXInfo={r.tokenXInfo}
+          tokenYInfo={r.tokenYInfo}
+          hasUnrealizedFees={hasFees}
+          claiming={isClaiming && claiming}
+          onClaimFee={hasFees && walletAddress ? () => handleClaimFee(item.id) : undefined}
+        />
+      )
     },
-    [],
+    [claimingId, claiming, walletAddress, handleClaimFee],
   )
 
   const listHeader = useMemo(
@@ -63,9 +115,14 @@ export default function PositionsList({
             </Text>
           </View>
         )}
+        {claimError && (
+          <View className="bg-red-500/10 border border-red-500/30 rounded-2xl px-4 py-3 mb-4">
+            <Text className="text-red-400 text-xs font-sans-bold">Claim failed: {claimError}</Text>
+          </View>
+        )}
       </>
     ),
-    [summary, hasPnLData, positionCount, outOfRangeCount],
+    [summary, hasPnLData, positionCount, outOfRangeCount, claimError],
   )
 
   // Show skeleton until wallet is resolved, positions fetch completes, AND token
