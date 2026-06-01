@@ -27,8 +27,10 @@ This file contains build commands and code style guidelines for agentic coding a
 - `bun run test` - Run all tests once (Vitest)
 - `bun run test:watch` - Run tests in watch mode
 - `bun run test:coverage` - Run tests with V8 coverage report
-- Test files live in `src/__tests__/` (mirrors `src/` structure)
-- Environment: happy-dom / jsdom; globals enabled via Vitest config
+- Test files live in `src/__tests__/` (mirrors `src/` structure: `config/`, `services/`, `stores/`, `utils/`)
+- Environment: `node`; globals enabled via Vitest config (`happy-dom` and `jsdom` are installed but not active)
+- Path alias: `@` resolves to `./src` (configured in `vitest.config.ts`)
+- Coverage: V8 provider; includes `src/utils/**`, `src/stores/**`, `src/hooks/**`
 - Setup: `src/__tests__/setup.ts` — mocks React Native core modules
 - Also: manual testing via Expo dev client or simulators
 
@@ -107,13 +109,12 @@ This file contains build commands and code style guidelines for agentic coding a
 ### State Management
 
 - **Zustand** for global/shared state (`src/stores/`)
-  - `pnlStore.ts` — PnL calculations and position data
-  - `settingsStore.ts` — app settings and preferences
-  - `walletStore.ts` — wallet connection state
+  - `settingsStore.ts` — app settings and preferences (theme, font), persisted to MMKV via `zustand/middleware`
+  - `walletStore.ts` — module-level MMKV-backed helpers (`getStoredWalletAddress`, `setStoredWalletAddress`) used by hooks and the Android widget for headless access
 - React hooks for local component state
   - `useState` for simple values
   - `useReducer` for complex state logic
-- `react-native-mmkv` for persistent storage (cache, settings)
+- `react-native-mmkv` for persistent storage (cache, settings, wallet address)
 - Set loading states before async operations
 
 ### Big Numbers
@@ -127,10 +128,10 @@ This file contains build commands and code style guidelines for agentic coding a
 - `/src/app/` - Expo Router pages (file-based routing)
 - `/src/components/` - Reusable UI components (`positions/`, `ui/`)
 - `/src/config/` - Configuration and constants (`connection.ts`, `env.ts`, `fonts.ts`, `theme.ts`, `cache.ts`)
-- `/src/contexts/` - React contexts (reserved for future use, currently empty)
-- `/src/hooks/` - Custom React hooks (`usePositionsPage`, `useWalletLifecycle`, `useThemeTokens`, `useWidgetSync`, `useFontConfig`)
-- `/src/services/` - Data fetching layer (`data.ts`)
-- `/src/stores/` - Zustand stores (`pnlStore`, `settingsStore`, `walletStore`)
+- `/src/hooks/` - Custom React hooks (`useClaimFee`, `useFontConfig`, `usePositionsPage`, `useThemeTokens`, `useWalletLifecycle`, `useWidgetSync`)
+- `/src/services/` - Data fetching layer (`data.ts` for token/price services, `positionPipeline.ts` for the portfolio pipeline)
+- `/src/stores/` - Zustand stores (`settingsStore`, `walletStore`)
+- `/src/tasks/` - Background tasks (e.g. `widgetBackgroundSync.ts` for `expo-task-manager` + `expo-background-fetch`)
 - `/src/tokens/` - Token lists (`index.ts`)
 - `/src/types/` - Shared TypeScript type definitions (`charts.d.ts`)
 - `/src/utils/` - Pure utility functions (`positions/`, `cache/`)
@@ -176,15 +177,19 @@ Polyfills are loaded in this order (do **not** change):
 | ----------------------------- | --------------------------------------------------------- |
 | `expo-router`                 | File-based routing                                        |
 | `zustand`                     | Global state management (stores in `src/stores/`)         |
-| `uniwind`                     | Tailwind CSS for React Native                             |
+| `uniwind`                     | Tailwind CSS for React Native (Tailwind v4-compatible)    |
 | `@wallet-ui/react-native-kit` | Solana wallet connection                                  |
 | `@solana/kit`                 | Solana SDK v2 (new API)                                   |
 | `@solana/web3.js`             | Solana SDK v1 (legacy, still used)                        |
 | `@meteora-ag/dlmm`            | Meteora DLMM pool integration                             |
+| `metcomet`                    | PnL data fetching from Metcomet API                       |
 | `@shopify/flash-list`         | High-performance lists                                    |
 | `react-native-mmkv`           | Fast persistent key-value storage                         |
 | `react-native-android-widget` | Android home screen widgets                               |
 | `react-native-quick-crypto`   | Crypto polyfill for Hermes                                |
+| `expo-background-fetch`       | Background fetch for widget sync while app is closed      |
+| `expo-task-manager`           | Task registration for background fetch                    |
+| `@expo/vector-icons`          | Icon set (Ionicons) used in the app shell                 |
 | `zod`                         | Schema validation (available, currently unused in env.ts) |
 | `vitest`                      | Test framework                                            |
 
@@ -242,6 +247,7 @@ Quick links by topic:
 | Number formatting (SOL, USD, %)   | [[Number Formatting]]                          |
 | Code search patterns              | [[ast-grep]]                                   |
 | Render optimization               | [[Performance Optimizations]]                  |
+| Vitest setup, coverage            | [[Testing]]                                    |
 
 ### Staging area: `docs/raw/`
 
