@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { ActivityIndicator, Pressable, Text, View } from 'react-native'
+import { useThemeTokens } from '../../hooks/useThemeTokens'
 import type { TokenInfo } from '../../tokens'
 import type { PositionViewModel } from '../../utils/positions/computePositionViewData'
 import { LiquidityBarChart } from './LiquidityBarChart'
@@ -24,6 +25,8 @@ function PositionCardComponent({
   claiming = false,
   onClaimFee,
 }: PositionCardProps) {
+  const tokens = useThemeTokens()
+
   // Show skeleton while token data is loading
   if (!tokenXInfo && !tokenYInfo) {
     return <PositionCardSkeleton />
@@ -56,12 +59,14 @@ function PositionCardComponent({
         <Pressable
           onPress={onClaimFee}
           disabled={claiming}
-          className="border-t border-app-border rounded-b-3xl py-3 flex-1 items-center active:opacity-60"
+          className="border-t border-app-border bg-app-primary-dim rounded-b-3xl py-3 flex-row items-center justify-center gap-1.5 active:bg-app-primary-dark disabled:opacity-50"
         >
           {claiming ? (
-            <ActivityIndicator size="small" color="#777777" />
+            <ActivityIndicator size="small" color={tokens.primary} />
           ) : (
-            <Text className="text-app-text-muted text-xs font-sans-bold tracking-wider">Claim Fees</Text>
+            <Text className="text-app-primary text-xs font-sans-bold tracking-wider">
+              Claim {vm.unrealizedFeesValue} →
+            </Text>
           )}
         </Pressable>
       )}
