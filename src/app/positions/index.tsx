@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import { LegendList } from '@legendapp/list/react-native'
 import { useCallback, useMemo } from 'react'
 import { RefreshControl, ScrollView, Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
@@ -36,18 +36,12 @@ export default function PositionsList({
 }: PositionsListProps) {
   const tokens = useThemeTokens()
 
-  const listData = useMemo(
-    () => positions.map((resolved) => ({ id: resolved.id, resolved })),
-    [positions],
-  )
+  const listData = useMemo(() => positions.map((resolved) => ({ id: resolved.id, resolved })), [positions])
 
-  const renderItem = useCallback(
-    ({ item }: { item: (typeof listData)[number] }) => {
-      const r = item.resolved
-      return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} />
-    },
-    [],
-  )
+  const renderItem = useCallback(({ item }: { item: (typeof listData)[number] }) => {
+    const r = item.resolved
+    return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} />
+  }, [])
 
   const listHeader = useMemo(
     () => (
@@ -69,7 +63,7 @@ export default function PositionsList({
   )
 
   // Show skeleton until wallet is resolved, positions fetch completes, AND token
-  // data is ready.  Waiting for tokenDataReady avoids a blank FlashList frame that
+  // data is ready.  Waiting for tokenDataReady avoids a blank LegendList frame that
   // occurs when positions exist but token prices haven't loaded yet.
   const showSkeleton = !walletResolved || !tokenDataReady || (positions.length === 0 && loading)
   const showEmpty = walletResolved && !loading && positions.length === 0
@@ -97,7 +91,7 @@ export default function PositionsList({
   }
 
   return (
-    <FlashList
+    <LegendList
       data={listData}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
@@ -105,6 +99,7 @@ export default function PositionsList({
       ListFooterComponent={<View className="h-20" />}
       contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8 }}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={tokens.refreshTint} />}
+      recycleItems
     />
   )
 }

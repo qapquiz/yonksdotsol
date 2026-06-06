@@ -22,7 +22,7 @@ export interface PositionsPageResult {
   positionCount: number
   /** True during initial skeleton load */
   loading: boolean
-  /** True when token prices have been resolved (prevents FlashList blank frame) */
+  /** True when token prices have been resolved (prevents LegendList blank frame) */
   tokenDataReady: boolean
   /** Pull-to-refresh handler */
   refresh: () => void
