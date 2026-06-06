@@ -38,7 +38,7 @@
     "@meteora-ag/dlmm": "^1.9.10",
     "@solana/kit": "^6.9.0",
     "@solana/web3.js": "^3.0.0-rc.1",
-    "@wallet-ui/react-native-kit": "^4.1.1",
+    "@wallet-ui/react-native-kit": "^4.2.0",
     "buffer": "^6.0.3",
     "expo": "~56.0.9",
     "expo-asset": "~56.0.16",
@@ -68,24 +68,26 @@
     "react-native-url-polyfill": "^3.0.0",
     "react-native-worklets": "0.8.3",
     "tailwindcss": "^4.3.0",
-    "uniwind": "^1.7.0",
+    "uniwind": "^1.8.0",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react": "^16.3.2",
     "@testing-library/react-native": "^13.3.3",
-    "@types/react": "~19.2.15",
+    "@types/react": "~19.2.17",
     "@types/react-test-renderer": "^19.1.0",
-    "@typescript/native-preview": "^7.0.0-dev.20260527.2",
+    "@typescript/native-preview": "^7.0.0-dev.20260606.1",
     "eslint": "^9.39.4",
     "eslint-config-expo": "~56.0.4",
-    "happy-dom": "^20.9.0",
+    "happy-dom": "^20.10.1",
     "jsdom": "^29.1.1",
     "oxfmt": "^0.53.0",
-    "react-test-renderer": "^19.2.6",
-    "vitest": "^4.1.7"
+    "react-test-renderer": "^19.2.7",
+    "vitest": "^4.1.8"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "uuid": "14.0.0"
+  }
 }
