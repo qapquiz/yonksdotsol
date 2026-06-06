@@ -10,7 +10,7 @@ This file contains build commands and code style guidelines for agentic coding a
 - `bun run ci` - Run full CI: type check, lint check, format check, and Android build
 - `bun run lint` - Run ESLint with auto-fix
 - `bun run lint:check` - Check ESLint errors without fixing
-- `bun run fmt` - Format code with Prettier
+- `bun run fmt` - Format code with oxfmt
 - `bun run fmt:check` - Check code formatting
 - `tsgo --noEmit` - Type check without emitting files (do **not** use `tsc`)
 
@@ -42,8 +42,9 @@ This file contains build commands and code style guidelines for agentic coding a
 - Use `import type { TypeName }` for type-only imports
 - Sort imports alphabetically within groups
 
-### Formatting (Prettier)
+### Formatting (oxfmt)
 
+- Config: `.oxfmtrc.json` (migrated from Prettier)
 - Max line width: 120 characters
 - No semicolons, single quotes, arrow parens always
 - Trailing commas everywhere, 2-space indentation (no tabs)

@@ -50,4 +50,3 @@ jobs:
           path: |
             *.apk
             *.aab
-
