@@ -48,6 +48,8 @@ export interface PositionViewModel {
   /** PnL data from external API */
   pnlSol: number | null
   pnlSolPctChange: number | null
+  /** 24h APR (annualized from feePerTvl24h), null if unavailable */
+  apr24h: number | null
 }
 
 export interface ComputePositionViewDataInput {
@@ -231,6 +233,12 @@ export function computePositionViewData(input: ComputePositionViewDataInput): Po
         )
       : null
 
+  // APR from feePerTvl24h: percentage string (e.g. "0.0234" = 2.34% daily)
+  // Annualize as simple APR: dailyRate * 365
+  const feePerTvl = pnlData?.feePerTvl24h
+  const parsedFeePerTvl = feePerTvl ? parseFloat(feePerTvl) : NaN
+  const apr24h = Number.isFinite(parsedFeePerTvl) && parsedFeePerTvl >= 0 ? parsedFeePerTvl * 365 : null
+
   return {
     totalValue,
     inRange,
@@ -242,5 +250,6 @@ export function computePositionViewData(input: ComputePositionViewDataInput): Po
     liquidityShape,
     pnlSol: pnlData?.pnlSol ?? null,
     pnlSolPctChange: pnlData?.pnlSolPctChange ?? null,
+    apr24h,
   }
 }

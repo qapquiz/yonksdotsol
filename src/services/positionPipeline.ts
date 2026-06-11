@@ -60,6 +60,7 @@ export interface PortfolioSummaryWidgetData {
   totalUnclaimedFeesSol: number
   positionCount: number
   outOfRangeCount: number
+  apr24h: number | null
 }
 
 // ─── Dependency injection ─────────────────────────────────────────────
@@ -177,6 +178,7 @@ export class PositionPipeline {
       totalUnclaimedFeesSol: result.summary?.totalUnclaimedFeesSol ?? 0,
       positionCount: result.positionCount,
       outOfRangeCount: result.outOfRangeCount,
+      apr24h: result.summary?.apr24h ?? null,
     }
   }
 

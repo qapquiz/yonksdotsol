@@ -6,6 +6,8 @@ export interface PoolPnLSummary {
   totalValueSol: number
   totalInitialDepositSol: number
   totalUnclaimedFeesSol: number
+  /** Portfolio-weighted 24h APR (annualized from feePerTvl24h) */
+  apr24h: number | null
 }
 
 const EMPTY_SUMMARY: PoolPnLSummary = {
@@ -14,6 +16,7 @@ const EMPTY_SUMMARY: PoolPnLSummary = {
   totalValueSol: 0,
   totalInitialDepositSol: 0,
   totalUnclaimedFeesSol: 0,
+  apr24h: null,
 }
 
 /**
@@ -67,12 +70,34 @@ export function computePoolPnLSummary(positions: PositionPnLData[]): PoolPnLSumm
 
   const pnlPercent = totalWeight > 0 ? weightedPnlPercentSum / totalWeight : 0
 
+  // Weighted 24h APR: weight each position's APR by its SOL value
+  let weightedAprSum = 0
+  let aprWeightSum = 0
+  for (const pos of positions) {
+    const feeStr = pos.feePerTvl24h
+    const parsedFee = feeStr ? parseFloat(feeStr) : NaN
+    if (!Number.isFinite(parsedFee) || parsedFee < 0) continue
+
+    let posValueSol = 0
+    if (pos.unrealizedPnl?.balancesSol) {
+      posValueSol = parseFloat(pos.unrealizedPnl.balancesSol)
+    } else if (pos.unrealizedPnl?.balances) {
+      posValueSol = pos.unrealizedPnl.balances / 200
+    }
+    if (posValueSol <= 0) continue
+
+    weightedAprSum += parsedFee * 365 * posValueSol
+    aprWeightSum += posValueSol
+  }
+  const apr24h = aprWeightSum > 0 ? weightedAprSum / aprWeightSum : null
+
   return {
     totalPnlSol: pnlSol,
     totalPnlPercent: pnlPercent,
     totalValueSol: valueSol,
     totalInitialDepositSol: initialDepositSol,
     totalUnclaimedFeesSol: feesSol,
+    apr24h,
   }
 }
 
