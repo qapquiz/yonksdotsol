@@ -38,7 +38,7 @@ function PositionCardComponent({ vm, tokenXInfo, tokenYInfo }: PositionCardProps
         claimedFeesDisplay={vm.claimedFeesDisplay}
         unrealizedFeesValue={vm.unrealizedFeesValue}
         claimedFeesValue={vm.claimedFeesValue}
-        apr24h={vm.apr24h}
+        feesTvl24h={vm.feesTvl24h}
       />
     </View>
   )

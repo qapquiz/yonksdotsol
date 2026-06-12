@@ -61,9 +61,9 @@ export function formatUPNLDisplay(upnl: number | undefined | null, percent: numb
   return `${sign}$${Math.abs(upnl).toFixed(2)} (${sign}${Number(percent).toFixed(2)}%)`
 }
 
-export function formatAPR24h(apr: number | null): string {
-  if (apr == null || !Number.isFinite(apr)) return '—'
-  if (apr >= 1000) return `${(apr / 1000).toFixed(1)}k%`
-  if (apr >= 100) return `${apr.toFixed(0)}%`
-  return `${apr.toFixed(2)}%`
+export function formatFeesTvl24h(feePerTvl: number | null): string {
+  if (feePerTvl == null || !Number.isFinite(feePerTvl)) return '—'
+  const pct = feePerTvl * 100
+  if (pct >= 100) return `${pct.toFixed(0)}%`
+  return `${pct.toFixed(2)}%`
 }

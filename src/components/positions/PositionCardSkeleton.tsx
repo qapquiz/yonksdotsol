@@ -59,7 +59,7 @@ function PositionCardSkeleton() {
         </View>
       </View>
 
-      {/* Footer — matches PositionFooter: 24H APR + two fee blocks */}
+      {/* Footer — matches PositionFooter: 24H FEES/TVL + two fee blocks */}
       <View className="mb-4">
         <ShimmerBlock className="w-16 h-3 rounded bg-app-border mb-1.5" />
         <ShimmerBlock className="w-14 h-4 rounded bg-app-border" />

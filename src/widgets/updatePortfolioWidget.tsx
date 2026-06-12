@@ -27,7 +27,7 @@ export interface PortfolioSummary {
   totalUnclaimedFeesSol: number
   positionCount: number
   outOfRangeCount: number
-  apr24h: number | null
+  feesTvl24h: number | null
 }
 
 // ─── Number formatting ───────────────────────────────────────────────
@@ -58,7 +58,7 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
   const depositedDisplay = hasData ? formatSolValue(summary.totalInitialDepositSol) : '—'
   const feesDisplay = hasData ? formatSolValue(summary.totalUnclaimedFeesSol) : '—'
   const countDisplay = hasData ? String(summary.positionCount) : '0'
-  const aprDisplay = hasData && summary.apr24h != null ? formatSolValue(summary.apr24h) + '%' : '—'
+  const feesTvlDisplay = hasData && summary.feesTvl24h != null ? (summary.feesTvl24h * 100).toFixed(2) + '%' : '—'
 
   return (
     <FlexWidget
@@ -247,10 +247,10 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
           </FlexWidget>
         </FlexWidget>
 
-        {/* 24H APR */}
+        {/* 24H FEES/TVL */}
         <FlexWidget style={{ flexDirection: 'column', flex: 1 }}>
           <TextWidget
-            text="24H APR"
+            text="24H FEES/TVL"
             style={{
               fontSize: 10,
               color: COLORS.textMuted,
@@ -260,7 +260,7 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
             }}
           />
           <TextWidget
-            text={aprDisplay}
+            text={feesTvlDisplay}
             style={{
               fontSize: 14,
               color: COLORS.text,
@@ -521,7 +521,7 @@ export async function fetchPortfolioSummary(walletAddress: string): Promise<Port
     totalUnclaimedFeesSol: result.totalUnclaimedFeesSol,
     positionCount: result.positionCount,
     outOfRangeCount: result.outOfRangeCount,
-    apr24h: result.apr24h ?? null,
+    feesTvl24h: result.feesTvl24h ?? null,
   }
 }
 

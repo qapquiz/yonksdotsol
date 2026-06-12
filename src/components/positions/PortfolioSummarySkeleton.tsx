@@ -20,7 +20,7 @@ function PortfolioSummarySkeleton() {
         <ShimmerBlock className="h-5 bg-app-border rounded-lg w-20" />
       </View>
 
-      {/* Stats row — matches: VALUE / 24H APR / DEPOSITED / UNCLAIMED FEES */}
+      {/* Stats row — matches: VALUE / 24H FEES/TVL / DEPOSITED / UNCLAIMED FEES */}
       <View className="flex-row justify-between">
         <View className="items-start">
           <ShimmerBlock className="h-3 bg-app-border rounded w-14 mb-1.5" />

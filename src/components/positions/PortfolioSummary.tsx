@@ -3,7 +3,7 @@ import { Text, View } from 'react-native'
 import type { PortfolioSummaryData } from '../../hooks/usePositionsPage'
 import { usePixelFont } from '../../hooks/useFontConfig'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
-import { formatAPR24h } from '../../utils/positions/formatters'
+import { formatFeesTvl24h } from '../../utils/positions/formatters'
 
 interface PortfolioSummaryProps {
   summary: PortfolioSummaryData | null
@@ -99,7 +99,7 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
     return null
   }
 
-  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol, apr24h } = summary
+  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol, feesTvl24h } = summary
 
   const isProfit = totalPnlSol >= 0
   const pnlColorClass = isProfit ? 'text-emerald-400' : 'text-red-400'
@@ -143,9 +143,9 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
           </View>
         </View>
         <View>
-          <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">24H APR</Text>
+          <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">24H FEES/TVL</Text>
           <Text className="text-app-text text-sm" style={{ fontFamily: pixelFont }}>
-            {formatAPR24h(apr24h)}
+            {formatFeesTvl24h(feesTvl24h)}
           </Text>
         </View>
         <View>
