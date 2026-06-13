@@ -13,6 +13,7 @@
     "/ios",
     "/tmp",
     "pnpm-lock.yaml",
-    "/src/uniwind-types.d.ts"
+    "/src/uniwind-types.d.ts",
+    "/plans"
   ]
 }
