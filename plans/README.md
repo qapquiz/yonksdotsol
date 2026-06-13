@@ -12,7 +12,8 @@ the file + the repo alone.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
-| 001  | Out-of-range alerts | P1 | M | — | TODO |
+| 004  | Fix pre-existing CI baseline (tsgo + lint + fmt green) | **P1 prerequisite** | S | — | TODO — **land before 001/002/003's clean-CI done criteria are satisfiable** |
+| 001  | Out-of-range alerts | P1 | M | — | DONE (impl complete & tested; build red on pre-existing CI — see Execute log) |
 | 002  | Historical-price disposition (recommend: delete) | P2 | S | — | TODO |
 | 003  | SOL/USD display toggle | P2 | M | — | TODO |
 
@@ -20,9 +21,16 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 
 ## Dependency notes
 
-- All three are **independent** — no hard ordering is required. The suggested
-  order is by leverage and by "clear the deck before broadening surfaces."
-- **Recommended order: 001 → 002 → 003.**
+- **004 (baseline CI fix) is a prerequisite for clean-CI verification of every
+  other plan.** The base commit (`1ea83e4` ≡ `86a1d22` for all source/deps) has
+  three pre-existing failures: `tsgo` (1 error, accidental `@solana/web3.js`
+  v3 bump in `positionPipeline.ts:108`), `lint:check` (2 errors,
+  `react-hooks/set-state-in-effect`), and `fmt:check` (4 files, the `plans/*.md`).
+  004 fixes all three with low risk (v1 dep pin + rule suppressions + ignore
+  `plans/`). Land 004 first; then 001's already-DONE implementation will verify
+  green without code changes, and 002/003 can finish cleanly.
+- 001/002/003 are **independent of each other** — no hard ordering among them.
+- **Recommended order: 004 → 001 (verify green) → 002 → 003.**
   - **001 (alerts)** first: highest user leverage; the background-task
     infrastructure it builds on already exists, so it's the best risk/reward.
   - **002 (delete dead historical-price code)** before **003**: 003 touches the
@@ -32,6 +40,33 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
     path 002 deletes — but landing 002 first is tidier.)
   - **003 (USD toggle)** is the broadest in surface area (touches summary,
     header, threading, optional widget); do it last when the value layer is clean.
+
+## Execute log
+
+### 001 — Out-of-range alerts (executed 2026-06-13 via herdr executor pi / glm-5.2)
+
+- **Verdict: APPROVE.** Implementation is complete, in-scope (11 files, 0 out-of-scope),
+  and fully unit-tested (`bun run test` → 146/146, incl. 6 new detector + 3 new settings
+  tests). Executor's code adds **0** new tsgo/lint/fmt problems.
+- **Branch:** `advisor/001-out-of-range-alerts` — worktree at
+  `/home/moshi/.herdr/worktrees/yonksdotsol/advisor-001-out-of-range-alerts` (10 commits,
+  conventional-commit style). Not merged — operator's call.
+- **`bun run build` / `tsgo --noEmit` / `lint:check` are RED, but NOT because of 001.** Three
+  pre-existing, out-of-scope failures exist at the base commit (`86a1d22` == `1ea83e4` for
+  all source/deps — the plan's recon never verified the baseline):
+  1. `tsgo`: `src/services/positionPipeline.ts(108,65)` TS2740 — `@solana/web3.js`
+     (top-level 3.0.0-rc.1) vs `@coral-xyz/anchor`'s nested 1.98.4 `Connection` divergence.
+  2. `lint:check`: `react-hooks/set-state-in-effect` in `src/hooks/usePositionsPage.ts:86`
+     and `src/hooks/useWalletLifecycle.ts:50`.
+  3. `fmt:check`: the 4 `plans/*.md` files are not oxfmt-conformant (introduced by the plans
+     commit itself).
+- **Recommended follow-up (blocks 002 & 003 too):** a small baseline-fix plan — resolve the
+  web3/anchor Connection typing, the two effect setState lints, and add `plans/` to oxfmt
+  ignore (or format the markdown). Until then every plan's "clean CI" done criterion is
+  unsatisfiable. Ask `/improve plan "fix pre-existing CI baseline"` if wanted.
+- **Documented executor deviations (all meritorious, in scope):** `alertStore.clearRangeState`
+  uses `mmkv.remove()` (react-native-mmkv v4 API; mirrors `walletStore`); detector test
+  imports vitest globals + orders `vi.mock` after imports (tsgo + eslint `import/first`).
 
 ## Recap of what each plan delivers
 
