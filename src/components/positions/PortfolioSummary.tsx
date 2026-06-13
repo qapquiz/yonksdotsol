@@ -99,7 +99,8 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
     return null
   }
 
-  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol, feesTvl24h } = summary
+  const { totalPnlSol, totalPnlPercent, totalValueSol, totalInitialDepositSol, totalUnclaimedFeesSol, feesTvl24h } =
+    summary
 
   const isProfit = totalPnlSol >= 0
   const pnlColorClass = isProfit ? 'text-emerald-400' : 'text-red-400'

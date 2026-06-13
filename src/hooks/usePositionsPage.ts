@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { env } from '../config/env'
 import { createPositionPipeline, type PortfolioResult } from '../services/positionPipeline'
+import { createMockPortfolioResult } from '../services/mockPortfolio'
 
 // ─── Re-export types for consumers ───────────────────────────────────
 
@@ -36,6 +38,7 @@ export interface PositionsPageResult {
 
 export function usePositionsPage(walletAddress: string | undefined, walletResolved: boolean): PositionsPageResult {
   const pipeline = useMemo(() => createPositionPipeline(), [])
+  const mockPortfolio = useMemo(() => createMockPortfolioResult(), [])
 
   const [result, setResult] = useState<PortfolioResult | null>(null)
   const [loading, setLoading] = useState(true)
@@ -45,6 +48,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
   const prevWalletRef = useRef<string | null>(null)
 
   useEffect(() => {
+    if (env.devMock) return // dev mock: skip on-chain fetch
     const currentAddress = walletAddress ?? null
     const prevAddress = prevWalletRef.current
 
@@ -77,6 +81,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
 
   // ── When wallet resolves with no address, show empty state ──
   useEffect(() => {
+    if (env.devMock) return
     if (walletResolved && !walletAddress) {
       setLoading(false)
       setTokenDataReady(true)
@@ -86,6 +91,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
   // ── Throttled refresh (30s cooldown) ──
   const lastRefreshRef = useRef(0)
   const refresh = useCallback(() => {
+    if (env.devMock) return // dev mock: no-op refresh
     if (!walletAddress) return
     const now = Date.now()
     if (now - lastRefreshRef.current < 30_000) return
@@ -99,6 +105,40 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
       setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
     })
   }, [walletAddress, pipeline])
+
+  // ── Dev mock mode: return static portfolio, bypass the pipeline ──
+  // When "disconnected" (no wallet address), return empty data so the
+  // empty state renders — lets us test the connected/empty UX in dev.
+  if (env.devMock) {
+    if (!walletAddress) {
+      return {
+        positions: [],
+        summary: null,
+        hasPnLData: false,
+        outOfRangeCount: 0,
+        poolAddresses: [],
+        positionCount: 0,
+        loading: false,
+        tokenDataReady: true,
+        refresh,
+        walletResolved: true,
+        walletAddress,
+      }
+    }
+    return {
+      positions: mockPortfolio.positions,
+      summary: mockPortfolio.summary,
+      hasPnLData: mockPortfolio.hasPnLData,
+      outOfRangeCount: mockPortfolio.outOfRangeCount,
+      poolAddresses: mockPortfolio.poolAddresses,
+      positionCount: mockPortfolio.positionCount,
+      loading: false,
+      tokenDataReady: true,
+      refresh,
+      walletResolved: true,
+      walletAddress,
+    }
+  }
 
   return {
     positions: result?.positions ?? [],

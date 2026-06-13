@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { env } from '../config/env'
 import { FontPicker } from '../components/ui/FontPicker'
 import { PixelAvatar } from '../components/ui/PixelAvatar'
 import { usePositionsPage } from '../hooks/usePositionsPage'
@@ -72,6 +73,13 @@ export default function App() {
           </View>
         </View>
       </View>
+
+      {env.devMock && (
+        <View className="flex-row items-center justify-center gap-2 bg-amber-500 px-4 py-1.5">
+          <Ionicons name="flask-outline" size={13} color="#000000" />
+          <Text className="text-[11px] font-sans-bold uppercase tracking-wider text-black">Dev Mode — Mock Data</Text>
+        </View>
+      )}
 
       <View className="flex-1">
         <PositionsList

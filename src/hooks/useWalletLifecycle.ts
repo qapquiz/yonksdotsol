@@ -1,5 +1,7 @@
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { env } from '../config/env'
+import { MOCK_WALLET_ADDRESS } from '../services/mockPortfolio'
 import { getStoredWalletAddress, setStoredWalletAddress } from '../stores/walletStore'
 
 export interface UseWalletLifecycleResult {
@@ -21,6 +23,8 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
   const { account, accounts, disconnect, signIn } = useMobileWallet()
   const [isConnecting, setIsConnecting] = useState(false)
   const [walletCheckTimedOut, setWalletCheckTimedOut] = useState(false)
+  // Dev mock only: tracks whether the fake wallet is "connected"
+  const [mockConnected, setMockConnected] = useState(true)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Fallback timeout in case wallet provider doesn't update accounts state
@@ -76,6 +80,25 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
       setStoredWalletAddress(undefined)
     }
   }, [disconnect])
+
+  // Dev mock only: toggle handlers (declared unconditionally for rules-of-hooks)
+  const handleMockConnect = useCallback(async () => {
+    setMockConnected(true)
+  }, [])
+  const handleMockDisconnect = useCallback(async () => {
+    setMockConnected(false)
+  }, [])
+
+  // ── Dev mock mode: toggle a fake wallet to test connected/empty states ──
+  if (env.devMock) {
+    return {
+      walletReady: true,
+      walletAddress: mockConnected ? MOCK_WALLET_ADDRESS : undefined,
+      isConnecting: false,
+      handleConnect: handleMockConnect,
+      handleDisconnect: handleMockDisconnect,
+    }
+  }
 
   return {
     walletReady,
