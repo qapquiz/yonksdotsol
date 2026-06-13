@@ -1,4 +1,6 @@
-import { vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+
+import { detectOutOfRangeAlerts } from '../../utils/alerts/outOfRange'
 
 vi.mock('expo-notifications', () => ({
   setNotificationChannelAsync: vi.fn(async () => ({})),
@@ -6,8 +8,6 @@ vi.mock('expo-notifications', () => ({
   AndroidImportance: { HIGH: 4 },
   SchedulableTriggerInputTypes: { TIME_INTERVAL: 'timeInterval' },
 }))
-
-import { detectOutOfRangeAlerts } from '../../utils/alerts/outOfRange'
 
 describe('detectOutOfRangeAlerts', () => {
   it('emits no alerts and only records state when previous is null (first run)', () => {
