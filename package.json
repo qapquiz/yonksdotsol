@@ -48,6 +48,7 @@
     "expo-font": "~56.0.5",
     "expo-insights": "~56.0.16",
     "expo-linking": "~56.0.13",
+    "expo-notifications": "^56.0.17",
     "expo-router": "~56.2.9",
     "expo-status-bar": "~56.0.4",
     "expo-system-ui": "~56.0.5",

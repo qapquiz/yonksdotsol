@@ -18,6 +18,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#000000"
       },
+      "permissions": ["android.permission.POST_NOTIFICATIONS"],
       "blockedPermissions": ["android.permission.SYSTEM_ALERT_WINDOW"]
     },
     "extra": {
@@ -59,7 +60,13 @@
           ]
         }
       ],
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-notifications",
+        {
+          "color": "#8FA893"
+        }
+      ]
     ],
     "ios": {
       "bundleIdentifier": "dev.nullphase.yonks"
