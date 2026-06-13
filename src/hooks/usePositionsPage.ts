@@ -83,6 +83,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
   useEffect(() => {
     if (env.devMock) return
     if (walletResolved && !walletAddress) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false)
       setTokenDataReady(true)
     }
