@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { env } from '../config/env'
 import { FontPicker } from '../components/ui/FontPicker'
 import { PixelAvatar } from '../components/ui/PixelAvatar'
+import { SettingsSheet } from '../components/ui/SettingsSheet'
 import { usePositionsPage } from '../hooks/usePositionsPage'
 import { useSettingsStore } from '../stores/settingsStore'
 import { useThemeTokens } from '../hooks/useThemeTokens'
@@ -22,10 +23,12 @@ export default function App() {
   const pageData = usePositionsPage(walletAddress, walletReady)
 
   const [fontPickerVisible, setFontPickerVisible] = useState(false)
+  const [settingsVisible, setSettingsVisible] = useState(false)
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: tokens.bg }}>
       <FontPicker visible={fontPickerVisible} onClose={() => setFontPickerVisible(false)} />
+      <SettingsSheet visible={settingsVisible} onClose={() => setSettingsVisible(false)} />
       <View className="px-4 py-4">
         <View className="flex-row items-center justify-between">
           <View className="flex-row items-center gap-3">
@@ -49,6 +52,12 @@ export default function App() {
             </View>
           </View>
           <View className="flex-row items-center gap-3">
+            <Pressable
+              onPress={() => setSettingsVisible(true)}
+              className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
+            >
+              <Ionicons name="settings-outline" size={20} color={tokens.textSecondary} />
+            </Pressable>
             <Pressable
               onPress={() => setFontPickerVisible(true)}
               className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
