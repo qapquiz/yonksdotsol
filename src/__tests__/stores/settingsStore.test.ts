@@ -28,6 +28,7 @@ describe('settingsStore', () => {
     // Reset both the Zustand store and the in-memory MMKV store
     useSettingsStore.setState({
       theme: 'dark',
+      alertsEnabled: false,
     })
     store.clear()
   })
@@ -100,6 +101,25 @@ describe('settingsStore', () => {
       const stored = store.get('settings-store')
       expect(stored).toBeDefined()
       expect(JSON.parse(stored!).state.theme).toBe('dark')
+    })
+  })
+
+  describe('alertsEnabled', () => {
+    it('defaults to false', () => {
+      expect(useSettingsStore.getState().alertsEnabled).toBe(false)
+    })
+
+    it('flips to true via setAlertsEnabled', () => {
+      useSettingsStore.getState().setAlertsEnabled(true)
+
+      expect(useSettingsStore.getState().alertsEnabled).toBe(true)
+    })
+
+    it('flips back to false', () => {
+      useSettingsStore.getState().setAlertsEnabled(true)
+      useSettingsStore.getState().setAlertsEnabled(false)
+
+      expect(useSettingsStore.getState().alertsEnabled).toBe(false)
     })
   })
 })
