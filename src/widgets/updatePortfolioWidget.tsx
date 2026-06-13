@@ -15,6 +15,7 @@ const COLORS = {
   primary: '#8FA893',
   profit: '#34d399',
   loss: '#f87171',
+  border: '#333333',
 } as const
 
 // ─── Shared types ────────────────────────────────────────────────────
@@ -209,12 +210,13 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
         </FlexWidget>
       )}
 
-      {/* Bottom row: Value / Deposited / Unclaimed Fees */}
+      {/* Stats row: VALUE / DEPOSITED / UNCLAIMED FEES */}
       <FlexWidget
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
           width: 'match_parent',
+          marginBottom: 12,
         }}
       >
         {/* VALUE */}
@@ -245,27 +247,6 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
               }}
             />
           </FlexWidget>
-        </FlexWidget>
-
-        {/* 24H FEES/TVL */}
-        <FlexWidget style={{ flexDirection: 'column', flex: 1 }}>
-          <TextWidget
-            text="24H FEES/TVL"
-            style={{
-              fontSize: 10,
-              color: COLORS.textMuted,
-              fontWeight: '700',
-              letterSpacing: 1.5,
-              marginBottom: 4,
-            }}
-          />
-          <TextWidget
-            text={feesTvlDisplay}
-            style={{
-              fontSize: 14,
-              color: COLORS.text,
-            }}
-          />
         </FlexWidget>
 
         {/* DEPOSITED */}
@@ -327,6 +308,36 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
             />
           </FlexWidget>
         </FlexWidget>
+      </FlexWidget>
+
+      {/* Yield band: 24H FEES / TVL (separated by divider) */}
+      <FlexWidget
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: 'match_parent',
+          borderTopWidth: 1,
+          borderTopColor: COLORS.border,
+          paddingTop: 12,
+        }}
+      >
+        <TextWidget
+          text="24H FEES / TVL"
+          style={{
+            fontSize: 10,
+            color: COLORS.textMuted,
+            fontWeight: '700',
+            letterSpacing: 1.5,
+          }}
+        />
+        <TextWidget
+          text={feesTvlDisplay}
+          style={{
+            fontSize: 14,
+            color: COLORS.text,
+          }}
+        />
       </FlexWidget>
 
       {/* Last updated timestamp */}

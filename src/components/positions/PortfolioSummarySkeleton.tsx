@@ -20,33 +20,35 @@ function PortfolioSummarySkeleton() {
         <ShimmerBlock className="h-5 bg-app-border rounded-lg w-20" />
       </View>
 
-      {/* Stats row — matches: VALUE / 24H FEES/TVL / DEPOSITED / UNCLAIMED FEES */}
-      <View className="flex-row justify-between">
-        <View className="items-start">
+      {/* Stats row — matches: VALUE / DEPOSITED / UNCLAIMED FEES */}
+      <View className="flex-row justify-between mb-4">
+        <View className="flex-1 items-start">
           <ShimmerBlock className="h-3 bg-app-border rounded w-14 mb-1.5" />
           <View className="flex-row items-baseline">
             <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
             <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
           </View>
         </View>
-        <View className="items-start">
-          <ShimmerBlock className="h-3 bg-app-border rounded w-16 mb-1.5" />
-          <ShimmerBlock className="h-4 bg-app-border rounded w-14" />
-        </View>
-        <View className="items-start">
+        <View className="flex-1 items-start">
           <ShimmerBlock className="h-3 bg-app-border rounded w-20 mb-1.5" />
           <View className="flex-row items-baseline">
             <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
             <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
           </View>
         </View>
-        <View className="items-start">
+        <View className="flex-1 items-start">
           <ShimmerBlock className="h-3 bg-app-border rounded w-24 mb-1.5" />
           <View className="flex-row items-baseline">
             <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
             <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
           </View>
         </View>
+      </View>
+
+      {/* Yield band — matches: 24H FEES / TVL divider row */}
+      <View className="border-t border-app-border pt-3 flex-row justify-between">
+        <ShimmerBlock className="h-3 bg-app-border rounded w-20" />
+        <ShimmerBlock className="h-4 bg-app-border rounded w-10" />
       </View>
     </View>
   )
