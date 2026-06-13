@@ -47,6 +47,7 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
   // Persist wallet address to MMKV for headless widget access
   useEffect(() => {
     if (account?.address) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setWalletCheckTimedOut(true)
       setStoredWalletAddress(account.address)
       if (timeoutRef.current) {
