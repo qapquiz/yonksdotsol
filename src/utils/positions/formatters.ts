@@ -61,6 +61,23 @@ export function formatUPNLDisplay(upnl: number | undefined | null, percent: numb
   return `${sign}$${Math.abs(upnl).toFixed(2)} (${sign}${Number(percent).toFixed(2)}%)`
 }
 
+/**
+ * Parse the Meteora API's `feePerTvl24h` into the internal ratio representation.
+ *
+ * The API returns a **percentage** string (e.g. "1.31" means 1.31% daily), not a
+ * ratio. Internally we store a ratio (0.0131 = 1.31%) so that
+ * `formatFeesTvl24h` can multiply by 100 for display. Dividing by 100 here
+ * keeps the value consistent everywhere it is consumed.
+ *
+ * Returns null for missing, non-finite, or negative values.
+ */
+export function parseFeePerTvl24h(apiValue: string | null | undefined): number | null {
+  if (!apiValue) return null
+  const pct = parseFloat(apiValue)
+  if (!Number.isFinite(pct) || pct < 0) return null
+  return pct / 100
+}
+
 export function formatFeesTvl24h(feePerTvl: number | null): string {
   if (feePerTvl == null || !Number.isFinite(feePerTvl)) return '—'
   const pct = feePerTvl * 100

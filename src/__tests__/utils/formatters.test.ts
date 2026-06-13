@@ -8,6 +8,8 @@ import {
   formatFees,
   formatUPNLDisplaySol,
   formatUPNLDisplay,
+  parseFeePerTvl24h,
+  formatFeesTvl24h,
 } from '../../utils/positions/formatters'
 
 describe('formatUSD', () => {
@@ -220,5 +222,51 @@ describe('formatUPNLDisplay', () => {
 
   it('handles small decimal values', () => {
     expect(formatUPNLDisplay(0.01, 0.01)).toBe('+$0.01 (+0.01%)')
+  })
+})
+
+describe('parseFeePerTvl24h', () => {
+  it('converts an API percentage string to the internal ratio', () => {
+    // API returns a percentage (1.31 = 1.31%); internally we store a ratio.
+    expect(parseFeePerTvl24h('1.31')).toBeCloseTo(0.0131)
+  })
+
+  it('converts whole-number percentages', () => {
+    expect(parseFeePerTvl24h('5')).toBeCloseTo(0.05)
+  })
+
+  it('handles zero', () => {
+    expect(parseFeePerTvl24h('0')).toBe(0)
+  })
+
+  it('returns null for missing values', () => {
+    expect(parseFeePerTvl24h(undefined)).toBeNull()
+    expect(parseFeePerTvl24h(null)).toBeNull()
+    expect(parseFeePerTvl24h('')).toBeNull()
+  })
+
+  it('returns null for non-finite or negative values', () => {
+    expect(parseFeePerTvl24h('not-a-number')).toBeNull()
+    expect(parseFeePerTvl24h('-1')).toBeNull()
+  })
+})
+
+describe('formatFeesTvl24h', () => {
+  it('renders a ratio as a percentage (end-to-end with parser)', () => {
+    // API "1.31" (1.31%) -> ratio 0.0131 -> displayed "1.31%".
+    expect(formatFeesTvl24h(parseFeePerTvl24h('1.31'))).toBe('1.31%')
+  })
+
+  it('renders small ratios with two decimals', () => {
+    expect(formatFeesTvl24h(0.0042)).toBe('0.42%')
+  })
+
+  it('rounds large ratios to a whole percent', () => {
+    expect(formatFeesTvl24h(1.5)).toBe('150%')
+  })
+
+  it('returns an em dash for null or non-finite input', () => {
+    expect(formatFeesTvl24h(null)).toBe('—')
+    expect(formatFeesTvl24h(Number.NaN)).toBe('—')
   })
 })

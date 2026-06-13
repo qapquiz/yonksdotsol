@@ -258,6 +258,42 @@ describe('computePositionViewData', () => {
     expect(vm.pnlSolPctChange).toBeNull()
   })
 
+  it('converts API feePerTvl24h percentage to internal ratio', () => {
+    // The Meteora API returns a percentage string ("1.31" = 1.31% daily).
+    // The view model must store the ratio (0.0131) so the UI renders 1.31%.
+    const pnlData = {
+      feePerTvl24h: '1.31',
+    } as PositionPnLData
+
+    const vm = computePositionViewData({
+      positionData: createMockPositionData(),
+      activeId: 50,
+      positionAddress: 'pos1',
+      poolAddress: 'pool1',
+      tokenXInfo: mockTokenX,
+      tokenYInfo: mockTokenY,
+      pnlData,
+    })
+
+    expect(vm.feesTvl24h).toBeCloseTo(0.0131)
+  })
+
+  it('returns null feesTvl24h for missing or invalid API values', () => {
+    for (const feePerTvl24h of [undefined, '', '-1', 'not-a-number']) {
+      const vm = computePositionViewData({
+        positionData: createMockPositionData(),
+        activeId: 50,
+        positionAddress: 'pos1',
+        poolAddress: 'pool1',
+        tokenXInfo: mockTokenX,
+        tokenYInfo: mockTokenY,
+        pnlData: { feePerTvl24h } as PositionPnLData,
+      })
+
+      expect(vm.feesTvl24h).toBeNull()
+    }
+  })
+
   it('generates liquidity shape when all data is present', () => {
     const vm = computePositionViewData({
       positionData: createMockPositionData(),

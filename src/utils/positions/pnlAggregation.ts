@@ -1,4 +1,5 @@
 import type { PositionPnLData } from 'metcomet'
+import { parseFeePerTvl24h } from './formatters'
 
 export interface PoolPnLSummary {
   totalPnlSol: number
@@ -74,9 +75,8 @@ export function computePoolPnLSummary(positions: PositionPnLData[]): PoolPnLSumm
   let weightedFeeSum = 0
   let feeWeightSum = 0
   for (const pos of positions) {
-    const feeStr = pos.feePerTvl24h
-    const parsedFee = feeStr ? parseFloat(feeStr) : NaN
-    if (!Number.isFinite(parsedFee) || parsedFee < 0) continue
+    const ratio = parseFeePerTvl24h(pos.feePerTvl24h)
+    if (ratio == null) continue
 
     let posValueSol = 0
     if (pos.unrealizedPnl?.balancesSol) {
@@ -86,7 +86,7 @@ export function computePoolPnLSummary(positions: PositionPnLData[]): PoolPnLSumm
     }
     if (posValueSol <= 0) continue
 
-    weightedFeeSum += parsedFee * posValueSol
+    weightedFeeSum += ratio * posValueSol
     feeWeightSum += posValueSol
   }
   const feesTvl24h = feeWeightSum > 0 ? weightedFeeSum / feeWeightSum : null

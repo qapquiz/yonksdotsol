@@ -1,7 +1,7 @@
 import { PositionBinData, type PositionData } from '@meteora-ag/dlmm'
 import type { PositionPnLData } from 'metcomet'
 import type { TokenInfo } from '../../tokens'
-import { formatTokenAmount, formatUSD } from './formatters'
+import { formatTokenAmount, formatUSD, parseFeePerTvl24h } from './formatters'
 
 // ─── Exported types ──────────────────────────────────────────────────
 
@@ -233,10 +233,9 @@ export function computePositionViewData(input: ComputePositionViewDataInput): Po
         )
       : null
 
-  // Fees/TVL from feePerTvl24h: ratio string (e.g. "0.01" = 1% daily)
-  const feePerTvlStr = pnlData?.feePerTvl24h
-  const parsedFeePerTvl = feePerTvlStr ? parseFloat(feePerTvlStr) : NaN
-  const feesTvl24h = Number.isFinite(parsedFeePerTvl) && parsedFeePerTvl >= 0 ? parsedFeePerTvl : null
+  // Fees/TVL: the API returns a percentage (e.g. "1.31" = 1.31% daily),
+  // converted here to the internal ratio representation (0.0131).
+  const feesTvl24h = parseFeePerTvl24h(pnlData?.feePerTvl24h)
 
   return {
     totalValue,

@@ -80,12 +80,12 @@ const MOCK_TOKEN_Y = {
 }
 
 const MOCK_PNL_DATA: PositionPnLData = {
-  positionAddress: 'pos123',
+  positionAddress: 'pos-addr-0',
   minPrice: '0.5',
   maxPrice: '2.0',
   lowerBinId: 40,
   upperBinId: 60,
-  feePerTvl24h: '0.01',
+  feePerTvl24h: '1.31', // API returns a percentage (1.31 = 1.31% daily)
   isClosed: false,
   pnlUsd: '50',
   pnlPctChange: '10.5',
@@ -209,6 +209,10 @@ describe('PositionPipeline', () => {
       expect(result.summary).not.toBeNull()
       expect(result.summary!.totalPnlSol).toBeCloseTo(0.5)
       expect(result.outOfRangeCount).toBe(0) // activeId 50 is within range 40-60
+
+      // API feePerTvl24h is a percentage (1.31 = 1.31%); the view model
+      // stores the internal ratio (0.0131), so the UI renders 1.31% — not 131%.
+      expect(result.positions[0].vm.feesTvl24h).toBeCloseTo(0.0131)
     })
 
     it('returns hasPnLData=false when PnL fetch fails', async () => {
