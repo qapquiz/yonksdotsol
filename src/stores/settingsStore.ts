@@ -23,6 +23,10 @@ interface SettingsState {
   // Font preferences
   pixelFont: string
   setPixelFont: (id: string) => void
+
+  // Alert preferences
+  alertsEnabled: boolean
+  setAlertsEnabled: (enabled: boolean) => void
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -34,6 +38,9 @@ export const useSettingsStore = create<SettingsState>()(
 
       pixelFont: DEFAULT_PIXEL_FONT,
       setPixelFont: (pixelFont) => set({ pixelFont }),
+
+      alertsEnabled: false,
+      setAlertsEnabled: (alertsEnabled) => set({ alertsEnabled }),
     }),
     {
       name: 'settings-store',
