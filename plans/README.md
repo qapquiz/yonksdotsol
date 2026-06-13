@@ -12,7 +12,7 @@ the file + the repo alone.
 
 | Plan | Title | Priority | Effort | Depends on | Status |
 |------|-------|----------|--------|------------|--------|
-| 004  | Fix pre-existing CI baseline (tsgo + lint + fmt green) | **P1 prerequisite** | S | — | TODO — **land before 001/002/003's clean-CI done criteria are satisfiable** |
+| 004  | Fix pre-existing CI baseline (tsgo + lint + fmt green) | **P1 prerequisite** | S | — | DONE (all gates green: tsgo/lint/fmt/test/build exit 0; 146/146 tests) |
 | 001  | Out-of-range alerts | P1 | M | — | DONE (impl complete & tested; build red on pre-existing CI — see Execute log) |
 | 002  | Historical-price disposition (recommend: delete) | P2 | S | — | TODO |
 | 003  | SOL/USD display toggle | P2 | M | — | TODO |
