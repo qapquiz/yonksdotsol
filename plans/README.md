@@ -73,9 +73,10 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   `getHistoricalSOLPrice`), its two fetcher modules (`meteora-ohlcv.ts`, `pyth-benchmarks.ts`), the
   `OHLCV_PRICE`/`PYTH_PRICE` TTL constants, and the `prices` field on `DataServices` were fully
   orphaned — `PositionPipeline` only ever reads `dataServices.tokens`. All removed.
-- **Merge:** merged to `main` via `--no-ff` as `fc67375` (2026-06-14, this session).
-  Branch + worktree teardown pending — operator step (the executor runs inside the
-  workspace, so it cannot remove its own session).
+- **Merge:** merged to `main` via `--no-ff` as `fc67375` (2026-06-14, this session;
+  operator merge + `470f26a` log correction). Branch + worktree removed post-review
+  (advisor teardown: `herdr worktree remove --workspace w65434a370239a18 --force` +
+  `git branch -d advisor/002-remove-historical-price`).
 - **All gates green at the post-001/003/004 base:** `tsgo --noEmit` 0, `lint:check` 0,
   `fmt:check` 0, `test` 143/143 (−12 vs the 155 baseline — exactly the 4 PriceService + 4 OHLCV
   + 4 Pyth orphan tests removed). No native build run (no deps/native config changed).
