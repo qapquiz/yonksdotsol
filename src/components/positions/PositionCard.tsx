@@ -11,6 +11,8 @@ interface PositionCardProps {
   vm: PositionViewModel
   tokenXInfo: TokenInfo | null
   tokenYInfo: TokenInfo | null
+  /** Live SOL→USD price; forwarded to PositionHeader for the uPnL line */
+  solUsdPrice: number | null
 }
 
 function PositionCardComponent({ vm, tokenXInfo, tokenYInfo }: PositionCardProps) {

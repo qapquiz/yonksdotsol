@@ -9,6 +9,8 @@ interface PortfolioSummaryProps {
   summary: PortfolioSummaryData | null
   hasData: boolean
   positionCount: number
+  /** Live SOL→USD price; used when displayCurrency === 'USD' */
+  solUsdPrice: number | null
 }
 
 function formatSmallValue(value: number): { leadingText: string; superscript: string; digits: string } | null {
