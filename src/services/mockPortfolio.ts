@@ -13,6 +13,7 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
 
 import { env } from '../config/env'
+import { WRAPPED_SOL_MINT } from '../tokens'
 import type { PortfolioResult, ResolvedPosition } from './positionPipeline'
 import type { ChartBinData, LiquidityShape, PositionViewModel } from '../utils/positions/computePositionViewData'
 import type { TokenInfo } from '../tokens'
@@ -23,7 +24,7 @@ export const MOCK_WALLET_ADDRESS = 'DeVMoCK1Wallet111111111111111111111111111111
 // ─── Well-known token mint addresses ─────────────────────────────────
 
 const MINT = {
-  SOL: 'So11111111111111111111111111111111111111112',
+  SOL: WRAPPED_SOL_MINT,
   USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
   BONK: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
   JUP: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbHedAuSjreC',
