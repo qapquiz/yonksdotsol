@@ -15,7 +15,7 @@ the file + the repo alone.
 | 004  | Fix pre-existing CI baseline (tsgo + lint + fmt green) | **P1 prerequisite** | S | — | DONE (all gates green: tsgo/lint/fmt/test/build exit 0; 146/146 tests) |
 | 001  | Out-of-range alerts | P1 | M | — | DONE (impl complete & tested; build red on pre-existing CI — see Execute log) |
 | 002  | Historical-price disposition (recommend: delete) | P2 | S | — | TODO |
-| 003  | SOL/USD display toggle | P2 | M | — | TODO |
+| 003  | SOL/USD display toggle | P2 | M | — | DONE (Steps 1-8,10 done, all gates green: tsgo/lint/fmt/test 155/build exit 0; Step 9 widget USD deferred per plan) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale).
 
@@ -67,6 +67,33 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - **Documented executor deviations (all meritorious, in scope):** `alertStore.clearRangeState`
   uses `mmkv.remove()` (react-native-mmkv v4 API; mirrors `walletStore`); detector test
   imports vitest globals + orders `vi.mock` after imports (tsgo + eslint `import/first`).
+
+### 003 — SOL/USD display toggle (executed 2026-06-14 via herdr executor pi / glm-5.2)
+
+- **Verdict: APPROVE.** Steps 1–8 & 10 complete; in-scope (13 files modified, widget
+  deferred per Step 9, 0 out-of-scope). All gates green at the post-004 base (`7c764a2`):
+  `tsgo --noEmit` 0, `lint:check` 0, `fmt:check` 0, `test` 155/155 (+9 new: 6
+  `formatUsdFromSol` + 3 `displayCurrency`), `build` 0. Zero new tsgo/lint/fmt problems
+  introduced.
+- **Branch:** `advisor/003-usd-display-toggle` — worktree at
+  `/home/moshi/.herdr/worktrees/yonksdotsol/advisor-003-usd-display-toggle` (10 commits,
+  conventional-commit style). Not merged — operator's call.
+- **Drift handled (not a STOP):** plan 001 (`alertsEnabled`) + plan 004 (`eslint-disable`
+  in `usePositionsPage.ts`) had landed since `86a1d22`. `displayCurrency` added alongside
+  `alertsEnabled` exactly as Step 4 anticipated.
+- **Step 9 (widget USD variant) DEFERRED** per plan (marked OPTIONAL/DEFERRABLE and
+  self-contained). In-app SOL/USD toggle is complete and consistent; the headless-widget
+  USD variant is a clean follow-up.
+- **Anticipated by plan, followed exactly:** per-position `totalValue` stays USD in both
+  modes (known pre-existing inconsistency; out of scope — see plan maintenance notes).
+- **Executor decisions (in scope, low-risk):** dropped the now-dead `upnlIsSol` prop from
+  `PositionHeader`/`PositionCard` (always `true`; the USD/SOL branch is now driven by
+  `displayCurrency` from the store); `CurrencyToggle` is a compact joined segmented control
+  using the FontPicker color tokens (`bg-app-primary-dim`/`text-app-primary`); dev-mock mode
+  fetches the SOL price once on mount so the USD path is testable.
+- **SOL-mode regression:** verified byte-for-byte — `SummaryValue` delegates to the existing
+  `SolValue` with identical props, unit labels render the same `<Text>SOL</Text>`, and the
+  `PositionHeader` uPnL resolves to `formatUPNLDisplaySol` (SOL branch unchanged).
 
 ## Recap of what each plan delivers
 
