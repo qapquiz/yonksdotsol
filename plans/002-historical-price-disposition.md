@@ -9,10 +9,22 @@
 > the "STOP conditions" section occurs, stop and report. When done, update the
 > status row for this plan in `plans/README.md`.
 >
-> **Drift check (run first)**: `git diff --stat 86a1d22..HEAD -- src/services/data.ts src/config/cache.ts src/__tests__/services/data.test.ts src/utils/positions/meteora-ohlcv.ts src/utils/positions/pyth-benchmarks.ts`
+> **Drift check (run first)**: `git diff --stat 86a1d22..HEAD -- src/services/data.ts src/config/cache.ts src/__tests__/services/data.test.ts src/__tests__/utils/dataFetching.test.ts src/__tests__/services/positionPipeline.test.ts src/utils/positions/meteora-ohlcv.ts src/utils/positions/pyth-benchmarks.ts`
 > If any in-scope file changed since this plan was written, compare the
 > "Current state" excerpts against the live code before proceeding; on a
 > mismatch, treat it as a STOP condition.
+>
+> **Reconciliation note (advisor pre-dispatch, 2026-06-14):** the original
+> scope missed two test files that also reference the deleted symbols and would
+> break the build/tests after deletion. They existed at `86a1d22` unchanged, so
+> this is a plan-scope gap, not drift. Both are now in scope (see Step 4):
+> - `src/__tests__/utils/dataFetching.test.ts` — contains its own
+>   `describe('fetchOHLCVPriceAtTimestamp')` and `describe('fetchHistoricalSOLPriceFromApi')`
+>   blocks (lines 106–278) that `await import(...)` the deleted modules. The top
+>   `describe('fetchTokenFromRpc')` block (the live token service) MUST stay.
+> - `src/__tests__/services/positionPipeline.test.ts:52-53` — mocks `OHLCV_PRICE`/
+>   `PYTH_PRICE` inside its `vi.mock('../../config/cache')` factory; remove those
+>   two lines so the done-criteria grep stays clean.
 
 ## Status
 
@@ -131,6 +143,16 @@ caching. The top of the file also `vi.mock`s both fetch modules and imports them
 - `src/config/cache.ts` — remove `OHLCV_PRICE` and `PYTH_PRICE`
 - `src/__tests__/services/data.test.ts` — remove the `PriceService` describe
   block, the two `vi.mock` calls for the deleted modules, and their imports
+- `src/__tests__/utils/dataFetching.test.ts` — remove the two describe blocks
+  `fetchOHLCVPriceAtTimestamp` and `fetchHistoricalSOLPriceFromApi` and their
+  section-separator comments (everything from the
+  `// ─── meteora-ohlcv.ts:` comment at line 106 through end of file, line 278).
+  KEEP the top `describe('fetchTokenFromRpc')` block (lines 1–~105) — it tests
+  the live token service, not the deleted price path.
+- `src/__tests__/services/positionPipeline.test.ts` — remove the two lines
+  `OHLCV_PRICE: 60 * 60 * 1000,` and `PYTH_PRICE: 60 * 60 * 1000,` (lines 52–53)
+  from the `vi.mock('../../config/cache')` factory; leave `UPNL_PER_POSITION`
+  and `TOKEN_DATA`.
 
 **Out of scope** (do NOT touch):
 - `src/services/positionPipeline.ts` — it only uses `tokens`; do not change it.
@@ -197,22 +219,44 @@ rm src/utils/positions/meteora-ohlcv.ts src/utils/positions/pyth-benchmarks.ts
 **Verify**: `ls src/utils/positions/` → the two files are gone; `formatters.ts`,
 `computePositionViewData.ts`, `pnlAggregation.ts` remain.
 
-### Step 4: Trim the data-service test
+### Step 4: Trim the tests (three files)
 
-In `src/__tests__/services/data.test.ts`:
+#### Step 4a: `src/__tests__/services/data.test.ts`
 1. Remove the two `vi.mock` blocks:
    ```ts
    vi.mock('../../utils/positions/meteora-ohlcv', () => ({ fetchOHLCVPriceAtTimestamp: vi.fn() }))
    vi.mock('../../utils/positions/pyth-benchmarks', () => ({ fetchHistoricalSOLPriceFromApi: vi.fn() }))
    ```
 2. Remove the imports of `fetchOHLCVPriceAtTimestamp` and
-   `fetchHistoricalSOLPriceFromApi`.
+   `fetchHistoricalSOLPriceFromApi` (lines 6–7).
 3. Remove the entire `describe('PriceService', () => { ... })` block.
 4. Leave the `describe('DataServices', ...)` shell and the `TokenService` tests
    intact.
 
-**Verify**: `bun run test -- src/__tests__/services/data.test.ts` → all
-remaining tests pass.
+#### Step 4b: `src/__tests__/utils/dataFetching.test.ts` (added in reconciliation)
+1. Delete everything from the `// ─── meteora-ohlcv.ts:` separator comment
+   (line 106) through the end of file (line 278). This removes both the
+   `describe('fetchOHLCVPriceAtTimestamp')` and
+   `describe('fetchHistoricalSOLPriceFromApi')` blocks and their separators.
+2. **KEEP** the top `describe('fetchTokenFromRpc')` block (lines 1–~105) and
+   the file's top imports — `fetchTokenFromRpc` is the live token service and
+   is not part of this deletion.
+3. Leave exactly one trailing newline at end of file.
+
+#### Step 4c: `src/__tests__/services/positionPipeline.test.ts` (added in reconciliation)
+In the `vi.mock('../../config/cache', () => ({ CACHE_TTL: { ... } }))` factory
+(around lines 48–55), delete these two lines:
+```ts
+    OHLCV_PRICE: 60 * 60 * 1000,
+    PYTH_PRICE: 60 * 60 * 1000,
+```
+Leave `UPNL_PER_POSITION` and `TOKEN_DATA`. (The mock is for the pipeline's
+own TTL usage; removing these unused keys is cosmetic + makes the done-criteria
+grep clean. Runtime behaviour is unchanged either way.)
+
+**Verify (after all of 4a/4b/4c)**:
+- `bun run test -- src/__tests__/services/data.test.ts src/__tests__/utils/dataFetching.test.ts src/__tests__/services/positionPipeline.test.ts` → all remaining tests pass.
+- `grep -rn "PriceService\|getPoolPrice\|getHistoricalSOLPrice\|fetchOHLCVPriceAtTimestamp\|fetchHistoricalSOLPriceFromApi\|OHLCV_PRICE\|PYTH_PRICE\|meteora-ohlcv\|pyth-benchmarks" src/` → **no matches** (the whole src/ tree is now clean of the deleted price path).
 
 ### Step 5: Format and full verification
 
