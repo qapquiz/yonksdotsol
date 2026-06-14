@@ -14,7 +14,7 @@ the file + the repo alone.
 |------|-------|----------|--------|------------|--------|
 | 004  | Fix pre-existing CI baseline (tsgo + lint + fmt green) | **P1 prerequisite** | S | — | DONE (all gates green: tsgo/lint/fmt/test/build exit 0; 146/146 tests) |
 | 001  | Out-of-range alerts | P1 | M | — | DONE (impl complete & tested; build red on pre-existing CI — see Execute log) |
-| 002  | Historical-price disposition (recommend: delete) | P2 | S | — | TODO |
+| 002  | Historical-price disposition (recommend: delete) | P2 | S | — | DONE (Option A: orphaned PriceService + 2 fetchers deleted; tsgo/lint/fmt/test 143 all exit 0) |
 | 003  | SOL/USD display toggle | P2 | M | — | DONE (Steps 1-8,10 done, all gates green: tsgo/lint/fmt/test 155/build exit 0; Step 9 widget USD deferred per plan) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale).
@@ -67,6 +67,36 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - **Documented executor deviations (all meritorious, in scope):** `alertStore.clearRangeState`
   uses `mmkv.remove()` (react-native-mmkv v4 API; mirrors `walletStore`); detector test
   imports vitest globals + orders `vi.mock` after imports (tsgo + eslint `import/first`).
+
+### 002 — Historical-price disposition (executed 2026-06-14 via herdr executor pi / glm-5.2)
+
+- **Verdict: APPROVE.** Option A (delete the orphan) executed. The `PriceService` (`getPoolPrice` /
+  `getHistoricalSOLPrice`), its two fetcher modules (`meteora-ohlcv.ts`, `pyth-benchmarks.ts`), the
+  `OHLCV_PRICE`/`PYTH_PRICE` TTL constants, and the `prices` field on `DataServices` were fully
+  orphaned — `PositionPipeline` only ever reads `dataServices.tokens`. All removed.
+- **Branch:** `advisor/002-remove-historical-price` — worktree at
+  `/home/moshi/.herdr/worktrees/yonksdotsol/advisor-002-remove-historical-price` (3 commits,
+  conventional-commit style). Not merged — operator's call.
+- **All gates green at the post-001/003/004 base:** `tsgo --noEmit` 0, `lint:check` 0,
+  `fmt:check` 0, `test` 143/143 (−12 vs the 155 baseline — exactly the 4 PriceService + 4 OHLCV
+  + 4 Pyth orphan tests removed). No native build run (no deps/native config changed).
+- **Scope:** 7 files, 0 out-of-scope. `data.ts` (−42), `cache.ts` (−2), 2 deleted modules (−97),
+  `data.test.ts` (−52), `dataFetching.test.ts` (−174), `positionPipeline.test.ts` (−2). Net
+  +1/−368.
+- **Decision gate honored:** branch name + maintainer instruction confirmed Option A
+  (delete). Option B (build value-over-time chart) not chosen; per plan, that needs its own
+  feature plan.
+- **Drift check clean:** `git diff --stat 86a1d22..HEAD -- <in-scope files>` returned nothing —
+  no in-scope file changed since the plan was written.
+- **STOP conditions all cleared:** every "Current state" excerpt matched live code; grep for
+  `getPoolPrice`/`getHistoricalSOLPrice` returned only `data.ts` (def) + `data.test.ts` (removed);
+  no production caller found (confirmed orphaned); `positionPipeline.ts` never reads `.prices`.
+- **Executor note on commit grouping:** the plan's Step 1 alone leaves `tsgo` red (removing
+  `prices` from `DataServices` immediately breaks `data.test.ts`). Per the plan's explicit
+  sanction ("if you prefer green tests between steps, do Step 4 immediately after this one"),
+  the 5 steps were grouped into 3 green commits: (1) data.ts + data.test.ts; (2) cache.ts +
+  positionPipeline.test.ts; (3) delete modules + dataFetching.test.ts. Each commit type-checks
+  and passes tests independently.
 
 ### 003 — SOL/USD display toggle (executed 2026-06-14 via herdr executor pi / glm-5.2)
 

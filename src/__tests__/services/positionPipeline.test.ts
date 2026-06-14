@@ -49,8 +49,6 @@ vi.mock('../../config/cache', () => ({
   CACHE_TTL: {
     UPNL_PER_POSITION: 15 * 60 * 1000,
     TOKEN_DATA: 60 * 1000,
-    OHLCV_PRICE: 60 * 60 * 1000,
-    PYTH_PRICE: 60 * 60 * 1000,
   },
 }))
 
