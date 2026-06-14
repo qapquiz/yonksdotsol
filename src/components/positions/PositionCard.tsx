@@ -15,7 +15,7 @@ interface PositionCardProps {
   solUsdPrice: number | null
 }
 
-function PositionCardComponent({ vm, tokenXInfo, tokenYInfo }: PositionCardProps) {
+function PositionCardComponent({ vm, tokenXInfo, tokenYInfo, solUsdPrice }: PositionCardProps) {
   // Show skeleton while token data is loading
   if (!tokenXInfo && !tokenYInfo) {
     return <PositionCardSkeleton />
@@ -30,7 +30,7 @@ function PositionCardComponent({ vm, tokenXInfo, tokenYInfo }: PositionCardProps
         totalValue={vm.totalValue}
         upnlValue={vm.pnlSol}
         upnlPercentage={vm.pnlSolPctChange}
-        upnlIsSol={true}
+        solUsdPrice={solUsdPrice}
       />
 
       <LiquidityBarChart liquidityShape={vm.liquidityShape} currentPrice={vm.currentPrice} />
