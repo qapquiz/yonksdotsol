@@ -48,9 +48,8 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - **Verdict: APPROVE.** Implementation is complete, in-scope (11 files, 0 out-of-scope),
   and fully unit-tested (`bun run test` → 146/146, incl. 6 new detector + 3 new settings
   tests). Executor's code adds **0** new tsgo/lint/fmt problems.
-- **Branch:** `advisor/001-out-of-range-alerts` — worktree at
-  `/home/moshi/.herdr/worktrees/yonksdotsol/advisor-001-out-of-range-alerts` (10 commits,
-  conventional-commit style). Not merged — operator's call.
+- **Merge:** fast-forwarded onto `main` from base `1ea83e4` (commits `d132f6d`..`b01b8ac`,
+  linear history — no merge commit; DONE marker `9d3e138`). Branch + worktree removed.
 - **`bun run build` / `tsgo --noEmit` / `lint:check` are RED, but NOT because of 001.** Three
   pre-existing, out-of-scope failures exist at the base commit (`86a1d22` == `1ea83e4` for
   all source/deps — the plan's recon never verified the baseline):
@@ -74,9 +73,9 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   `getHistoricalSOLPrice`), its two fetcher modules (`meteora-ohlcv.ts`, `pyth-benchmarks.ts`), the
   `OHLCV_PRICE`/`PYTH_PRICE` TTL constants, and the `prices` field on `DataServices` were fully
   orphaned — `PositionPipeline` only ever reads `dataServices.tokens`. All removed.
-- **Branch:** `advisor/002-remove-historical-price` — worktree at
-  `/home/moshi/.herdr/worktrees/yonksdotsol/advisor-002-remove-historical-price` (3 commits,
-  conventional-commit style). Not merged — operator's call.
+- **Merge:** merged to `main` via `--no-ff` as `fc67375` (2026-06-14, this session).
+  Branch + worktree teardown pending — operator step (the executor runs inside the
+  workspace, so it cannot remove its own session).
 - **All gates green at the post-001/003/004 base:** `tsgo --noEmit` 0, `lint:check` 0,
   `fmt:check` 0, `test` 143/143 (−12 vs the 155 baseline — exactly the 4 PriceService + 4 OHLCV
   + 4 Pyth orphan tests removed). No native build run (no deps/native config changed).
@@ -105,9 +104,7 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   `tsgo --noEmit` 0, `lint:check` 0, `fmt:check` 0, `test` 155/155 (+9 new: 6
   `formatUsdFromSol` + 3 `displayCurrency`), `build` 0. Zero new tsgo/lint/fmt problems
   introduced.
-- **Branch:** `advisor/003-usd-display-toggle` — worktree at
-  `/home/moshi/.herdr/worktrees/yonksdotsol/advisor-003-usd-display-toggle` (10 commits,
-  conventional-commit style). Not merged — operator's call.
+- **Merge:** merged to `main` via `--no-ff` as `a70a60e`. Branch + worktree removed.
 - **Drift handled (not a STOP):** plan 001 (`alertsEnabled`) + plan 004 (`eslint-disable`
   in `usePositionsPage.ts`) had landed since `86a1d22`. `displayCurrency` added alongside
   `alertsEnabled` exactly as Step 4 anticipated.
