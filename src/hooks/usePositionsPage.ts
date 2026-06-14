@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { env } from '../config/env'
 import { createPositionPipeline, type PortfolioResult } from '../services/positionPipeline'
 import { createMockPortfolioResult } from '../services/mockPortfolio'
+import { getCurrentSolUsdPrice } from '../services/solPrice'
 
 // ─── Re-export types for consumers ───────────────────────────────────
 
@@ -26,6 +27,8 @@ export interface PositionsPageResult {
   loading: boolean
   /** True when token prices have been resolved (prevents LegendList blank frame) */
   tokenDataReady: boolean
+  /** Live SOL→USD price for the SOL/USD display toggle; null while loading or on failure */
+  solUsdPrice: number | null
   /** Pull-to-refresh handler */
   refresh: () => void
   /** Wallet resolved status */
@@ -43,6 +46,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
   const [result, setResult] = useState<PortfolioResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [tokenDataReady, setTokenDataReady] = useState(false)
+  const [solUsdPrice, setSolUsdPrice] = useState<number | null>(null)
 
   // ── Wallet change: invalidate old data, fetch new ──
   const prevWalletRef = useRef<string | null>(null)
@@ -70,10 +74,14 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
         // or there are no positions at all (empty state)
         setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
       })
+      getCurrentSolUsdPrice()
+        .then(setSolUsdPrice)
+        .catch(() => setSolUsdPrice(null))
     } else if (currentAddress === null && prevAddress !== null) {
       // Disconnected
       setResult(null)
       setLoading(false)
+      setSolUsdPrice(null)
     }
 
     prevWalletRef.current = currentAddress
@@ -105,7 +113,18 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
       setLoading(false)
       setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
     })
+    getCurrentSolUsdPrice()
+      .then(setSolUsdPrice)
+      .catch(() => setSolUsdPrice(null))
   }, [walletAddress, pipeline])
+
+  // ── Dev mock mode: fetch SOL price once on mount so USD display is testable ──
+  useEffect(() => {
+    if (!env.devMock) return
+    getCurrentSolUsdPrice()
+      .then(setSolUsdPrice)
+      .catch(() => setSolUsdPrice(null))
+  }, [])
 
   // ── Dev mock mode: return static portfolio, bypass the pipeline ──
   // When "disconnected" (no wallet address), return empty data so the
@@ -121,6 +140,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
         positionCount: 0,
         loading: false,
         tokenDataReady: true,
+        solUsdPrice,
         refresh,
         walletResolved: true,
         walletAddress,
@@ -135,6 +155,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
       positionCount: mockPortfolio.positionCount,
       loading: false,
       tokenDataReady: true,
+      solUsdPrice,
       refresh,
       walletResolved: true,
       walletAddress,
@@ -150,6 +171,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
     positionCount: result?.positionCount ?? 0,
     loading,
     tokenDataReady,
+    solUsdPrice,
     refresh,
     walletResolved,
     walletAddress,

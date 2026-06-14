@@ -5,6 +5,16 @@ export function formatUSD(value: number): string {
   })}`
 }
 
+export type DisplayCurrency = 'SOL' | 'USD'
+
+/** Convert a SOL-denominated amount to a USD string. Null/missing price → $0.00. */
+export function formatUsdFromSol(solAmount: number, solUsdPrice: number | null): string {
+  if (solUsdPrice == null || !Number.isFinite(solAmount) || !Number.isFinite(solUsdPrice)) {
+    return '$0.00'
+  }
+  return formatUSD(solAmount * solUsdPrice)
+}
+
 export function formatTokenAmount(amount: string | bigint, decimals: number): string {
   let amountValue: bigint
   if (typeof amount === 'string') {

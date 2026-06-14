@@ -12,6 +12,9 @@ export interface TokenInfo {
   }
 }
 
+/** Wrapped SOL mint — used to fetch a live SOL→USD price via the token service. */
+export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
+
 /**
  * Pure fetch — calls RPC and parses the response.
  * No caching, no singleton. Fully testable.

@@ -17,6 +17,8 @@ interface PositionsListProps {
   positionCount: number
   loading: boolean
   tokenDataReady: boolean
+  /** Live SOL→USD price for the SOL/USD display toggle */
+  solUsdPrice: number | null
   walletResolved: boolean
   walletAddress?: string
   refresh: () => void
@@ -30,6 +32,7 @@ export default function PositionsList({
   positionCount,
   loading,
   tokenDataReady,
+  solUsdPrice,
   walletResolved,
   walletAddress,
   refresh,
@@ -38,15 +41,23 @@ export default function PositionsList({
 
   const listData = useMemo(() => positions.map((resolved) => ({ id: resolved.id, resolved })), [positions])
 
-  const renderItem = useCallback(({ item }: { item: (typeof listData)[number] }) => {
-    const r = item.resolved
-    return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} />
-  }, [])
+  const renderItem = useCallback(
+    ({ item }: { item: (typeof listData)[number] }) => {
+      const r = item.resolved
+      return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} solUsdPrice={solUsdPrice} />
+    },
+    [solUsdPrice],
+  )
 
   const listHeader = useMemo(
     () => (
       <>
-        <PortfolioSummary summary={summary} hasData={hasPnLData} positionCount={positionCount} />
+        <PortfolioSummary
+          summary={summary}
+          hasData={hasPnLData}
+          positionCount={positionCount}
+          solUsdPrice={solUsdPrice}
+        />
         {outOfRangeCount > 0 && (
           <View className="flex-row items-center gap-2 mb-4 px-1">
             <View className="w-4 h-4 rounded-full bg-orange-500/20 items-center justify-center">
@@ -59,7 +70,7 @@ export default function PositionsList({
         )}
       </>
     ),
-    [summary, hasPnLData, positionCount, outOfRangeCount],
+    [summary, hasPnLData, positionCount, outOfRangeCount, solUsdPrice],
   )
 
   // Show skeleton until wallet is resolved, positions fetch completes, AND token

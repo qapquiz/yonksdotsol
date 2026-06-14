@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 import { createMMKV } from 'react-native-mmkv'
 import type { ThemeMode } from '../config/theme'
 import { DEFAULT_PIXEL_FONT } from '../config/fonts'
+import type { DisplayCurrency } from '../utils/positions/formatters'
 
 const mmkv = createMMKV({ id: 'settings' })
 
@@ -13,6 +14,7 @@ const storage = {
 }
 
 export type { ThemeMode }
+export type { DisplayCurrency }
 
 interface SettingsState {
   // Display preferences
@@ -27,6 +29,10 @@ interface SettingsState {
   // Alert preferences
   alertsEnabled: boolean
   setAlertsEnabled: (enabled: boolean) => void
+
+  // Display currency (SOL/USD toggle for portfolio values)
+  displayCurrency: DisplayCurrency
+  setDisplayCurrency: (currency: DisplayCurrency) => void
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -41,6 +47,9 @@ export const useSettingsStore = create<SettingsState>()(
 
       alertsEnabled: false,
       setAlertsEnabled: (alertsEnabled) => set({ alertsEnabled }),
+
+      displayCurrency: 'SOL',
+      setDisplayCurrency: (displayCurrency) => set({ displayCurrency }),
     }),
     {
       name: 'settings-store',

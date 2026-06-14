@@ -3,6 +3,7 @@ import { Text, View } from 'react-native'
 import type { TokenInfo } from '../../tokens'
 import { usePixelFont } from '../../hooks/useFontConfig'
 import { formatUPNLDisplay, formatUPNLDisplaySol } from '../../utils/positions/formatters'
+import { useSettingsStore } from '../../stores/settingsStore'
 import { TokenIcons } from './TokenIcons'
 
 interface PositionHeaderProps {
@@ -12,7 +13,8 @@ interface PositionHeaderProps {
   totalValue: string
   upnlValue: number | null
   upnlPercentage: number | null
-  upnlIsSol?: boolean
+  /** Live SOL→USD price for the uPnL line when displayCurrency === 'USD' */
+  solUsdPrice: number | null
 }
 
 function PositionHeaderComponent({
@@ -22,10 +24,20 @@ function PositionHeaderComponent({
   totalValue,
   upnlValue,
   upnlPercentage,
-  upnlIsSol = false,
+  solUsdPrice,
 }: PositionHeaderProps) {
   const pixelFont = usePixelFont()
+  const displayCurrency = useSettingsStore((s) => s.displayCurrency)
   const upnlColorClass = upnlValue !== null ? (upnlValue >= 0 ? 'text-emerald-400' : 'text-red-400') : ''
+
+  const upnlForDisplay =
+    upnlValue != null && upnlPercentage != null
+      ? displayCurrency === 'USD' && solUsdPrice != null
+        ? formatUPNLDisplay(upnlValue * solUsdPrice, upnlPercentage)
+        : formatUPNLDisplaySol(upnlValue, upnlPercentage)
+      : displayCurrency === 'USD'
+        ? '+$0.00 (+0.00%)'
+        : '+0.0000 SOL (+0.00%)'
 
   return (
     <View className="flex-row justify-between items-start mb-6">
@@ -50,11 +62,7 @@ function PositionHeaderComponent({
           className={`text-xs ${upnlValue != null ? upnlColorClass : 'opacity-0'}`}
           style={{ fontFamily: pixelFont }}
         >
-          {upnlValue != null && upnlPercentage != null
-            ? upnlIsSol
-              ? formatUPNLDisplaySol(upnlValue, upnlPercentage)
-              : formatUPNLDisplay(upnlValue, upnlPercentage)
-            : '+0.0000 SOL (+0.00%)'}
+          {upnlForDisplay}
         </Text>
       </View>
     </View>

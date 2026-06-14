@@ -29,6 +29,7 @@ describe('settingsStore', () => {
     useSettingsStore.setState({
       theme: 'dark',
       alertsEnabled: false,
+      displayCurrency: 'SOL',
     })
     store.clear()
   })
@@ -120,6 +121,25 @@ describe('settingsStore', () => {
       useSettingsStore.getState().setAlertsEnabled(false)
 
       expect(useSettingsStore.getState().alertsEnabled).toBe(false)
+    })
+  })
+
+  describe('displayCurrency', () => {
+    it('defaults to SOL', () => {
+      expect(useSettingsStore.getState().displayCurrency).toBe('SOL')
+    })
+
+    it('flips to USD via setDisplayCurrency', () => {
+      useSettingsStore.getState().setDisplayCurrency('USD')
+
+      expect(useSettingsStore.getState().displayCurrency).toBe('USD')
+    })
+
+    it('flips back to SOL', () => {
+      useSettingsStore.getState().setDisplayCurrency('USD')
+      useSettingsStore.getState().setDisplayCurrency('SOL')
+
+      expect(useSettingsStore.getState().displayCurrency).toBe('SOL')
     })
   })
 })
