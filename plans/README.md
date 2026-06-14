@@ -130,6 +130,7 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 
 ## Notes for executors
 
+- **Running an executor under herdr**: see [`HERDR_EXECUTION.md`](./HERDR_EXECUTION.md) — the workspace-vs-split gotcha, the `worktree create` + `pane run` recipe (preferred), the task-prompt template, observation/poll patterns, independent verification, and merge/cleanup.
 - Verification commands are repo-specific: type-check with **`tsgo --noEmit`**
   (never `tsc`), lint with `bun run lint:check`, format with `bun run fmt`,
   tests with `bun run test`, full build/prebuild with `bun run build`.
