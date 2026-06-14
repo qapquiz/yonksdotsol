@@ -1,21 +1,11 @@
 import { CacheManager } from '../utils/cache/CacheManager'
 import { CACHE_TTL } from '../config/cache'
 import { fetchTokenFromRpc, type TokenInfo } from '../tokens'
-import { fetchOHLCVPriceAtTimestamp } from '../utils/positions/meteora-ohlcv'
-import { fetchHistoricalSOLPriceFromApi } from '../utils/positions/pyth-benchmarks'
 
 // ─── Cache key generators (internalized) ─────────────────────────────
 
 function getTokenDataKey(mint: string): string {
   return `token_data:${mint}`
-}
-
-function getOHLCVKey(poolAddress: string, hourBucket: string): string {
-  return `ohlcv:${poolAddress}:${hourBucket}`
-}
-
-function getPythPriceKey(tokenSymbol: string, hourBucket: string): string {
-  return `pyth_price:${tokenSymbol}:${hourBucket}`
 }
 
 // ─── Token Service ───────────────────────────────────────────────────
@@ -27,20 +17,10 @@ export interface TokenService {
   getPrices(mints: string[]): Promise<Map<string, TokenInfo>>
 }
 
-// ─── Price Service ───────────────────────────────────────────────────
-
-export interface PriceService {
-  /** Fetch OHLCV candle closest to timestamp for a pool (cached) */
-  getPoolPrice(poolAddress: string, timestamp: number, timeframe?: string): Promise<number | null>
-  /** Fetch historical SOL price from Pyth (cached) */
-  getHistoricalSOLPrice(timestamp: number): Promise<number | null>
-}
-
 // ─── Data Services ───────────────────────────────────────────────────
 
 export interface DataServices {
   tokens: TokenService
-  prices: PriceService
 }
 
 /** Create the data services. Pass a fresh CacheManager for testing. */
@@ -72,25 +52,5 @@ export function createDataServices(cache?: CacheManager): DataServices {
     },
   }
 
-  const prices: PriceService = {
-    async getPoolPrice(poolAddress: string, timestamp: number, timeframe?: string): Promise<number | null> {
-      const hourBucket = String(Math.floor(timestamp / 3600))
-      return cm.getOrFetch(
-        getOHLCVKey(poolAddress, hourBucket),
-        () => fetchOHLCVPriceAtTimestamp(poolAddress, timestamp, timeframe as any),
-        CACHE_TTL.OHLCV_PRICE,
-      )
-    },
-
-    async getHistoricalSOLPrice(timestamp: number): Promise<number | null> {
-      const hourBucket = String(Math.floor(timestamp / 3600))
-      return cm.getOrFetch(
-        getPythPriceKey('SOL', hourBucket),
-        () => fetchHistoricalSOLPriceFromApi(timestamp),
-        CACHE_TTL.PYTH_PRICE,
-      )
-    },
-  }
-
-  return { tokens, prices }
+  return { tokens }
 }

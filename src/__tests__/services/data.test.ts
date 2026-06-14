@@ -3,8 +3,6 @@ import type { TokenInfo } from '../../tokens'
 import { CacheManager } from '../../utils/cache/CacheManager'
 
 import { fetchTokenFromRpc } from '../../tokens'
-import { fetchOHLCVPriceAtTimestamp } from '../../utils/positions/meteora-ohlcv'
-import { fetchHistoricalSOLPriceFromApi } from '../../utils/positions/pyth-benchmarks'
 import { createDataServices } from '../../services/data'
 
 const mockTokenInfo: TokenInfo = {
@@ -22,14 +20,6 @@ const mockTokenInfo: TokenInfo = {
 // Mock the pure fetch functions
 vi.mock('../../tokens', () => ({
   fetchTokenFromRpc: vi.fn(),
-}))
-
-vi.mock('../../utils/positions/meteora-ohlcv', () => ({
-  fetchOHLCVPriceAtTimestamp: vi.fn(),
-}))
-
-vi.mock('../../utils/positions/pyth-benchmarks', () => ({
-  fetchHistoricalSOLPriceFromApi: vi.fn(),
 }))
 
 // Mock env for tokens module
@@ -90,48 +80,6 @@ describe('DataServices', () => {
 
       expect(result.size).toBe(1)
       expect(result.get('mint1')).toEqual(token1)
-    })
-  })
-
-  describe('PriceService', () => {
-    it('fetches pool price', async () => {
-      vi.mocked(fetchOHLCVPriceAtTimestamp).mockResolvedValue(150.5)
-
-      const services = createDataServices(freshCache)
-      const result = await services.prices.getPoolPrice('pool1', 1700000000)
-
-      expect(result).toBe(150.5)
-      expect(fetchOHLCVPriceAtTimestamp).toHaveBeenCalledWith('pool1', 1700000000, undefined)
-    })
-
-    it('caches pool price on second call', async () => {
-      vi.mocked(fetchOHLCVPriceAtTimestamp).mockResolvedValue(150.5)
-
-      const services = createDataServices(freshCache)
-      await services.prices.getPoolPrice('pool1', 1700000000)
-      await services.prices.getPoolPrice('pool1', 1700000000)
-
-      expect(fetchOHLCVPriceAtTimestamp).toHaveBeenCalledTimes(1)
-    })
-
-    it('fetches historical SOL price', async () => {
-      vi.mocked(fetchHistoricalSOLPriceFromApi).mockResolvedValue(100.5)
-
-      const services = createDataServices(freshCache)
-      const result = await services.prices.getHistoricalSOLPrice(1700000000)
-
-      expect(result).toBe(100.5)
-      expect(fetchHistoricalSOLPriceFromApi).toHaveBeenCalledWith(1700000000)
-    })
-
-    it('caches historical SOL price on second call', async () => {
-      vi.mocked(fetchHistoricalSOLPriceFromApi).mockResolvedValue(100.5)
-
-      const services = createDataServices(freshCache)
-      await services.prices.getHistoricalSOLPrice(1700000000)
-      await services.prices.getHistoricalSOLPrice(1700000000)
-
-      expect(fetchHistoricalSOLPriceFromApi).toHaveBeenCalledTimes(1)
     })
   })
 })
