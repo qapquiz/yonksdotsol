@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   formatUSD,
+  formatUsdFromSol,
   formatTokenAmount,
   formatPriceRange,
   formatTimestamp,
@@ -31,6 +32,35 @@ describe('formatUSD', () => {
 
   it('formats negative values', () => {
     expect(formatUSD(-100.5)).toBe('$-100.50')
+  })
+})
+
+describe('formatUsdFromSol', () => {
+  it('converts a SOL amount using the live price', () => {
+    // 1.5 SOL * $100 = $150.00
+    expect(formatUsdFromSol(1.5, 100)).toBe('$150.00')
+  })
+
+  it('formats with comma grouping for large USD values', () => {
+    // 10 SOL * $145 = $1,450.00
+    expect(formatUsdFromSol(10, 145)).toBe('$1,450.00')
+  })
+
+  it('returns $0.00 for a null price', () => {
+    expect(formatUsdFromSol(1.5, null)).toBe('$0.00')
+  })
+
+  it('returns $0.00 for a non-finite SOL amount', () => {
+    expect(formatUsdFromSol(Number.NaN, 100)).toBe('$0.00')
+    expect(formatUsdFromSol(Number.POSITIVE_INFINITY, 100)).toBe('$0.00')
+  })
+
+  it('returns $0.00 for a non-finite price', () => {
+    expect(formatUsdFromSol(1.5, Number.NaN)).toBe('$0.00')
+  })
+
+  it('returns $0.00 for zero SOL', () => {
+    expect(formatUsdFromSol(0, 100)).toBe('$0.00')
   })
 })
 

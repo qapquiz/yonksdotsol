@@ -41,15 +41,23 @@ export default function PositionsList({
 
   const listData = useMemo(() => positions.map((resolved) => ({ id: resolved.id, resolved })), [positions])
 
-  const renderItem = useCallback(({ item }: { item: (typeof listData)[number] }) => {
-    const r = item.resolved
-    return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} solUsdPrice={solUsdPrice} />
-  }, [solUsdPrice])
+  const renderItem = useCallback(
+    ({ item }: { item: (typeof listData)[number] }) => {
+      const r = item.resolved
+      return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} solUsdPrice={solUsdPrice} />
+    },
+    [solUsdPrice],
+  )
 
   const listHeader = useMemo(
     () => (
       <>
-        <PortfolioSummary summary={summary} hasData={hasPnLData} positionCount={positionCount} solUsdPrice={solUsdPrice} />
+        <PortfolioSummary
+          summary={summary}
+          hasData={hasPnLData}
+          positionCount={positionCount}
+          solUsdPrice={solUsdPrice}
+        />
         {outOfRangeCount > 0 && (
           <View className="flex-row items-center gap-2 mb-4 px-1">
             <View className="w-4 h-4 rounded-full bg-orange-500/20 items-center justify-center">

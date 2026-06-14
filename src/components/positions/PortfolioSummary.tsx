@@ -78,9 +78,7 @@ const CurrencyToggle = memo(function CurrencyToggle() {
             onPress={() => setDisplayCurrency(currency)}
             className={`px-2.5 py-0.5 ${selected ? 'bg-app-primary-dim' : 'bg-transparent'} active:opacity-80`}
           >
-            <Text
-              className={`text-[10px] font-sans-bold ${selected ? 'text-app-primary' : 'text-app-text-muted'}`}
-            >
+            <Text className={`text-[10px] font-sans-bold ${selected ? 'text-app-primary' : 'text-app-text-muted'}`}>
               {currency}
             </Text>
           </Pressable>

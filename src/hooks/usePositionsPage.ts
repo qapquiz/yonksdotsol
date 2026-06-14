@@ -74,7 +74,9 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
         // or there are no positions at all (empty state)
         setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
       })
-      getCurrentSolUsdPrice().then(setSolUsdPrice).catch(() => setSolUsdPrice(null))
+      getCurrentSolUsdPrice()
+        .then(setSolUsdPrice)
+        .catch(() => setSolUsdPrice(null))
     } else if (currentAddress === null && prevAddress !== null) {
       // Disconnected
       setResult(null)
@@ -111,13 +113,17 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
       setLoading(false)
       setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
     })
-    getCurrentSolUsdPrice().then(setSolUsdPrice).catch(() => setSolUsdPrice(null))
+    getCurrentSolUsdPrice()
+      .then(setSolUsdPrice)
+      .catch(() => setSolUsdPrice(null))
   }, [walletAddress, pipeline])
 
   // ── Dev mock mode: fetch SOL price once on mount so USD display is testable ──
   useEffect(() => {
     if (!env.devMock) return
-    getCurrentSolUsdPrice().then(setSolUsdPrice).catch(() => setSolUsdPrice(null))
+    getCurrentSolUsdPrice()
+      .then(setSolUsdPrice)
+      .catch(() => setSolUsdPrice(null))
   }, [])
 
   // ── Dev mock mode: return static portfolio, bypass the pipeline ──
