@@ -1,9 +1,10 @@
 import { memo, useMemo } from 'react'
-import { Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import type { PortfolioSummaryData } from '../../hooks/usePositionsPage'
 import { usePixelFont } from '../../hooks/useFontConfig'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
-import { formatFeesTvl24h } from '../../utils/positions/formatters'
+import { useSettingsStore } from '../../stores/settingsStore'
+import { formatFeesTvl24h, formatUsdFromSol, type DisplayCurrency } from '../../utils/positions/formatters'
 
 interface PortfolioSummaryProps {
   summary: PortfolioSummaryData | null
@@ -60,8 +61,66 @@ function SolValue({ value, className, fontFamily }: { value: number; className?:
   return content
 }
 
-function PortfolioSummaryComponent({ summary, hasData, positionCount }: PortfolioSummaryProps) {
+const CURRENCY_OPTIONS: readonly DisplayCurrency[] = ['SOL', 'USD']
+
+/** Compact SOL/USD segmented control. Mirrors FontPicker's selected tokens. */
+const CurrencyToggle = memo(function CurrencyToggle() {
+  const displayCurrency = useSettingsStore((s) => s.displayCurrency)
+  const setDisplayCurrency = useSettingsStore((s) => s.setDisplayCurrency)
+
+  return (
+    <View className="flex-row rounded-full border border-app-border overflow-hidden">
+      {CURRENCY_OPTIONS.map((currency) => {
+        const selected = displayCurrency === currency
+        return (
+          <Pressable
+            key={currency}
+            onPress={() => setDisplayCurrency(currency)}
+            className={`px-2.5 py-0.5 ${selected ? 'bg-app-primary-dim' : 'bg-transparent'} active:opacity-80`}
+          >
+            <Text
+              className={`text-[10px] font-sans-bold ${selected ? 'text-app-primary' : 'text-app-text-muted'}`}
+            >
+              {currency}
+            </Text>
+          </Pressable>
+        )
+      })}
+    </View>
+  )
+})
+
+/**
+ * Renders a summary figure in the active currency. In SOL mode delegates to the
+ * existing SolValue renderer (byte-for-byte unchanged); in USD mode renders a
+ * plain Text with the converted value (the `$` is part of the formatted string).
+ */
+function SummaryValue({
+  sol,
+  className,
+  fontFamily,
+  displayCurrency,
+  solUsdPrice,
+}: {
+  sol: number
+  className?: string
+  fontFamily: string
+  displayCurrency: DisplayCurrency
+  solUsdPrice: number | null
+}) {
+  if (displayCurrency === 'USD') {
+    return (
+      <Text className={className} style={{ fontFamily }}>
+        {formatUsdFromSol(sol, solUsdPrice)}
+      </Text>
+    )
+  }
+  return <SolValue value={sol} className={className} fontFamily={fontFamily} />
+}
+
+function PortfolioSummaryComponent({ summary, hasData, positionCount, solUsdPrice }: PortfolioSummaryProps) {
   const pixelFont = usePixelFont()
+  const displayCurrency = useSettingsStore((s) => s.displayCurrency)
   const isLoading = positionCount > 0 && !hasData
   if (isLoading) {
     return (
@@ -121,6 +180,7 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
   const isProfit = totalPnlSol >= 0
   const pnlColorClass = isProfit ? 'text-emerald-400' : 'text-red-400'
   const sign = isProfit ? '+' : ''
+  const isUsd = displayCurrency === 'USD'
 
   return (
     <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
@@ -128,6 +188,9 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
         <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">PORTFOLIO SUMMARY</Text>
         <View className="bg-app-surface-highlight rounded-full w-5 h-5 items-center justify-center">
           <Text className="text-app-text-secondary text-[10px] font-sans-bold">{positionCount}</Text>
+        </View>
+        <View className="ml-auto">
+          <CurrencyToggle />
         </View>
       </View>
 
@@ -138,10 +201,18 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
               {sign}
             </Text>
           )}
-          <SolValue value={Math.abs(totalPnlSol)} className={`text-2xl ${pnlColorClass}`} fontFamily={pixelFont} />
-          <Text className={`text-sm ${pnlColorClass} ml-0.5 opacity-60`} style={{ fontFamily: pixelFont }}>
-            SOL
-          </Text>
+          <SummaryValue
+            sol={Math.abs(totalPnlSol)}
+            className={`text-2xl ${pnlColorClass}`}
+            fontFamily={pixelFont}
+            displayCurrency={displayCurrency}
+            solUsdPrice={solUsdPrice}
+          />
+          {!isUsd && (
+            <Text className={`text-sm ${pnlColorClass} ml-0.5 opacity-60`} style={{ fontFamily: pixelFont }}>
+              SOL
+            </Text>
+          )}
         </View>
         <Text className={`text-sm ${pnlColorClass}`} style={{ fontFamily: pixelFont }}>
           {sign}
@@ -153,28 +224,52 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount }: Portfoli
         <View className="flex-1">
           <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">VALUE</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalValueSol} className="text-app-text text-sm" fontFamily={pixelFont} />
-            <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
-              SOL
-            </Text>
+            <SummaryValue
+              sol={totalValueSol}
+              className="text-app-text text-sm"
+              fontFamily={pixelFont}
+              displayCurrency={displayCurrency}
+              solUsdPrice={solUsdPrice}
+            />
+            {!isUsd && (
+              <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+                SOL
+              </Text>
+            )}
           </View>
         </View>
         <View className="flex-1">
           <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">DEPOSITED</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalInitialDepositSol} className="text-app-text text-sm" fontFamily={pixelFont} />
-            <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
-              SOL
-            </Text>
+            <SummaryValue
+              sol={totalInitialDepositSol}
+              className="text-app-text text-sm"
+              fontFamily={pixelFont}
+              displayCurrency={displayCurrency}
+              solUsdPrice={solUsdPrice}
+            />
+            {!isUsd && (
+              <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+                SOL
+              </Text>
+            )}
           </View>
         </View>
         <View className="flex-1">
           <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">UNCLAIMED FEES</Text>
           <View className="flex-row items-baseline">
-            <SolValue value={totalUnclaimedFeesSol} className="text-app-text text-sm" fontFamily={pixelFont} />
-            <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
-              SOL
-            </Text>
+            <SummaryValue
+              sol={totalUnclaimedFeesSol}
+              className="text-app-text text-sm"
+              fontFamily={pixelFont}
+              displayCurrency={displayCurrency}
+              solUsdPrice={solUsdPrice}
+            />
+            {!isUsd && (
+              <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+                SOL
+              </Text>
+            )}
           </View>
         </View>
       </View>
