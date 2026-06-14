@@ -1,7 +1,7 @@
 # Executing plans with herdr
 
 Operational recipe for running a plan in `plans/` (e.g. `0NN-*.md`) inside a
-herdr-managed agent workspace. Distilled from executing plans 001 and 003.
+herdr-managed agent workspace. Distilled from executing plans 001, 002, and 003.
 
 ## Why a workspace, not a split
 
@@ -27,6 +27,33 @@ no `--split`), herdr puts pi into the workspace's active tab — which already
 has that shell pane — so it **splits again**, giving you two panes: the useless
 shell + the agent. This is the split that confused us the first time.
 
+## Before dispatching: reconcile the plan
+
+A plan written sessions ago can drift, or (more often) its recon missed a
+file. Fix gaps **before** creating the worktree — editing `plans/` is allowed
+even under the improve skill's "never edit source" rule, and it's far cheaper
+than watching an executor hit its own STOP condition.
+
+Two checks, both from the repo root (not the worktree):
+
+1. **Drift check** — the plan names the commit it was written against and a
+   `git diff --stat <commit>..HEAD -- <in-scope files>` command. Run it. If any
+   in-scope file changed, re-verify the "Current state" excerpts against live
+   code and refresh them (or treat it as a STOP).
+2. **Done-criteria satisfiability** — this is the one that bites. Run the plan's
+   *done-criteria greps* yourself against current HEAD. If they'd fail (e.g. the
+   grep targets a symbol the plan forgot was also referenced in another test
+   file), the plan's scope is incomplete. Add the missed files to scope + write
+   the steps for them, commit the reconciliation with a dated note in the plan,
+   *then* dispatch.
+
+> Plan 002 hit exactly this: its recon grep missed two test files
+> (`src/__tests__/utils/dataFetching.test.ts`, and the `CACHE_TTL` mock in
+> `src/__tests__/services/positionPipeline.test.ts`) that also referenced the
+> to-be-deleted symbols. Reconciling scope pre-dispatch (commit `610bf72`,
+> "add ... test files ... mock") took ~5 min and the executor then ran clean to
+> DONE. Without it, the done-criteria grep would have forced a STOP.
+
 ## Recipe A (preferred): `worktree create` then `pane run` — no shell pane left behind
 
 Reuse the root pane that `worktree create` already made. One pane total, no split.
@@ -46,7 +73,10 @@ herdr worktree create \
 #   → result.worktree.path            (the checkout path)
 
 # 2. Run the agent IN that root pane (overwrites the shell). No split.
-herdr pane run <root_pane_id> -- pi '<task prompt>'
+#    NOTE: no "--" separator — `pane run` treats "--" as a literal command
+#    ("bash: command not found: --") and pi never launches. Pass pi + prompt
+#    directly, single-quoted and shell-safe (see "Task prompt template"):
+herdr pane run <root_pane_id> pi '<task prompt>'
 ```
 
 ## Recipe B: `worktree create` then `agent start`, then close the shell
@@ -88,6 +118,21 @@ Commit per step with conventional-commit style on branch advisor/0NN-<slug>
 (already checked out here). Do not push. Honor all STOP conditions. When done,
 update the 0NN status row in plans/README.md to DONE with a one-line execute log.
 ```
+
+**Shell-safety when passing through `pane run`.** `pane run <pane> <command>`
+hands `<command>` to bash, so the prompt must survive one round of bash parsing:
+
+- **Single-quote it, never double-quote** — double quotes let bash try to
+  evaluate `(`, backticks, `$()`, etc. in the prompt
+  (`syntax error near unexpected token '('`). This is how plan 002's first
+  dispatch failed.
+- **No unescaped single quotes, no `--`, no parens, no backticks** inside the
+  prompt. If you need an apostrophe, reword (e.g. "do not" not "don't").
+- **Keep it short** — point the executor at the committed plan file
+  `plans/0NN-*.md` for the real detail (the plan IS the spec). A paragraph of
+  context, not the plan body. The worktree contains `plans/` once you've
+  committed any reconciliation, so the executor reading it is more robust than
+  re-typing it inline.
 
 Defaults are inherited from `~/.pi/agent/settings.json` (provider `zai`,
 model `glm-5.2`, thinking `high`) — no need to pass them.
@@ -200,3 +245,21 @@ net. Use `-D` only if you've explicitly decided to discard.
   sidebar dot works. It registers no tools. Controlling herdr is always via the
   `herdr` CLI. It only activates when `HERDR_ENV=1` + `HERDR_SOCKET_PATH` +
   `HERDR_PANE_ID` are set (i.e. when pi is launched *by* herdr).
+- **`pane run` takes no `--` separator, and the prompt must be shell-safe.**
+  `herdr pane run <pane> <command>` — the `<command>` is everything after the
+  pane id. Passing `-- pi '...'` makes bash try to run `--`
+  (`bash: command not found: --`) and pi never launches; the pane just returns
+  to a shell prompt. Use `herdr pane run <pane> pi '...'`. Same root cause for
+  the prompt text: double-quote it and you get
+  `syntax error near unexpected token '('` from any `(`/backtick/`$()` in the
+  prompt. **Single-quote, shell-safe, short** — see "Task prompt template".
+- **Poll signal can lie if the executor's TUI keeps spinning.** An executor can
+  commit all its work correctly, then get stuck in a post-task narration loop
+  (the model reinterpreting fragments as an ongoing conversation). Symptoms:
+  `herdr agent get <term>` returns `agent_status` null/absent while the pane
+  still shows `⠏ Working...`, and the poll loop never sees a clean `idle`.
+  Don't wait it out — verify the actual git state
+  (`git -C <worktree> log --oneline main..<branch>` +
+  `git -C <worktree> status --short`); if the work is done and the tree is
+  clean, the task is complete and you can review + merge + tear down regardless
+  of the stuck TUI (`herdr worktree remove --workspace <id> --force` kills it).
