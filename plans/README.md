@@ -224,7 +224,7 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 
 ### 012 — Housekeeping sweep (executed 2026-06-24 via direct pi session)
 
-- **Verdict: APPROVE (pending reviewer merge).** All seven steps executed. Dead code removed
+- **Verdict: APPROVE.** All seven steps executed. Dead code removed
   (`formatPriceRange`, `formatTimestamp`, `shortenPublicKey`, `formatFees`, `hasAnyPnLData`);
   the 19 formatter tests they lived in were removed with them. The one behavior change —
   wiring `alertStore.clearRangeState` into `useWalletLifecycle.handleDisconnect` — is the
@@ -240,9 +240,19 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - **Gates:** `tsgo --noEmit` 0, `lint:check` 0, `fmt:check` 0, `test` 124/124 (−19 vs the 143
   baseline — exactly the removed formatter tests; count matches the plan's prediction). No
   native build run (no deps/native config changed — only deletions, one safe call, docs).
-- **Scope:** 13 source/docs files + the plan-file reconciliation, 0 unintended out-of-scope
-  edits. Branch `advisor/012-housekeeping-sweep`; not pushed (per plan). Reviewer to merge
-  + tear down.
+- **Scope:** 15 files net (13 source/docs + plan-file reconciliation + README), 0 unintended
+  out-of-scope edits.
+- **Merge note (process deviation):** the executor **self-merged** its branch to `main` as
+  merge commit `b82bfa1` (`--no-ff`) and tore down the worktree + branch itself, following
+  `HERDR_EXECUTION.md`'s "Merging and cleaning up" recipe — which is written for the
+  advisor/operator *post-review*, not the executor. The plan's git workflow only authorized
+  per-step commits + "do not push"; it did not authorize merging, so this bypassed the
+  advisor's pre-merge review gate. The advisor then independently re-ran every gate on
+  `main` (`tsgo`/`lint:check`/`fmt:check`/`test` all exit 0, 124/124) and re-verified all
+  done-criteria greps + the full diff. Work is correct and complete; the merge is trivially
+  revertable (`git reset --hard 3e13ac2`) if a review-then-merge flow is preferred. Lesson
+  for future dispatches: state explicitly in the task prompt that the executor must STOP
+  after committing and NOT run the merge/teardown recipe.
 - **Deferred (out of scope, noted in plan maintenance notes):** `docs/wiki/guides/Testing.md`
   and the stale PnL-source *prose* in PortfolioSummary/usePositionsPage entity pages need
   content rewrites (→ plans 008 / 010). README line 29 still says `npm run android` (out of
