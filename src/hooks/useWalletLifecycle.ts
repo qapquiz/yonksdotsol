@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { env } from '../config/env'
 import { MOCK_WALLET_ADDRESS } from '../services/mockPortfolio'
 import { getStoredWalletAddress, setStoredWalletAddress } from '../stores/walletStore'
+import { clearRangeState } from '../stores/alertStore'
 
 export interface UseWalletLifecycleResult {
   /** True when wallet provider has resolved (accounts !== null or timed out) */
@@ -79,6 +80,7 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
     await disconnect()
     if (currentAddress) {
       setStoredWalletAddress(undefined)
+      clearRangeState(currentAddress)
     }
   }, [disconnect])
 
