@@ -17,7 +17,7 @@ A mobile wallet application for tracking Meteora DLMM (Dynamic Liquidity Market 
 1. Install dependencies
 
    ```bash
-   npm install
+   bun install
    ```
 
 2. Start the app
@@ -50,6 +50,7 @@ Required environment variables:
 
 - `EXPO_PUBLIC_RPC_URL` - Your Solana RPC endpoint
 - `EXPO_PUBLIC_HELIUS_API_KEY` - Your Helius API key for enhanced data fetching
+- `EXPO_PUBLIC_DEV_MOCK` - Set to `1` to render mock positions instead of fetching on-chain data (optional, defaults off)
 
 ## Project Structure
 
