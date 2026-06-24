@@ -26,8 +26,7 @@ The app uses a single, lazily-initialized [[Connection]] instance for all Solana
 ```
 getSharedConnection()  ←  src/config/connection.ts
          │
-         ├─→ src/app/index.tsx          (DLMM.getAllLbPairPositionsByUser)
-         └─→ src/hooks/useUpnlPerPosition.ts  (metcomet getUpnlPerPosition)
+         └─→ src/services/positionPipeline.ts  (DLMM.getAllLbPairPositionsByUser)
 ```
 
 ## Rules
