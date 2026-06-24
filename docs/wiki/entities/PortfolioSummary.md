@@ -6,7 +6,6 @@ created: 2026-04-19
 updated: 2026-04-19
 tags: [component, portfolio, pnl, sol]
 related:
-  - PnLStore
   - ShimmerBlock
   - Number Formatting
 ---
@@ -82,6 +81,5 @@ Returns:
 
 ## See Also
 
-- [[PnLStore]] — Data source
 - [[ShimmerBlock]] — Loading skeleton
 - [[Number Formatting]] — SOL formatting conventions

@@ -8,7 +8,6 @@ tags: [hook, positions, data-fetching, state]
 related:
   - useWalletLifecycle
   - computePositionViewData
-  - PnLStore
   - CacheManager
   - Connection
 ---
@@ -64,7 +63,6 @@ Manual refresh enforces a 30-second cooldown and invalidates PnL cache for fresh
 
 - Uses [[Connection]] via `getSharedConnection()`
 - Uses [[CacheManager]] for cache invalidation
-- Uses [[PnLStore]] for profit/loss data
 - Depends on [[computePositionViewData]] for view model generation
 - Consumed by `PositionsList` and `App`
 
@@ -73,4 +71,3 @@ Manual refresh enforces a 30-second cooldown and invalidates PnL cache for fresh
 - [[useWalletLifecycle]] — provides wallet state
 - [[computePositionViewData]] — pure view model transformer
 - [[CacheManager]] — caching system
-- [[PnLStore]] — PnL state management
