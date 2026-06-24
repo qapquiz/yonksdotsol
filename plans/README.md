@@ -36,7 +36,7 @@
 | 007  | Make the widget follow the app's SOL/USD toggle (= deferred Step 9 of 003) | P2 | S | 006 | TODO |
 | 008  | Document PnL semantics in the wiki | P2 | S | — | TODO |
 | 009  | Non-interactive price-movement chart + position min/max range band (in-card) | P2 | M | — | TODO |
-| 012  | Housekeeping sweep — dead code, `.env.example`, stale wiki links | P3 | S | — | TODO |
+| 012  | Housekeeping sweep — dead code, `.env.example`, stale wiki links | P3 | S | — | DONE (deleted 5 dead exports + 19 tests; wired clearRangeState on disconnect; added .env.example; README bun + DEV_MOCK; removed stale PnLStore/useUpnlPerPosition wiki refs incl. 3 reconciled files; tsgo/lint/fmt/test 124 all exit 0) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale).
 
@@ -221,6 +221,32 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - **SOL-mode regression:** verified byte-for-byte — `SummaryValue` delegates to the existing
   `SolValue` with identical props, unit labels render the same `<Text>SOL</Text>`, and the
   `PositionHeader` uPnL resolves to `formatUPNLDisplaySol` (SOL branch unchanged).
+
+### 012 — Housekeeping sweep (executed 2026-06-24 via direct pi session)
+
+- **Verdict: APPROVE (pending reviewer merge).** All seven steps executed. Dead code removed
+  (`formatPriceRange`, `formatTimestamp`, `shortenPublicKey`, `formatFees`, `hasAnyPnLData`);
+  the 19 formatter tests they lived in were removed with them. The one behavior change —
+  wiring `alertStore.clearRangeState` into `useWalletLifecycle.handleDisconnect` — is the
+  intended use of an export that was previously defined-but-uncalled, and passes
+  `react-hooks/exhaustive-deps` with no deps-array change (verified).
+- **Reconciliation (in plan, commit `088fbc8`):** Steps 6/7's done-criteria greps are repo-wide,
+  but the original scope named only a subset of the files holding each symbol. Three files
+  were added to scope as mechanical fixes: `Connection.md` (stale Consumers list →
+  `positionPipeline.ts`), and the broken `[[PnLStore]]` links in `PortfolioSummary.md` +
+  `usePositionsPage.md` (would dangle once `PnLStore.md` was deleted). Deeper stale *prose*
+  in those pages (e.g. PortfolioSummary's "Data Source" still reads `pnlStore`) is left for
+  plan 008, per the same precedent that excluded `Testing.md`.
+- **Gates:** `tsgo --noEmit` 0, `lint:check` 0, `fmt:check` 0, `test` 124/124 (−19 vs the 143
+  baseline — exactly the removed formatter tests; count matches the plan's prediction). No
+  native build run (no deps/native config changed — only deletions, one safe call, docs).
+- **Scope:** 13 source/docs files + the plan-file reconciliation, 0 unintended out-of-scope
+  edits. Branch `advisor/012-housekeeping-sweep`; not pushed (per plan). Reviewer to merge
+  + tear down.
+- **Deferred (out of scope, noted in plan maintenance notes):** `docs/wiki/guides/Testing.md`
+  and the stale PnL-source *prose* in PortfolioSummary/usePositionsPage entity pages need
+  content rewrites (→ plans 008 / 010). README line 29 still says `npm run android` (out of
+  this plan's `npm install`-only done criterion) — trivial Bun-consistency follow-up.
 
 ## Recap of what each plan delivers
 

@@ -47,8 +47,7 @@ const positions = await DLMM.getAllLbPairPositionsByUser(connection, wallet)
 
 ## Consumers
 
-- `src/app/index.tsx` — DLMM.getAllLbPairPositionsByUser
-- `src/hooks/useUpnlPerPosition.ts` — metcomet getUpnlPerPosition
+- `src/services/positionPipeline.ts` — DLMM.getAllLbPairPositionsByUser
 
 ## See Also
 

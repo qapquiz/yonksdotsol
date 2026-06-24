@@ -24,7 +24,6 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 | [[CacheManager]]            | Centralized caching with TTL and dedup     | `src/utils/cache/CacheManager.ts`                |
 | [[PositionInfo]]            | Meteora DLMM position data structure       | `@meteora-ag/dlmm`                               |
 | [[SettingsStore]]           | Zustand store for theme and preferences    | `src/stores/settingsStore.ts`                    |
-| [[PnLStore]]                | Zustand store for profit/loss data         | `src/stores/pnlStore.ts`                         |
 | [[ShimmerBlock]]            | Skeleton loading animation component       | `src/components/ui/ShimmerBlock.tsx`             |
 | [[usePositionsPage]]        | Main data orchestration hook for positions | `src/hooks/usePositionsPage.ts`                  |
 | [[useWalletLifecycle]]      | Wallet connection lifecycle hook           | `src/hooks/useWalletLifecycle.ts`                |

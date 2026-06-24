@@ -248,6 +248,30 @@ getSharedConnection()  ←  src/config/connection.ts
 
 (Verified during recon at commit `7496775`: tsgo 0, lint 0, test 143/143.)
 
+## Reconciliation
+
+**2026-06-24 (during execution).** Steps 1-5 ran clean. Step 6/7 hit a STOP:
+the plan's recon greps for the done-criteria (`grep -rn "PnLStore" docs/wiki/`
+and `grep -rn "useUpnlPerPosition" docs/wiki/`) are repo-wide, but the original
+scope only touched a subset of the files containing those symbols. Verified
+against live code at HEAD:
+
+- `[[PnLStore]]` also appears in `docs/wiki/entities/PortfolioSummary.md`
+  (frontmatter `related:` + See Also) and `docs/wiki/entities/usePositionsPage.md`
+  (frontmatter `related:` + two prose links). These are **broken wikilinks** once
+  `PnLStore.md` is deleted, so removing them is mechanical housekeeping, not
+  content authoring. The deeper stale *prose* in those pages (e.g.
+  PortfolioSummary's "Data Source" section still says it reads `pnlStore`) is a
+  content rewrite of the same kind as `Testing.md` and stays out of scope —
+  defer to plan 008 (Document PnL semantics).
+- `useUpnlPerPosition` also appears in `docs/wiki/entities/Connection.md`'s
+  Consumers list alongside `src/app/index.tsx` (both stale: `src/app/index.tsx`
+  no longer calls `getSharedConnection()`; the only real consumer is
+  `src/services/positionPipeline.ts`). Clean mechanical swap.
+
+These three files are added to scope (below). Done-criteria text is unchanged —
+it was already correct; only the scope list was incomplete.
+
 ## Scope
 
 **In scope** (the only files you should modify):
@@ -261,6 +285,9 @@ getSharedConnection()  ←  src/config/connection.ts
 - `docs/wiki/index.md` — remove the PnLStore table row
 - `docs/wiki/log.md` — remove the PnLStore bullet
 - `docs/wiki/concepts/Connection Lifecycle.md` — fix the Flow block
+- `docs/wiki/entities/Connection.md` — fix the Consumers list (added 2026-06-24 — see Reconciliation)
+- `docs/wiki/entities/PortfolioSummary.md` — remove the broken `[[PnLStore]]` link (added 2026-06-24 — see Reconciliation)
+- `docs/wiki/entities/usePositionsPage.md` — remove the broken `[[PnLStore]]` links (added 2026-06-24 — see Reconciliation)
 
 **Out of scope** (do NOT touch, even though they look related):
 - `docs/wiki/guides/Testing.md` — it is ALSO stale (references deleted
@@ -401,6 +428,16 @@ EXPO_PUBLIC_DEV_MOCK=0
    `[[PnLStore]]` and `src/stores/pnlStore.ts` (exact line in "Current state").
 3. In `docs/wiki/log.md`, under `## [2026-04-18] create | Entity pages`, remove
    the bullet `- [[PnLStore]] — from data-model.md references`.
+4. (Reconciliation) In `docs/wiki/entities/PortfolioSummary.md`, remove the
+   `[[PnLStore]]` references that would become broken links: the `- PnLStore`
+   line in the frontmatter `related:` list and the See Also bullet
+   `- [[PnLStore]] — Data source`. Leave the stale "Data Source" prose (lowercase
+   `pnlStore`) for plan 008.
+5. (Reconciliation) In `docs/wiki/entities/usePositionsPage.md`, remove the
+   `[[PnLStore]]` references: the `- PnLStore` line in the frontmatter
+   `related:` list, the Key Relationships bullet `Uses [[PnLStore]] for
+   profit/loss data`, and the See Also bullet `- [[PnLStore]] — PnL state
+   management`. Leave any deeper content rewrite for plan 010.
 
 **Verify**:
 - `ls docs/wiki/entities/PnLStore.md` → "No such file or directory".
@@ -428,9 +465,16 @@ getSharedConnection()  ←  src/config/connection.ts
          └─→ src/services/positionPipeline.ts  (DLMM.getAllLbPairPositionsByUser)
 ```
 
+Additionally (reconciliation): in `docs/wiki/entities/Connection.md`, fix the
+Consumers list: it currently lists `src/app/index.tsx` and
+`src/hooks/useUpnlPerPosition.ts` (both stale). Replace both lines with the
+single real consumer, `src/services/positionPipeline.ts`
+(DLMM.getAllLbPairPositionsByUser).
+
 **Verify**:
 - `grep -rn "useUpnlPerPosition" docs/wiki/` → **no matches**.
 - `grep -n "positionPipeline.ts" docs/wiki/concepts/Connection\ Lifecycle.md` → at least one match.
+- `grep -rn "src/app/index.tsx" docs/wiki/concepts/Connection\ Lifecycle.md docs/wiki/entities/Connection.md` → **no matches**.
 
 ## Test plan
 

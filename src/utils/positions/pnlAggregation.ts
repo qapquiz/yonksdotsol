@@ -108,10 +108,3 @@ export function computePoolPnLSummary(positions: PositionPnLData[]): PoolPnLSumm
 export function findPositionPnL(positions: PositionPnLData[], positionAddress: string): PositionPnLData | null {
   return positions.find((p) => p.positionAddress === positionAddress) ?? null
 }
-
-/**
- * Check if any positions exist in the PnL data.
- */
-export function hasAnyPnLData(positions: PositionPnLData[]): boolean {
-  return positions.length > 0
-}

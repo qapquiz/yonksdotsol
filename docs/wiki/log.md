@@ -27,7 +27,6 @@ Created initial entity pages from existing docs:
 - [[CacheManager]] — from architecture.md + CACHING_STRATEGY.md
 - [[PositionInfo]] — from data-model.md
 - [[SettingsStore]] — from theme-guide.md
-- [[PnLStore]] — from data-model.md references
 
 ## [2026-04-18] create | Concept pages
 

@@ -3,10 +3,6 @@ import {
   formatUSD,
   formatUsdFromSol,
   formatTokenAmount,
-  formatPriceRange,
-  formatTimestamp,
-  shortenPublicKey,
-  formatFees,
   formatUPNLDisplaySol,
   formatUPNLDisplay,
   parseFeePerTvl24h,
@@ -103,99 +99,6 @@ describe('formatTokenAmount', () => {
 
   it('handles fractional amounts', () => {
     expect(formatTokenAmount(555555555n, 9)).toBe('0.555555')
-  })
-})
-
-describe('formatPriceRange', () => {
-  it('formats price range correctly', () => {
-    expect(formatPriceRange(0.5, 2.0)).toBe('0.5 - 2')
-  })
-
-  it('handles integers', () => {
-    expect(formatPriceRange(1, 100)).toBe('1 - 100')
-  })
-
-  it('handles zero', () => {
-    expect(formatPriceRange(0, 10)).toBe('0 - 10')
-  })
-})
-
-describe('formatTimestamp', () => {
-  const now = Math.floor(Date.now() / 1000)
-
-  it('returns "Just now" for recent timestamps', () => {
-    expect(formatTimestamp(now)).toBe('Just now')
-  })
-
-  it('formats minutes ago', () => {
-    const thirtyMinAgo = now - 30 * 60
-    expect(formatTimestamp(thirtyMinAgo)).toBe('30m ago')
-  })
-
-  it('formats hours ago', () => {
-    const fiveHoursAgo = now - 5 * 60 * 60
-    expect(formatTimestamp(fiveHoursAgo)).toBe('5h ago')
-  })
-
-  it('formats days ago', () => {
-    const twoDaysAgo = now - 2 * 24 * 60 * 60
-    expect(formatTimestamp(twoDaysAgo)).toBe('2d ago')
-  })
-
-  it('handles 1 minute ago', () => {
-    const oneMinAgo = now - 60
-    expect(formatTimestamp(oneMinAgo)).toBe('1m ago')
-  })
-
-  it('handles 1 hour ago', () => {
-    const oneHourAgo = now - 60 * 60
-    expect(formatTimestamp(oneHourAgo)).toBe('1h ago')
-  })
-})
-
-describe('shortenPublicKey', () => {
-  const testKey = '11111111111111111111111111111111'
-
-  it('shortens with default 8 chars', () => {
-    expect(shortenPublicKey(testKey)).toBe('11111111...11111111')
-  })
-
-  it('shortens with custom chars', () => {
-    expect(shortenPublicKey(testKey, 4)).toBe('1111...1111')
-  })
-
-  it('handles short strings', () => {
-    expect(shortenPublicKey('abc', 2)).toBe('ab...bc')
-  })
-
-  it('handles single character', () => {
-    expect(shortenPublicKey('a', 1)).toBe('a...a')
-  })
-})
-
-describe('formatFees', () => {
-  it('formats both fees when present', () => {
-    expect(formatFees('100', '200')).toBe('X: 100 | Y: 200')
-  })
-
-  it('formats only X fee when Y is zero', () => {
-    expect(formatFees('100', '0')).toBe('X: 100')
-  })
-
-  it('formats only Y fee when X is zero', () => {
-    expect(formatFees('0', '200')).toBe('Y: 200')
-  })
-
-  it('returns None for zero fees', () => {
-    expect(formatFees('0', '0')).toBe('None')
-  })
-
-  it('handles bigint inputs', () => {
-    expect(formatFees(100n, 200n)).toBe('X: 100 | Y: 200')
-  })
-
-  it('handles empty strings as zero', () => {
-    expect(formatFees('', '')).toBe('None')
   })
 })
 
