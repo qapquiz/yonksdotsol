@@ -49,9 +49,17 @@ export function computePoolPnLSummary(positions: PositionPnLData[]): PoolPnLSumm
       valueSol += posValueSol
     }
 
-    const posInitialDeposit = pos.allTimeDeposits.total.sol
-      ? parseFloat(pos.allTimeDeposits.total.sol)
-      : posValueSol - posPnlSol
+    // Net cost basis = gross deposits − gross withdrawals. Gross deposits
+    // alone double-count redeposits after a withdrawal (e.g. deposit 4.5,
+    // withdraw, deposit 4.5 again → shows 9.0 instead of the real 4.5 cost
+    // basis). Withdrawals here are principal RemoveLiquidity events; claimed
+    // fees are tracked separately under allTimeFees, so this does not
+    // double-subtract the fee line. Falls back to value − uPnL (a derived
+    // net basis) only when no deposit data is available at all.
+    const grossDepositsSol = pos.allTimeDeposits.total.sol ? parseFloat(pos.allTimeDeposits.total.sol) : null
+    const grossWithdrawalsSol = pos.allTimeWithdrawals.total.sol ? parseFloat(pos.allTimeWithdrawals.total.sol) : null
+    const posInitialDeposit =
+      grossDepositsSol !== null ? grossDepositsSol - (grossWithdrawalsSol ?? 0) : posValueSol - posPnlSol
     initialDepositSol += posInitialDeposit
 
     const posPct = pos.pnlSolPctChange != null ? Number(pos.pnlSolPctChange) : null
