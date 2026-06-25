@@ -51,9 +51,8 @@
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | **Cache manager**      | The in-memory singleton that stores fetched data with TTL expiration and deduplicates concurrent requests for the same key | cache, store, memo               |
 | **Cache invalidation** | Removing entries matching a pattern (e.g., all data for a given wallet address) when data is stale                         | cache clear, cache bust, purge   |
-| **Data services**      | The facade layer (`createDataServices()`) providing typed `TokenService` and `PriceService` with built-in caching          | service layer, API layer         |
+| **Data services**      | The facade layer (`createDataServices()`) providing the `TokenService` with built-in caching                               | service layer, API layer         |
 | **Token service**      | The component of **Data services** responsible for fetching and caching **Token info** by **Mint**                         | token fetcher, token provider    |
-| **Price service**      | The component of **Data services** responsible for fetching and caching historical prices (OHLCV and Pyth benchmarks)      | price fetcher, price provider    |
 | **TTL**                | Time-to-live — how long a cached entry remains valid before it is considered expired and re-fetched                        | expiry, lifetime, cache duration |
 
 ## View & Display
@@ -64,6 +63,8 @@
 | **Liquidity shape**     | The chart data for a **Position**'s bin distribution: bin IDs, price per bin, and token amounts per bin in SOL terms                                              | chart data, bin data, shape          |
 | **Skeleton**            | A placeholder UI shown while data is loading, using animated shimmer blocks                                                                                       | loading state, placeholder, spinner  |
 | **Empty state**         | The UI shown when a wallet has no positions (distinct from a loading skeleton)                                                                                    | no-data state                        |
+| **Error state**         | The full-screen recovery UI shown when the initial load fails and no positions can be rendered; offers a retry                                                    | load-failed state, error screen      |
+| **Stale state**         | A non-blocking indicator overlaid on Data when a refresh fails or data may be out of date; the prior Data stays on screen and remains usable                      | refresh error, outdated banner       |
 
 ## Relationships
 
@@ -74,10 +75,10 @@
 - A **Pool PnL summary** aggregates across all **Positions** in a single **Pool** for one **Wallet**.
 - A **Portfolio summary** is the union of all **Pool PnL summaries** for one **Wallet**.
 - **Token info** is looked up by **Mint** through the **Token service**, backed by the **Cache manager**.
-- **Price service** provides historical **Prices** through the **Cache manager** with configured **TTL**.
 - When a **Wallet** disconnects, all **Cache entries** tagged with that **Wallet address** are removed via **Cache invalidation**.
 - The **Position view model** is a pure transformation of raw position + **Token info** + **PnL** data — no side effects.
 - When **Wallet** is not yet **Ready**, the UI shows a **Skeleton**. When **Ready** with no positions, it shows an **Empty state**.
+- The positions screen is in exactly one of four states at once: **Skeleton** (loading), **Empty state** (resolved, no positions), **Error state** (initial load failed), or **Data** (positions rendered). A **Stale state** indicator can additionally overlay **Data** when a refresh fails — it never replaces the data.
 
 ## Example dialogue
 
@@ -91,7 +92,7 @@
 > **Domain expert:** "Exactly — total PnL in SOL, weighted PnL percent, total value, total initial deposit, and total **Unrealized fees**. Each **Position** contributes proportionally."
 >
 > **Dev:** "And what if the **Token service** hasn't returned **Token info** yet when the **Position view model** is computed?"
-> **Domain expert:** "The **Position view model** falls back to `$0.00` for values and `"-"` for fee displays. Meanwhile, show a **Skeleton** — never a blank card. Once **Token info** resolves, the view model recomputes and the real data appears."
+> **Domain expert:** "The **Position view model** falls back to `$0.00` for values and `"-"` for fee displays. While it's loading, show a **Skeleton** — never a blank card. Once **Token info** resolves, the view model recomputes and the real data appears. If the load ultimately fails, that's the **Error state**, not a skeleton that never clears."
 >
 > **Dev:** "One more thing — what's the difference between **Unrealized fees** and **Claimed fees** on a **Position**?"
 > **Domain expert:** "**Unrealized fees** are still sitting in the **Position**, accruing from trades within the **Bin range**. **Claimed fees** have already been withdrawn. Both are expressed as Token X / Token Y pairs and also converted to USD using the **Token service** prices."
@@ -99,6 +100,6 @@
 ## Flagged ambiguities
 
 - **"Pool address" vs "pair address"**: The codebase uses `pairAddress` as the variable name in `DLMM.getAllLbPairPositionsByUser` and as the Map key, but the UI **Position card** refers to "pool" colloquially. **Canonical term: pair address** in code (matching the DLMM `LbPair` naming), **Pool** in user-facing text. When speaking about data keys, use **pair address**; when speaking about the concept, use **Pool**.
-- **"PnL" vs "uPnL"**: `PositionPnLData` from `metcomet` contains `pnlSol` (which is unrealized PnL) and `pnlSolPctChange`. The codebase displays these as "uPnL" in formatters like `formatUPNLDisplay`. **Canonical: use uPnL** when specifically referring to unrealized, use **PnL** for the general concept or aggregated amounts.
+- **`pnlSol` holds uPnL, despite the name.** The field `pnlSol` (and `pnlSolPctChange`) on `metcomet`'s `PositionPnLData` and on our **Position view model** _is_ **uPnL** (current value − initial deposit) — an upstream (`metcomet`) naming convention we inherit and do not rename locally. Display always renders it as **uPnL** (e.g. `formatUPNLDisplay`). **Canonical: use uPnL** when specifically referring to unrealized; use **PnL** for the general concept or aggregated amounts.
 - **"Token data" vs "Token info"**: The caching layer uses cache keys prefixed `token_data:`, but the TypeScript interface is `TokenInfo`. **Canonical: Token info** for the concept and type, "token data" only in opaque cache key strings.
-- **"Wallet ready" vs "wallet resolved"**: The code has both `walletReady` (from `useWalletLifecycle`) and `walletResolved` (passed through in `PositionsPageResult`). They represent the same concept. **Canonical: wallet ready** — it's the term used in the lifecycle hook. `walletResolved` should be considered an alias.
+- **"Wallet ready" vs "wallet resolved"** (resolved): both hooks now use `walletReady`. The earlier `walletResolved` alias in `PositionsPageResult`/`usePositionsPage` was renamed to `walletReady` to match `useWalletLifecycle` — the two no longer diverge. **Canonical: wallet ready.**

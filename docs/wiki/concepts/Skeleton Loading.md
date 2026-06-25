@@ -51,7 +51,7 @@ The app uses a consistent skeleton loading pattern with per-block shimmer animat
 
 Three states in component lifecycle:
 
-1. **Skeleton** — until `walletResolved=true` AND first fetch completes
+1. **Skeleton** — until `walletReady=true` AND first fetch completes
 2. **Empty** — after wallet resolved + fetch complete, zero positions
 3. **Data** — positions loaded and rendered
 

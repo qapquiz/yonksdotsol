@@ -27,10 +27,8 @@ All caching in the app goes through [[CacheManager]] — no ad-hoc `Map` caches 
 ```
 CacheManager (singleton)
     │
-    ├─→ Token data         key: "token_data:{mint}"        TTL: 60s
-    ├─→ UPNL data          key: "upnl_per_position:{addr}" TTL: 15min
-    ├─→ OHLCV prices       key: "ohlcv:{pool}:{bucket}"    TTL: 1hr
-    └─→ Pyth prices        key: "pyth_price:{sym}:{bucket}" TTL: 1hr
+    ├─→ Token data         key: "token_data:{mint}"   TTL: 60s
+    └─→ Position PnL      key: "pnl:{pool}:{wallet}"  TTL: 15min
 ```
 
 ## Request Deduplication

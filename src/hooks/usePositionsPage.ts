@@ -31,15 +31,15 @@ export interface PositionsPageResult {
   solUsdPrice: number | null
   /** Pull-to-refresh handler */
   refresh: () => void
-  /** Wallet resolved status */
-  walletResolved: boolean
+  /** Wallet ready status */
+  walletReady: boolean
   /** Wallet address */
   walletAddress?: string
 }
 
 // ─── Hook implementation ─────────────────────────────────────────────
 
-export function usePositionsPage(walletAddress: string | undefined, walletResolved: boolean): PositionsPageResult {
+export function usePositionsPage(walletAddress: string | undefined, walletReady: boolean): PositionsPageResult {
   const pipeline = useMemo(() => createPositionPipeline(), [])
   const mockPortfolio = useMemo(() => createMockPortfolioResult(), [])
 
@@ -90,12 +90,12 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
   // ── When wallet resolves with no address, show empty state ──
   useEffect(() => {
     if (env.devMock) return
-    if (walletResolved && !walletAddress) {
+    if (walletReady && !walletAddress) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false)
       setTokenDataReady(true)
     }
-  }, [walletResolved, walletAddress])
+  }, [walletReady, walletAddress])
 
   // ── Throttled refresh (30s cooldown) ──
   const lastRefreshRef = useRef(0)
@@ -142,7 +142,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
         tokenDataReady: true,
         solUsdPrice,
         refresh,
-        walletResolved: true,
+        walletReady: true,
         walletAddress,
       }
     }
@@ -157,7 +157,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
       tokenDataReady: true,
       solUsdPrice,
       refresh,
-      walletResolved: true,
+      walletReady: true,
       walletAddress,
     }
   }
@@ -173,7 +173,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletResolv
     tokenDataReady,
     solUsdPrice,
     refresh,
-    walletResolved,
+    walletReady,
     walletAddress,
   }
 }

@@ -19,7 +19,7 @@ interface PositionsListProps {
   tokenDataReady: boolean
   /** Live SOL→USD price for the SOL/USD display toggle */
   solUsdPrice: number | null
-  walletResolved: boolean
+  walletReady: boolean
   walletAddress?: string
   refresh: () => void
 }
@@ -33,7 +33,7 @@ export default function PositionsList({
   loading,
   tokenDataReady,
   solUsdPrice,
-  walletResolved,
+  walletReady,
   walletAddress,
   refresh,
 }: PositionsListProps) {
@@ -76,8 +76,8 @@ export default function PositionsList({
   // Show skeleton until wallet is resolved, positions fetch completes, AND token
   // data is ready.  Waiting for tokenDataReady avoids a blank LegendList frame that
   // occurs when positions exist but token prices haven't loaded yet.
-  const showSkeleton = !walletResolved || !tokenDataReady || (positions.length === 0 && loading)
-  const showEmpty = walletResolved && !loading && positions.length === 0
+  const showSkeleton = !walletReady || !tokenDataReady || (positions.length === 0 && loading)
+  const showEmpty = walletReady && !loading && positions.length === 0
 
   if (showSkeleton) {
     return (

@@ -42,7 +42,7 @@ interface PositionsPageResult {
   loading: boolean // True during initial skeleton load
   tokenDataReady: boolean // Prevents FlashList blank frame
   refresh: () => void // Throttled refresh
-  walletResolved: boolean
+  walletReady: boolean
   walletAddress?: string
 }
 ```
