@@ -10,6 +10,8 @@
 | **Pair address**     | The on-chain public key of a **Pool**                                                                                     | pool address, lbPair address           |
 | **Bin**              | A discrete price bucket within a DLMM **Pool**; each pool contains many bins at incrementally higher prices               | tick, step, price level                |
 | **Bin range**        | The lower–upper **Bin** IDs spanning a **Position**'s liquidity concentration                                             | range, price range, tick range         |
+| **Range low price**  | The price of the lowest **Bin** in a **Position**’s **Bin range**; the lower price bound of the position                  | range floor, low bin price             |
+| **Range high price** | The price of the highest **Bin** in a **Position**’s **Bin range**; the upper price bound of the position                 | range ceiling, high bin price          |
 | **Active bin**       | The **Bin** at the current market price of the **Pool**                                                                   | active bin ID, current price level     |
 | **In range**         | A **Position** whose **Bin range** includes the **Active bin** — the position is earning fees                             | active, inTicks                        |
 | **Out of range**     | A **Position** whose **Bin range** does not include the **Active bin** — the position is not earning fees                 | inactive, out of range                 |
@@ -70,6 +72,7 @@
 
 - A **Wallet** can hold zero or more **Positions**, each in a **Pool**.
 - A **Position** spans a **Bin range** within a **Pool** and is either **In range** or **Out of range**.
+- A **Position**’s **Bin range** has two price endpoints: the **Range low price** (price of its lowest bin) and the **Range high price** (price of its highest bin). Together they bound the price band the position covers.
 - Each **Pool** has one **Active bin** and contains many **Bins**.
 - A **Position** has **Token X** and **Token Y** amounts, **Unrealized fees**, and **Claimed fees**.
 - A **Pool PnL summary** aggregates across all **Positions** in a single **Pool** for one **Wallet**.
@@ -99,6 +102,7 @@
 
 ## Flagged ambiguities
 
+- **`lowerBinId`/`upperBinId` vs Range low/high price**: Code names bin-range endpoints `lowerBinId`/`upperBinId`, so “Lower bin price / Upper bin price” mirrors the code most directly. The canonical _display_ terms are **Range low price / Range high price** — chosen to keep “price” in the name and distinguish them from the **Bin range** (which is IDs, not prices). In code, `lowerBinId`/`upperBinId` are bin IDs; their price equivalents are the Range low/high price.
 - **"Pool address" vs "pair address"**: The codebase uses `pairAddress` as the variable name in `DLMM.getAllLbPairPositionsByUser` and as the Map key, but the UI **Position card** refers to "pool" colloquially. **Canonical term: pair address** in code (matching the DLMM `LbPair` naming), **Pool** in user-facing text. When speaking about data keys, use **pair address**; when speaking about the concept, use **Pool**.
 - **`pnlSol` holds uPnL, despite the name.** The field `pnlSol` (and `pnlSolPctChange`) on `metcomet`'s `PositionPnLData` and on our **Position view model** _is_ **uPnL** (current value − initial deposit) — an upstream (`metcomet`) naming convention we inherit and do not rename locally. Display always renders it as **uPnL** (e.g. `formatUPNLDisplay`). **Canonical: use uPnL** when specifically referring to unrealized; use **PnL** for the general concept or aggregated amounts.
 - **"Token data" vs "Token info"**: The caching layer uses cache keys prefixed `token_data:`, but the TypeScript interface is `TokenInfo`. **Canonical: Token info** for the concept and type, "token data" only in opaque cache key strings.

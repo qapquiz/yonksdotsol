@@ -3,6 +3,7 @@ import type { TokenInfo } from '../../tokens'
 import { CacheManager } from '../../utils/cache/CacheManager'
 
 import { fetchTokenFromRpc } from '../../tokens'
+import { fetchPoolOhlcv } from '../../services/ohlcv'
 import { createDataServices } from '../../services/data'
 
 const mockTokenInfo: TokenInfo = {
@@ -20,6 +21,11 @@ const mockTokenInfo: TokenInfo = {
 // Mock the pure fetch functions
 vi.mock('../../tokens', () => ({
   fetchTokenFromRpc: vi.fn(),
+}))
+
+vi.mock('../../services/ohlcv', () => ({
+  fetchPoolOhlcv: vi.fn(),
+  DEFAULT_OHLCV_TIMEFRAME: '4h',
 }))
 
 // Mock env for tokens module
@@ -80,6 +86,56 @@ describe('DataServices', () => {
 
       expect(result.size).toBe(1)
       expect(result.get('mint1')).toEqual(token1)
+    })
+  })
+
+  describe('OhlcvService', () => {
+    const mockSeries = {
+      pairAddress: 'pool-1',
+      timeframe: '4h',
+      candles: [{ timestamp: 1, open: 1, high: 1, low: 1, close: 1, volume: 1 }],
+    }
+
+    it('fetches OHLCV for a pool', async () => {
+      vi.mocked(fetchPoolOhlcv).mockResolvedValue(mockSeries)
+
+      const services = createDataServices(freshCache)
+      const result = await services.ohlcv.getOhlcv('pool-1')
+
+      expect(result).toEqual(mockSeries)
+      expect(fetchPoolOhlcv).toHaveBeenCalledWith('pool-1', '4h')
+    })
+
+    it('caches OHLCV on second call (same pool + timeframe)', async () => {
+      vi.mocked(fetchPoolOhlcv).mockResolvedValue(mockSeries)
+
+      const services = createDataServices(freshCache)
+      await services.ohlcv.getOhlcv('pool-1')
+      await services.ohlcv.getOhlcv('pool-1')
+
+      expect(fetchPoolOhlcv).toHaveBeenCalledTimes(1)
+    })
+
+    it('re-fetches for a different timeframe (distinct cache key)', async () => {
+      vi.mocked(fetchPoolOhlcv).mockResolvedValue(mockSeries)
+
+      const services = createDataServices(freshCache)
+      await services.ohlcv.getOhlcv('pool-1', '4h')
+      await services.ohlcv.getOhlcv('pool-1', '1h')
+
+      expect(fetchPoolOhlcv).toHaveBeenCalledTimes(2)
+      expect(fetchPoolOhlcv).toHaveBeenNthCalledWith(1, 'pool-1', '4h')
+      expect(fetchPoolOhlcv).toHaveBeenNthCalledWith(2, 'pool-1', '1h')
+    })
+
+    it('shares a cached entry across pools only by key (different pool re-fetches)', async () => {
+      vi.mocked(fetchPoolOhlcv).mockResolvedValue(mockSeries)
+
+      const services = createDataServices(freshCache)
+      await services.ohlcv.getOhlcv('pool-1')
+      await services.ohlcv.getOhlcv('pool-2')
+
+      expect(fetchPoolOhlcv).toHaveBeenCalledTimes(2)
     })
   })
 })
