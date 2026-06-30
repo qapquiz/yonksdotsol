@@ -1,25 +1,6 @@
-import { memo, useEffect } from 'react'
-import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated'
+import { memo } from 'react'
 import { View } from 'react-native'
-
-const SHIMMER_DURATION = 2000
-
-function ShimmerBlock({ className }: { className?: string }) {
-  const shimmerValue = useSharedValue(0)
-
-  useEffect(() => {
-    shimmerValue.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), -1, false)
-    return () => {
-      shimmerValue.value = 0
-    }
-  }, [shimmerValue])
-
-  const shimmerStyle = useAnimatedStyle(() => ({
-    opacity: 0.4 + shimmerValue.value * 0.3,
-  }))
-
-  return <Animated.View style={shimmerStyle} className={className} />
-}
+import { ShimmerBlock } from '../ui/ShimmerBlock'
 
 function PositionCardSkeleton() {
   return (

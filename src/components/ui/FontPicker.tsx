@@ -1,6 +1,6 @@
+import { Ionicons } from '@expo/vector-icons'
 import { memo, useCallback } from 'react'
 import { Modal, Pressable, Text, View } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
 import { PIXEL_FONT_OPTIONS } from '../../config/fonts'
@@ -14,7 +14,6 @@ function FontPickerComponent({ visible, onClose }: FontPickerProps) {
   const tokens = useThemeTokens()
   const currentPixelFont = useSettingsStore((s) => s.pixelFont)
   const setPixelFont = useSettingsStore((s) => s.setPixelFont)
-
   const handleSelect = useCallback(
     (id: string) => {
       setPixelFont(id)
@@ -64,7 +63,7 @@ function FontPickerComponent({ visible, onClose }: FontPickerProps) {
                       </Text>
                       {isSelected && (
                         <View className="w-5 h-5 rounded-full bg-app-primary items-center justify-center">
-                          <Ionicons name="checkmark" size={14} color="#050505" />
+                          <Ionicons name="checkmark" size={14} color={tokens.bg} />
                         </View>
                       )}
                     </View>

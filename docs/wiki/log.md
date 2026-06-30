@@ -91,3 +91,23 @@ Performed full wiki health check following [[WIKI_SCHEMA]]:
   - [[computePositionViewData]] — pure view model transformer
 - Updated [[index]] with all new pages and bumped `updated` date
 - Added `related` frontmatter cross-references where missing
+
+## [2026-06-30] update | Design system unified; DESIGN.md authored
+
+Unified the visual design across the app and recorded it as the authoritative source:
+
+- Created root-level [`DESIGN.md`](../../../DESIGN.md) as the source of truth for the design system (colors, typography, spacing, semantic mapping, component patterns). Sits beside `UBIQUITOUS_LANGUAGE.md`.
+- Added `app-negative` / `app-negative-dim` tokens (clay-red) for loss/error; mapped all semantic states onto the accent palette (profit→primary, loss→negative, caution→secondary). Removed all raw Tailwind palette classes (`emerald-*`, `red-*`, `orange-*`, `amber-*`, `cyan-*`, `zinc-*`) from components.
+- Charts de-hardcoded: `LiquidityBarChart` and `PriceChart` now derive SVG colors from `useThemeTokens()` instead of literal cyan/emerald/zinc.
+- Typography unified: `font-bold` → `font-sans-bold` everywhere; one eyebrow style (`text-[10px] font-sans-bold tracking-wider`).
+- Extracted shared primitives: [[SegmentedControl]] (both toggles), [[ChartPanel]] (chart wrapper). Removed duplicated `ShimmerBlock` from [[PositionCardSkeleton]].
+- Refreshed [[Theming]] to current token values and pointed it at DESIGN.md as authoritative. `docs/raw/theme-guide.md` is now historical/stale.
+
+## [2026-06-30] update | Design pass — "Readout" hero + chrome reduction
+
+First opinionated design pass on top of the unified system. Signature + refinements:
+
+- **Portfolio hero is now a card-less readout** ([[PortfolioSummary]]): total value sits bare on the background at `text-4xl` (pixel), PnL delta beneath in color, stat row anchored by a hairline. Leads with value (stable anchor) over PnL. Bare treatment distinguishes the portfolio from the boxed position cards. [[PortfolioSummarySkeleton]] updated to match (also card-less).
+- **Removed the box-in-a-box**: [[ChartPanel]] no longer wraps the chart in a recessed panel; the chart renders directly on the card surface, framed by its eyebrow + grid lines. Price chip became quiet mono text.
+- **Killed emoji tells** (`✨ 💰 📊`): [[PositionFooter]] is now label-left/value-right rows with state carried by color (unrealized→primary, claimed→secondary). [[EmptyState]] swaps 📊 for the app's own [[PixelAvatar]] (ghost variant).
+- [`DESIGN.md`](../../../DESIGN.md) Component Patterns updated: hero documented as the card-less signature, ChartPanel as container-less, footer as colored rows, "no emoji" rule recorded.

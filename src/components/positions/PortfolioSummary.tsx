@@ -1,10 +1,11 @@
-import { memo, useMemo } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { memo, useMemo, type ReactNode } from 'react'
+import { Text, View } from 'react-native'
 import type { PortfolioSummaryData } from '../../hooks/usePositionsPage'
 import { usePixelFont } from '../../hooks/useFontConfig'
-import { ShimmerBlock } from '../ui/ShimmerBlock'
+import { SegmentedControl } from '../ui/SegmentedControl'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { formatFeesTvl24h, formatUsdFromSol, type DisplayCurrency } from '../../utils/positions/formatters'
+import PortfolioSummarySkeleton from './PortfolioSummarySkeleton'
 
 interface PortfolioSummaryProps {
   summary: PortfolioSummaryData | null
@@ -61,32 +62,7 @@ function SolValue({ value, className, fontFamily }: { value: number; className?:
   return content
 }
 
-const CURRENCY_OPTIONS: readonly DisplayCurrency[] = ['SOL', 'USD']
-
-/** Compact SOL/USD segmented control. Mirrors FontPicker's selected tokens. */
-const CurrencyToggle = memo(function CurrencyToggle() {
-  const displayCurrency = useSettingsStore((s) => s.displayCurrency)
-  const setDisplayCurrency = useSettingsStore((s) => s.setDisplayCurrency)
-
-  return (
-    <View className="flex-row rounded-full border border-app-border overflow-hidden">
-      {CURRENCY_OPTIONS.map((currency) => {
-        const selected = displayCurrency === currency
-        return (
-          <Pressable
-            key={currency}
-            onPress={() => setDisplayCurrency(currency)}
-            className={`px-2.5 py-0.5 ${selected ? 'bg-app-primary-dim' : 'bg-transparent'} active:opacity-80`}
-          >
-            <Text className={`text-[10px] font-sans-bold ${selected ? 'text-app-primary' : 'text-app-text-muted'}`}>
-              {currency}
-            </Text>
-          </Pressable>
-        )
-      })}
-    </View>
-  )
-})
+const CURRENCY_OPTIONS: readonly { value: DisplayCurrency }[] = [{ value: 'SOL' }, { value: 'USD' }]
 
 /**
  * Renders a summary figure in the active currency. In SOL mode delegates to the
@@ -116,55 +92,23 @@ function SummaryValue({
   return <SolValue value={sol} className={className} fontFamily={fontFamily} />
 }
 
+/** Quiet label/value column used in the hero's supporting stat row. */
+function Stat({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <View className="flex-1">
+      <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">{label}</Text>
+      {children}
+    </View>
+  )
+}
+
 function PortfolioSummaryComponent({ summary, hasData, positionCount, solUsdPrice }: PortfolioSummaryProps) {
   const pixelFont = usePixelFont()
   const displayCurrency = useSettingsStore((s) => s.displayCurrency)
-  const isLoading = positionCount > 0 && !hasData
-  if (isLoading) {
-    return (
-      <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
-        <View className="flex-row items-center gap-2 mb-3">
-          <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">PORTFOLIO SUMMARY</Text>
-          <View className="bg-app-surface-highlight rounded-full w-5 h-5 items-center justify-center">
-            <Text className="text-app-text-muted text-[10px] font-sans-bold">{positionCount}</Text>
-          </View>
-        </View>
+  const setDisplayCurrency = useSettingsStore((s) => s.setDisplayCurrency)
 
-        <View className="mb-4">
-          <ShimmerBlock className="h-8 bg-app-border rounded-lg mb-1.5" />
-          <ShimmerBlock className="h-5 bg-app-border rounded-lg w-24" />
-        </View>
-
-        <View className="flex-row justify-between mb-4">
-          <View className="flex-1 items-start">
-            <ShimmerBlock className="h-3 bg-app-border rounded w-14 mb-1.5" />
-            <View className="flex-row items-baseline">
-              <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
-              <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
-            </View>
-          </View>
-          <View className="flex-1 items-start">
-            <ShimmerBlock className="h-3 bg-app-border rounded w-20 mb-1.5" />
-            <View className="flex-row items-baseline">
-              <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
-              <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
-            </View>
-          </View>
-          <View className="flex-1 items-start">
-            <ShimmerBlock className="h-3 bg-app-border rounded w-24 mb-1.5" />
-            <View className="flex-row items-baseline">
-              <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
-              <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
-            </View>
-          </View>
-        </View>
-
-        <View className="border-t border-app-border pt-3 flex-row justify-between">
-          <ShimmerBlock className="h-3 bg-app-border rounded w-20" />
-          <ShimmerBlock className="h-4 bg-app-border rounded w-10" />
-        </View>
-      </View>
-    )
+  if (positionCount > 0 && !hasData) {
+    return <PortfolioSummarySkeleton />
   }
 
   // No data yet (no positions or summary not computed)
@@ -176,68 +120,69 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount, solUsdPric
     summary
 
   const isProfit = totalPnlSol >= 0
-  const pnlColorClass = isProfit ? 'text-emerald-400' : 'text-red-400'
+  const pnlColorClass = isProfit ? 'text-app-primary' : 'text-app-negative'
   const sign = isProfit ? '+' : ''
   const isUsd = displayCurrency === 'USD'
 
   return (
-    <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
-      <View className="flex-row items-center gap-2 mb-3">
-        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">PORTFOLIO SUMMARY</Text>
-        <View className="bg-app-surface-highlight rounded-full w-5 h-5 items-center justify-center">
-          <Text className="text-app-text-secondary text-[10px] font-sans-bold">{positionCount}</Text>
-        </View>
-        <View className="ml-auto">
-          <CurrencyToggle />
-        </View>
+    // Hero readout — no card chrome. The total value sits bare on the
+    // background at instrument scale; the bare treatment distinguishes "the
+    // portfolio" from the boxed position cards below it.
+    <View className="pt-3 pb-6 mb-2">
+      {/* meta row — count + currency toggle */}
+      <View className="flex-row items-center justify-between mb-5">
+        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">
+          {positionCount} {positionCount === 1 ? 'POSITION' : 'POSITIONS'}
+        </Text>
+        <SegmentedControl options={CURRENCY_OPTIONS} value={displayCurrency} onChange={setDisplayCurrency} />
       </View>
 
-      <View className="mb-4">
+      {/* HERO — PnL delta at instrument scale (the colored story) */}
+      <View className="flex-row items-baseline mb-1.5">
+        {sign && (
+          <Text className={`text-4xl ${pnlColorClass}`} style={{ fontFamily: pixelFont }}>
+            {sign}
+          </Text>
+        )}
+        <SummaryValue
+          sol={Math.abs(totalPnlSol)}
+          className={`text-4xl ${pnlColorClass}`}
+          fontFamily={pixelFont}
+          displayCurrency={displayCurrency}
+          solUsdPrice={solUsdPrice}
+        />
+        {!isUsd && (
+          <Text className={`text-base ${pnlColorClass} opacity-70 ml-2`} style={{ fontFamily: pixelFont }}>
+            SOL
+          </Text>
+        )}
+      </View>
+
+      {/* VALUE — total portfolio value, the anchor beneath the delta */}
+      <View className="flex-row items-baseline gap-2 mb-6">
         <View className="flex-row items-baseline">
-          {sign && (
-            <Text className={`text-2xl ${pnlColorClass}`} style={{ fontFamily: pixelFont }}>
-              {sign}
-            </Text>
-          )}
           <SummaryValue
-            sol={Math.abs(totalPnlSol)}
-            className={`text-2xl ${pnlColorClass}`}
+            sol={totalValueSol}
+            className="text-app-text text-lg"
             fontFamily={pixelFont}
             displayCurrency={displayCurrency}
             solUsdPrice={solUsdPrice}
           />
           {!isUsd && (
-            <Text className={`text-sm ${pnlColorClass} ml-0.5 opacity-60`} style={{ fontFamily: pixelFont }}>
+            <Text className="text-app-text-muted text-sm ml-1" style={{ fontFamily: pixelFont }}>
               SOL
             </Text>
           )}
         </View>
-        <Text className={`text-sm ${pnlColorClass}`} style={{ fontFamily: pixelFont }}>
+        <Text className={`text-sm ${pnlColorClass} opacity-70`} style={{ fontFamily: pixelFont }}>
           {sign}
           {isNaN(totalPnlPercent) ? '0.00' : totalPnlPercent.toFixed(2)}%
         </Text>
       </View>
 
-      <View className="flex-row justify-between mb-4">
-        <View className="flex-1">
-          <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">VALUE</Text>
-          <View className="flex-row items-baseline">
-            <SummaryValue
-              sol={totalValueSol}
-              className="text-app-text text-sm"
-              fontFamily={pixelFont}
-              displayCurrency={displayCurrency}
-              solUsdPrice={solUsdPrice}
-            />
-            {!isUsd && (
-              <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
-                SOL
-              </Text>
-            )}
-          </View>
-        </View>
-        <View className="flex-1">
-          <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">DEPOSITED</Text>
+      {/* supporting stats — anchored by a hairline, no box */}
+      <View className="flex-row border-t border-app-border pt-4">
+        <Stat label="DEPOSITED">
           <View className="flex-row items-baseline">
             <SummaryValue
               sol={totalInitialDepositSol}
@@ -247,14 +192,13 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount, solUsdPric
               solUsdPrice={solUsdPrice}
             />
             {!isUsd && (
-              <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+              <Text className="text-app-text-muted text-[10px] ml-1" style={{ fontFamily: pixelFont }}>
                 SOL
               </Text>
             )}
           </View>
-        </View>
-        <View className="flex-1">
-          <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">UNCLAIMED FEES</Text>
+        </Stat>
+        <Stat label="UNCLAIMED FEES">
           <View className="flex-row items-baseline">
             <SummaryValue
               sol={totalUnclaimedFeesSol}
@@ -264,19 +208,17 @@ function PortfolioSummaryComponent({ summary, hasData, positionCount, solUsdPric
               solUsdPrice={solUsdPrice}
             />
             {!isUsd && (
-              <Text className="text-app-text text-[10px] ml-0.5 opacity-60" style={{ fontFamily: pixelFont }}>
+              <Text className="text-app-text-muted text-[10px] ml-1" style={{ fontFamily: pixelFont }}>
                 SOL
               </Text>
             )}
           </View>
-        </View>
-      </View>
-
-      <View className="border-t border-app-border pt-3 flex-row items-baseline justify-between">
-        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">24H FEES / TVL</Text>
-        <Text className="text-app-text text-sm" style={{ fontFamily: pixelFont }}>
-          {formatFeesTvl24h(feesTvl24h)}
-        </Text>
+        </Stat>
+        <Stat label="24H FEES / TVL">
+          <Text className="text-app-text text-sm" style={{ fontFamily: pixelFont }}>
+            {formatFeesTvl24h(feesTvl24h)}
+          </Text>
+        </Stat>
       </View>
     </View>
   )

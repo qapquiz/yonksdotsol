@@ -11,6 +11,10 @@ export interface ThemeTokens {
   primaryDark: string
   /** Secondary accent */
   secondary: string
+  /** Negative / loss accent */
+  negative: string
+  /** Negative / loss accent, dimmed variant (badge backgrounds) */
+  negativeDim: string
   /** Secondary accent, dimmed variant */
   secondaryDim: string
   /** Surface/card background */
@@ -39,6 +43,8 @@ export const themeTokens: Record<ThemeMode, ThemeTokens> = {
     primaryDark: '#3e4f43',
     secondary: '#d4955f',
     secondaryDim: '#332619',
+    negative: '#c97064',
+    negativeDim: '#3a2222',
     surface: '#151515',
     surfaceHighlight: '#252525',
     text: '#ffffff',
@@ -55,6 +61,8 @@ export const themeTokens: Record<ThemeMode, ThemeTokens> = {
     primaryDark: '#a3c4a8',
     secondary: '#c07a3e',
     secondaryDim: '#f5e6d5',
+    negative: '#b55044',
+    negativeDim: '#f5ddd8',
     surface: '#ffffff',
     surfaceHighlight: '#eeeeee',
     text: '#1a1a1a',

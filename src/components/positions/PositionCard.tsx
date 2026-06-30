@@ -1,7 +1,8 @@
 import { memo, useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { View } from 'react-native'
 import type { TokenInfo } from '../../tokens'
 import type { PositionViewModel } from '../../utils/positions/computePositionViewData'
+import { SegmentedControl } from '../ui/SegmentedControl'
 import { LiquidityBarChart } from './LiquidityBarChart'
 import PositionCardSkeleton from './PositionCardSkeleton'
 import { PriceChart } from './PriceChart'
@@ -17,6 +18,11 @@ interface PositionCardProps {
 }
 
 type ChartMode = 'liquidity' | 'price'
+
+const CHART_MODE_OPTIONS: readonly { value: ChartMode; label: string }[] = [
+  { value: 'liquidity', label: 'Liquidity' },
+  { value: 'price', label: 'Price' },
+]
 
 function PositionCardComponent({ vm, tokenXInfo, tokenYInfo, solUsdPrice }: PositionCardProps) {
   const [chartMode, setChartMode] = useState<ChartMode>('liquidity')
@@ -38,22 +44,13 @@ function PositionCardComponent({ vm, tokenXInfo, tokenYInfo, solUsdPrice }: Posi
         solUsdPrice={solUsdPrice}
       />
 
-      <View className="flex-row bg-app-bg/50 rounded-lg p-1 mb-3 border border-app-border/50">
-        {(['liquidity', 'price'] as const).map((mode) => (
-          <TouchableOpacity
-            key={mode}
-            onPress={() => setChartMode(mode)}
-            className={`flex-1 py-1.5 rounded-md items-center ${chartMode === mode ? 'bg-app-primary-dim' : ''}`}
-            activeOpacity={0.7}
-          >
-            <Text
-              className={`text-[10px] font-sans-bold capitalize ${chartMode === mode ? 'text-app-primary' : 'text-app-text-muted'}`}
-            >
-              {mode}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <SegmentedControl
+        options={CHART_MODE_OPTIONS}
+        value={chartMode}
+        onChange={setChartMode}
+        variant="fill"
+        className="mb-3"
+      />
 
       {chartMode === 'liquidity' ? (
         <LiquidityBarChart liquidityShape={vm.liquidityShape} currentPrice={vm.currentPrice} />

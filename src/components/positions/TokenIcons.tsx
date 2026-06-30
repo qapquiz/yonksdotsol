@@ -20,7 +20,7 @@ function TokenIconsComponent({ tokenXInfo, tokenYInfo }: TokenIconsProps) {
       />
     ) : (
       <View className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight z-10 items-center justify-center">
-        <Text className="text-app-text text-xs font-bold">{tokenXInfo?.symbol?.[0] || '?'}</Text>
+        <Text className="text-app-text text-xs font-sans-bold">{tokenXInfo?.symbol?.[0] || '?'}</Text>
       </View>
     )
 
@@ -33,7 +33,7 @@ function TokenIconsComponent({ tokenXInfo, tokenYInfo }: TokenIconsProps) {
       />
     ) : (
       <View className="w-8 h-8 rounded-full bg-app-surface-highlight border border-app-surface-highlight -ml-3 items-center justify-center">
-        <Text className="text-app-text text-xs font-bold">{tokenYInfo?.symbol?.[0] || '?'}</Text>
+        <Text className="text-app-text text-xs font-sans-bold">{tokenYInfo?.symbol?.[0] || '?'}</Text>
       </View>
     )
 

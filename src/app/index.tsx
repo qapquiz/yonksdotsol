@@ -84,9 +84,11 @@ export default function App() {
       </View>
 
       {env.devMock && (
-        <View className="flex-row items-center justify-center gap-2 bg-amber-500 px-4 py-1.5">
-          <Ionicons name="flask-outline" size={13} color="#000000" />
-          <Text className="text-[11px] font-sans-bold uppercase tracking-wider text-black">Dev Mode — Mock Data</Text>
+        <View className="flex-row items-center justify-center gap-2 bg-app-secondary px-4 py-1.5">
+          <Ionicons name="flask-outline" size={13} color="#1a1a1a" />
+          <Text className="text-[11px] font-sans-bold uppercase tracking-wider text-[#1a1a1a]">
+            Dev Mode — Mock Data
+          </Text>
         </View>
       )}
 

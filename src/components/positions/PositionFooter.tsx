@@ -21,38 +21,40 @@ function PositionFooterComponent({
   const pixelFont = usePixelFont()
 
   return (
-    <View>
-      <View className="mb-4">
-        <Text className="text-app-text-muted text-[10px] font-sans-bold mb-1 tracking-wider">24H FEES/TVL</Text>
+    // Label-left / value-right rows, separated from the chart by a hairline.
+    // State is carried by color, not emoji: unrealized (accruing) → primary
+    // (sage), claimed → secondary (copper). Sub-values (USD conversions) sit
+    // under each value, right-aligned.
+    <View className="border-t border-app-border pt-4 gap-4">
+      <View className="flex-row items-start justify-between">
+        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">24H FEES / TVL</Text>
         <Text className="text-app-text text-sm" style={{ fontFamily: pixelFont }}>
           {formatFeesTvl24h(feesTvl24h)}
         </Text>
       </View>
 
-      <View className="mb-4">
-        <Text className="text-app-text-muted text-[10px] font-sans-bold mb-1 tracking-wider">UNREALIZED FEES</Text>
-        <View className="flex-row items-center gap-1">
-          <Text className="text-app-text text-sm" style={{ fontFamily: pixelFont }}>
+      <View className="flex-row items-start justify-between">
+        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">UNREALIZED FEES</Text>
+        <View className="items-end">
+          <Text className="text-app-primary text-sm" style={{ fontFamily: pixelFont }}>
             {unrealizedFeesDisplay}
           </Text>
-          <Text className="text-emerald-400 text-xs">✨</Text>
+          <Text className="text-app-text-secondary text-xs mt-0.5" style={{ fontFamily: pixelFont }}>
+            {unrealizedFeesValue}
+          </Text>
         </View>
-        <Text className="text-app-text-secondary text-xs mt-1" style={{ fontFamily: pixelFont }}>
-          {unrealizedFeesValue}
-        </Text>
       </View>
 
-      <View>
-        <Text className="text-app-text-muted text-[10px] font-sans-bold mb-1 tracking-wider">CLAIMED FEES</Text>
-        <View className="flex-row items-center gap-1">
-          <Text className="text-app-text text-sm" style={{ fontFamily: pixelFont }}>
+      <View className="flex-row items-start justify-between">
+        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">CLAIMED FEES</Text>
+        <View className="items-end">
+          <Text className="text-app-secondary text-sm" style={{ fontFamily: pixelFont }}>
             {claimedFeesDisplay}
           </Text>
-          <Text className="text-amber-400 text-xs">💰</Text>
+          <Text className="text-app-text-secondary text-xs mt-0.5" style={{ fontFamily: pixelFont }}>
+            {claimedFeesValue}
+          </Text>
         </View>
-        <Text className="text-app-text-secondary text-xs mt-1" style={{ fontFamily: pixelFont }}>
-          {claimedFeesValue}
-        </Text>
       </View>
     </View>
   )

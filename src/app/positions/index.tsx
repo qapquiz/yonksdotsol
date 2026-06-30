@@ -60,10 +60,10 @@ export default function PositionsList({
         />
         {outOfRangeCount > 0 && (
           <View className="flex-row items-center gap-2 mb-4 px-1">
-            <View className="w-4 h-4 rounded-full bg-orange-500/20 items-center justify-center">
-              <Text className="text-orange-500 text-[10px] font-sans-bold">!</Text>
+            <View className="w-4 h-4 rounded-full bg-app-secondary-dim items-center justify-center">
+              <Text className="text-app-secondary text-[10px] font-sans-bold">!</Text>
             </View>
-            <Text className="text-orange-400 text-xs font-sans-bold">
+            <Text className="text-app-secondary text-xs font-sans-bold">
               {outOfRangeCount} {outOfRangeCount === 1 ? 'position' : 'positions'} out of range
             </Text>
           </View>

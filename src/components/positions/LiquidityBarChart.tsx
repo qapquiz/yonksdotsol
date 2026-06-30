@@ -2,6 +2,8 @@ import { memo, useCallback, useMemo, useState } from 'react'
 import { Text, View } from 'react-native'
 import { Line, Rect, Svg } from 'react-native-svg'
 import type { LiquidityShape } from '../../utils/positions/computePositionViewData'
+import { useThemeTokens } from '../../hooks/useThemeTokens'
+import { ChartPanel } from './ChartPanel'
 
 interface LiquidityBarChartProps {
   liquidityShape: LiquidityShape | null
@@ -12,14 +14,24 @@ const CHART_HEIGHT = 120
 const CHART_PADDING = { top: 10, bottom: 10, left: 0, right: 0 }
 const BAR_GAP_RATIO = 0.3
 
-// Bar colors — aligned with app palette
-const BAR_COLOR_DEFAULT = '#3f3f46' // zinc-700 — above active bin
-const BAR_COLOR_ACTIVE = '#22d3ee' // cyan-400 — active bin
-const BAR_COLOR_BELOW = '#10b981' // emerald-500 — below active bin
-const GRID_LINE_COLOR = 'rgba(63, 63, 70, 0.3)'
+// 8-digit hex alpha suffixes for grid lines (≈0.3 opacity)
+const GRID_ALPHA = '4D'
 
 function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityBarChartProps) {
+  const tokens = useThemeTokens()
   const [containerWidth, setContainerWidth] = useState(0)
+
+  // Bar colors — all derived from the app palette so they theme correctly:
+  //   active bin → primary (sage), below active → secondary (copper), above → neutral
+  const colors = useMemo(
+    () => ({
+      active: tokens.primary,
+      below: tokens.secondary,
+      above: tokens.border,
+      grid: `${tokens.border}${GRID_ALPHA}`,
+    }),
+    [tokens],
+  )
 
   const handleLayout = useCallback((event: { nativeEvent: { layout: { width: number } } }) => {
     setContainerWidth(event.nativeEvent.layout.width)
@@ -40,11 +52,11 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
       const isActive = bin.binId === currentActiveId
       const isLeft = bin.binId < currentActiveId
 
-      let color = BAR_COLOR_DEFAULT
+      let color = colors.above
       if (isActive) {
-        color = BAR_COLOR_ACTIVE
+        color = colors.active
       } else if (isLeft) {
-        color = BAR_COLOR_BELOW
+        color = colors.below
       }
 
       return {
@@ -54,7 +66,7 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
         color,
       }
     })
-  }, [liquidityShape])
+  }, [liquidityShape, colors])
 
   const minPrice = useMemo(() => {
     if (!liquidityShape?.binDistribution || liquidityShape.binDistribution.length === 0) return '0'
@@ -89,9 +101,7 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
     // Add horizontal grid lines
     const gridLines = [0, 25, 50, 75, 100].map((percent) => {
       const y = CHART_PADDING.top + chartInnerHeight - (percent / 100) * chartInnerHeight
-      return (
-        <Line key={`grid-${percent}`} x1="0" y1={y} x2={chartWidth} y2={y} stroke={GRID_LINE_COLOR} strokeWidth="1" />
-      )
+      return <Line key={`grid-${percent}`} x1="0" y1={y} x2={chartWidth} y2={y} stroke={colors.grid} strokeWidth="1" />
     })
 
     return (
@@ -100,17 +110,28 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
         {bars}
       </Svg>
     )
-  }, [chartData, containerWidth])
+  }, [chartData, containerWidth, colors])
+
+  const legend = (
+    <View className="flex-row items-center justify-center mt-2 gap-4">
+      <View className="flex-row items-center">
+        <View className="w-2 h-2 rounded-sm bg-app-secondary mr-1.5" />
+        <Text className="text-app-text-secondary text-[10px]">Below Price</Text>
+      </View>
+      <View className="flex-row items-center">
+        <View className="w-2 h-2 rounded-sm bg-app-primary mr-1.5" />
+        <Text className="text-app-primary text-[10px]">Active</Text>
+      </View>
+      <View className="flex-row items-center">
+        <View className="w-2 h-2 rounded-sm bg-app-text-muted mr-1.5" />
+        <Text className="text-app-text-secondary text-[10px]">Above Price</Text>
+      </View>
+    </View>
+  )
 
   if (chartData.length === 0) {
     return (
-      <View className="bg-app-bg/50 rounded-xl p-4 mb-6 border border-app-border/50">
-        <View className="flex-row justify-between items-start mb-3">
-          <Text className="text-app-text-muted text-[10px] font-bold tracking-widest">LIQUIDITY SHAPE</Text>
-          <View className="bg-app-surface px-2 py-1 rounded border border-app-border">
-            <Text className="text-app-text-secondary text-[10px] font-mono">{currentPrice}</Text>
-          </View>
-        </View>
+      <ChartPanel title="LIQUIDITY SHAPE" currentPrice={currentPrice}>
         <View className="h-[120px] items-center justify-center">
           <Text className="text-app-text-muted text-xs">No liquidity data</Text>
         </View>
@@ -118,33 +139,13 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
           <Text className="text-app-text-muted text-[10px] font-mono">-</Text>
           <Text className="text-app-text-muted text-[10px] font-mono">-</Text>
         </View>
-        <View className="flex-row items-center justify-center mt-2 gap-4">
-          <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-emerald-500 mr-1.5" />
-            <Text className="text-app-text-secondary text-[10px]">Below Price</Text>
-          </View>
-          <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-cyan-400 mr-1.5" />
-            <Text className="text-cyan-400 text-[10px]">Active</Text>
-          </View>
-          <View className="flex-row items-center">
-            <View className="w-2 h-2 rounded-sm bg-app-text-muted mr-1.5" />
-            <Text className="text-app-text-secondary text-[10px]">Above Price</Text>
-          </View>
-        </View>
-      </View>
+        {legend}
+      </ChartPanel>
     )
   }
 
   return (
-    <View className="bg-app-bg/50 rounded-xl p-4 mb-6 border border-app-border/50">
-      <View className="flex-row justify-between items-start mb-3">
-        <Text className="text-app-text-muted text-[10px] font-bold tracking-widest">LIQUIDITY SHAPE</Text>
-        <View className="bg-app-surface px-2 py-1 rounded border border-app-border">
-          <Text className="text-app-text-secondary text-[10px] font-mono">{currentPrice}</Text>
-        </View>
-      </View>
-
+    <ChartPanel title="LIQUIDITY SHAPE" currentPrice={currentPrice}>
       <View className="w-full" style={{ height: CHART_HEIGHT }} onLayout={handleLayout}>
         {svgContent}
       </View>
@@ -154,21 +155,8 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
         <Text className="text-app-text-muted text-[10px] font-mono">{maxPrice}</Text>
       </View>
 
-      <View className="flex-row items-center justify-center mt-2 gap-4">
-        <View className="flex-row items-center">
-          <View className="w-2 h-2 rounded-sm bg-emerald-500 mr-1.5" />
-          <Text className="text-app-text-secondary text-[10px]">Below Price</Text>
-        </View>
-        <View className="flex-row items-center">
-          <View className="w-2 h-2 rounded-sm bg-cyan-400 mr-1.5" />
-          <Text className="text-cyan-400 text-[10px]">Active</Text>
-        </View>
-        <View className="flex-row items-center">
-          <View className="w-2 h-2 rounded-sm bg-app-text-muted mr-1.5" />
-          <Text className="text-app-text-secondary text-[10px]">Above Price</Text>
-        </View>
-      </View>
-    </View>
+      {legend}
+    </ChartPanel>
   )
 }
 

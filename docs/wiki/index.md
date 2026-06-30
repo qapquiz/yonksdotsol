@@ -2,7 +2,7 @@
 title: Wiki Index
 type: index
 created: 2026-04-18
-updated: 2026-04-28
+updated: 2026-06-30
 tags: [index, wiki]
 ---
 
@@ -47,13 +47,13 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 
 ## Concepts
 
-| Page                      | Description                            |
-| ------------------------- | -------------------------------------- |
-| [[Caching Strategy]]      | TTL-based caching with request dedup   |
-| [[Theming]]               | Dark/light mode with Uniwind tokens    |
-| [[Connection Lifecycle]]  | Singleton pattern for RPC connection   |
-| [[Position Architecture]] | One pair → many positions relationship |
-| [[Skeleton Loading]]      | Per-block shimmer pattern              |
+| Page                      | Description                                                              |
+| ------------------------- | ------------------------------------------------------------------------ |
+| [[Caching Strategy]]      | TTL-based caching with request dedup                                     |
+| [[Theming]]               | Dark/light mode with Uniwind tokens — see [`DESIGN.md`](../../DESIGN.md) |
+| [[Connection Lifecycle]]  | Singleton pattern for RPC connection                                     |
+| [[Position Architecture]] | One pair → many positions relationship                                   |
+| [[Skeleton Loading]]      | Per-block shimmer pattern                                                |
 
 ## Guides
 

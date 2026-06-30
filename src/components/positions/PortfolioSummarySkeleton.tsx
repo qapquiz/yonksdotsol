@@ -2,53 +2,40 @@ import { memo } from 'react'
 import { View } from 'react-native'
 import { ShimmerBlock } from '../ui/ShimmerBlock'
 
+/**
+ * Skeleton for the portfolio hero readout. Matches the loaded layout exactly:
+ * bare (no card chrome), so the hero placeholder reads as distinct from the
+ * boxed PositionCard skeletons beneath it. See PortfolioSummary.tsx.
+ */
 function PortfolioSummarySkeleton() {
   return (
-    <View className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border">
-      {/* Title row — matches: "PORTFOLIO SUMMARY" + count badge */}
-      <View className="flex-row items-center gap-2 mb-3">
-        <ShimmerBlock className="h-3 bg-app-border rounded w-32" />
-        <ShimmerBlock className="bg-app-border rounded-full w-5 h-5" />
+    <View className="pt-3 pb-6 mb-2">
+      {/* meta row — count + currency toggle */}
+      <View className="flex-row items-center justify-between mb-5">
+        <ShimmerBlock className="h-3 bg-app-border rounded w-20" />
+        <ShimmerBlock className="h-6 bg-app-border rounded w-24" />
       </View>
 
-      {/* PnL value — matches: large SOL value + percentage */}
-      <View className="mb-4">
-        <View className="flex-row items-baseline">
-          <ShimmerBlock className="h-8 bg-app-border rounded-lg w-28 mb-1.5" />
-          <ShimmerBlock className="h-4 bg-app-border rounded w-8 ml-1" />
-        </View>
-        <ShimmerBlock className="h-5 bg-app-border rounded-lg w-20" />
-      </View>
+      {/* hero value — matches text-4xl */}
+      <ShimmerBlock className="h-9 bg-app-border rounded-lg w-40 mb-2" />
 
-      {/* Stats row — matches: VALUE / DEPOSITED / UNCLAIMED FEES */}
-      <View className="flex-row justify-between mb-4">
+      {/* delta */}
+      <ShimmerBlock className="h-4 bg-app-border rounded w-32 mb-6" />
+
+      {/* stats row — matches DEPOSITED / UNCLAIMED FEES / 24H FEES / TVL */}
+      <View className="border-t border-app-border pt-4 flex-row justify-between">
         <View className="flex-1 items-start">
-          <ShimmerBlock className="h-3 bg-app-border rounded w-14 mb-1.5" />
-          <View className="flex-row items-baseline">
-            <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
-            <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
-          </View>
+          <ShimmerBlock className="h-3 bg-app-border rounded w-16 mb-1.5" />
+          <ShimmerBlock className="h-4 bg-app-border rounded w-20" />
         </View>
         <View className="flex-1 items-start">
           <ShimmerBlock className="h-3 bg-app-border rounded w-20 mb-1.5" />
-          <View className="flex-row items-baseline">
-            <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
-            <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
-          </View>
+          <ShimmerBlock className="h-4 bg-app-border rounded w-20" />
         </View>
         <View className="flex-1 items-start">
-          <ShimmerBlock className="h-3 bg-app-border rounded w-24 mb-1.5" />
-          <View className="flex-row items-baseline">
-            <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
-            <ShimmerBlock className="h-3 bg-app-border rounded w-6 ml-0.5" />
-          </View>
+          <ShimmerBlock className="h-3 bg-app-border rounded w-16 mb-1.5" />
+          <ShimmerBlock className="h-4 bg-app-border rounded w-16" />
         </View>
-      </View>
-
-      {/* Yield band — matches: 24H FEES / TVL divider row */}
-      <View className="border-t border-app-border pt-3 flex-row justify-between">
-        <ShimmerBlock className="h-3 bg-app-border rounded w-20" />
-        <ShimmerBlock className="h-4 bg-app-border rounded w-10" />
       </View>
     </View>
   )

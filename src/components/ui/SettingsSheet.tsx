@@ -55,7 +55,7 @@ function SettingsSheetComponent({ visible, onClose }: SettingsSheetProps) {
                   Notify me when a position stops earning fees
                 </Text>
                 {denied && (
-                  <Text className="text-red-400 text-xs mt-1">
+                  <Text className="text-app-negative text-xs mt-1">
                     Notification permission denied. Enable it in system settings.
                   </Text>
                 )}

@@ -28,7 +28,7 @@ function PositionHeaderComponent({
 }: PositionHeaderProps) {
   const pixelFont = usePixelFont()
   const displayCurrency = useSettingsStore((s) => s.displayCurrency)
-  const upnlColorClass = upnlValue !== null ? (upnlValue >= 0 ? 'text-emerald-400' : 'text-red-400') : ''
+  const upnlColorClass = upnlValue !== null ? (upnlValue >= 0 ? 'text-app-primary' : 'text-app-negative') : ''
 
   const upnlForDisplay =
     upnlValue != null && upnlPercentage != null
@@ -50,8 +50,8 @@ function PositionHeaderComponent({
         </View>
       </View>
       <View className="items-end gap-1 flex-shrink-0">
-        <View className={`px-2 py-1 rounded-md ${inRange ? 'bg-emerald-500/20' : 'bg-orange-500/20'}`}>
-          <Text className={`text-[10px] font-sans-bold ${inRange ? 'text-emerald-500' : 'text-orange-500'}`}>
+        <View className={`px-2 py-1 rounded-md ${inRange ? 'bg-app-primary-dim' : 'bg-app-secondary-dim'}`}>
+          <Text className={`text-[10px] font-sans-bold ${inRange ? 'text-app-primary' : 'text-app-secondary'}`}>
             {inRange ? 'IN RANGE' : 'OUT OF RANGE'}
           </Text>
         </View>

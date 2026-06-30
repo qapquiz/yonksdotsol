@@ -24,6 +24,9 @@
       --color-app-secondary: #d4955f;
       --color-app-secondary-dim: #332619;
 
+      --color-app-negative: #c97064;
+      --color-app-negative-dim: #3a2222;
+
       --color-app-text: #ffffff;
       --color-app-text-secondary: #aaaaaa;
       --color-app-text-muted: #777777;
@@ -42,6 +45,9 @@
 
       --color-app-secondary: #c07a3e;
       --color-app-secondary-dim: #f5e6d5;
+
+      --color-app-negative: #b55044;
+      --color-app-negative-dim: #f5ddd8;
 
       --color-app-text: #1a1a1a;
       --color-app-text-secondary: #666666;

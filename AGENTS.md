@@ -90,20 +90,24 @@ This file contains build commands and code style guidelines for agentic coding a
 
 ### Styling (Uniwind/Tailwind CSS)
 
+- **Full design system documented in [`DESIGN.md`](DESIGN.md)** — read it for the authoritative color, typography, spacing, and component-pattern rules. What follows is a quick reference.
 - Use Uniwind utility classes for all styling
 - **Source of truth for color values**: `src/config/theme.ts` — keep `src/global.css` in sync
 - Custom colors defined in `src/global.css` (with dark & light variants):
   - `app-bg`, `app-surface`, `app-surface-highlight`
   - `app-primary`, `app-primary-dim`, `app-primary-dark`
   - `app-secondary`, `app-secondary-dim`
+  - `app-negative`, `app-negative-dim`
   - `app-text`, `app-text-secondary`, `app-text-muted`
   - `app-border`
+- **Semantic mapping**: profit/in-range/selected → `app-primary`; loss/error → `app-negative`; out-of-range/caution → `app-secondary`. Never use raw Tailwind palette classes (`emerald-*`, `red-*`, etc.).
 - Custom fonts: `font-pixel`, `font-sans`, `font-sans-bold`, `font-mono`
+- **Use `font-sans-bold` for all bold** — never `font-bold` (renders faux-bold on Geist-Regular).
 - Common patterns:
   - `className="flex-1"` for full height
   - `className="flex-row items-center justify-between"` for row layouts
-  - `className="rounded-3xl"` for cards
-  - `className="text-sm font-bold"` for typography
+  - `className="bg-app-surface rounded-3xl p-5 mb-4 border border-app-border"` for cards
+  - `className="text-sm font-sans-bold"` for typography
 
 ### State Management
 
