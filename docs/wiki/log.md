@@ -111,3 +111,13 @@ First opinionated design pass on top of the unified system. Signature + refineme
 - **Removed the box-in-a-box**: [[ChartPanel]] no longer wraps the chart in a recessed panel; the chart renders directly on the card surface, framed by its eyebrow + grid lines. Price chip became quiet mono text.
 - **Killed emoji tells** (`✨ 💰 📊`): [[PositionFooter]] is now label-left/value-right rows with state carried by color (unrealized→primary, claimed→secondary). [[EmptyState]] swaps 📊 for the app's own [[PixelAvatar]] (ghost variant).
 - [`DESIGN.md`](../../../DESIGN.md) Component Patterns updated: hero documented as the card-less signature, ChartPanel as container-less, footer as colored rows, "no emoji" rule recorded.
+
+## [2026-06-30] update | Android widget brought into the design system
+
+The home-screen widget (`src/widgets/updatePortfolioWidget.tsx`) was the last surface outside the unified system — it still carried the old emerald/red/orange color story and a duplicate hardcoded palette.
+
+- **Single source of truth:** widget now imports `themeTokens` directly (`themeTokens.dark`). It renders to native Android RemoteViews, so it can't use Uniwind classes or the theme hook — but `theme.ts` is pure constants (headless-task safe), so the widget tracks the source of truth.
+- **Color unified:** profit → primary (sage), loss → negative (clay-red), out-of-range → secondary (copper) + secondaryDim. Removed `profit`/`loss` emerald/red literals and orange hex.
+- **Structure aligned to the Readout hero:** title → "N POSITIONS" (dropped literal title + count badge); total value lifted from a buried stat column to the anchor line under the PnL hero; stats row → DEPOSITED / UNCLAIMED FEES / 24H FEES TVL (VALUE folded out, yield band folded in). Error/no-positions states share the cleaned header.
+- **theme.ts:** `themeTokens` now declared `as const satisfies Record<ThemeMode, ThemeTokens>` so direct readers (widget, PixelAvatar) get precise literal types (assignable to RemoteViews `ColorProp`); the `useThemeTokens` hook still returns the widened interface.
+- DESIGN.md gains an "Android Widget" section.

@@ -35,7 +35,7 @@ export interface ThemeTokens {
   statusBar: 'light' | 'dark'
 }
 
-export const themeTokens: Record<ThemeMode, ThemeTokens> = {
+export const themeTokens = {
   dark: {
     bg: '#050505',
     primary: '#8FA893',
@@ -72,4 +72,4 @@ export const themeTokens: Record<ThemeMode, ThemeTokens> = {
     refreshTint: '#6b8f71',
     statusBar: 'dark',
   },
-}
+} as const satisfies Record<ThemeMode, ThemeTokens>

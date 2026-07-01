@@ -236,6 +236,27 @@ Charts render in SVG, so colors can't use Uniwind classes — they read tokens v
 
 ---
 
+## Android Widget
+
+The home-screen widget (`src/widgets/updatePortfolioWidget.tsx`) renders to **native Android RemoteViews** via `react-native-android-widget` (`FlexWidget` / `TextWidget` / `SvgWidget`) — not Uniwind classes. Despite the different surface, it shares the **same token source**: it imports `themeTokens` directly (pure constants, headless-task safe — no React hook is available in the headless render context) and binds `themeTokens.dark`.
+
+The widget is **dark-only and SOL-only by design** — it's a glanceable readout, not an interactive screen (no theme toggle, no currency toggle).
+
+### Structure — mirrors the portfolio hero
+
+The widget follows the same **PnL-led Readout** hierarchy as the in-app hero, compressed for a glance:
+
+1. **Header** — `"N POSITIONS"` eyebrow (left) + refresh affordance (right). No literal "PORTFOLIO SUMMARY" title (the widget's context is self-evident on the home screen).
+2. **Hero** — PnL delta at the largest size, colored (sage profit / clay-red loss).
+3. **Anchor line** — total value (neutral) + PnL % (colored).
+4. **Out-of-range warning** (when applicable) — copper, mirroring the in-app banner.
+5. **Stats row** — hairline-anchored: DEPOSITED / UNCLAIMED FEES / 24H FEES / TVL. (VALUE is folded out — it's the anchor line above.)
+6. **Last updated** timestamp + `OPEN_APP` / `REFRESH` click actions.
+
+The `ErrorWidget` and `NoPositionsWidget` states share the same header and surface treatment.
+
+---
+
 ## What Can't Use Tokens
 
 A few surfaces use native props that Uniwind can't process. These read from `useThemeTokens()` and pass the token value through — **not** a restated hex literal:
@@ -245,6 +266,7 @@ A few surfaces use native props that Uniwind can't process. These read from `use
 - `Ionicons` `color` → the relevant token
 - `PixelAvatar` SVG fills → `tokens.primary` / `tokens.primaryDim` / etc.
 - Chart SVG strokes/fills → token-derived (see [Charts](#charts))
+- **Android widget** → imports `themeTokens.dark` directly (headless context; see [Android Widget](#android-widget))
 
 The rule: even outside className, **the hex still comes from the token**, so a theme change updates everything.
 
