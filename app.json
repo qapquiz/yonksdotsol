@@ -60,6 +60,7 @@
           ]
         }
       ],
+      "./plugins/withGradleHeap",
       "expo-status-bar",
       [
         "expo-notifications",
