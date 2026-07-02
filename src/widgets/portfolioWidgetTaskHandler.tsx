@@ -2,14 +2,24 @@
 
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget'
 import { getStoredWalletAddress } from '../stores/walletStore'
-import { buildErrorWidget, buildWidgetTree, fetchPortfolioSummary } from './updatePortfolioWidget'
+import {
+  buildErrorWidget,
+  buildRefreshingWidget,
+  buildWidgetTree,
+  fetchPortfolioSummary,
+} from './updatePortfolioWidget'
 
 async function portfolioWidgetTaskHandler({ widgetAction, clickAction, renderWidget }: WidgetTaskHandlerProps) {
   if (widgetAction === 'WIDGET_DELETED') return
 
-  // Refresh click → fall through to re-fetch and render
-  if (widgetAction === 'WIDGET_CLICK' && clickAction === 'REFRESH') {
-    // fall through
+  const isRefreshClick = widgetAction === 'WIDGET_CLICK' && clickAction === 'REFRESH'
+
+  // Optimistic feedback: the instant the refresh click reaches us, redraw
+  // the last cached summary with the refresh icon turned sage and the footer
+  // reading "Updating…". The fetch below then swaps in fresh data. This
+  // confirms the tap registered without erasing the numbers on screen.
+  if (isRefreshClick) {
+    renderWidget(buildRefreshingWidget())
   }
 
   const walletAddress = getStoredWalletAddress()

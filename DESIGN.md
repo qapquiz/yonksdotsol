@@ -253,6 +253,10 @@ The widget follows the same **PnL-led Readout** hierarchy as the in-app hero, co
 5. **Stats row** — hairline-anchored: DEPOSITED / UNCLAIMED FEES / 24H FEES / TVL. (VALUE is folded out — it's the anchor line above.)
 6. **Last updated** timestamp + `OPEN_APP` / `REFRESH` click actions.
 
+### Refresh feedback (optimistic)
+
+A tap on the refresh icon re-renders **immediately** before the fetch completes, so the button feels responsive instead of dead for several seconds. The handler calls `renderWidget(buildRefreshingWidget())` the instant the click arrives, then `renderWidget(buildWidgetTree(fresh))` once data resolves. The refreshing state shows the **last cached summary** (kept in MMKV — file-backed, so readable from the headless task's JS realm) with two reinforcing signals: the refresh icon turns **sage** (active), and the footer reads **"Updating…"** instead of the timestamp. The user's numbers stay visible throughout — no blank loading state. Falls back to a minimal `UpdatingWidget` if no cache exists yet. (Caveat: the tap can only reach JS once the headless task has spawned, so there's an inherent ~1–2s delay before feedback if the app process is cold — unavoidable in RN's headless model.)
+
 The `ErrorWidget` and `NoPositionsWidget` states share the same header and surface treatment.
 
 ---

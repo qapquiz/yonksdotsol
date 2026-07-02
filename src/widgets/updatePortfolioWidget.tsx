@@ -2,6 +2,7 @@
 
 import type { WidgetRepresentation } from 'react-native-android-widget'
 import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget'
+import { createMMKV } from 'react-native-mmkv'
 import { createPositionPipeline } from '../services/positionPipeline'
 import { themeTokens } from '../config/theme'
 
@@ -14,6 +15,38 @@ import { themeTokens } from '../config/theme'
 // If a token changes in theme.ts, the widget tracks it automatically.
 
 const C = themeTokens.dark
+
+// ─── Last-rendered cache ─────────────────────────────────────────────
+// Headless task runs get their own JS realm, so we can't keep the last
+// summary in module memory across runs. MMKV is file-backed and readable
+// from the headless context (same pattern as getStoredWalletAddress), so
+// we persist the last successfully rendered summary there. This lets the
+// refreshing state show the user's *actual* data (with an "Updating…"
+// marker) instead of a blank — the tap confirms instantly without
+// erasing the numbers they're looking at.
+
+const widgetMmkv = createMMKV({ id: 'widget' })
+const LAST_SUMMARY_KEY = 'last_portfolio_summary'
+
+function saveWidgetSummary(summary: PortfolioSummary): void {
+  try {
+    widgetMmkv.set(LAST_SUMMARY_KEY, JSON.stringify(summary))
+  } catch {
+    // Non-critical — refreshing just falls back to the minimal state.
+  }
+}
+
+function loadWidgetSummary(): PortfolioSummary | null {
+  try {
+    const raw = widgetMmkv.getString(LAST_SUMMARY_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as PortfolioSummary
+    if (typeof parsed.positionCount !== 'number') return null
+    return parsed
+  } catch {
+    return null
+  }
+}
 
 // ─── Shared types ────────────────────────────────────────────────────
 
@@ -36,12 +69,16 @@ function formatSolValue(value: number): string {
 }
 
 // ─── SVG Icons ───────────────────────────────────────────────────────
+// Stroke color is a parameter so the refresh icon can turn sage while a
+// refresh is in flight — a clear "active" signal at glance scale.
 
-const REFRESH_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${C.textMuted}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`
+function refreshIconSvg(stroke: string): string {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`
+}
 
 // ─── Shared header (title + refresh affordance) ──────────────────────
 
-function WidgetHeader({ title }: { title: string }) {
+function WidgetHeader({ title, refreshing = false }: { title: string; refreshing?: boolean }) {
   return (
     <FlexWidget
       style={{
@@ -70,7 +107,7 @@ function WidgetHeader({ title }: { title: string }) {
           justifyContent: 'center',
         }}
       >
-        <SvgWidget svg={REFRESH_ICON_SVG} style={{ width: 18, height: 18 }} />
+        <SvgWidget svg={refreshIconSvg(refreshing ? C.primary : C.textMuted)} style={{ width: 18, height: 18 }} />
       </FlexWidget>
     </FlexWidget>
   )
@@ -114,7 +151,15 @@ function StatColumn({ label, value, unit }: { label: string; value: string; unit
 
 // ─── Widget components ───────────────────────────────────────────────
 
-function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSummary; lastUpdated: string }) {
+function PortfolioSummaryWidget({
+  summary,
+  lastUpdated,
+  refreshing = false,
+}: {
+  summary: PortfolioSummary
+  lastUpdated: string
+  refreshing?: boolean
+}) {
   const isProfit = summary.totalPnlSol >= 0
   const pnlColor = isProfit ? C.primary : C.negative
   const sign = isProfit ? '+' : '-'
@@ -140,7 +185,7 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
         width: 'match_parent',
       }}
     >
-      <WidgetHeader title={titleText} />
+      <WidgetHeader title={titleText} refreshing={refreshing} />
 
       {/* HERO — PnL delta (colored), the glanceable answer to "how am I doing" */}
       <FlexWidget style={{ flexDirection: 'row', alignItems: 'flex-end', marginBottom: 2 }}>
@@ -206,7 +251,7 @@ function PortfolioSummaryWidget({ summary, lastUpdated }: { summary: PortfolioSu
         <StatColumn label="24H FEES / TVL" value={feesTvlDisplay} />
       </FlexWidget>
 
-      {/* Last updated timestamp */}
+      {/* Last updated timestamp — becomes "Updating…" while a refresh is in flight */}
       <TextWidget text={lastUpdated} style={{ fontSize: 9, color: C.textMuted, marginTop: 12 }} />
     </FlexWidget>
   )
@@ -264,6 +309,33 @@ function NoPositionsWidget({ lastUpdated }: { lastUpdated: string }) {
   )
 }
 
+/**
+ * Minimal "Updating portfolio…" state shown when a refresh is in flight but
+ * no cached summary exists yet (first-ever refresh, or cache was cleared).
+ * The sage refresh icon signals the tap was received.
+ */
+function UpdatingWidget() {
+  return (
+    <FlexWidget
+      clickAction="OPEN_APP"
+      style={{
+        backgroundColor: C.surface,
+        borderRadius: 24,
+        padding: 20,
+        flexDirection: 'column',
+        width: 'match_parent',
+      }}
+    >
+      <WidgetHeader title="PORTFOLIO" refreshing />
+      <FlexWidget
+        style={{ flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingVertical: 8 }}
+      >
+        <TextWidget text="Updating portfolio…" style={{ fontSize: 13, color: C.textSecondary, textAlign: 'center' }} />
+      </FlexWidget>
+    </FlexWidget>
+  )
+}
+
 // ─── Data fetching (works in both headless and in-app contexts) ───────
 
 export async function fetchPortfolioSummary(walletAddress: string): Promise<PortfolioSummary | null> {
@@ -288,19 +360,43 @@ export async function fetchPortfolioSummary(walletAddress: string): Promise<Port
 
 // ─── Shared render logic ─────────────────────────────────────────────
 
-export function buildWidgetTree(summary: PortfolioSummary | null): WidgetRepresentation {
+function formattedLastUpdated(): string {
   const lastUpdated = new Date().toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
   })
+  return `Updated ${lastUpdated}`
+}
 
+export function buildWidgetTree(summary: PortfolioSummary | null): WidgetRepresentation {
   if (!summary || summary.positionCount === 0) {
-    return <NoPositionsWidget lastUpdated={`Updated ${lastUpdated}`} />
+    return <NoPositionsWidget lastUpdated={formattedLastUpdated()} />
   }
 
-  return <PortfolioSummaryWidget summary={summary} lastUpdated={`Updated ${lastUpdated}`} />
+  // Cache the last good render so a subsequent refresh click can show the
+  // user's data (with an "Updating…" marker) instead of a blank.
+  saveWidgetSummary(summary)
+  return <PortfolioSummaryWidget summary={summary} lastUpdated={formattedLastUpdated()} />
 }
 
 export function buildErrorWidget(message: string): WidgetRepresentation {
   return <ErrorWidget message={message} />
+}
+
+/**
+ * Optimistic state to render the instant a refresh click reaches the
+ * handler, before the (slow) fetch completes. Shows the last cached
+ * summary with the refresh icon turned sage and the footer reading
+ * "Updating…"; falls back to a minimal UpdatingWidget if no cache exists.
+ *
+ * `renderWidget(buildRefreshingWidget())` is meant to be called immediately
+ * on REFRESH, followed by `renderWidget(buildWidgetTree(fresh))` once the
+ * fetch resolves — giving instant confirmation that the tap registered.
+ */
+export function buildRefreshingWidget(): WidgetRepresentation {
+  const cached = loadWidgetSummary()
+  if (cached) {
+    return <PortfolioSummaryWidget summary={cached} lastUpdated="Updating…" refreshing />
+  }
+  return <UpdatingWidget />
 }
