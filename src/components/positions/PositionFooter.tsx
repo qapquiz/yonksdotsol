@@ -11,6 +11,19 @@ interface PositionFooterProps {
   feesTvl24h: number | null
 }
 
+/**
+ * Fee display, separated from the chart by a hairline.
+ *
+ * Layout is chosen by value length, not uniformity:
+ * - The 24H FEES / TVL value is always short ("0.031%" / "—"), so it sits
+ *   inline on the right of its label.
+ * - The unrealized/claimed fee values are dual-token pairs
+ *   ("1234.56 BONK / 0.0023 SOL") and can run 30+ chars — those get a full
+ *   row each (label above, value below) so they never overflow.
+ *
+ * State is carried by color, not emoji: unrealized (accruing) → primary
+ * (sage), claimed → secondary (copper). USD sub-values sit under each value.
+ */
 function PositionFooterComponent({
   unrealizedFeesDisplay,
   claimedFeesDisplay,
@@ -21,40 +34,34 @@ function PositionFooterComponent({
   const pixelFont = usePixelFont()
 
   return (
-    // Label-left / value-right rows, separated from the chart by a hairline.
-    // State is carried by color, not emoji: unrealized (accruing) → primary
-    // (sage), claimed → secondary (copper). Sub-values (USD conversions) sit
-    // under each value, right-aligned.
     <View className="border-t border-app-border pt-4 gap-4">
-      <View className="flex-row items-start justify-between">
+      {/* Short value → inline label-left / value-right */}
+      <View className="flex-row items-center justify-between">
         <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">24H FEES / TVL</Text>
         <Text className="text-app-text text-sm" style={{ fontFamily: pixelFont }}>
           {formatFeesTvl24h(feesTvl24h)}
         </Text>
       </View>
 
-      <View className="flex-row items-start justify-between">
-        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">UNREALIZED FEES</Text>
-        <View className="items-end">
-          <Text className="text-app-primary text-sm" style={{ fontFamily: pixelFont }}>
-            {unrealizedFeesDisplay}
-          </Text>
-          <Text className="text-app-text-secondary text-xs mt-0.5" style={{ fontFamily: pixelFont }}>
-            {unrealizedFeesValue}
-          </Text>
-        </View>
+      {/* Long dual-token value → full row (label above, value below) */}
+      <View>
+        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">UNREALIZED FEES</Text>
+        <Text className="text-app-primary text-sm" style={{ fontFamily: pixelFont }}>
+          {unrealizedFeesDisplay}
+        </Text>
+        <Text className="text-app-text-secondary text-xs mt-0.5" style={{ fontFamily: pixelFont }}>
+          {unrealizedFeesValue}
+        </Text>
       </View>
 
-      <View className="flex-row items-start justify-between">
-        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">CLAIMED FEES</Text>
-        <View className="items-end">
-          <Text className="text-app-secondary text-sm" style={{ fontFamily: pixelFont }}>
-            {claimedFeesDisplay}
-          </Text>
-          <Text className="text-app-text-secondary text-xs mt-0.5" style={{ fontFamily: pixelFont }}>
-            {claimedFeesValue}
-          </Text>
-        </View>
+      <View>
+        <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-1">CLAIMED FEES</Text>
+        <Text className="text-app-secondary text-sm" style={{ fontFamily: pixelFont }}>
+          {claimedFeesDisplay}
+        </Text>
+        <Text className="text-app-text-secondary text-xs mt-0.5" style={{ fontFamily: pixelFont }}>
+          {claimedFeesValue}
+        </Text>
       </View>
     </View>
   )

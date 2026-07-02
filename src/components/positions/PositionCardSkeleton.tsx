@@ -21,11 +21,16 @@ function PositionCardSkeleton() {
         </View>
       </View>
 
-      {/* Chart section — matches LiquidityBarChart wrapper */}
-      <View className="bg-app-bg/50 rounded-xl p-4 mb-6 border border-app-border/50">
-        <View className="flex-row justify-between items-start mb-3">
+      {/* Chart-mode toggle — matches SegmentedControl (fill) */}
+      <View className="flex-row bg-app-bg/50 rounded-lg p-1 border border-app-border/50 mb-3">
+        <ShimmerBlock className="flex-1 h-5 rounded-md bg-app-border" />
+      </View>
+
+      {/* Chart — matches ChartPanel (flat on card, no nested box) */}
+      <View className="mb-4">
+        <View className="flex-row justify-between items-baseline mb-3">
           <ShimmerBlock className="w-28 h-3 rounded bg-app-border" />
-          <ShimmerBlock className="w-16 h-5 rounded bg-app-border" />
+          <ShimmerBlock className="w-16 h-3 rounded bg-app-border" />
         </View>
         {/* CHART_HEIGHT = 120 */}
         <ShimmerBlock className="h-[120px] rounded-lg bg-app-border" />
@@ -40,22 +45,27 @@ function PositionCardSkeleton() {
         </View>
       </View>
 
-      {/* Footer — matches PositionFooter: 24H FEES/TVL + two fee blocks */}
-      <View className="mb-4">
-        <ShimmerBlock className="w-16 h-3 rounded bg-app-border mb-1.5" />
-        <ShimmerBlock className="w-14 h-4 rounded bg-app-border" />
-      </View>
+      {/* Footer — matches PositionFooter: hairline + inline 24H + two full-width fee blocks */}
+      <View className="border-t border-app-border pt-4 gap-4">
+        {/* 24H FEES / TVL — inline label-left / value-right */}
+        <View className="flex-row items-center justify-between">
+          <ShimmerBlock className="w-20 h-3 rounded bg-app-border" />
+          <ShimmerBlock className="w-10 h-4 rounded bg-app-border" />
+        </View>
 
-      <View className="mb-4">
-        <ShimmerBlock className="w-28 h-3 rounded bg-app-border mb-1.5" />
-        <ShimmerBlock className="w-36 h-4 rounded bg-app-border" />
-        <ShimmerBlock className="w-20 h-3 rounded bg-app-border mt-1" />
-      </View>
+        {/* UNREALIZED FEES — full row */}
+        <View>
+          <ShimmerBlock className="w-28 h-3 rounded bg-app-border mb-1.5" />
+          <ShimmerBlock className="w-36 h-4 rounded bg-app-border" />
+          <ShimmerBlock className="w-20 h-3 rounded bg-app-border mt-1" />
+        </View>
 
-      <View>
-        <ShimmerBlock className="w-24 h-3 rounded bg-app-border mb-1.5" />
-        <ShimmerBlock className="w-36 h-4 rounded bg-app-border" />
-        <ShimmerBlock className="w-20 h-3 rounded bg-app-border mt-1" />
+        {/* CLAIMED FEES — full row */}
+        <View>
+          <ShimmerBlock className="w-24 h-3 rounded bg-app-border mb-1.5" />
+          <ShimmerBlock className="w-36 h-4 rounded bg-app-border" />
+          <ShimmerBlock className="w-20 h-3 rounded bg-app-border mt-1" />
+        </View>
       </View>
     </View>
   )
