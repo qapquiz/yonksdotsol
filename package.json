@@ -89,6 +89,8 @@
   },
   "private": true,
   "overrides": {
-    "uuid": "14.0.0"
+    "uuid": "14.0.0",
+    "expo-asset": "~57.0.3",
+    "expo-constants": "~57.0.3"
   }
 }
