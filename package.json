@@ -18,8 +18,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
-  "displayName": "Uniwind Mobile Kit Expo example",
-  "description": "A template for building a Solana mobile app with Expo, React Native, Solana Kit, and Uniwind.",
+  "displayName": "Yonks",
+  "description": "Track your Meteora DLMM positions on Solana.",
   "usecase": "Mobile",
   "keywords": [
     "expo",
