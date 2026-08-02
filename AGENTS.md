@@ -17,9 +17,11 @@ This file contains build commands and code style guidelines for agentic coding a
 ### Development
 
 - `bun run dev` - Start Expo dev server with cache reset
-- `bun run android` - Prebuild and run on Android
-- `bun run ios` - Prebuild and run on iOS
+- `bun run android` - Run on Android (`expo run:android`; run `android:build` first if no `android/` native project)
+- `bun run android:build` - Run Expo prebuild for Android (generates the `android/` native project)
+- `bun run ios` - Run on iOS (`expo run:ios`)
 - `bun run web` - Start web dev server
+- `bun run doctor` - Run `expo-doctor` to check project health
 - `bun start` - Start Expo without dev client
 
 ### Testing
@@ -112,9 +114,10 @@ This file contains build commands and code style guidelines for agentic coding a
 ### State Management
 
 - **Zustand** for global/shared state (`src/stores/`)
-  - `pnlStore.ts` — PnL calculations and position data
+  - `alertStore.ts` — out-of-range position alert state (MMKV-backed)
   - `settingsStore.ts` — app settings and preferences
   - `walletStore.ts` — wallet connection state
+- PnL is **not** held in a store — it's computed on demand by the service layer (`src/services/positionPipeline.ts`, via the `metcomet` library) with pure aggregation in `src/utils/positions/` (`computePositionViewData.ts`, `pnlAggregation.ts`).
 - React hooks for local component state
   - `useState` for simple values
   - `useReducer` for complex state logic
@@ -132,13 +135,13 @@ This file contains build commands and code style guidelines for agentic coding a
 - `/src/app/` - Expo Router pages (file-based routing)
 - `/src/components/` - Reusable UI components (`positions/`, `ui/`)
 - `/src/config/` - Configuration and constants (`connection.ts`, `env.ts`, `fonts.ts`, `theme.ts`, `cache.ts`)
-- `/src/contexts/` - React contexts (reserved for future use, currently empty)
-- `/src/hooks/` - Custom React hooks (`usePositionsPage`, `useWalletLifecycle`, `useThemeTokens`, `useWidgetSync`, `useFontConfig`)
-- `/src/services/` - Data fetching layer (`data.ts`)
-- `/src/stores/` - Zustand stores (`pnlStore`, `settingsStore`, `walletStore`)
+- `/src/hooks/` - Custom React hooks (`usePositionsPage`, `usePoolOhlcv`, `useWalletLifecycle`, `useThemeTokens`, `useWidgetSync`, `useFontConfig`)
+- `/src/services/` - Data fetching & PnL pipeline (`data.ts`, `positionPipeline.ts`, `ohlcv.ts`, `solPrice.ts`, `mockPortfolio.ts`)
+- `/src/stores/` - Zustand stores (`alertStore`, `settingsStore`, `walletStore`)
+- `/src/tasks/` - Background task handlers (`widgetBackgroundSync.ts` — out-of-range position alert checks)
 - `/src/tokens/` - Token lists (`index.ts`)
 - `/src/types/` - Shared TypeScript type definitions (`charts.d.ts`)
-- `/src/utils/` - Pure utility functions (`positions/`, `cache/`)
+- `/src/utils/` - Pure utility functions (`positions/`, `cache/`, `alerts/`)
 - `/src/widgets/` - Android home screen widget handlers (`portfolioWidgetTaskHandler.tsx`, `updatePortfolioWidget.tsx`)
 - `/src/__tests__/` - Vitest test files (mirrors `src/` structure)
 
@@ -186,7 +189,7 @@ Polyfills are loaded in this order (do **not** change):
 | `@solana/kit`                 | Solana SDK v2 (new API)                                   |
 | `@solana/web3.js`             | Solana SDK v1 (legacy, still used)                        |
 | `@meteora-ag/dlmm`            | Meteora DLMM pool integration                             |
-| `@shopify/flash-list`         | High-performance lists                                    |
+| `metcomet`                    | PnL fetching library (`fetchPositionPnL`, `PositionPnLData`) |
 | `react-native-mmkv`           | Fast persistent key-value storage                         |
 | `react-native-android-widget` | Android home screen widgets                               |
 | `react-native-quick-crypto`   | Crypto polyfill for Hermes                                |
@@ -270,3 +273,17 @@ Always run:
 - Use via `process.env.EXPO_PUBLIC_RPC_URL`
 - Access via `src/config/env.ts` (`env.rpcUrl`, `env.heliusApiKey`) — never use `process.env` directly in components
 - Zod validation is currently commented out; values are read directly from `process.env`
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as GitHub issues (via `gh`). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Five default triage labels (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — `CONTEXT.md` at root + `docs/adr/`. See `docs/agents/domain.md`.
