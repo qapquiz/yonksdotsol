@@ -30,7 +30,7 @@
     "tailwind"
   ],
   "main": "./index.js",
-  "version": "5.0.1",
+  "version": "5.1.0-alpha",
   "dependencies": {
     "@craftzdog/react-native-buffer": "^6.1.2",
     "@expo/vector-icons": "^15.1.1",
