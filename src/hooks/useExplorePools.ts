@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { applySafetyDefaults, fetchTopPools, type ExplorePool } from '../services/pools'
+import { applySafetyDefaults, fetchTopPools, type ExplorePool, type PoolOrderBy } from '../services/pools'
 
 export interface UseExplorePoolsResult {
-  /** Safety-filtered top pools (sorted by 24h volume desc). */
+  /** Safety-filtered top pools (sorted by the active order). */
   pools: ExplorePool[]
   /** Total pool count reported by the API (across all pages). */
   total: number
@@ -23,7 +23,7 @@ export interface UseExplorePoolsResult {
  * NOTE: pagination beyond page 1 is a future task — only the first page is
  * surfaced today.
  */
-export function useExplorePools(): UseExplorePoolsResult {
+export function useExplorePools(orderBy: PoolOrderBy = 'volume_usd_24h'): UseExplorePoolsResult {
   const [pools, setPools] = useState<ExplorePool[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -47,7 +47,7 @@ export function useExplorePools(): UseExplorePoolsResult {
     setLoading(true)
     setError(null)
 
-    fetchTopPools()
+    fetchTopPools({ orderBy })
       .then((page) => {
         if (!active || !mountedRef.current) return
         setTotal(page.total)
@@ -71,7 +71,7 @@ export function useExplorePools(): UseExplorePoolsResult {
     return () => {
       active = false
     }
-  }, [refreshKey])
+  }, [refreshKey, orderBy])
 
   return { pools, total, loading, error, refresh }
 }

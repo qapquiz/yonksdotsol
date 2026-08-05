@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { LegendList } from '@legendapp/list/react-native'
 import { StatusBar } from 'expo-status-bar'
 import { useRouter } from 'expo-router'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Pressable, RefreshControl, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -10,7 +10,7 @@ import { ExploreRow } from '../../components/explore/ExploreRow'
 import { ExploreRowSkeleton } from '../../components/explore/ExploreRowSkeleton'
 import { useExplorePools } from '../../hooks/useExplorePools'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
-import type { ExplorePool } from '../../services/pools'
+import type { ExplorePool, PoolOrderBy } from '../../services/pools'
 
 interface ExploreListItem {
   id: string
@@ -31,7 +31,8 @@ interface ExploreListItem {
 export default function ExploreScreen() {
   const router = useRouter()
   const tokens = useThemeTokens()
-  const { pools, loading, error, refresh } = useExplorePools()
+  const [orderBy, setOrderBy] = useState<PoolOrderBy>('volume_usd_24h')
+  const { pools, loading, error, refresh } = useExplorePools(orderBy)
 
   const handlePressRow = useCallback(
     (address: string) => {
@@ -73,6 +74,32 @@ export default function ExploreScreen() {
           <Text className="text-xs font-sans-bold uppercase tracking-wider text-app-text-secondary">Explore</Text>
           <Text className="text-lg text-app-text font-sans-bold">Top DLMM Pools</Text>
         </View>
+      </View>
+      <View className="flex-row gap-2 px-4 pb-2">
+        <Pressable
+          onPress={() => setOrderBy('volume_usd_24h')}
+          className={`rounded-full px-3 py-1.5 active:opacity-80 ${
+            orderBy === 'volume_usd_24h' ? 'border border-app-primary bg-app-primary-dim' : 'bg-app-surface-highlight'
+          }`}
+        >
+          <Text
+            className={`text-xs font-sans-bold ${orderBy === 'volume_usd_24h' ? 'text-app-primary' : 'text-app-text-secondary'}`}
+          >
+            24h Vol
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() => setOrderBy('apr')}
+          className={`rounded-full px-3 py-1.5 active:opacity-80 ${
+            orderBy === 'apr' ? 'border border-app-primary bg-app-primary-dim' : 'bg-app-surface-highlight'
+          }`}
+        >
+          <Text
+            className={`text-xs font-sans-bold ${orderBy === 'apr' ? 'text-app-primary' : 'text-app-text-secondary'}`}
+          >
+            APR
+          </Text>
+        </Pressable>
       </View>
 
       {showSkeleton ? (

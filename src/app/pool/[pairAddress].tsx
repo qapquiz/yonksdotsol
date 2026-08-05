@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
 import { useLocalSearchParams, useRouter } from 'expo-router'
-import { useCallback, useMemo } from 'react'
-import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
+import { useCallback, useEffect, useMemo } from 'react'
+import { BackHandler, Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { PoolDepthChart } from '../../components/pool/PoolDepthChart'
@@ -57,13 +57,22 @@ export default function PoolDepthScreen() {
     [positions, depth],
   )
 
+  // The pool screen is currently reachable only from the Explore tab. Expo
+  // Router tab switches don't push to the back stack, so a default back lands
+  // on the Portfolio (initial) tab instead of Explore — navigate to Explore
+  // explicitly. Revisit when Portfolio also links into /pool.
   const handleBack = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back()
-    } else {
-      router.replace('/')
-    }
+    router.replace('/explore')
   }, [router])
+
+  // Make Android hardware-back behave like the in-app back button.
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      handleBack()
+      return true
+    })
+    return () => subscription.remove()
+  }, [handleBack])
 
   // Current price label for the chart eyebrow: REST spot price is best,
   // falling back to the active bin's price from the on-chain depth.
