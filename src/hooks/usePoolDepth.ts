@@ -37,6 +37,8 @@ export interface PoolDepthData {
 export interface UsePoolDepthResult {
   meta: PoolMeta | null
   depth: PoolDepthData | null
+  /** The DLMM SDK instance bound to this pool — lets the position overlay reuse it. */
+  dlmm: DLMM | null
   loading: boolean
   error: Error | null
   refresh: () => void
@@ -80,7 +82,13 @@ function formatPriceLabel(price: number): string {
  * Build on-chain depth via the DLMM SDK. The chart's core data — bins,
  * active bin id, bin step, and token decimals/mints — all come from here.
  */
-async function loadOnChainDepth(pairAddress: string): Promise<PoolDepthData> {
+interface OnChainDepthResult {
+  depth: PoolDepthData
+  /** Returned alongside the depth so the position overlay can reuse the SDK instance. */
+  dlmm: DLMM
+}
+
+async function loadOnChainDepth(pairAddress: string): Promise<OnChainDepthResult> {
   const dlmm = await DLMM.create(getSharedConnection(), new PublicKey(pairAddress))
 
   const { activeBin, bins } = await dlmm.getBinsAroundActiveBin(BINS_EACH_SIDE, BINS_EACH_SIDE)
@@ -89,7 +97,7 @@ async function loadOnChainDepth(pairAddress: string): Promise<PoolDepthData> {
 
   const projected = bins.map((bin) => projectBin(bin, decimalsX, decimalsY))
 
-  return {
+  const depth: PoolDepthData = {
     bins: projected,
     activeBinId: activeBin,
     binStep: dlmm.lbPair.binStep,
@@ -98,6 +106,8 @@ async function loadOnChainDepth(pairAddress: string): Promise<PoolDepthData> {
     mintX: dlmm.tokenX.mint.address.toBase58(),
     mintY: dlmm.tokenY.mint.address.toBase58(),
   }
+
+  return { depth, dlmm }
 }
 
 // ─── Hook ────────────────────────────────────────────────────────────
@@ -113,6 +123,7 @@ async function loadOnChainDepth(pairAddress: string): Promise<PoolDepthData> {
 export function usePoolDepth(pairAddress: string | undefined): UsePoolDepthResult {
   const [meta, setMeta] = useState<PoolMeta | null>(null)
   const [depth, setDepth] = useState<PoolDepthData | null>(null)
+  const [dlmm, setDlmm] = useState<DLMM | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
@@ -144,13 +155,15 @@ export function usePoolDepth(pairAddress: string | undefined): UsePoolDepthResul
 
         // On-chain depth is the load-bearing fetch.
         if (depthResult.status === 'fulfilled') {
-          setDepth(depthResult.value)
+          setDepth(depthResult.value.depth)
+          setDlmm(depthResult.value.dlmm)
           setError(null)
         } else {
           const reason = depthResult.reason
           const err = reason instanceof Error ? reason : new Error(String(reason))
           console.error('[usePoolDepth] on-chain depth failed:', err)
           setDepth(null)
+          setDlmm(null)
           setError(err)
         }
 
@@ -175,5 +188,5 @@ export function usePoolDepth(pairAddress: string | undefined): UsePoolDepthResul
     }
   }, [pairAddress, refreshKey])
 
-  return { meta, depth, loading, error, refresh }
+  return { meta, depth, dlmm, loading, error, refresh }
 }

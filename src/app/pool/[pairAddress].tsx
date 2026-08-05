@@ -6,17 +6,23 @@ import { Pressable, RefreshControl, ScrollView, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { PoolDepthChart } from '../../components/pool/PoolDepthChart'
+import type { PositionOverlay } from '../../components/pool/PoolDepthChart'
 import { PoolDepthSkeleton } from '../../components/pool/PoolDepthSkeleton'
 import { PoolHeaderBadges } from '../../components/pool/PoolHeaderBadges'
+import { PoolPositionCard } from '../../components/pool/PoolPositionCard'
 import { usePoolDepth } from '../../hooks/usePoolDepth'
+import { usePoolPosition } from '../../hooks/usePoolPosition'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
+import { useWalletLifecycle } from '../../hooks/useWalletLifecycle'
 
 /**
  * Pool Depth view (v2 hero feature).
  *
- * Unauthenticated — no wallet required. Renders REST-sourced pool metadata
- * badges above an on-chain bin-by-bin liquidity depth chart with the active
- * bin highlighted. The position overlay is a later task.
+ * Unauthenticated base — no wallet required. Renders REST-sourced pool
+ * metadata badges above an on-chain bin-by-bin liquidity depth chart with the
+ * active bin highlighted. When a wallet is connected, the user's position(s)
+ * in this pool are overlaid on the chart (range + per-bin share, in/out-of
+ * range vs the active bin) and summarized in a card below.
  */
 export default function PoolDepthScreen() {
   const router = useRouter()
@@ -24,7 +30,32 @@ export default function PoolDepthScreen() {
   const params = useLocalSearchParams<{ pairAddress: string }>()
   const pairAddress = typeof params.pairAddress === 'string' ? params.pairAddress : undefined
 
-  const { meta, depth, loading, error, refresh } = usePoolDepth(pairAddress)
+  const { meta, depth, dlmm, loading, error, refresh } = usePoolDepth(pairAddress)
+
+  // Connected-wallet position overlay — reuses the depth view's DLMM instance.
+  // Hooked unconditionally; it no-ops while there's no wallet or no dlmm yet.
+  const { walletAddress, isConnecting, handleConnect } = useWalletLifecycle()
+  const {
+    positions,
+    loading: posLoading,
+    error: posError,
+    refresh: refreshPositions,
+  } = usePoolPosition(dlmm, walletAddress)
+
+  // Project positions onto the chart: range + per-bin share, with in/out-of
+  // range computed from the depth view's active bin so the overlay and the
+  // active-bin marker always agree.
+  const positionOverlays = useMemo<PositionOverlay[]>(
+    () =>
+      positions.map((p) => ({
+        id: p.id,
+        lowerBinId: p.lowerBinId,
+        upperBinId: p.upperBinId,
+        inRange: depth != null && depth.activeBinId >= p.lowerBinId && depth.activeBinId <= p.upperBinId,
+        bins: p.bins.map((b) => ({ binId: b.binId, share: b.share })),
+      })),
+    [positions, depth],
+  )
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -97,7 +128,7 @@ export default function PoolDepthScreen() {
 
           {depth ? (
             <View className="bg-app-surface rounded-3xl p-5 border border-app-border">
-              <PoolDepthChart depth={depth} currentPrice={currentPriceLabel} />
+              <PoolDepthChart depth={depth} currentPrice={currentPriceLabel} positionOverlays={positionOverlays} />
             </View>
           ) : (
             // REST meta resolved but on-chain bins still pending — keep the
@@ -106,6 +137,27 @@ export default function PoolDepthScreen() {
               <Text className="text-app-text-muted text-xs text-center py-10">Loading depth…</Text>
             </View>
           )}
+
+          {/* Connected-wallet position overlay summary. Non-blocking: depth
+              stays fully usable with no wallet, no position, or a failed fetch. */}
+          {depth ? (
+            <View className="mt-4">
+              <PoolPositionCard
+                walletAddress={walletAddress}
+                isConnecting={isConnecting}
+                loading={posLoading}
+                error={posError}
+                positions={positions}
+                activeBinId={depth.activeBinId}
+                decimalsX={depth.decimalsX}
+                decimalsY={depth.decimalsY}
+                symbolX={meta?.symbolX ?? null}
+                symbolY={meta?.symbolY ?? null}
+                onConnect={handleConnect}
+                onRetry={refreshPositions}
+              />
+            </View>
+          ) : null}
 
           {error && depth && (
             <View className="mt-4 flex-row items-center gap-2 px-1">
