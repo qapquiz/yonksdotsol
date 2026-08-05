@@ -6,11 +6,11 @@ import { useCallback, useMemo } from 'react'
 import { Pressable, RefreshControl, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import { ExploreRow } from '../components/explore/ExploreRow'
-import { ExploreRowSkeleton } from '../components/explore/ExploreRowSkeleton'
-import { useExplorePools } from '../hooks/useExplorePools'
-import { useThemeTokens } from '../hooks/useThemeTokens'
-import type { ExplorePool } from '../services/pools'
+import { ExploreRow } from '../../components/explore/ExploreRow'
+import { ExploreRowSkeleton } from '../../components/explore/ExploreRowSkeleton'
+import { useExplorePools } from '../../hooks/useExplorePools'
+import { useThemeTokens } from '../../hooks/useThemeTokens'
+import type { ExplorePool } from '../../services/pools'
 
 interface ExploreListItem {
   id: string
@@ -32,14 +32,6 @@ export default function ExploreScreen() {
   const router = useRouter()
   const tokens = useThemeTokens()
   const { pools, loading, error, refresh } = useExplorePools()
-
-  const handleBack = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back()
-    } else {
-      router.replace('/')
-    }
-  }, [router])
 
   const handlePressRow = useCallback(
     (address: string) => {
@@ -77,12 +69,6 @@ export default function ExploreScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: tokens.bg }}>
       {/* Top bar */}
       <View className="px-4 py-3 flex-row items-center gap-3">
-        <Pressable
-          onPress={handleBack}
-          className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
-        >
-          <Ionicons name="chevron-back" size={22} color={tokens.textSecondary} />
-        </Pressable>
         <View className="flex-1">
           <Text className="text-xs font-sans-bold uppercase tracking-wider text-app-text-secondary">Explore</Text>
           <Text className="text-lg text-app-text font-sans-bold">Top DLMM Pools</Text>
