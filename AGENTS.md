@@ -180,21 +180,21 @@ Polyfills are loaded in this order (do **not** change):
 
 ## Key Dependencies
 
-| Package                       | Purpose                                                   |
-| ----------------------------- | --------------------------------------------------------- |
-| `expo-router`                 | File-based routing                                        |
-| `zustand`                     | Global state management (stores in `src/stores/`)         |
-| `uniwind`                     | Tailwind CSS for React Native                             |
-| `@wallet-ui/react-native-kit` | Solana wallet connection                                  |
-| `@solana/kit`                 | Solana SDK v2 (new API)                                   |
-| `@solana/web3.js`             | Solana SDK v1 (legacy, still used)                        |
-| `@meteora-ag/dlmm`            | Meteora DLMM pool integration                             |
+| Package                       | Purpose                                                      |
+| ----------------------------- | ------------------------------------------------------------ |
+| `expo-router`                 | File-based routing                                           |
+| `zustand`                     | Global state management (stores in `src/stores/`)            |
+| `uniwind`                     | Tailwind CSS for React Native                                |
+| `@wallet-ui/react-native-kit` | Solana wallet connection                                     |
+| `@solana/kit`                 | Solana SDK v2 (new API)                                      |
+| `@solana/web3.js`             | Solana SDK v1 (legacy, still used)                           |
+| `@meteora-ag/dlmm`            | Meteora DLMM pool integration                                |
 | `metcomet`                    | PnL fetching library (`fetchPositionPnL`, `PositionPnLData`) |
-| `react-native-mmkv`           | Fast persistent key-value storage                         |
-| `react-native-android-widget` | Android home screen widgets                               |
-| `react-native-quick-crypto`   | Crypto polyfill for Hermes                                |
-| `zod`                         | Schema validation (available, currently unused in env.ts) |
-| `vitest`                      | Test framework                                            |
+| `react-native-mmkv`           | Fast persistent key-value storage                            |
+| `react-native-android-widget` | Android home screen widgets                                  |
+| `react-native-quick-crypto`   | Crypto polyfill for Hermes                                   |
+| `zod`                         | Schema validation (available, currently unused in env.ts)    |
+| `vitest`                      | Test framework                                               |
 
 ## Domain Terminology
 
