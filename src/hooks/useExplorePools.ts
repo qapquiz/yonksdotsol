@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { applySafetyDefaults, fetchTopPools, type ExplorePool, type PoolOrderBy } from '../services/pools'
 
 export interface UseExplorePoolsResult {
-  /** Safety-filtered top pools (sorted by the active order). */
+  /** Safety-filtered pools, client-sorted by the active sort. */
   pools: ExplorePool[]
   /** Total pool count reported by the API (across all pages). */
   total: number
@@ -12,19 +12,23 @@ export interface UseExplorePoolsResult {
   refresh: () => void
 }
 
+/** Candidate page size — larger than the API default (10) so APR (client-sorted) has more to rank. */
+const CANDIDATE_PAGE_SIZE = 100
+
 /**
- * Load the Explore discovery list: page-1 top-volume DLMM pools from the
- * Meteora REST API, filtered client-side by the safety defaults (Token X
- * market cap + 24h volume floors).
+ * Load the Explore discovery list.
  *
- * Unauthenticated — no wallet required. Mirrors the usePoolDepth lifecycle:
- * mounted guard, refreshKey-driven reload, try/catch with console.error.
+ * The Meteora `/pools` endpoint does NOT honor `order_by=apr` (it silently
+ * returns the volume order), so APR sorting is done client-side: fetch a
+ * larger top-volume page as the candidate set, apply the safety defaults
+ * (Token X market cap + 24h volume floors), then sort by the user's choice —
+ * volume keeps the API order; APR re-orders the filtered set by apr desc.
  *
- * NOTE: pagination beyond page 1 is a future task — only the first page is
- * surfaced today.
+ * Unauthenticated — no wallet required. NOTE: pagination beyond this
+ * candidate page is a future task.
  */
-export function useExplorePools(orderBy: PoolOrderBy = 'volume_usd_24h'): UseExplorePoolsResult {
-  const [pools, setPools] = useState<ExplorePool[]>([])
+export function useExplorePools(sortBy: PoolOrderBy = 'volume_usd_24h'): UseExplorePoolsResult {
+  const [filtered, setFiltered] = useState<ExplorePool[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -47,18 +51,18 @@ export function useExplorePools(orderBy: PoolOrderBy = 'volume_usd_24h'): UseExp
     setLoading(true)
     setError(null)
 
-    fetchTopPools({ orderBy })
+    fetchTopPools({ orderBy: 'volume_usd_24h', pageSize: CANDIDATE_PAGE_SIZE })
       .then((page) => {
         if (!active || !mountedRef.current) return
         setTotal(page.total)
-        setPools(applySafetyDefaults(page.pools))
+        setFiltered(applySafetyDefaults(page.pools))
         setError(null)
       })
       .catch((reason: unknown) => {
         if (!active || !mountedRef.current) return
         const err = reason instanceof Error ? reason : new Error(String(reason))
         console.error('[useExplorePools] fetch failed:', err)
-        setPools([])
+        setFiltered([])
         setTotal(0)
         setError(err)
       })
@@ -71,7 +75,14 @@ export function useExplorePools(orderBy: PoolOrderBy = 'volume_usd_24h'): UseExp
     return () => {
       active = false
     }
-  }, [refreshKey, orderBy])
+  }, [refreshKey])
+
+  const pools = useMemo(() => {
+    if (sortBy === 'apr') {
+      return [...filtered].sort((a, b) => (b.apr ?? -Infinity) - (a.apr ?? -Infinity))
+    }
+    return filtered
+  }, [filtered, sortBy])
 
   return { pools, total, loading, error, refresh }
 }

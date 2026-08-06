@@ -132,12 +132,16 @@ export async function fetchTopPools(options?: {
   orderBy?: PoolOrderBy
   orderDir?: OrderDir
   page?: number
+  pageSize?: number
 }): Promise<ExplorePoolsPage> {
   const orderBy = options?.orderBy ?? 'volume_usd_24h'
   const orderDir = options?.orderDir ?? 'desc'
   const page = options?.page ?? 1
+  const pageSize = options?.pageSize
 
-  const url = `${METEORA_DLMM_API}/pools?order_by=${orderBy}&order_dir=${orderDir}&page=${page}`
+  const url = `${METEORA_DLMM_API}/pools?order_by=${orderBy}&order_dir=${orderDir}&page=${page}${
+    pageSize ? `&page_size=${pageSize}` : ''
+  }`
 
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
