@@ -144,6 +144,7 @@ export default function ExploreScreen() {
           contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 32 }}
           refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={tokens.refreshTint} />}
           recycleItems
+          estimatedItemSize={140}
         />
       )}
 

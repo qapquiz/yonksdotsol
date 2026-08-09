@@ -110,7 +110,7 @@ export default function PositionsList({
       ListFooterComponent={<View className="h-20" />}
       contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8 }}
       refreshControl={<RefreshControl refreshing={loading} onRefresh={refresh} tintColor={tokens.refreshTint} />}
-      recycleItems
+      estimatedItemSize={440}
     />
   )
 }
