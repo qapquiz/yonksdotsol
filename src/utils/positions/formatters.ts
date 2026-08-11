@@ -65,3 +65,17 @@ export function formatFeesTvl24h(feePerTvl: number | null): string {
   if (pct >= 100) return `${pct.toFixed(0)}%`
   return `${pct.toFixed(2)}%`
 }
+
+/** "−$X.XX/hr" with a true minus sign for the urgency hero (USD mode). */
+export function formatForegoneRateUsdPerHour(usdPerHour: number): string {
+  if (!Number.isFinite(usdPerHour) || usdPerHour <= 0) return '$0.00/hr'
+  return `−$${usdPerHour.toFixed(2)}/hr`
+}
+
+/** "−X.XXXX SOL/hr" for the urgency hero (SOL mode); USD value converted via the live SOL price. */
+export function formatForegoneRateSolPerHour(usdPerHour: number, solUsdPrice: number | null): string {
+  if (!Number.isFinite(usdPerHour) || usdPerHour <= 0) return '0.0000 SOL/hr'
+  if (solUsdPrice == null || !Number.isFinite(solUsdPrice) || solUsdPrice <= 0) return '— SOL/hr'
+  const sol = usdPerHour / solUsdPrice
+  return `−${sol.toFixed(4)} SOL/hr`
+}

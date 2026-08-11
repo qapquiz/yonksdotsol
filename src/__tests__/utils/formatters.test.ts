@@ -7,6 +7,8 @@ import {
   formatUPNLDisplay,
   parseFeePerTvl24h,
   formatFeesTvl24h,
+  formatForegoneRateUsdPerHour,
+  formatForegoneRateSolPerHour,
 } from '../../utils/positions/formatters'
 
 describe('formatUSD', () => {
@@ -201,5 +203,41 @@ describe('formatFeesTvl24h', () => {
   it('returns an em dash for null or non-finite input', () => {
     expect(formatFeesTvl24h(null)).toBe('—')
     expect(formatFeesTvl24h(Number.NaN)).toBe('—')
+  })
+})
+
+describe('formatForegoneRateUsdPerHour', () => {
+  it('renders a positive rate with a true minus sign', () => {
+    expect(formatForegoneRateUsdPerHour(12.5)).toBe('−$12.50/hr')
+  })
+
+  it('renders zero/negative as a flat $0.00/hr', () => {
+    expect(formatForegoneRateUsdPerHour(0)).toBe('$0.00/hr')
+    expect(formatForegoneRateUsdPerHour(-1)).toBe('$0.00/hr')
+  })
+
+  it('renders non-finite as $0.00/hr', () => {
+    expect(formatForegoneRateUsdPerHour(Number.NaN)).toBe('$0.00/hr')
+  })
+})
+
+describe('formatForegoneRateSolPerHour', () => {
+  it('converts a USD rate to SOL via the live price', () => {
+    // $12.00/hr at $120/SOL = 0.1000 SOL/hr
+    expect(formatForegoneRateSolPerHour(12, 120)).toBe('−0.1000 SOL/hr')
+  })
+
+  it('renders zero/negative USD as 0.0000 SOL/hr', () => {
+    expect(formatForegoneRateSolPerHour(0, 120)).toBe('0.0000 SOL/hr')
+    expect(formatForegoneRateSolPerHour(-1, 120)).toBe('0.0000 SOL/hr')
+  })
+
+  it('returns an em dash when the SOL price is missing', () => {
+    expect(formatForegoneRateSolPerHour(12, null)).toBe('— SOL/hr')
+    expect(formatForegoneRateSolPerHour(12, 0)).toBe('— SOL/hr')
+  })
+
+  it('renders non-finite USD as 0.0000 SOL/hr', () => {
+    expect(formatForegoneRateSolPerHour(Number.NaN, 120)).toBe('0.0000 SOL/hr')
   })
 })
