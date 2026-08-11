@@ -12,9 +12,15 @@ function ExploreRowSkeletonComponent() {
   return (
     <View className="bg-app-surface rounded-2xl p-4 mb-3 border border-app-border">
       <View className="flex-row items-center justify-between mb-3">
-        <View className="flex-1 mr-3">
-          <ShimmerBlock className="h-4 bg-app-border rounded w-32 mb-1.5" />
-          <ShimmerBlock className="h-2.5 bg-app-border rounded w-20" />
+        <View className="flex-row items-center flex-1 mr-3 gap-3">
+          <View className="flex-row">
+            <ShimmerBlock className="w-8 h-8 rounded-full bg-app-border z-10" />
+            <ShimmerBlock className="w-8 h-8 rounded-full bg-app-border -ml-3" />
+          </View>
+          <View className="flex-1">
+            <ShimmerBlock className="h-4 bg-app-border rounded w-32 mb-1.5" />
+            <ShimmerBlock className="h-2.5 bg-app-border rounded w-20" />
+          </View>
         </View>
         <View className="items-end">
           <ShimmerBlock className="h-2.5 bg-app-border rounded w-8 mb-1" />

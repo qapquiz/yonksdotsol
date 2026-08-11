@@ -10,11 +10,15 @@ import { ExploreRow } from '../../components/explore/ExploreRow'
 import { ExploreRowSkeleton } from '../../components/explore/ExploreRowSkeleton'
 import { useExplorePools } from '../../hooks/useExplorePools'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
+import { useTokenLogos } from '../../hooks/useTokenLogos'
 import type { ExplorePool, PoolOrderBy } from '../../services/pools'
+import type { TokenLogo } from '../../tokens'
 
 interface ExploreListItem {
   id: string
   pool: ExplorePool
+  tokenXInfo: TokenLogo | null
+  tokenYInfo: TokenLogo | null
 }
 
 /**
@@ -42,11 +46,33 @@ export default function ExploreScreen() {
   )
 
   const renderItem = useCallback(
-    ({ item }: { item: ExploreListItem }) => <ExploreRow pool={item.pool} onPress={handlePressRow} />,
+    ({ item }: { item: ExploreListItem }) => (
+      <ExploreRow pool={item.pool} tokenXInfo={item.tokenXInfo} tokenYInfo={item.tokenYInfo} onPress={handlePressRow} />
+    ),
     [handlePressRow],
   )
 
-  const listData = useMemo<ExploreListItem[]>(() => pools.map((pool) => ({ id: pool.address, pool })), [pools])
+  const mints = useMemo(() => {
+    const set = new Set<string>()
+    for (const pool of pools) {
+      if (pool.mintX) set.add(pool.mintX)
+      if (pool.mintY) set.add(pool.mintY)
+    }
+    return Array.from(set)
+  }, [pools])
+
+  const tokenLogos = useTokenLogos(mints)
+
+  const listData = useMemo<ExploreListItem[]>(
+    () =>
+      pools.map((pool) => ({
+        id: pool.address,
+        pool,
+        tokenXInfo: pool.mintX ? (tokenLogos.get(pool.mintX) ?? null) : null,
+        tokenYInfo: pool.mintY ? (tokenLogos.get(pool.mintY) ?? null) : null,
+      })),
+    [pools, tokenLogos],
+  )
 
   // Stale-state banner: a refresh that failed while prior data is still on
   // screen. It overlays the Data state and never replaces it.

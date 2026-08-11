@@ -1,10 +1,19 @@
 import { memo, useState } from 'react'
 import { Image, Text, View } from 'react-native'
-import type { TokenInfo } from '../../tokens'
+
+/**
+ * Minimal icon source — anything with an optional logo URL + symbol. Both the
+ * full `TokenInfo` (positions) and the lighter `TokenLogo` (explore) satisfy
+ * this; the component only reads these two fields.
+ */
+export interface TokenIconSource {
+  cdn_url?: string | null
+  symbol?: string | null
+}
 
 interface TokenIconsProps {
-  tokenXInfo: TokenInfo | null
-  tokenYInfo: TokenInfo | null
+  tokenXInfo?: TokenIconSource | null
+  tokenYInfo?: TokenIconSource | null
 }
 
 function TokenIconsComponent({ tokenXInfo, tokenYInfo }: TokenIconsProps) {

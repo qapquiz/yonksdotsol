@@ -34,6 +34,10 @@ export interface ExplorePool {
   symbolX: string | null
   /** Quote token (Token Y) symbol */
   symbolY: string | null
+  /** Base token (Token X) mint address — used to resolve its icon */
+  mintX: string | null
+  /** Quote token (Token Y) mint address — used to resolve its icon */
+  mintY: string | null
   /** Bin step (price increment basis points) */
   binStep: number | null
   /** Total value locked in USD */
@@ -85,6 +89,7 @@ interface RawPool {
 }
 
 interface RawTokenMeta {
+  address?: string
   symbol?: string
   market_cap?: number | string
 }
@@ -112,6 +117,8 @@ function projectPool(raw: RawPool): ExplorePool | null {
     name: raw.name ?? null,
     symbolX: baseMeta?.symbol ?? null,
     symbolY: quoteMeta?.symbol ?? null,
+    mintX: baseMeta?.address ?? null,
+    mintY: quoteMeta?.address ?? null,
     binStep: num(raw.pool_config?.bin_step),
     tvl: num(raw.tvl),
     apr: num(raw.apr),

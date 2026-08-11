@@ -1,12 +1,15 @@
 import { memo, useCallback } from 'react'
 import { Pressable, Text, View } from 'react-native'
 
+import { TokenIcons, type TokenIconSource } from '../ui/TokenIcons'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
 import { formatUSD } from '../../utils/positions/formatters'
 import type { ExplorePool } from '../../services/pools'
 
 interface ExploreRowProps {
   pool: ExplorePool
+  tokenXInfo?: TokenIconSource | null
+  tokenYInfo?: TokenIconSource | null
   onPress: (address: string) => void
 }
 
@@ -45,7 +48,7 @@ function Stat({ label, value, accent = false }: StatProps) {
   )
 }
 
-function ExploreRowComponent({ pool, onPress }: ExploreRowProps) {
+function ExploreRowComponent({ pool, tokenXInfo = null, tokenYInfo = null, onPress }: ExploreRowProps) {
   const tokens = useThemeTokens()
   const handlePress = useCallback(() => onPress(pool.address), [onPress, pool.address])
 
@@ -60,13 +63,16 @@ function ExploreRowComponent({ pool, onPress }: ExploreRowProps) {
       style={({ pressed }) => (pressed ? { borderColor: tokens.primary } : undefined)}
     >
       <View className="flex-row items-center justify-between mb-3">
-        <View className="flex-1 mr-3">
-          <Text className="text-base text-app-text font-sans-bold" numberOfLines={1}>
-            {title}
-          </Text>
-          <Text className="text-app-text-muted text-[11px] font-mono mt-0.5">
-            {symbolX} / {symbolY}
-          </Text>
+        <View className="flex-row items-center flex-1 mr-3 gap-3">
+          <TokenIcons tokenXInfo={tokenXInfo} tokenYInfo={tokenYInfo} />
+          <View className="flex-1 min-w-0">
+            <Text className="text-base text-app-text font-sans-bold" numberOfLines={1}>
+              {title}
+            </Text>
+            <Text className="text-app-text-muted text-[11px] font-mono mt-0.5">
+              {symbolX} / {symbolY}
+            </Text>
+          </View>
         </View>
         <View className="items-end">
           <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider mb-0.5">APR</Text>

@@ -4,7 +4,7 @@ import type { TokenInfo } from '../../tokens'
 import { usePixelFont } from '../../hooks/useFontConfig'
 import { formatUPNLDisplay, formatUPNLDisplaySol } from '../../utils/positions/formatters'
 import { useSettingsStore } from '../../stores/settingsStore'
-import { TokenIcons } from './TokenIcons'
+import { TokenIcons } from '../ui/TokenIcons'
 
 interface PositionHeaderProps {
   tokenXInfo: TokenInfo | null

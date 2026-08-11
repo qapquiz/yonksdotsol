@@ -12,6 +12,17 @@ export interface TokenInfo {
   }
 }
 
+/**
+ * Minimal token-icon source: just the logo URL + symbol, keyed by mint.
+ * Used by the icon avatar (and any view that only needs a logo). Lighter than
+ * `TokenInfo` — fetched from Jupiter's token API rather than a DAS `getAsset`.
+ */
+export interface TokenLogo {
+  mint: string
+  symbol: string | null
+  cdn_url: string | null
+}
+
 /** Wrapped SOL mint — used to fetch a live SOL→USD price via the token service. */
 export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
 
