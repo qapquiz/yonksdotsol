@@ -166,7 +166,16 @@ describe('computeTriage', () => {
 
   it('places an out-of-range position in the bleeding tier and sums its rate', () => {
     const res = computeTriage(
-      [{ positionId: 'a', pairAddress: 'p1', totalValueUsd: 1000, feesTvl24h: 0.0131, inRange: false, liquidityShape: null }],
+      [
+        {
+          positionId: 'a',
+          pairAddress: 'p1',
+          totalValueUsd: 1000,
+          feesTvl24h: 0.0131,
+          inRange: false,
+          liquidityShape: null,
+        },
+      ],
       {},
     )
     expect(res.items).toHaveLength(1)
@@ -178,7 +187,16 @@ describe('computeTriage', () => {
   it('places a near-edge in-range position in tier 2 WITHOUT adding to the total', () => {
     const shape = makeShape({ min: 100, max: 110, active: 101 })
     const res = computeTriage(
-      [{ positionId: 'b', pairAddress: 'p2', totalValueUsd: 500, feesTvl24h: 0.02, inRange: true, liquidityShape: shape }],
+      [
+        {
+          positionId: 'b',
+          pairAddress: 'p2',
+          totalValueUsd: 500,
+          feesTvl24h: 0.02,
+          inRange: true,
+          liquidityShape: shape,
+        },
+      ],
       {}, // no candles → timeToEdgeHours null
     )
     expect(res.items).toHaveLength(1)
@@ -191,8 +209,22 @@ describe('computeTriage', () => {
   it('sorts bleeding items by foregone rate descending', () => {
     const res = computeTriage(
       [
-        { positionId: 'small', pairAddress: 'p', totalValueUsd: 100, feesTvl24h: 0.01, inRange: false, liquidityShape: null },
-        { positionId: 'big', pairAddress: 'p', totalValueUsd: 10000, feesTvl24h: 0.01, inRange: false, liquidityShape: null },
+        {
+          positionId: 'small',
+          pairAddress: 'p',
+          totalValueUsd: 100,
+          feesTvl24h: 0.01,
+          inRange: false,
+          liquidityShape: null,
+        },
+        {
+          positionId: 'big',
+          pairAddress: 'p',
+          totalValueUsd: 10000,
+          feesTvl24h: 0.01,
+          inRange: false,
+          liquidityShape: null,
+        },
       ],
       {},
     )
@@ -207,8 +239,22 @@ describe('computeTriage', () => {
     const fastCandles = candles([1.05, 1.045, 1.04, 1.035, 1.03, 1.025, 1.02]) // → 4h for edge 1.00 from 1.02
     const res = computeTriage(
       [
-        { positionId: 'unknown', pairAddress: 'px', totalValueUsd: 1, feesTvl24h: 0.01, inRange: true, liquidityShape: slowShape },
-        { positionId: 'fast', pairAddress: 'pf', totalValueUsd: 1, feesTvl24h: 0.01, inRange: true, liquidityShape: fastShape },
+        {
+          positionId: 'unknown',
+          pairAddress: 'px',
+          totalValueUsd: 1,
+          feesTvl24h: 0.01,
+          inRange: true,
+          liquidityShape: slowShape,
+        },
+        {
+          positionId: 'fast',
+          pairAddress: 'pf',
+          totalValueUsd: 1,
+          feesTvl24h: 0.01,
+          inRange: true,
+          liquidityShape: fastShape,
+        },
       ],
       { pf: fastCandles }, // px has no candles → null
     )
@@ -222,8 +268,22 @@ describe('computeTriage', () => {
     const nearShape = makeShape({ min: 100, max: 110, active: 101 })
     const res = computeTriage(
       [
-        { positionId: 'near', pairAddress: 'p2', totalValueUsd: 500, feesTvl24h: 0.02, inRange: true, liquidityShape: nearShape },
-        { positionId: 'bleed', pairAddress: 'p1', totalValueUsd: 1000, feesTvl24h: 0.0131, inRange: false, liquidityShape: null },
+        {
+          positionId: 'near',
+          pairAddress: 'p2',
+          totalValueUsd: 500,
+          feesTvl24h: 0.02,
+          inRange: true,
+          liquidityShape: nearShape,
+        },
+        {
+          positionId: 'bleed',
+          pairAddress: 'p1',
+          totalValueUsd: 1000,
+          feesTvl24h: 0.0131,
+          inRange: false,
+          liquidityShape: null,
+        },
       ],
       {},
     )

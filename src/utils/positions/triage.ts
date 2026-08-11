@@ -67,7 +67,10 @@ export function isNearEdge(s: NearEdgeInput): boolean {
  *
  * Display-only estimate (ADR 0001); never feeds any stored figure.
  */
-export function timeToEdgeHours(args: { liquidityShape: LiquidityShape | null; candles: OhlcvCandle[] }): number | null {
+export function timeToEdgeHours(args: {
+  liquidityShape: LiquidityShape | null
+  candles: OhlcvCandle[]
+}): number | null {
   const shape = args.liquidityShape
   const candles = args.candles
   if (!shape || candles.length < 2) return null
