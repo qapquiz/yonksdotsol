@@ -18,6 +18,14 @@
 >   Two higher-leverage findings are identified but **not yet planned** (see
 >   "Findings identified in Pass 3 but not yet planned" below) — pick them up
 >   as 010/011 when ready.
+> - **013 (2026-06-24, `/grilling` direction plan, app commit `7496775`)** — a
+>   standalone **direction/design plan** (not an audit): the at-a-glance triage
+>   redesign from a `/grilling` session. Flips the home fold from a PnL hero to
+>   a foregone-fee **urgency rate** + two-tier triage queue, adds a claimable-
+>   fees push trigger (extending the DONE 001 alert system), and mirrors
+>   reactive urgency onto the widget. Phased A→(B∥C)→D; Phase A is the core
+>   unbuilt value. Fences held: Android-primary, single-wallet, pull-based, no
+>   server.
 >
 > Each plan is self-contained: an executor with no prior context can run it from
 > the file + the repo alone. Read each plan fully before starting, honor its
@@ -37,6 +45,8 @@
 | 008  | Document PnL semantics in the wiki | P2 | S | — | TODO |
 | 009  | Non-interactive price-movement chart + position min/max range band (in-card) | P2 | M | — | TODO |
 | 012  | Housekeeping sweep — dead code, `.env.example`, stale wiki links | P3 | S | — | DONE (deleted 5 dead exports + 19 tests; wired clearRangeState on disconnect; added .env.example; README bun + DEV_MOCK; removed stale PnLStore/useUpnlPerPosition wiki refs incl. 3 reconciled files; tsgo/lint/fmt/test 124 all exit 0) |
+| 013  | At-a-glance triage redesign (urgency hero + triage queue + fees push + widget mirror) | P1 (A) / P2 (B, C) / P3 (D) | L (phased) | 001 (done) | TODO — Phase A (home reshape) first; B ∥ C after A; D last |
+| 013a | Phase A — home first-fold reshape (urgency hero + two-tier triage queue) | P1 | L | 013 (design) | TODO — step-by-step executor plan in `013a-home-reshape.md` |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale).
 
@@ -105,6 +115,24 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
   yet planned" below). When written, 010 (usePositionsPage robustness) is the
   highest-leverage remaining item; 011 (background-sync range snapshots) is
   independent and builds on the already-DONE 001 alert infrastructure.
+
+### 013 (standalone direction plan)
+
+- **013 is a direction/design plan**, not a step-by-step executor plan —
+  elaborate each phase into a step-by-step plan (à la 001) when dispatching it.
+- **Phase A is a hard prerequisite for B and C** — both consume the numeric
+  `totalValueUsd` / `unrealizedFeesUsd` fields A.0 adds to `PositionViewModel`
+  (today those exist only as formatted `$X.XX` strings).
+- **B and C are independent** of each other after A; parallelize them.
+- **013 builds on the DONE 001 alert infrastructure** (detector + `alertStore` +
+  `widgetBackgroundSync` + `expo-notifications`) — Phase B extends it with a
+  sibling fees detector + hysteresis state, reusing the single `alertsEnabled`
+  toggle.
+- **Watch for overlap with proposed 011** (background-sync range snapshots):
+  both touch `widgetBackgroundSync.ts`'s alert block. If 011 lands first, Phase
+  B's fees detector attaches to whatever snapshot path 011 establishes.
+- **Recommended order:** A → (B ∥ C) → D.
+- **Phase A is elaborated as a step-by-step executor plan in [`013a-home-reshape.md`](./013a-home-reshape.md)** (à la 001). 013 stays the direction/roadmap doc; elaborate B / C / D the same way when dispatching them.
 
 ## Execute log
 
@@ -291,6 +319,24 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 - **008 — PnL semantics wiki page:** record the findings (USD canonical, SOL
   derived; historical-per-event vs live SOL pricing; why the % doesn't change on
   toggle) so the next person doesn't re-derive them.
+
+### 013 (standalone direction plan)
+
+- **013 — At-a-glance triage redesign:** the product of a `/grilling` session
+  ("make this the best at-a-glance app for Meteora"). For an active rebalancer,
+  beat Meteora on *time-to-answer* by making the glance say **how urgently must I
+  act**, not *how am I doing*. **Phase A** reshapes the home first-fold: a
+  foregone-fee urgency hero ("$X/hr not earning") + a two-tier triage queue
+  ("Bleeding now" / "About to bleed"), with PnL demoted and reclaiming the hero
+  automatically when all clear. Near-edge detection is proactive (trigger =
+  bins-from-edge ≤ 2; display = time-to-edge from OHLCV drift) and lives only on
+  the fresh on-open fetch. **Phase B** adds a claimable-fees push trigger
+  (threshold `max(0.5% of value, $5)`, edge-detected with hysteresis) to the
+  existing Plan 001 30-min background task. **Phase C** mirrors reactive urgency
+  onto the Android widget (no near-edge — a 30-min-stale prediction isn't
+  honest). **Phase D** is light polish. The governing principle: *staleness of
+  the channel decides how far a signal may travel* — reactive everywhere,
+  proactive on fresh fetch only.
 
 ### 009 (standalone feature plan)
 
