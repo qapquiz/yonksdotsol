@@ -1,11 +1,14 @@
 import { memo, useMemo, type ReactNode } from 'react'
 import { Text, View } from 'react-native'
 import type { PortfolioSummaryData } from '../../hooks/usePositionsPage'
+import type { ResolvedPosition } from '../../services/positionPipeline'
+import type { TriageResult } from '../../utils/positions/triage'
 import { usePixelFont } from '../../hooks/useFontConfig'
 import { SegmentedControl } from '../ui/SegmentedControl'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { formatFeesTvl24h, formatUsdFromSol, type DisplayCurrency } from '../../utils/positions/formatters'
 import PortfolioSummarySkeleton from './PortfolioSummarySkeleton'
+import { TriageView } from './TriageView'
 
 interface PortfolioSummaryProps {
   summary: PortfolioSummaryData | null
@@ -13,6 +16,12 @@ interface PortfolioSummaryProps {
   positionCount: number
   /** Live SOL→USD price; used when displayCurrency === 'USD' */
   solUsdPrice: number | null
+  /** Triage result; when non-null with items, switches the fold to urgency mode. */
+  triage: TriageResult | null
+  /** Positions, for the triage queue to resolve pair labels/icons. */
+  positions: ResolvedPosition[]
+  /** True while near-edge OHLCV velocity is still loading. */
+  velocityLoading: boolean
 }
 
 function formatSmallValue(value: number): { leadingText: string; superscript: string; digits: string } | null {
@@ -102,10 +111,26 @@ function Stat({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-function PortfolioSummaryComponent({ summary, hasData, positionCount, solUsdPrice }: PortfolioSummaryProps) {
+function PortfolioSummaryComponent({
+  summary,
+  hasData,
+  positionCount,
+  solUsdPrice,
+  triage,
+  positions,
+  velocityLoading,
+}: PortfolioSummaryProps) {
   const pixelFont = usePixelFont()
   const displayCurrency = useSettingsStore((s) => s.displayCurrency)
   const setDisplayCurrency = useSettingsStore((s) => s.setDisplayCurrency)
+
+  // TRIAGE MODE — urgency hero + queue take precedence over the PnL hero.
+  // The all-clear path below is byte-identical to the pre-triage design.
+  if (triage && triage.items.length > 0) {
+    return (
+      <TriageView triage={triage} positions={positions} solUsdPrice={solUsdPrice} velocityLoading={velocityLoading} />
+    )
+  }
 
   if (positionCount > 0 && !hasData) {
     return <PortfolioSummarySkeleton />

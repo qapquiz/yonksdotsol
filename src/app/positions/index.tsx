@@ -1,12 +1,13 @@
 import { LegendList } from '@legendapp/list/react-native'
 import { useCallback, useMemo } from 'react'
-import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import { RefreshControl, ScrollView, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
 import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PortfolioSummarySkeleton from '../../components/positions/PortfolioSummarySkeleton'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
+import { useTriage } from '../../hooks/useTriage'
 import type { ResolvedPosition, PortfolioSummaryData } from '../../hooks/usePositionsPage'
 
 interface PositionsListProps {
@@ -28,7 +29,6 @@ export default function PositionsList({
   positions,
   summary,
   hasPnLData,
-  outOfRangeCount,
   positionCount,
   loading,
   tokenDataReady,
@@ -38,6 +38,7 @@ export default function PositionsList({
   refresh,
 }: PositionsListProps) {
   const tokens = useThemeTokens()
+  const { triage, velocityLoading } = useTriage(positions)
 
   const listData = useMemo(() => positions.map((resolved) => ({ id: resolved.id, resolved })), [positions])
 
@@ -51,26 +52,17 @@ export default function PositionsList({
 
   const listHeader = useMemo(
     () => (
-      <>
-        <PortfolioSummary
-          summary={summary}
-          hasData={hasPnLData}
-          positionCount={positionCount}
-          solUsdPrice={solUsdPrice}
-        />
-        {outOfRangeCount > 0 && (
-          <View className="flex-row items-center gap-2 mb-4 px-1">
-            <View className="w-4 h-4 rounded-full bg-app-secondary-dim items-center justify-center">
-              <Text className="text-app-secondary text-[10px] font-sans-bold">!</Text>
-            </View>
-            <Text className="text-app-secondary text-xs font-sans-bold">
-              {outOfRangeCount} {outOfRangeCount === 1 ? 'position' : 'positions'} out of range
-            </Text>
-          </View>
-        )}
-      </>
+      <PortfolioSummary
+        summary={summary}
+        hasData={hasPnLData}
+        positionCount={positionCount}
+        solUsdPrice={solUsdPrice}
+        triage={triage}
+        positions={positions}
+        velocityLoading={velocityLoading}
+      />
     ),
-    [summary, hasPnLData, positionCount, outOfRangeCount, solUsdPrice],
+    [summary, hasPnLData, positionCount, solUsdPrice, triage, positions, velocityLoading],
   )
 
   // Show skeleton until wallet is resolved, positions fetch completes, AND token

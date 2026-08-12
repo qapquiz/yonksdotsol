@@ -120,13 +120,21 @@ function vm(
   pnlSolPctChange: number,
   feesTvl24h: number,
 ): Omit<PositionViewModel, 'liquidityShape'> & { liquidityShape: null } {
+  // Derive numeric USD values from the "$X.XX" strings so dev-mock triage
+  // (foregone-fee rate, claimable-fees threshold) exercises real numbers.
+  const parseUsd = (s: string): number => {
+    const n = parseFloat(s.replace(/[$,]/g, ''))
+    return Number.isFinite(n) ? n : 0
+  }
   return {
     totalValue,
+    totalValueUsd: parseUsd(totalValue),
     inRange,
     currentPrice,
     unrealizedFeesDisplay,
     claimedFeesDisplay,
     unrealizedFeesValue,
+    unrealizedFeesUsd: parseUsd(unrealizedFeesValue),
     claimedFeesValue,
     liquidityShape: null,
     pnlSol,

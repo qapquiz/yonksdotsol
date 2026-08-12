@@ -31,6 +31,8 @@ export interface LiquidityShape {
 export interface PositionViewModel {
   /** "$X.XX" formatted total position value */
   totalValue: string
+  /** Raw numeric total position value in USD (for triage math). */
+  totalValueUsd: number
   /** Whether position is in the active bin range */
   inRange: boolean
   /** Current price as formatted string */
@@ -41,6 +43,8 @@ export interface PositionViewModel {
   claimedFeesDisplay: string
   /** Unrealized fees value as "$X.XX" */
   unrealizedFeesValue: string
+  /** Raw numeric unrealized (unclaimed) fees in USD. */
+  unrealizedFeesUsd: number
   /** Claimed fees value as "$X.XX" */
   claimedFeesValue: string
   /** Liquidity chart data */
@@ -161,17 +165,16 @@ export function computePositionViewData(input: ComputePositionViewDataInput): Po
   const hasTokenData = tokenXInfo !== null && tokenYInfo !== null
 
   // Inline: totalValue = formatUSD(calculateTokenPairUSD(...))
-  const totalValue =
+  const totalValueUsd =
     positionData && hasTokenData
-      ? formatUSD(
-          calculateTokenPairUSD(
-            BigInt(positionData.totalXAmount),
-            BigInt(positionData.totalYAmount),
-            tokenXInfo,
-            tokenYInfo,
-          ),
+      ? calculateTokenPairUSD(
+          BigInt(positionData.totalXAmount),
+          BigInt(positionData.totalYAmount),
+          tokenXInfo,
+          tokenYInfo,
         )
-      : '$0.00'
+      : 0
+  const totalValue = positionData && hasTokenData ? formatUSD(totalValueUsd) : '$0.00'
 
   // Inline: calculateIsInRange = activeId >= lowerBinId && activeId <= upperBinId
   const inRange = positionData ? activeId >= positionData.lowerBinId && activeId <= positionData.upperBinId : false
@@ -196,17 +199,16 @@ export function computePositionViewData(input: ComputePositionViewDataInput): Po
       : '-'
 
   // Inline: unrealizedFeesValue = formatUSD(calculateTokenPairUSD(...))
-  const unrealizedFeesValue =
+  const unrealizedFeesUsd =
     tokenXInfo && tokenYInfo && positionData
-      ? formatUSD(
-          calculateTokenPairUSD(
-            BigInt(positionData.feeX.toString()),
-            BigInt(positionData.feeY.toString()),
-            tokenXInfo,
-            tokenYInfo,
-          ),
+      ? calculateTokenPairUSD(
+          BigInt(positionData.feeX.toString()),
+          BigInt(positionData.feeY.toString()),
+          tokenXInfo,
+          tokenYInfo,
         )
-      : '$0.00'
+      : 0
+  const unrealizedFeesValue = tokenXInfo && tokenYInfo && positionData ? formatUSD(unrealizedFeesUsd) : '$0.00'
 
   // Inline: claimedFeesValue = formatUSD(calculateTokenPairUSD(...))
   const claimedFeesValue =
@@ -239,11 +241,13 @@ export function computePositionViewData(input: ComputePositionViewDataInput): Po
 
   return {
     totalValue,
+    totalValueUsd,
     inRange,
     currentPrice,
     unrealizedFeesDisplay,
     claimedFeesDisplay,
     unrealizedFeesValue,
+    unrealizedFeesUsd,
     claimedFeesValue,
     liquidityShape,
     pnlSol: pnlData?.pnlSol ?? null,
