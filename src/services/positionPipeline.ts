@@ -86,15 +86,20 @@ function pnlCacheKey(poolAddress: string, walletAddress: string): string {
 
 export class PositionPipeline {
   private readonly cache: CacheManager
-  private readonly connection: Connection
+  /** Resolved lazily — constructing the pipeline must not require an RPC URL (web mock mode) */
+  private readonly injectedConnection: Connection | undefined
   private readonly heliusApiKey: string | undefined
   private readonly dataServices: DataServices
 
   constructor(deps?: PipelineDeps) {
     this.cache = deps?.cache ?? CacheManager.getInstance()
-    this.connection = deps?.connection ?? getSharedConnection()
+    this.injectedConnection = deps?.connection
     this.heliusApiKey = deps?.heliusApiKey ?? env.heliusApiKey
     this.dataServices = deps?.dataServices ?? createDataServices(this.cache)
+  }
+
+  private get connection(): Connection {
+    return this.injectedConnection ?? getSharedConnection()
   }
 
   /**

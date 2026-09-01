@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { env } from '../config/env'
+import { createMockPortfolioResult, MOCK_SOL_USD_PRICE } from '../services/mockPortfolio'
 import { createPositionPipeline, type PortfolioResult } from '../services/positionPipeline'
-import { createMockPortfolioResult } from '../services/mockPortfolio'
 import { getCurrentSolUsdPrice } from '../services/solPrice'
 
 // ─── Re-export types for consumers ───────────────────────────────────
@@ -46,7 +46,9 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
   const [result, setResult] = useState<PortfolioResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [tokenDataReady, setTokenDataReady] = useState(false)
-  const [solUsdPrice, setSolUsdPrice] = useState<number | null>(null)
+  // Mock mode seeds the SOL price synchronously (no RPC on web); live mode
+  // starts null and is filled by the wallet-change / refresh effects below.
+  const [solUsdPrice, setSolUsdPrice] = useState<number | null>(env.devMock ? MOCK_SOL_USD_PRICE : null)
 
   // ── Wallet change: invalidate old data, fetch new ──
   const prevWalletRef = useRef<string | null>(null)
@@ -117,14 +119,6 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       .then(setSolUsdPrice)
       .catch(() => setSolUsdPrice(null))
   }, [walletAddress, pipeline])
-
-  // ── Dev mock mode: fetch SOL price once on mount so USD display is testable ──
-  useEffect(() => {
-    if (!env.devMock) return
-    getCurrentSolUsdPrice()
-      .then(setSolUsdPrice)
-      .catch(() => setSolUsdPrice(null))
-  }, [])
 
   // ── Dev mock mode: return static portfolio, bypass the pipeline ──
   // When "disconnected" (no wallet address), return empty data so the

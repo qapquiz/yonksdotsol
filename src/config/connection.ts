@@ -5,7 +5,12 @@ let instance: Connection | null = null
 
 export function getSharedConnection(): Connection {
   if (!instance) {
-    instance = new Connection(env.rpcUrl || '')
+    if (!env.rpcUrl) {
+      throw new Error(
+        'EXPO_PUBLIC_RPC_URL is not set — copy .env.example to .env and set your RPC endpoint before fetching on-chain data.',
+      )
+    }
+    instance = new Connection(env.rpcUrl)
   }
   return instance
 }

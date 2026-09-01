@@ -21,6 +21,9 @@ import type { TokenInfo } from '../tokens'
 /** Stable fake address surfaced in the header while in dev mock mode */
 export const MOCK_WALLET_ADDRESS = 'DeVMoCK1Wallet11111111111111111111111111111111'
 
+/** Mock SOL→USD price — must stay in sync with TOKENS.SOL below */
+export const MOCK_SOL_USD_PRICE = 145.0
+
 // ─── Well-known token mint addresses ─────────────────────────────────
 
 const MINT = {
@@ -43,7 +46,7 @@ function token(mint: string, symbol: string, decimals: number, price: number): T
 }
 
 const TOKENS = {
-  SOL: token(MINT.SOL, 'SOL', 9, 145.0),
+  SOL: token(MINT.SOL, 'SOL', 9, MOCK_SOL_USD_PRICE),
   USDC: token(MINT.USDC, 'USDC', 6, 1.0),
   BONK: token(MINT.BONK, 'BONK', 5, 0.0000285),
   JUP: token(MINT.JUP, 'JUP', 6, 0.78),

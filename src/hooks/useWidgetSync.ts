@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { AppState } from 'react-native'
 import { requestWidgetUpdate } from 'react-native-android-widget'
+import { env } from '../config/env'
 import { getStoredWalletAddress } from '../stores/walletStore'
 import { registerWidgetBackgroundSync } from '../tasks/widgetBackgroundSync'
 import { buildErrorWidget, buildWidgetTree, fetchPortfolioSummary } from '../widgets/updatePortfolioWidget'
@@ -24,6 +25,8 @@ export function useWidgetSync() {
   const intervalRef = useRef<ReturnType<typeof globalThis.setInterval> | null>(null)
 
   async function updateWidget() {
+    // Mock mode: never fetch on-chain data or push the real widget
+    if (env.devMock) return
     const walletAddress = getStoredWalletAddress()
     if (!walletAddress) return
 
@@ -94,7 +97,11 @@ export function useWidgetSync() {
     startPeriodicTimer()
 
     // Register background fetch so widget updates while app is closed
-    registerWidgetBackgroundSync().catch((e) => console.error('useWidgetSync: failed to register background sync:', e))
+    if (!env.devMock) {
+      registerWidgetBackgroundSync().catch((e) =>
+        console.error('useWidgetSync: failed to register background sync:', e),
+      )
+    }
 
     return () => {
       subscription.remove()

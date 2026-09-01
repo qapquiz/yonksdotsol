@@ -1,4 +1,4 @@
-import { useMobileWallet } from '@wallet-ui/react-native-kit'
+import { useMobileWallet } from '../wallet/walletKit'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { env } from '../config/env'
 import { MOCK_WALLET_ADDRESS } from '../services/mockPortfolio'
