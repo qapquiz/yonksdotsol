@@ -6,7 +6,9 @@
   "trailingComma": "all",
   "sortPackageJson": false,
   "ignorePatterns": [
+    "/.agents",
     "/.expo",
+    "/.pi",
     "/android",
     "/coverage",
     "/dist",
