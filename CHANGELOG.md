@@ -5,6 +5,30 @@ All notable changes to **Yonks** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [5.0.2] - 2026-09-02
+
+### Added
+
+- **Web mock preview** — run the full app UI in a browser from the Pi
+  (`bun run web`) using dev-mock data, for layout iteration without an
+  emulator. Web auto-enables mock mode; native-only seams (polyfills,
+  wallet adapter, widget sync) are stubbed via `.web.*` platform files.
+- Vendored Expo agent skills (`.agents/skills`, `.pi/skills` symlinks,
+  `skills-lock.json`).
+
+### Changed
+
+- **Bumped Expo SDK 57 patch to 57.0.18** (from 57.0.2) — fixes the
+  Hermes V1 memory regression affecting `react-native-reanimated` /
+  `react-native-worklets`; includes react-native 0.86.3 and
+  SDK-aligned package bumps.
+
+### Fixed
+
+- Solana `Connection` is now created lazily — a missing
+  `EXPO_PUBLIC_RPC_URL` fails only when fetching, with an actionable
+  error, instead of crashing the position pipeline at render.
+
 ## [5.0.0] - 2026-07-03
 
 First **stable** release. This version promotes the accumulated work from the
