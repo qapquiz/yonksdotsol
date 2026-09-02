@@ -42,6 +42,10 @@ describe('theme tokens', () => {
     expect(cssColors['surface']).toBe(themeTokens.dark.surface)
     expect(cssColors['text']).toBe(themeTokens.dark.text)
     expect(cssColors['border']).toBe(themeTokens.dark.border)
+    expect(cssColors['onPrimary']?.toLowerCase()).toBe(themeTokens.dark.onPrimary.toLowerCase())
+    expect(cssColors['onSecondary']?.toLowerCase()).toBe(themeTokens.dark.onSecondary.toLowerCase())
+    expect(cssColors['primaryDimText']?.toLowerCase()).toBe(themeTokens.dark.primaryDimText.toLowerCase())
+    expect(cssColors['negativeDimText']?.toLowerCase()).toBe(themeTokens.dark.negativeDimText.toLowerCase())
   })
 
   it('light theme CSS colors match themeTokens', () => {
@@ -51,5 +55,9 @@ describe('theme tokens', () => {
     expect(cssColors['surface']).toBe(themeTokens.light.surface)
     expect(cssColors['text']).toBe(themeTokens.light.text)
     expect(cssColors['border']).toBe(themeTokens.light.border)
+    expect(cssColors['onPrimary']?.toLowerCase()).toBe(themeTokens.light.onPrimary.toLowerCase())
+    expect(cssColors['onSecondary']?.toLowerCase()).toBe(themeTokens.light.onSecondary.toLowerCase())
+    expect(cssColors['primaryDimText']?.toLowerCase()).toBe(themeTokens.light.primaryDimText.toLowerCase())
+    expect(cssColors['negativeDimText']?.toLowerCase()).toBe(themeTokens.light.negativeDimText.toLowerCase())
   })
 })

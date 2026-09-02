@@ -10,8 +10,8 @@ The visual design system for the Yonks app. This is the **source of truth** for 
 
 Yonks is a Solana DLMM positions tracker. The design is **earthy and instrument-like**, not the usual neon-on-black crypto aesthetic. Two accents do all the work:
 
-- **Sage** (`#8FA893` / `#6b8f71`) — the primary. It means _good_: profit, in-range, accruing, connected, selected.
-- **Copper** (`#d4955f` / `#c07a3e`) — the secondary. It means _attention_: out-of-range, caution, claimed fees.
+- **Sage** (`#8FA893` / `#5a7a60`) — the primary. It means _good_: profit, in-range, accruing, connected, selected.
+- **Copper** (`#d4955f` / `#a5652f`) — the secondary. It means _attention_: out-of-range, caution, claimed fees.
 
 A single **clay-red** (`#c97064` / `#b55044`) — `negative` — is the only non-accent hue, reserved for loss and error. Everything else is neutral grayscale. Numerics use a pixel/mono typeface, giving values a readout/instrument quality. Dark mode is the default and the more considered of the two themes.
 
@@ -23,41 +23,51 @@ Every color is a token. Never use raw Tailwind palette classes (`emerald-400`, `
 
 ### Dark (default)
 
-| Token                   | Hex       | Role                                                            |
-| ----------------------- | --------- | --------------------------------------------------------------- |
-| `app-bg`                | `#050505` | Screen background (`SafeAreaView`)                              |
-| `app-surface`           | `#151515` | Card backgrounds                                                |
-| `app-surface-highlight` | `#252525` | Recessed fills, icon-button backgrounds, sheet handle           |
-| `app-border`            | `#333333` | Borders, dividers, **skeleton blocks**, chart grid derivation   |
-| `app-primary`           | `#8FA893` | Sage — profit, in-range, selected, connected, price line        |
-| `app-primary-dim`       | `#2a332c` | Sage tint — selected segment, in-range badge bg, avatar ring    |
-| `app-primary-dark`      | `#3e4f43` | Darker sage variant (reserved)                                  |
-| `app-secondary`         | `#d4955f` | Copper — out-of-range, caution, claimed fees, "below price" bar |
-| `app-secondary-dim`     | `#332619` | Copper tint — out-of-range badge bg                             |
-| `app-negative`          | `#c97064` | Clay-red — loss, error                                          |
-| `app-negative-dim`      | `#3a2222` | Clay-red tint — reserved for badge backgrounds                  |
-| `app-text`              | `#ffffff` | Primary text                                                    |
-| `app-text-secondary`    | `#aaaaaa` | Secondary labels, chip text                                     |
-| `app-text-muted`        | `#777777` | Eyebrows, captions, muted text, "above price" legend            |
+| Token                    | Hex       | Role                                                            |
+| ------------------------ | --------- | --------------------------------------------------------------- |
+| `app-bg`                 | `#050505` | Screen background (`SafeAreaView`)                              |
+| `app-surface`            | `#151515` | Card backgrounds                                                |
+| `app-surface-highlight`  | `#252525` | Recessed fills, icon-button backgrounds, sheet handle           |
+| `app-border`             | `#333333` | Borders, dividers, **skeleton blocks**, chart grid derivation   |
+| `app-primary`            | `#8FA893` | Sage — profit, in-range, selected, connected, price line        |
+| `app-primary-dim`        | `#2a332c` | Sage tint — selected segment, in-range badge bg, avatar ring    |
+| `app-primary-dim-text`   | `#8FA893` | Text on `primaryDim` (on-container pair)                        |
+| `app-primary-dark`       | `#3e4f43` | Darker sage variant (reserved)                                  |
+| `app-on-primary`         | `#050505` | Text/icons on full `primary` fills (7.95:1)                     |
+| `app-secondary`          | `#d4955f` | Copper — out-of-range, caution, claimed fees, "below price" bar |
+| `app-secondary-dim`      | `#332619` | Copper tint — out-of-range badge bg                             |
+| `app-secondary-dim-text` | `#d4955f` | Text on `secondaryDim` (on-container pair)                      |
+| `app-on-secondary`       | `#1a1a1a` | Text/icons on full `secondary` fills (6.85:1) — dev banner      |
+| `app-negative`           | `#c97064` | Clay-red — loss, error                                          |
+| `app-negative-dim`       | `#3a2222` | Clay-red tint — reserved for badge backgrounds                  |
+| `app-negative-dim-text`  | `#d4897e` | Text on `negativeDim` (5.36:1 — never raw `negative` there)     |
+| `app-text`               | `#ffffff` | Primary text                                                    |
+| `app-text-secondary`     | `#aaaaaa` | Secondary labels, chip text                                     |
+| `app-text-muted`         | `#909090` | Eyebrows, captions, muted text, "above price" legend            |
 
 ### Light
 
-| Token                   | Hex       | Role                               |
-| ----------------------- | --------- | ---------------------------------- |
-| `app-bg`                | `#f5f5f5` | Screen background                  |
-| `app-surface`           | `#ffffff` | Card backgrounds                   |
-| `app-surface-highlight` | `#eeeeee` | Recessed fills, icon buttons       |
-| `app-border`            | `#e0e0e0` | Borders, dividers, skeleton blocks |
-| `app-primary`           | `#6b8f71` | Sage (accent)                      |
-| `app-primary-dim`       | `#dce8de` | Sage tint                          |
-| `app-primary-dark`      | `#a3c4a8` | Sage variant                       |
-| `app-secondary`         | `#c07a3e` | Copper (accent)                    |
-| `app-secondary-dim`     | `#f5e6d5` | Copper tint                        |
-| `app-negative`          | `#b55044` | Clay-red (loss/error)              |
-| `app-negative-dim`      | `#f5ddd8` | Clay-red tint                      |
-| `app-text`              | `#1a1a1a` | Primary text                       |
-| `app-text-secondary`    | `#666666` | Secondary labels                   |
-| `app-text-muted`        | `#999999` | Eyebrows, captions                 |
+| Token                    | Hex       | Role                                          |
+| ------------------------ | --------- | --------------------------------------------- |
+| `app-bg`                 | `#f5f5f5` | Screen background                             |
+| `app-surface`            | `#ffffff` | Card backgrounds                              |
+| `app-surface-highlight`  | `#eeeeee` | Recessed fills, icon buttons                  |
+| `app-border`             | `#e0e0e0` | Borders, dividers, skeleton blocks            |
+| `app-primary`            | `#5a7a60` | Sage (accent)                                 |
+| `app-primary-dim`        | `#dce8de` | Sage tint                                     |
+| `app-primary-dim-text`   | `#3e5a45` | Text on `primaryDim` (on-container)           |
+| `app-primary-dark`       | `#a3c4a8` | Sage variant                                  |
+| `app-on-primary`         | `#ffffff` | Text/icons on full `primary` fills (4.79:1)   |
+| `app-secondary`          | `#a5652f` | Copper (accent)                               |
+| `app-secondary-dim`      | `#f5e6d5` | Copper tint                                   |
+| `app-secondary-dim-text` | `#7d4a20` | Text on `secondaryDim` (on-container)         |
+| `app-on-secondary`       | `#ffffff` | Text/icons on full `secondary` fills (4.66:1) |
+| `app-negative`           | `#b55044` | Clay-red (loss/error)                         |
+| `app-negative-dim`       | `#f5ddd8` | Clay-red tint                                 |
+| `app-negative-dim-text`  | `#8a3d33` | Text on `negativeDim` (5.80:1)                |
+| `app-text`               | `#1a1a1a` | Primary text                                  |
+| `app-text-secondary`     | `#666666` | Secondary labels                              |
+| `app-text-muted`         | `#737373` | Eyebrows, captions                            |
 
 ---
 
@@ -73,7 +83,7 @@ This is the core convention. State colors are **mapped onto the accent palette**
 | Selected / active control      | `app-primary-dim` bg + `app-primary` text | Segmented control, font picker                |
 | Neutral recessed               | `app-surface-highlight`                   | Icon buttons, count badge bg                  |
 
-**Badge background rule:** pair a `-dim` background with the matching accent text. This replaces the old raw-`/20`-alpha hacks (`bg-emerald-500/20`) which didn't theme.
+**On-container / on-accent rule:** text or icons on a tinted fill always use the paired on-color token, never the raw accent — `primaryDim`/`secondaryDim`/`negativeDim` take their `-dim-text` partners, and full-strength `primary`/`secondary` fills take `app-on-primary`/`app-on-secondary`. This replaces the old raw-`/20`-alpha hacks (`bg-emerald-500/20`) which didn't theme.
 
 ---
 
@@ -230,7 +240,7 @@ Charts render in SVG, so colors can't use Uniwind classes — they read tokens v
 
 - **Never use raw Tailwind palette classes** (`emerald-*`, `red-*`, `orange-*`, `amber-*`, `cyan-*`, `zinc-*`, …). They don't theme and clash with the palette.
 - **Never use `font-bold`** — use `font-sans-bold`.
-- **Never hardcode hex in components.** Read from `useThemeTokens()`. (The single sanctioned exception is the dev-only banner, which is intentionally fixed dark-on-copper across both themes.)
+- **Never hardcode hex in components.** Read from `useThemeTokens()`. No exceptions — the dev-mode banner uses `app-on-secondary` on `app-secondary`.
 - **Never duplicate `ShimmerBlock`** or the chart panel wrapper — import the shared one.
 - **Never mix inline `style` and `className`** for the same property — inline wins.
 

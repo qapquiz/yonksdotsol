@@ -63,7 +63,7 @@ function FontPickerComponent({ visible, onClose }: FontPickerProps) {
                       </Text>
                       {isSelected && (
                         <View className="w-5 h-5 rounded-full bg-app-primary items-center justify-center">
-                          <Ionicons name="checkmark" size={14} color={tokens.bg} />
+                          <Ionicons name="checkmark" size={14} color={tokens.onPrimary} />
                         </View>
                       )}
                     </View>

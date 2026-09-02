@@ -21,6 +21,12 @@ export interface ThemeTokens {
   secondaryDimText: string
   /** Text color for content sitting on `primaryDim` (container/on-container pair) */
   primaryDimText: string
+  /** Text/icon color on full-strength `primary` fills (on-accent pair) */
+  onPrimary: string
+  /** Text/icon color on full-strength `secondary` fills (on-accent pair) */
+  onSecondary: string
+  /** Text color for content sitting on `negativeDim` (container/on-container pair) */
+  negativeDimText: string
   /** Surface/card background */
   surface: string
   /** Surface highlight (borders, subtle backgrounds) */
@@ -49,10 +55,13 @@ export const themeTokens = {
     secondaryDim: '#332619',
     secondaryDimText: '#d4955f',
     primaryDimText: '#8FA893',
+    onPrimary: '#050505',
+    onSecondary: '#1a1a1a',
     negative: '#c97064',
-    // Pairing note: text on negativeDim is 4.18:1 — below AA for small text.
-    // Don't set body/label copy in `negative` on `negativeDim` backgrounds.
+    // Pairing note: use negativeDimText (not negative) for copy on negativeDim —
+    // raw negative on negativeDim is 4.18:1, below AA for small text.
     negativeDim: '#3a2222',
+    negativeDimText: '#d4897e',
     surface: '#151515',
     surfaceHighlight: '#252525',
     text: '#ffffff',
@@ -71,8 +80,11 @@ export const themeTokens = {
     secondaryDim: '#f5e6d5',
     secondaryDimText: '#7d4a20',
     primaryDimText: '#3e5a45',
+    onPrimary: '#ffffff',
+    onSecondary: '#ffffff',
     negative: '#b55044',
     negativeDim: '#f5ddd8',
+    negativeDimText: '#8a3d33',
     surface: '#ffffff',
     surfaceHighlight: '#eeeeee',
     text: '#1a1a1a',

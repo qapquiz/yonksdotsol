@@ -20,13 +20,17 @@
       --color-app-primary: #8fa893;
       --color-app-primary-dim: #2a332c;
       --color-app-primary-dark: #3e4f43;
+      --color-app-primary-dim-text: #8fa893;
+      --color-app-on-primary: #050505;
 
       --color-app-secondary: #d4955f;
       --color-app-secondary-dim: #332619;
       --color-app-secondary-dim-text: #d4955f;
+      --color-app-on-secondary: #1a1a1a;
 
       --color-app-negative: #c97064;
       --color-app-negative-dim: #3a2222;
+      --color-app-negative-dim-text: #d4897e;
 
       --color-app-text: #ffffff;
       --color-app-text-secondary: #aaaaaa;
@@ -44,13 +48,16 @@
       --color-app-primary-dim: #dce8de;
       --color-app-primary-dark: #a3c4a8;
       --color-app-primary-dim-text: #3e5a45;
+      --color-app-on-primary: #ffffff;
 
       --color-app-secondary: #a5652f;
       --color-app-secondary-dim: #f5e6d5;
       --color-app-secondary-dim-text: #7d4a20;
+      --color-app-on-secondary: #ffffff;
 
       --color-app-negative: #b55044;
       --color-app-negative-dim: #f5ddd8;
+      --color-app-negative-dim-text: #8a3d33;
 
       --color-app-text: #1a1a1a;
       --color-app-text-secondary: #666666;
