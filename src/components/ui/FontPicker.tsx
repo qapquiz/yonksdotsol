@@ -56,7 +56,7 @@ function FontPickerComponent({ visible, onClose }: FontPickerProps) {
                   >
                     <View className="flex-row items-center justify-between mb-2">
                       <Text
-                        className={`text-base ${isSelected ? 'text-app-primary' : 'text-app-text'}`}
+                        className={`text-base ${isSelected ? 'text-app-primary-dim-text' : 'text-app-text'}`}
                         style={{ fontFamily: option.fontFamily }}
                       >
                         {option.label}

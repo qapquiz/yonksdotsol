@@ -17,6 +17,10 @@ export interface ThemeTokens {
   negativeDim: string
   /** Secondary accent, dimmed variant */
   secondaryDim: string
+  /** Text color for content sitting on `secondaryDim` (container/on-container pair) */
+  secondaryDimText: string
+  /** Text color for content sitting on `primaryDim` (container/on-container pair) */
+  primaryDimText: string
   /** Surface/card background */
   surface: string
   /** Surface highlight (borders, subtle backgrounds) */
@@ -43,6 +47,8 @@ export const themeTokens = {
     primaryDark: '#3e4f43',
     secondary: '#d4955f',
     secondaryDim: '#332619',
+    secondaryDimText: '#d4955f',
+    primaryDimText: '#8FA893',
     negative: '#c97064',
     // Pairing note: text on negativeDim is 4.18:1 — below AA for small text.
     // Don't set body/label copy in `negative` on `negativeDim` backgrounds.
@@ -58,20 +64,22 @@ export const themeTokens = {
   },
   light: {
     bg: '#f5f5f5',
-    primary: '#6b8f71',
+    primary: '#5a7a60',
     primaryDim: '#dce8de',
     primaryDark: '#a3c4a8',
-    secondary: '#c07a3e',
+    secondary: '#a5652f',
     secondaryDim: '#f5e6d5',
+    secondaryDimText: '#7d4a20',
+    primaryDimText: '#3e5a45',
     negative: '#b55044',
     negativeDim: '#f5ddd8',
     surface: '#ffffff',
     surfaceHighlight: '#eeeeee',
     text: '#1a1a1a',
     textSecondary: '#666666',
-    textMuted: '#999999',
+    textMuted: '#737373',
     border: '#e0e0e0',
-    refreshTint: '#6b8f71',
+    refreshTint: '#5a7a60',
     statusBar: 'dark',
   },
 } as const satisfies Record<ThemeMode, ThemeTokens>

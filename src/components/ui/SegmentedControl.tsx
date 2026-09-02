@@ -45,7 +45,9 @@ function SegmentedControlComponent<T extends string>({
             onPress={() => onChange(option.value)}
             className={`${variant === 'fill' ? 'flex-1' : 'px-3'} py-1.5 rounded-md items-center justify-center active:opacity-80 ${selected ? 'bg-app-primary-dim' : ''}`}
           >
-            <Text className={`text-[10px] font-sans-bold ${selected ? 'text-app-primary' : 'text-app-text-muted'}`}>
+            <Text
+              className={`text-[10px] font-sans-bold ${selected ? 'text-app-primary-dim-text' : 'text-app-text-muted'}`}
+            >
               {option.label ?? option.value}
             </Text>
           </Pressable>

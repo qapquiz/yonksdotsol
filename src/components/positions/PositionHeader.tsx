@@ -51,7 +51,9 @@ function PositionHeaderComponent({
       </View>
       <View className="items-end gap-1 flex-shrink-0">
         <View className={`px-2 py-1 rounded-md ${inRange ? 'bg-app-primary-dim' : 'bg-app-secondary-dim'}`}>
-          <Text className={`text-[10px] font-sans-bold ${inRange ? 'text-app-primary' : 'text-app-secondary'}`}>
+          <Text
+            className={`text-[10px] font-sans-bold ${inRange ? 'text-app-primary-dim-text' : 'text-app-secondary-dim-text'}`}
+          >
             {inRange ? 'IN RANGE' : 'OUT OF RANGE'}
           </Text>
         </View>
