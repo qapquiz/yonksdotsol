@@ -54,24 +54,28 @@ export default function App() {
           <View className="flex-row items-center gap-3">
             <Pressable
               onPress={() => setSettingsVisible(true)}
+              hitSlop={4}
               className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
             >
               <Ionicons name="settings-outline" size={20} color={tokens.textSecondary} />
             </Pressable>
             <Pressable
               onPress={() => setFontPickerVisible(true)}
+              hitSlop={4}
               className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
             >
               <Ionicons name="text-outline" size={20} color={tokens.textSecondary} />
             </Pressable>
             <Pressable
               onPress={toggleTheme}
+              hitSlop={4}
               className="h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80"
             >
               <Ionicons name={theme === 'dark' ? 'sunny-outline' : 'moon-outline'} size={20} color={tokens.primary} />
             </Pressable>
             <Pressable
               onPress={walletAddress ? handleDisconnect : handleConnect}
+              hitSlop={4}
               disabled={isConnecting}
               className={`h-10 w-10 items-center justify-center rounded-full bg-app-surface-highlight active:opacity-80 ${
                 walletAddress ? 'border border-app-primary' : ''

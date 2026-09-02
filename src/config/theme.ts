@@ -44,12 +44,14 @@ export const themeTokens = {
     secondary: '#d4955f',
     secondaryDim: '#332619',
     negative: '#c97064',
+    // Pairing note: text on negativeDim is 4.18:1 — below AA for small text.
+    // Don't set body/label copy in `negative` on `negativeDim` backgrounds.
     negativeDim: '#3a2222',
     surface: '#151515',
     surfaceHighlight: '#252525',
     text: '#ffffff',
     textSecondary: '#aaaaaa',
-    textMuted: '#777777',
+    textMuted: '#909090',
     border: '#333333',
     refreshTint: '#8FA893',
     statusBar: 'light',
