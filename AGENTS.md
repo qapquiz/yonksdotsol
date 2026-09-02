@@ -22,6 +22,13 @@ This file contains build commands and code style guidelines for agentic coding a
 - `bun run web` - Start web dev server
 - `bun start` - Start Expo without dev client
 
+### Web Preview (mock mode)
+
+- The web target **auto-enables dev mock mode** (`env.devMock` is always true when `Platform.OS === 'web'`) — no wallet adapter, no RPC, static mock portfolio.
+- `bun run web` — Expo web dev server (http://localhost:8081); add `-- --lan` to reach it from other devices.
+- Native-only seams are stubbed via platform-split files (Metro loads `.web.*` only on web; native never sees them): `polyfill.web.js`, `src/wallet/walletKit(.web).tsx`, `src/hooks/useWidgetSync(.web).ts`, `src/widgets/registerWidgetTask(.web).ts`. Keep export pairs in sync when changing either side.
+- `python3 scripts/observe-web.py` — headless UI observation on displayless machines (e.g. the Pi 5, where chromium's HTTP stack is broken). Fetches the served bundle, boots it in headless chromium over CDP (dark or light via `--theme`), and reports: screenshot (`.expo/web-capture.png`), computed design tokens, rendered text, page errors, and a token-vs-pixels palette check. Requires `pip install pillow websocket-client`. Theme follows `prefers-color-scheme` on web — headless defaults to light unless emulated.
+
 ### Testing
 
 - `bun run test` - Run all tests once (Vitest)
