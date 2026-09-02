@@ -27,7 +27,20 @@ This file contains build commands and code style guidelines for agentic coding a
 - The web target **auto-enables dev mock mode** (`env.devMock` is always true when `Platform.OS === 'web'`) — no wallet adapter, no RPC, static mock portfolio.
 - `bun run web` — Expo web dev server (http://localhost:8081); add `-- --lan` to reach it from other devices.
 - Native-only seams are stubbed via platform-split files (Metro loads `.web.*` only on web; native never sees them): `polyfill.web.js`, `src/wallet/walletKit(.web).tsx`, `src/hooks/useWidgetSync(.web).ts`, `src/widgets/registerWidgetTask(.web).ts`. Keep export pairs in sync when changing either side.
-- `python3 scripts/observe-web.py` — headless UI observation on displayless machines (e.g. the Pi 5, where chromium's HTTP stack is broken). Fetches the served bundle, boots it in headless chromium over CDP (dark or light via `--theme`), and reports: screenshot (`.expo/web-capture.png`), computed design tokens, rendered text, page errors, and a token-vs-pixels palette check. Requires `pip install pillow websocket-client`. Theme follows `prefers-color-scheme` on web — headless defaults to light unless emulated.
+- Headless UI observation via **agent-browser** (its managed Chromium can fetch HTTP here — the Debian system chromium cannot). One-time setup: `npm i -g agent-browser && agent-browser install`.
+
+  ```bash
+  export AGENT_BROWSER_SESSION="$(agent-browser session id --scope worktree --prefix observe)"
+  agent-browser set viewport 412 900
+  agent-browser open http://localhost:8081 && agent-browser wait --text "DEPOSITED"  # mount marker
+  agent-browser console                                                             # page/console errors
+  agent-browser screenshot "$PWD/.expo/web-capture.png"                              # absolute path (daemon cwd differs)
+  python3 scripts/palette-check.py .expo/web-capture.png                             # token-vs-pixels audit
+  ```
+
+  Live state via snapshot + clicks (refs change every snapshot — re-snapshot first): `agent-browser snapshot -i` lists the header pressables; the theme toggle flips dark↔light and the last one captures the disconnected wallet state. Theme is **store-driven** (`settingsStore` hardcodes dark) — `set media` does nothing. For boot-time states in light (skeleton audits), seed before reload: `agent-browser eval "localStorage.setItem('settings\\\\settings-store', JSON.stringify({state:{theme:'light'},version:0})); 1"` then reopen. Wait ~3–4s after editing a file before observing — Metro's watcher needs a beat to invalidate. On a cold daemon the first screenshot can catch the app mid-boot (palette ≈ all app-bg) — re-capture once settled.
+
+- `scripts/palette-check.py <png> [--theme dark|light]` — audits a capture against the tokens in `src/config/theme.ts` (auto-detects theme from pixels; requires `pip install pillow`). Theme is applied end-to-end from the store, so a correct audit confirms uniwind CSS vars haven't drifted from theme.ts.
 
 ### Testing
 
