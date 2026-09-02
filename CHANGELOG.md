@@ -5,6 +5,36 @@ All notable changes to **Yonks** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [5.0.3] - 2026-09-03
+
+### Added
+
+- **Design-system codification** — shape tiers (control / card / tile /
+  track / chip / micro) and a single state-layer press rule
+  (`active:opacity-80`) documented in DESIGN.md; applied to the three
+  pressables that lacked feedback.
+- **agent-browser web observation loop** — headless UI verification
+  from the Pi without Playwright (drives the real dev server; theme
+  and wallet states via snapshot + clicks). Token-vs-pixels audit
+  survives as `scripts/palette-check.py` (pure pillow, auto theme
+  detection). Playwright dependency and its 984 MB browser cache
+  dropped.
+
+### Fixed
+
+- **Light theme AA contrast** — primary `#6b8f71→#5a7a60`, secondary
+  `#c07a3e→#a5652f`, muted `#999999→#737373`; new paired on-dim text
+  tokens (`-dim-text`) so badge and segment text stops borrowing
+  full-strength accents.
+- **Light dev-mode banner failed AA** (3.73:1 after the copper
+  darkening) — hardcoded hex replaced by `app-on-secondary`; white on
+  copper is 4.66:1. DESIGN.md's hardcoded-hex exception retired.
+- **Dark theme missing `--color-app-primary-dim-text`** — IN RANGE
+  badges and selected segments fell back to inherited color; now
+  resolve to sage `#8FA893` (5.09:1).
+- FontPicker checkmark uses `app-on-primary` instead of borrowing the
+  screen background color.
+
 ## [5.0.2] - 2026-09-02
 
 ### Added
