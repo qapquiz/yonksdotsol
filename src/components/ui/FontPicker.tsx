@@ -35,7 +35,7 @@ function FontPickerComponent({ visible, onClose }: FontPickerProps) {
             {/* Header */}
             <View className="flex-row items-center justify-between mb-5">
               <Text className="text-app-text text-lg font-sans-bold">Numeric Style</Text>
-              <Pressable onPress={onClose} className="p-1">
+              <Pressable onPress={onClose} className="p-1 active:opacity-80">
                 <Ionicons name="close" size={22} color={tokens.textMuted} />
               </Pressable>
             </View>
@@ -48,7 +48,7 @@ function FontPickerComponent({ visible, onClose }: FontPickerProps) {
                   <Pressable
                     key={option.id}
                     onPress={() => handleSelect(option.id)}
-                    className={`rounded-2xl p-4 border ${
+                    className={`rounded-2xl p-4 border active:opacity-80 ${
                       isSelected
                         ? 'bg-app-primary-dim border-app-primary'
                         : 'bg-app-surface-highlight border-app-border'

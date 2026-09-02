@@ -134,6 +134,25 @@ Built on Uniwind's 4px base scale. These tiers are fixed — new surfaces pick t
 
 **Card spacing rhythm:** cards stack with `mb-4`; inside a card, blocks separate with `mb-4` (sections) and `mb-1`/`mb-1.5` (label-to-value).
 
+## Shape
+
+Six radius tiers, mapped to roles. New surfaces pick a tier from this menu — don't invent a value. (`rounded-xl` is currently unused; prefer retiring sizes over adding them.) Values stay Tailwind-native — only the roles are codified, so nothing visual changes with this table.
+
+| Tier        | Class          | Used for                                                             |
+| ----------- | -------------- | -------------------------------------------------------------------- |
+| **Control** | `rounded-full` | Circular controls — icon buttons, avatar, check circle, sheet handle |
+| **Card**    | `rounded-3xl`  | Position cards; sheets use `rounded-t-3xl` on top corners            |
+| **Tile**    | `rounded-2xl`  | Blocks inside sheets — setting rows, font options                    |
+| **Track**   | `rounded-lg`   | Recessed tracks — segmented control track, skeleton blocks           |
+| **Chip**    | `rounded-md`   | Chips and badges — segmented items, status badge, price chip         |
+| **Micro**   | `rounded-sm`   | Chart legend swatches                                                |
+
+(Loose M3 mapping: card ≈ extra-large, tile ≈ large, track ≈ small, chip ≈ extra-small, control = full.)
+
+### Press feedback (state layer)
+
+Every interactive `Pressable` gets `active:opacity-80` on its root — one convention, no shadows or ripples (flat instrument identity). Exceptions: the scrim press-to-dismiss and stop-propagation containers don't dim.
+
 ---
 
 ## Component Patterns
@@ -234,6 +253,7 @@ Charts render in SVG, so colors can't use Uniwind classes — they read tokens v
 - Map state colors through the [semantic mapping](#semantic-color-mapping): profit→primary, loss→negative, caution→secondary.
 - Use `font-sans-bold` for all bold; `usePixelFont()` for numerics.
 - Reuse the shared primitives (`ChartPanel`, `SegmentedControl`, `ShimmerBlock`).
+- Give every interactive `Pressable` `active:opacity-80` — see [Press feedback](#press-feedback-state-layer).
 - Keep `theme.ts` and `global.css` in sync when changing a value.
 
 ### DON'T

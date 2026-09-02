@@ -43,7 +43,7 @@ function SettingsSheetComponent({ visible, onClose }: SettingsSheetProps) {
             <View className="w-10 h-1 rounded-full bg-app-surface-highlight self-center mb-4" />
             <View className="flex-row items-center justify-between mb-5">
               <Text className="text-app-text text-lg font-sans-bold">Settings</Text>
-              <Pressable onPress={onClose} className="p-1">
+              <Pressable onPress={onClose} className="p-1 active:opacity-80">
                 <Ionicons name="close" size={22} color={tokens.textMuted} />
               </Pressable>
             </View>
