@@ -5,6 +5,17 @@ All notable changes to **Yonks** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [5.0.4] - 2026-09-03
+
+### Added
+
+- **Segmented control motion** — the selected state is now a sliding
+  indicator pill (stiff, nearly critically damped spring — fast
+  arrival, one whisper of overshoot) with a 130 ms label-color
+  crossfade, on both the chart-mode (Liquidity/Price) and currency
+  (SOL/USD) toggles. Honors the OS reduce-motion setting; works in
+  both fill and inline variants; no new dependencies.
+
 ## [5.0.3] - 2026-09-03
 
 ### Added
