@@ -5,6 +5,26 @@ All notable changes to **Yonks** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [5.1.0] - 2026-09-03
+
+### Added
+
+- **EAS Observe telemetry** — startup metrics (cold/warm launch, TTR,
+  TTI) and per-route navigation timings from Android builds, plus the
+  launch-window network rollup and unhandled JS errors recorded as
+  `exception` events. TTI fires when the positions skeleton resolves;
+  the `expo-router` integration tags events with route patterns.
+  Native only — web resolves a no-op seam (`src/observe/`), so no
+  observe code ships to the browser.
+- **User-defined Observe events** — `wallet.connect` (success +
+  duration), `wallet.disconnect`, and `positions.refreshed` (duration
+  + position count) for product-moment analytics.
+- **Positions error boundary** — render-phase errors in the positions
+  list are recorded with their component stack and replaced by a
+  retryable error state (`PositionsErrorState`).
+- **Vitest alias for `expo-observe`** — resolves to the web no-op stub
+  so instrumented hooks stay importable in the Node test environment.
+
 ## [5.0.4] - 2026-09-03
 
 ### Added
