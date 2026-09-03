@@ -204,7 +204,7 @@ Label-left / value-right rows, separated from the chart by a hairline. **State i
 />
 ````
 
-**Shared rhythm:** recessed `bg-app-bg/50 p-1 rounded-lg` track + `py-1.5 rounded-md` items + `bg-app-primary-dim` / `text-app-primary` selected state.
+**Shared rhythm:** recessed `bg-app-bg/50 p-1 rounded-lg` track + `py-1.5 rounded-md` items + a sliding `bg-app-primary-dim` **indicator pill** (stiff M3-style spring, one whisper of overshoot; label color crossfades 130ms behind it) as the selected state.
 
 ### Skeletons
 
