@@ -230,11 +230,12 @@ Charts render in SVG, so colors can't use Uniwind classes — they read tokens v
 | Above active | `tokens.border` (neutral)   |
 | Grid lines   | `tokens.border` + alpha     |
 
-**Price line chart:**
+**Price candlestick chart:**
 
 | Element         | Derivation                           |
 | --------------- | ------------------------------------ |
-| Price line      | `tokens.primary`                     |
+| Up candle       | `tokens.primary` (wick + body)       |
+| Down candle     | `tokens.negative` (wick + body)      |
 | Range band fill | `tokens.primary` + low alpha (≈0.12) |
 | Range band edge | `tokens.primary` + mid alpha (≈0.5)  |
 | Grid lines      | `tokens.border` + alpha (≈0.3)       |

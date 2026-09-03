@@ -5,6 +5,23 @@ All notable changes to **Yonks** are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- **Price chart: candlesticks** — the in-card price chart renders OHLC
+  candlesticks (wick + body) instead of a close-price polyline. Up candles
+  use `app-primary`, down candles `app-negative`; range band, grid, and
+  axis labels unchanged. Same OHLCV endpoint — open/high/low were already
+  fetched but unused.
+- **Mock OHLCV in dev mode** — `devMock` builds (including the web
+  preview) now synthesize deterministic candles per mock pool
+  (`src/services/mockOhlcv.ts`), so the price chart renders without RPC.
+- **Price chart measuring fix** — the chart's measuring `View` now mounts
+  unconditionally. RN Web never fires `onLayout` for a `View` that gains
+  the prop after mount, which left the chart blank whenever data arrived
+  after first render.
+
 ## [5.1.0] - 2026-09-03
 
 ### Added
@@ -18,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   observe code ships to the browser.
 - **User-defined Observe events** — `wallet.connect` (success +
   duration), `wallet.disconnect`, and `positions.refreshed` (duration
-  + position count) for product-moment analytics.
+  - position count) for product-moment analytics.
 - **Positions error boundary** — render-phase errors in the positions
   list are recorded with their component stack and replaced by a
   retryable error state (`PositionsErrorState`).

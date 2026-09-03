@@ -202,6 +202,11 @@ const POSITION_DEFS: MockPositionDef[] = [
   },
 ]
 
+/** Base price per mock pool — anchors mock OHLCV generation (`mockOhlcv.ts`). */
+export const MOCK_POOL_BASE_PRICES: Readonly<Record<string, number>> = Object.fromEntries(
+  POSITION_DEFS.map((def) => [def.pairAddress, def.tokenX.price_info.price_per_token]),
+)
+
 function resolveMockPosition(def: MockPositionDef): ResolvedPosition {
   const liquidityShape = buildLiquidityShape(
     def.pairAddress,

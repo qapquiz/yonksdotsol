@@ -24,7 +24,7 @@ This file contains build commands and code style guidelines for agentic coding a
 
 ### Web Preview (mock mode)
 
-- The web target **auto-enables dev mock mode** (`env.devMock` is always true when `Platform.OS === 'web'`) — no wallet adapter, no RPC, static mock portfolio.
+- The web target **auto-enables dev mock mode** (`env.devMock` is always true when `Platform.OS === 'web'`) — no wallet adapter, no RPC, static mock portfolio. Price charts render deterministic mock candles (`src/services/mockOhlcv.ts`, seeded per pool).
 - `bun run web` — Expo web dev server (http://localhost:8081); add `-- --lan` to reach it from other devices.
 - Native-only seams are stubbed via platform-split files (Metro loads `.web.*` only on web; native never sees them): `polyfill.web.js`, `src/wallet/walletKit(.web).tsx`, `src/hooks/useWidgetSync(.web).ts`, `src/widgets/registerWidgetTask(.web).ts`. Keep export pairs in sync when changing either side.
 - Headless UI observation via **agent-browser** (its managed Chromium can fetch HTTP here — the Debian system chromium cannot). One-time setup: `npm i -g agent-browser && agent-browser install`.

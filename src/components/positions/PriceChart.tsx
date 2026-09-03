@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
-import { Line, Polyline, Rect, Svg } from 'react-native-svg'
+import { Line, G, Rect, Svg } from 'react-native-svg'
 import type { LiquidityShape } from '../../utils/positions/computePositionViewData'
 import { usePoolOhlcv } from '../../hooks/usePoolOhlcv'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
@@ -19,6 +19,11 @@ const BAND_FILL_ALPHA = '1F' // ≈ 0.12
 const BAND_EDGE_ALPHA = '80' // ≈ 0.5
 const GRID_ALPHA = '4D' // ≈ 0.3
 
+// Candle geometry — body fills ~70% of its slot, capped so few candles don't balloon.
+const CANDLE_BODY_SLOT_RATIO = 0.7
+const CANDLE_BODY_MAX_WIDTH = 10
+const CANDLE_MIN_BODY_HEIGHT = 1 // doji (open === close) still renders a visible dash
+
 /** Format a price compactly for axis labels (handles tiny meme-token prices). */
 function formatPriceLabel(price: number): string {
   if (!Number.isFinite(price) || price === 0) return '0'
@@ -31,10 +36,12 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
   const pairAddress = liquidityShape?.pairAddress ?? null
   const { data: ohlcv, loading } = usePoolOhlcv(pairAddress)
 
-  // Chart colors — derived from app-primary so the price line themes correctly.
+  // Chart colors — up candles derive from app-primary (profit), down from
+  // app-negative (loss), per the semantic mapping. Band stays primary-tinted.
   const colors = useMemo(
     () => ({
-      priceLine: tokens.primary,
+      candleUp: tokens.primary,
+      candleDown: tokens.negative,
       bandFill: `${tokens.primary}${BAND_FILL_ALPHA}`,
       bandEdge: `${tokens.primary}${BAND_EDGE_ALPHA}`,
       grid: `${tokens.border}${GRID_ALPHA}`,
@@ -78,10 +85,6 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
     const innerHeight = CHART_HEIGHT - PADDING.top - PADDING.bottom
 
     const yScale = (price: number) => PADDING.top + innerHeight * (1 - (price - domainLo) / domain)
-    const xScale = (i: number) => {
-      if (candles.length === 1) return containerWidth / 2
-      return (i / (candles.length - 1)) * containerWidth
-    }
 
     // Range band — shaded rectangle between Range high price (top) and Range low price (bottom).
     const band =
@@ -115,8 +118,24 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
         </>
       ) : null
 
-    // Price line — close prices connected.
-    const points = candles.map((c, i) => `${xScale(i)},${yScale(c.close)}`).join(' ')
+    // Candles — wick spans high→low, body spans open→close. Each candle is
+    // centered in its horizontal slot; up (close ≥ open) fills primary, down negative.
+    const slot = containerWidth / candles.length
+    const bodyWidth = Math.max(1.5, Math.min(slot * CANDLE_BODY_SLOT_RATIO, CANDLE_BODY_MAX_WIDTH))
+
+    const candleEls = candles.map((c, i) => {
+      const x = slot * (i + 0.5)
+      const isUp = c.close >= c.open
+      const color = isUp ? colors.candleUp : colors.candleDown
+      const bodyTop = yScale(Math.max(c.open, c.close))
+      const bodyHeight = Math.max(CANDLE_MIN_BODY_HEIGHT, yScale(Math.min(c.open, c.close)) - bodyTop)
+      return (
+        <G key={`${c.timestamp}-${i}`}>
+          <Line x1={x} x2={x} y1={yScale(c.high)} y2={yScale(c.low)} stroke={color} strokeWidth="1" />
+          <Rect x={x - bodyWidth / 2} y={bodyTop} width={bodyWidth} height={bodyHeight} fill={color} />
+        </G>
+      )
+    })
 
     // Horizontal grid lines.
     const gridLines = [0, 25, 50, 75, 100].map((percent) => {
@@ -130,7 +149,7 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
       <Svg width={containerWidth} height={CHART_HEIGHT}>
         {gridLines}
         {band}
-        <Polyline points={points} fill="none" stroke={colors.priceLine} strokeWidth="2" strokeLinejoin="round" />
+        {candleEls}
       </Svg>
     )
   }, [candles, containerWidth, rangeLowPrice, rangeHighPrice, colors])
@@ -138,8 +157,12 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
   const legend = (
     <View className="flex-row items-center justify-center mt-2 gap-4">
       <View className="flex-row items-center">
-        <View className="w-3 h-0.5 bg-app-primary mr-1.5" />
-        <Text className="text-app-text-secondary text-[10px]">Price</Text>
+        <View className="w-2 h-2 rounded-sm bg-app-primary mr-1.5" />
+        <Text className="text-app-text-secondary text-[10px]">Up</Text>
+      </View>
+      <View className="flex-row items-center">
+        <View className="w-2 h-2 rounded-sm bg-app-negative mr-1.5" />
+        <Text className="text-app-text-secondary text-[10px]">Down</Text>
       </View>
       <View className="flex-row items-center">
         <View className="w-2 h-2 rounded-sm bg-app-primary-dim border border-app-primary mr-1.5" />
@@ -159,30 +182,23 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
     </View>
   )
 
-  // No data yet (loading, devMock, or empty series)
-  if (candles.length === 0) {
-    return (
-      <ChartPanel title="PRICE" currentPrice={currentPrice}>
-        <View className="h-[120px] items-center justify-center">
-          {loading ? (
-            <ActivityIndicator size="small" color={colors.priceLine} />
-          ) : (
-            <Text className="text-app-text-muted text-xs">No price data</Text>
-          )}
-        </View>
-        {axisLabels}
-      </ChartPanel>
-    )
-  }
-
+  // The measuring View mounts unconditionally (same as LiquidityBarChart) — RN Web
+  // doesn't fire onLayout for a View that gains the prop after mount, so the
+  // spinner/empty state renders INSIDE the measured box rather than in a branch
+  // that swaps it in once data arrives.
   return (
     <ChartPanel title="PRICE" currentPrice={currentPrice}>
-      <View className="w-full" style={{ height: CHART_HEIGHT }} onLayout={handleLayout}>
-        {svgContent}
+      <View className="w-full items-center justify-center" style={{ height: CHART_HEIGHT }} onLayout={handleLayout}>
+        {svgContent ??
+          (loading ? (
+            <ActivityIndicator size="small" color={colors.candleUp} />
+          ) : (
+            <Text className="text-app-text-muted text-xs">No price data</Text>
+          ))}
       </View>
 
       {axisLabels}
-      {legend}
+      {candles.length > 0 && legend}
     </ChartPanel>
   )
 }
