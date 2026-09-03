@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { env } from '../config/env'
@@ -8,9 +8,11 @@ import { FontPicker } from '../components/ui/FontPicker'
 import { PixelAvatar } from '../components/ui/PixelAvatar'
 import { SettingsSheet } from '../components/ui/SettingsSheet'
 import { usePositionsPage } from '../hooks/usePositionsPage'
+import { ObserveErrorBoundary, useObserve } from '../observe'
 import { useSettingsStore } from '../stores/settingsStore'
 import { useThemeTokens } from '../hooks/useThemeTokens'
 import { useWalletLifecycle } from '../hooks/useWalletLifecycle'
+import PositionsErrorState from '../components/positions/PositionsErrorState'
 import PositionsList from './positions'
 
 export default function App() {
@@ -21,9 +23,19 @@ export default function App() {
   const { walletReady, walletAddress, isConnecting, handleConnect, handleDisconnect } = useWalletLifecycle()
 
   const pageData = usePositionsPage(walletAddress, walletReady)
+  const { markInteractive } = useObserve()
 
   const [fontPickerVisible, setFontPickerVisible] = useState(false)
   const [settingsVisible, setSettingsVisible] = useState(false)
+
+  // EAS Observe: signal TTI once the skeleton resolves — the wallet provider
+  // has resolved (or timed out) and token info is ready, so real content or the
+  // empty state is on screen. Safe to call repeatedly; only the first call counts.
+  useEffect(() => {
+    if (pageData.walletReady && pageData.tokenDataReady) {
+      markInteractive()
+    }
+  }, [pageData.walletReady, pageData.tokenDataReady, markInteractive])
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: tokens.bg }}>
@@ -97,19 +109,22 @@ export default function App() {
       )}
 
       <View className="flex-1">
-        <PositionsList
-          positions={pageData.positions}
-          summary={pageData.summary}
-          hasPnLData={pageData.hasPnLData}
-          outOfRangeCount={pageData.outOfRangeCount}
-          positionCount={pageData.positionCount}
-          loading={pageData.loading}
-          tokenDataReady={pageData.tokenDataReady}
-          solUsdPrice={pageData.solUsdPrice}
-          walletReady={pageData.walletReady}
-          walletAddress={pageData.walletAddress}
-          refresh={pageData.refresh}
-        />
+        {/* Records render-phase errors as Observe exception events and shows a retry */}
+        <ObserveErrorBoundary fallback={({ resetError }) => <PositionsErrorState onRetry={resetError} />}>
+          <PositionsList
+            positions={pageData.positions}
+            summary={pageData.summary}
+            hasPnLData={pageData.hasPnLData}
+            outOfRangeCount={pageData.outOfRangeCount}
+            positionCount={pageData.positionCount}
+            loading={pageData.loading}
+            tokenDataReady={pageData.tokenDataReady}
+            solUsdPrice={pageData.solUsdPrice}
+            walletReady={pageData.walletReady}
+            walletAddress={pageData.walletAddress}
+            refresh={pageData.refresh}
+          />
+        </ObserveErrorBoundary>
       </View>
 
       <StatusBar style={tokens.statusBar} />

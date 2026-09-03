@@ -22,6 +22,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      // expo-observe resolves its native module at import time; in the Node test
+      // environment, redirect it to the web no-op stub so hooks that emit
+      // Observe events stay importable in tests.
+      'expo-observe': path.resolve(__dirname, './src/observe/index.web.tsx'),
     },
   },
 })

@@ -1,6 +1,7 @@
 import { useMobileWallet } from '../wallet/walletKit'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { env } from '../config/env'
+import { Observe } from '../observe'
 import { MOCK_WALLET_ADDRESS } from '../services/mockPortfolio'
 import { getStoredWalletAddress, setStoredWalletAddress } from '../stores/walletStore'
 import { clearRangeState } from '../stores/alertStore'
@@ -61,14 +62,22 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
 
   const handleConnect = useCallback(async () => {
     setIsConnecting(true)
+    const startedAt = Date.now()
     try {
       await signIn({
         domain: 'yonksdotsol.app',
         statement: 'Sign in to access your DLMM positions',
         version: '1',
       })
+      Observe.logEvent('wallet.connect', {
+        attributes: { success: true, durationMs: Date.now() - startedAt },
+      })
     } catch (error) {
       console.error('Wallet connection failed:', error)
+      Observe.logEvent('wallet.connect', {
+        attributes: { success: false, durationMs: Date.now() - startedAt },
+        severity: 'warn',
+      })
       await disconnect().catch(() => {})
     } finally {
       setIsConnecting(false)
@@ -78,6 +87,9 @@ export function useWalletLifecycle(): UseWalletLifecycleResult {
   const handleDisconnect = useCallback(async () => {
     const currentAddress = getStoredWalletAddress()
     await disconnect()
+    Observe.logEvent('wallet.disconnect', {
+      attributes: { hadStoredAddress: !!currentAddress },
+    })
     if (currentAddress) {
       setStoredWalletAddress(undefined)
       clearRangeState(currentAddress)

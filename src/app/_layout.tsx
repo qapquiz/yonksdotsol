@@ -8,7 +8,14 @@ import { MobileWalletProvider, createSolanaMainnet } from '../wallet/walletKit'
 import { useSettingsStore } from '../stores/settingsStore'
 import { PixelFontProvider } from '../hooks/useFontConfig'
 import { useWidgetSync } from '../hooks/useWidgetSync'
+import { Observe, ObserveRoot } from '../observe'
 import { env } from '../config/env'
+
+// EAS Observe: per-route navigation metrics. Must run at module scope,
+// before any screen mounts — toggling it later throws.
+Observe.configure({
+  integrations: { 'expo-router': true },
+})
 
 const cluster = createSolanaMainnet({ url: env.rpcUrl || '' })
 const identity = {
@@ -17,7 +24,7 @@ const identity = {
   icon: './assets/images/icon.png',
 }
 
-export default function Layout() {
+function RootLayout() {
   const theme = useSettingsStore((s) => s.theme)
 
   // Sync settings store theme → Uniwind
@@ -38,3 +45,6 @@ export default function Layout() {
     </GestureHandlerRootView>
   )
 }
+
+// EAS Observe: measures Time to First Render (TTR) around the root layout
+export default ObserveRoot.wrap(RootLayout)

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { env } from '../config/env'
+import { Observe } from '../observe'
 import { createMockPortfolioResult, MOCK_SOL_USD_PRICE } from '../services/mockPortfolio'
 import { createPositionPipeline, type PortfolioResult } from '../services/positionPipeline'
 import { getCurrentSolUsdPrice } from '../services/solPrice'
@@ -110,10 +111,14 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
 
     pipeline.invalidateWallet(walletAddress)
     setLoading(true)
+    const startedAt = Date.now()
     pipeline.loadPortfolio(walletAddress).then((res) => {
       setResult(res)
       setLoading(false)
       setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
+      Observe.logEvent('positions.refreshed', {
+        attributes: { durationMs: Date.now() - startedAt, positionCount: res.positionCount },
+      })
     })
     getCurrentSolUsdPrice()
       .then(setSolUsdPrice)
