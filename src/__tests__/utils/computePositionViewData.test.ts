@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import type { PositionPnLData } from 'metcomet'
+import type { PositionPnLData } from '../../services/dlmmApi'
 import type { PositionBinData, PositionData } from '@meteora-ag/dlmm'
 import { computePositionViewData } from '../../utils/positions/computePositionViewData'
 import type { TokenInfo } from '../../tokens'

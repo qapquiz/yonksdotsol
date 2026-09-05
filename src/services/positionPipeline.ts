@@ -1,7 +1,7 @@
 import type { PositionInfo } from '@meteora-ag/dlmm'
 import DLMM from '@meteora-ag/dlmm'
-import type { PositionPnLData } from 'metcomet'
-import { fetchPositionPnL } from 'metcomet'
+import type { PositionPnLData } from './dlmmApi'
+import { fetchPositionPnL } from './dlmmApi'
 import { PublicKey, Connection } from '@solana/web3.js'
 
 import { getSharedConnection } from '../config/connection'
@@ -216,8 +216,7 @@ export class PositionPipeline {
         try {
           const positions = await this.cache.getOrFetch(
             pnlCacheKey(poolAddress, walletAddress),
-            () =>
-              fetchPositionPnL({ poolAddress, user: walletAddress, status: 'open' }).then((r) => r?.positions ?? []),
+            () => fetchPositionPnL({ poolAddress, user: walletAddress, status: 'open' }).then((r) => r.positions ?? []),
             CACHE_TTL.UPNL_PER_POSITION,
           )
           results[poolAddress] = positions

@@ -224,6 +224,31 @@ totals. The weighting difference is documented in ADR 0002 (Step 6).
 | Lint      | `bun run lint:check`             | exit 0              |
 | Remove dep| `bun remove metcomet`            | exit 0, lockfile updated |
 
+## Reconciliation
+
+**2026-09-03 (during execution).** Two deviations, both mechanical:
+
+1. **Step 3's relative specifier was wrong for the source files.** From
+   `src/utils/positions/`, the correct import is `'../../services/dlmmApi'`
+   (two levels up), not `'../services/dlmmApi'` (which resolves to
+   `src/utils/services/` and fails `tsgo` with TS2307). The test-file
+   specifiers in the plan were already correct. Step 3's text above is
+   corrected inline.
+2. **Step 4's setup.ts change is a DELETE, not a swap.** A global
+   `vi.mock('../services/dlmmApi', ...)` in setup.ts shadows the real module
+   inside `dlmmApi.test.ts` itself (its 9 tests fail with undefined exports).
+   The old metcomet global mock existed because metcomet was a heavy
+   third-party graph; the owned client is a light leaf module (its only
+   import is the pure formatters util), so the global mock is removed and
+   consumers mock locally where isolation is needed
+   (positionPipeline.test.ts already does). Full suite: 155/155.
+
+Also noted against Done criteria: `grep -rn "metcomet" src/` will show ONE
+match after this plan — the provenance comment in `dlmmApi.ts`'s header
+(documenting what the file replaced). The criterion's intent — no code
+depends on metcomet — is verified by `grep "from 'metcomet'"` / `require`:
+zero matches, plus `bun.lock` and `package.json` clean after Step 6.
+
 ## Scope
 
 **In scope** (the only files you should modify/create):
@@ -790,8 +815,8 @@ Do NOT change: the `heliusApiKey` gate, the cache key
 In these four files, change `from 'metcomet'` → `from '../../services/dlmmApi'`
 (source files use `'../services/dlmmApi'`):
 
-- `src/utils/positions/pnlAggregation.ts` line 1 → `from '../services/dlmmApi'`
-- `src/utils/positions/computePositionViewData.ts` line 2 → `from '../services/dlmmApi'`
+- `src/utils/positions/pnlAggregation.ts` line 1 → `from '../../services/dlmmApi'`
+- `src/utils/positions/computePositionViewData.ts` line 2 → `from '../../services/dlmmApi'`
 - `src/__tests__/utils/pnlAggregation.test.ts` line 2
 - `src/__tests__/utils/computePositionViewData.test.ts` line 2
 
@@ -806,9 +831,11 @@ In these four files, change `from 'metcomet'` → `from '../../services/dlmmApi'
    - Line 2: `import type { PositionPnLData } from 'metcomet'` → `from '../../services/dlmmApi'`
    - Lines 32–35: `vi.mock('metcomet', () => ({...}))` → `vi.mock('../../services/dlmmApi', () => ({ fetchPositionPnL: vi.fn() }))` (update the `// Mock metcomet` comment to `// Mock the DLMM API client`)
    - Lines 190, 250, 413, 470: `await import('metcomet')` → `await import('../../services/dlmmApi')` — nothing else at these sites changes (verified: they use `mockResolvedValue` with full response objects and `mockRejectedValue`; none rely on metcomet's null-return semantics).
-2. `src/__tests__/setup.ts` lines 30–33: replace the `vi.mock('metcomet', ...)`
-   block with `vi.mock('../services/dlmmApi', () => ({ fetchPositionPnL: vi.fn() }))`
-   (update the comment the same way).
+2. `src/__tests__/setup.ts` lines 30–33: DELETE the `vi.mock('metcomet', ...)`
+   block entirely (see Reconciliation — a global dlmmApi mock would shadow
+   the real module inside `dlmmApi.test.ts`; the owned client is a light leaf
+   module, consumers mock locally). Leave a short NOTE comment where the
+   block was, per the reconciliation text.
 
 **Verify**:
 - `grep -rn "metcomet" src/` → **no matches**.

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import type { PositionPnLData } from 'metcomet'
+import type { PositionPnLData } from '../../services/dlmmApi'
 import { createPositionPipeline, type PositionPipeline } from '../../services/positionPipeline'
 import { CacheManager } from '../../utils/cache/CacheManager'
 
@@ -29,8 +29,8 @@ vi.mock('@solana/web3.js', () => {
   return { Connection: vi.fn(), PublicKey: MockPublicKey }
 })
 
-// Mock metcomet
-vi.mock('metcomet', () => ({
+// Mock the DLMM API client
+vi.mock('../../services/dlmmApi', () => ({
   fetchPositionPnL: vi.fn(),
 }))
 
@@ -187,7 +187,7 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
       // Mock PnL fetching
-      const { fetchPositionPnL } = await import('metcomet')
+      const { fetchPositionPnL } = await import('../../services/dlmmApi')
       vi.mocked(fetchPositionPnL).mockResolvedValue({
         positions: [MOCK_PNL_DATA],
         tokenX: null,
@@ -247,7 +247,7 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
       // PnL fetch throws
-      const { fetchPositionPnL } = await import('metcomet')
+      const { fetchPositionPnL } = await import('../../services/dlmmApi')
       vi.mocked(fetchPositionPnL).mockRejectedValue(new Error('API error'))
 
       pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
@@ -410,7 +410,7 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_X as any)
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
-      const { fetchPositionPnL } = await import('metcomet')
+      const { fetchPositionPnL } = await import('../../services/dlmmApi')
       vi.mocked(fetchPositionPnL).mockResolvedValue({
         positions: [MOCK_PNL_DATA],
         tokenX: null,
@@ -467,7 +467,7 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
       // PnL succeeds for pool1, fails for pool2
-      const { fetchPositionPnL } = await import('metcomet')
+      const { fetchPositionPnL } = await import('../../services/dlmmApi')
       vi.mocked(fetchPositionPnL)
         .mockResolvedValueOnce({
           positions: [MOCK_PNL_DATA],

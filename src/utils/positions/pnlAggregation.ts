@@ -1,4 +1,4 @@
-import type { PositionPnLData } from 'metcomet'
+import type { PositionPnLData } from '../../services/dlmmApi'
 import { parseFeePerTvl24h } from './formatters'
 
 export interface PoolPnLSummary {

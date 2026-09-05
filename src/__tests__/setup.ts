@@ -27,10 +27,10 @@ vi.mock('@meteora-ag/dlmm', () => ({
   // Add mocks as needed
 }))
 
-// Mock metcomet
-vi.mock('metcomet', () => ({
-  fetchPositionPnL: vi.fn(),
-}))
+// NOTE: no global mock for src/services/dlmmApi — it is a light, owned leaf
+// module (its only import is the pure formatters util), so test files import
+// the real thing and mock it locally where isolation is needed
+// (e.g. positionPipeline.test.ts).
 
 // Polyfill for BigInt in tests
 if (typeof BigInt === 'undefined') {

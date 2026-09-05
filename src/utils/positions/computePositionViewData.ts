@@ -1,5 +1,5 @@
 import { PositionBinData, type PositionData } from '@meteora-ag/dlmm'
-import type { PositionPnLData } from 'metcomet'
+import type { PositionPnLData } from '../../services/dlmmApi'
 import type { TokenInfo } from '../../tokens'
 import { formatTokenAmount, formatUSD, parseFeePerTvl24h } from './formatters'
 

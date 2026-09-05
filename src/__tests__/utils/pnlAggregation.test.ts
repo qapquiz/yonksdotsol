@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { PositionPnLData } from 'metcomet'
+import type { PositionPnLData } from '../../services/dlmmApi'
 import { computePoolPnLSummary } from '../../utils/positions/pnlAggregation'
 
 // ─── Helpers ─────────────────────────────────────────────────────────
