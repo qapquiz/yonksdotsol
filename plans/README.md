@@ -32,11 +32,12 @@
 | 002  | Historical-price disposition (recommend: delete) | P2 | S | — | DONE (Option A: orphaned PriceService + 2 fetchers deleted; tsgo/lint/fmt/test 143 all exit 0) |
 | 003  | SOL/USD display toggle | P2 | M | — | DONE (Steps 1-8,10 done, all gates green: tsgo/lint/fmt/test 155/build exit 0; Step 9 widget USD deferred → picked up by 007) |
 | 005  | Add `fetchOpenPortfolioSummary()` to metcomet (cross-repo) | P1 | S | — | DONE (impl complete & tested; type-check/lint/build/test all exit 0; format-CHECK red on pre-existing repo-wide debt — see Execute log) |
-| 006  | Switch widget data source to metcomet's open-portfolio summary | P1 | S | 005 (merged + published) | TODO |
-| 007  | Make the widget follow the app's SOL/USD toggle (= deferred Step 9 of 003) | P2 | S | 006 | TODO |
+| 006  | Switch widget data source to metcomet's open-portfolio summary | P1 | S | 005 (merged + published) | SUPERSEDED (by 013 — same widget fast path via the in-repo `dlmmApi` client; metcomet helper now unconsumed) |
+| 007  | Make the widget follow the app's SOL/USD toggle (= deferred Step 9 of 003) | P2 | S | 013 | TODO |
 | 008  | Document PnL semantics in the wiki | P2 | S | — | TODO |
 | 009  | Non-interactive price-movement chart + position min/max range band (in-card) | P2 | M | — | TODO |
 | 012  | Housekeeping sweep — dead code, `.env.example`, stale wiki links | P3 | S | — | DONE (deleted 5 dead exports + 19 tests; wired clearRangeState on disconnect; added .env.example; README bun + DEV_MOCK; removed stale PnLStore/useUpnlPerPosition wiki refs incl. 3 reconciled files; tsgo/lint/fmt/test 124 all exit 0) |
+| 013  | Owned DLMM data layer — in-repo API client, widget fast path, drop metcomet | P1 | M | — | TODO |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale).
 
@@ -92,10 +93,33 @@ Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJE
 
 ### Cross-repo checklist (for the operator)
 
+> **OBSOLETE since 013**: the app no longer consumes metcomet at all, so the
+> publish-then-update dance below no longer applies. 005 stays DONE in the
+> library; 006 is superseded. Kept for the historical record.
+
 1. Land Plan 005 in `../metcomet`, run its verification, and publish:
    `cd ../metcomet && bun run release` (decide `0.4.0` minor vs `0.3.6`
    patch; minor is recommended for a new public export).
 2. In the app: `bun update metcomet`, then start Plan 006.
+
+### 013 (owned data layer, planned 2026-09-03 at `78fb920`)
+
+- **013 supersedes 006.** Both deliver the same thing — the widget reading
+  server-aggregated `/portfolio/open` totals — but 013 owns the client
+  in-repo (`src/services/dlmmApi.ts`) instead of consuming a published
+  metcomet release. Plan 005's library feature (`fetchOpenPortfolioSummary`)
+  remains published in metcomet but is now unconsumed by this app.
+- **007 now depends on 013** (the widget summary path it builds on). Its
+  mechanics are unchanged; it gets easier — the API path returns USD and SOL
+  side by side (`balances` / `balancesSol`), so no derived conversion is
+  needed for the USD variant.
+- **011 is unaffected**: `PositionPipeline.loadPortfolio` keeps its shape
+  (only its PnL transport swaps underneath), so the background-sync alert
+  path still works. 013's maintenance notes also note 011 could later use
+  `/portfolio/open`'s `positionsOutOfRange` instead of any pipeline call.
+- The full `src/data/` re-layering (transports / domain / queries with the
+  `queries → domain ← transports` dependency rule) is deliberately NOT in
+  013 — see its Maintenance notes for the follow-up candidates.
 
 ### Pass 3 (012)
 
