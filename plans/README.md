@@ -37,7 +37,7 @@
 | 008  | Document PnL semantics in the wiki | P2 | S | — | TODO |
 | 009  | Non-interactive price-movement chart + position min/max range band (in-card) | P2 | M | — | TODO |
 | 012  | Housekeeping sweep — dead code, `.env.example`, stale wiki links | P3 | S | — | DONE (deleted 5 dead exports + 19 tests; wired clearRangeState on disconnect; added .env.example; README bun + DEV_MOCK; removed stale PnLStore/useUpnlPerPosition wiki refs incl. 3 reconciled files; tsgo/lint/fmt/test 124 all exit 0) |
-| 013  | Owned DLMM data layer — in-repo API client, widget fast path, drop metcomet | P1 | M | — | TODO |
+| 013  | Owned DLMM data layer — in-repo API client, widget fast path, drop metcomet | P1 | M | — | DONE (executed 2026-09-03 on `dev` at `7bdec5e`: dlmmApi client + 9 tests, widget on /portfolio/open server totals, metcomet removed; tsgo/lint/fmt/test 155/build all green; 3 reconciled deviations — see plan Reconciliation) |
 
 Status values: TODO | IN PROGRESS | DONE | BLOCKED (with one-line reason) | REJECTED (with one-line rationale).
 
