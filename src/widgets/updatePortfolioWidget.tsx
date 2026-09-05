@@ -3,7 +3,7 @@
 import type { WidgetRepresentation } from 'react-native-android-widget'
 import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget'
 import { createMMKV } from 'react-native-mmkv'
-import { createPositionPipeline } from '../services/positionPipeline'
+import { fetchOpenPortfolioSummary } from '../services/dlmmApi'
 import { themeTokens } from '../config/theme'
 
 // ─── Colors ──────────────────────────────────────────────────────────
@@ -339,22 +339,21 @@ function UpdatingWidget() {
 // ─── Data fetching (works in both headless and in-app contexts) ───────
 
 export async function fetchPortfolioSummary(walletAddress: string): Promise<PortfolioSummary | null> {
-  const pipeline = createPositionPipeline()
-  const result = await pipeline.fetchPortfolioSummary(walletAddress)
+  const summary = await fetchOpenPortfolioSummary({ user: walletAddress })
 
-  if (!result) {
+  if (summary.totalCount === 0) {
     return null
   }
 
   return {
-    totalPnlSol: result.totalPnlSol,
-    totalPnlPercent: result.totalPnlPercent,
-    totalValueSol: result.totalValueSol,
-    totalInitialDepositSol: result.totalInitialDepositSol,
-    totalUnclaimedFeesSol: result.totalUnclaimedFeesSol,
-    positionCount: result.positionCount,
-    outOfRangeCount: result.outOfRangeCount,
-    feesTvl24h: result.feesTvl24h ?? null,
+    totalPnlSol: summary.total.pnlSol != null ? Number(summary.total.pnlSol) : 0,
+    totalPnlPercent: summary.total.pnlPctChange != null ? Number(summary.total.pnlPctChange) : 0,
+    totalValueSol: summary.total.balancesSol != null ? Number(summary.total.balancesSol) : 0,
+    totalInitialDepositSol: summary.totalInitialDepositSol,
+    totalUnclaimedFeesSol: summary.total.unclaimedFeesSol != null ? Number(summary.total.unclaimedFeesSol) : 0,
+    positionCount: summary.totalCount,
+    outOfRangeCount: summary.outOfRangeCount,
+    feesTvl24h: summary.feesTvl24h,
   }
 }
 
