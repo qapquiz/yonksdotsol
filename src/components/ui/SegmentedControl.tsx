@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Pressable, View } from 'react-native'
 import type { LayoutChangeEvent } from 'react-native'
 import Animated, {
@@ -78,18 +78,27 @@ function SegmentedControlComponent<T extends string>({
     0,
     options.findIndex((option) => option.value === value),
   )
-  const geometry = useSharedValue<SegmentGeometry[]>([])
+  const geometry = useSharedValue<(SegmentGeometry | undefined)[]>([])
   const index = useSharedValue(selectedIndex)
+  const [layout, setLayout] = useState<(SegmentGeometry | undefined)[]>([])
 
   useEffect(() => {
     index.value = selectedIndex
   }, [selectedIndex, index])
 
+  // Layout flows through React state, never straight into the shared value:
+  // both items' onLayout fire in one batch, and reading `geometry.value` to
+  // append the second entry saw a stale array, writing a hole over segment 0
+  // — on native the pill then faded out whenever segment 0 was selected.
+  // Functional setState can't clobber, and this single dense write per commit
+  // reaches a pill that is already mounted and registered on the UI thread.
+  useEffect(() => {
+    geometry.value = options.map((_, i) => layout[i])
+  }, [layout, options, geometry])
+
   // The pill mounts unconditionally at zero size so its animated style is
-  // registered on the UI thread before any onLayout lands. Gating it on a
-  // `measured` state lost that race on native: the style evaluated before
-  // geometry existed and the later shared-value update was dropped, leaving
-  // the pill invisible. Both branches keep the same style shape on purpose.
+  // registered before geometry exists; both branches keep the same style
+  // shape so Reanimated never swaps style keys.
   const indicatorStyle = useAnimatedStyle(() => {
     const pos = geometry.value[index.value]
     return {
@@ -101,9 +110,13 @@ function SegmentedControlComponent<T extends string>({
 
   const handleItemLayout = (i: number) => (e: LayoutChangeEvent) => {
     const { x, width } = e.nativeEvent.layout
-    const next = [...geometry.value]
-    next[i] = { x, w: width }
-    geometry.value = next
+    setLayout((prev) => {
+      const current = prev[i]
+      if (current && current.x === x && current.w === width) return prev
+      const next = [...prev]
+      next[i] = { x, w: width }
+      return next
+    })
   }
 
   return (
