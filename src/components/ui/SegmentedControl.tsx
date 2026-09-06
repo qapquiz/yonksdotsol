@@ -1,5 +1,5 @@
-import { memo, useEffect, useState } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { memo, useEffect } from 'react'
+import { Pressable, View } from 'react-native'
 import type { LayoutChangeEvent } from 'react-native'
 import Animated, {
   ReduceMotion,
@@ -80,19 +80,22 @@ function SegmentedControlComponent<T extends string>({
   )
   const geometry = useSharedValue<SegmentGeometry[]>([])
   const index = useSharedValue(selectedIndex)
-  const [measured, setMeasured] = useState(false)
 
   useEffect(() => {
     index.value = selectedIndex
   }, [selectedIndex, index])
 
+  // The pill mounts unconditionally at zero size so its animated style is
+  // registered on the UI thread before any onLayout lands. Gating it on a
+  // `measured` state lost that race on native: the style evaluated before
+  // geometry existed and the later shared-value update was dropped, leaving
+  // the pill invisible. Both branches keep the same style shape on purpose.
   const indicatorStyle = useAnimatedStyle(() => {
     const pos = geometry.value[index.value]
-    if (!pos) return { opacity: 0 }
     return {
-      opacity: 1,
-      width: withSpring(pos.w, SPRING),
-      transform: [{ translateX: withSpring(pos.x, SPRING) }],
+      opacity: withTiming(pos ? 1 : 0, COLOR_TIMING),
+      width: withSpring(pos?.w ?? 0, SPRING),
+      transform: [{ translateX: withSpring(pos?.x ?? 0, SPRING) }],
     }
   })
 
@@ -101,20 +104,17 @@ function SegmentedControlComponent<T extends string>({
     const next = [...geometry.value]
     next[i] = { x, w: width }
     geometry.value = next
-    if (next.filter(Boolean).length === options.length) setMeasured(true)
   }
 
   return (
     <View className={`flex-row bg-app-bg/50 rounded-lg p-1 border border-app-border/50 ${className}`}>
-      {measured && (
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            { position: 'absolute', top: 4, bottom: 4, left: 0, borderRadius: 6, backgroundColor: tokens.primaryDim },
-            indicatorStyle,
-          ]}
-        />
-      )}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          { position: 'absolute', top: 4, bottom: 4, left: 0, borderRadius: 6, backgroundColor: tokens.primaryDim },
+          indicatorStyle,
+        ]}
+      />
       {options.map((option, i) => (
         <Pressable
           key={option.value}
