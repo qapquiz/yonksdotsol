@@ -11,6 +11,15 @@ function createBins(count: number, startBinId = 0): ChartBinData[] {
   }))
 }
 
+function createFlatBins(count: number, startBinId = 0): ChartBinData[] {
+  return Array.from({ length: count }, (_, i) => ({
+    binId: startBinId + i,
+    positionXAmountInSOL: 1,
+    positionYAmountInSOL: 2,
+    price: 1 + i * 0.01,
+  }))
+}
+
 describe('downsampleChartBins', () => {
   it('returns the input untouched when length is at or below maxBars', () => {
     const bins = createBins(50)
@@ -23,29 +32,36 @@ describe('downsampleChartBins', () => {
     expect(result).toHaveLength(MAX_CHART_BINS)
   })
 
-  it('sums both token amounts per bucket', () => {
+  it('keeps the peak bin per bucket (not the sum)', () => {
     // 300 bins into 100 buckets → exactly 3 bins per bucket
     const result = downsampleChartBins(createBins(300), 100, 150)
 
-    // bucket 0 holds bins 0-2: X = 1+2+3 = 6, Y = 2+4+6 = 12
-    expect(result[0].positionXAmountInSOL).toBe(6)
-    expect(result[0].positionYAmountInSOL).toBe(12)
-    // bucket 1 holds bins 3-5: X = 4+5+6 = 15, Y = 8+10+12 = 30
-    expect(result[1].positionXAmountInSOL).toBe(15)
-    expect(result[1].positionYAmountInSOL).toBe(30)
+    // bucket 0 holds bins 0-2, peak is bin 2
+    expect(result[0].positionXAmountInSOL).toBe(3)
+    expect(result[0].positionYAmountInSOL).toBe(6)
+    // bucket 1 holds bins 3-5, peak is bin 5
+    expect(result[1].positionXAmountInSOL).toBe(6)
+    expect(result[1].positionYAmountInSOL).toBe(12)
   })
 
-  it('preserves total amounts across uneven bucket sizes', () => {
-    const bins = createBins(250)
-    const result = downsampleChartBins(bins, 100, 125)
+  it('keeps uniform bars across uneven bucket sizes (no comb)', () => {
+    // 250 bins into 100 buckets → buckets of 2 and 3 bins; equal-magnitude
+    // inputs must yield equal-height buckets, which summing would break
+    const result = downsampleChartBins(createFlatBins(250), 100, 125)
 
-    const totalX = bins.reduce((sum, b) => sum + b.positionXAmountInSOL, 0)
-    const totalY = bins.reduce((sum, b) => sum + b.positionYAmountInSOL, 0)
-    const bucketX = result.reduce((sum, b) => sum + b.positionXAmountInSOL, 0)
-    const bucketY = result.reduce((sum, b) => sum + b.positionYAmountInSOL, 0)
+    for (const bucket of result) {
+      expect(bucket.positionXAmountInSOL).toBe(1)
+      expect(bucket.positionYAmountInSOL).toBe(2)
+    }
+  })
 
-    expect(bucketX).toBe(totalX)
-    expect(bucketY).toBe(totalY)
+  it('preserves the global peak across the envelope', () => {
+    const bins = createBins(300)
+    const result = downsampleChartBins(bins, 100, 150)
+
+    const globalPeak = Math.max(...bins.map((b) => b.positionXAmountInSOL + b.positionYAmountInSOL))
+    const bucketPeak = Math.max(...result.map((b) => b.positionXAmountInSOL + b.positionYAmountInSOL))
+    expect(bucketPeak).toBe(globalPeak)
   })
 
   it('keeps the first bin price per bucket in ascending order', () => {

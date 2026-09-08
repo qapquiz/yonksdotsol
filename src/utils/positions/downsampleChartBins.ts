@@ -7,10 +7,14 @@ export const MAX_CHART_BINS = 100
  * Aggregates a bin distribution into at most `maxBars` contiguous buckets for
  * chart rendering. At or below `maxBars` the input is returned untouched.
  *
- * Each bucket sums both token amounts and keeps the first bin's `price`
- * (prices ascend by bin, so buckets stay monotonic). A bucket reports its
- * first bin's `binId` — except the bucket containing `activeBinId`, which
- * reports `activeBinId` as its `binId` so the chart's
+ * Each bucket keeps its **peak bin** (largest combined SOL amount) rather than
+ * a sum: bucket sizes are uneven whenever the bin count doesn't divide evenly,
+ * and summed buckets with an extra bin sit systematically taller — a periodic
+ * comb over smooth regions. The max preserves the distribution's envelope
+ * independent of bucket size. A bucket reports its first bin's `price`
+ * (prices ascend by bin, so buckets stay monotonic) and its first bin's
+ * `binId` — except the bucket containing `activeBinId`, which reports
+ * `activeBinId` as its `binId` so the chart's
  * `binId === currentActiveId` color check marks exactly that bucket.
  */
 export function downsampleChartBins(bins: ChartBinData[], maxBars: number, activeBinId: number): ChartBinData[] {
@@ -38,8 +42,13 @@ export function downsampleChartBins(bins: ChartBinData[], maxBars: number, activ
       bucket.binId = activeBinId
     }
 
-    bucket.positionXAmountInSOL += bin.positionXAmountInSOL
-    bucket.positionYAmountInSOL += bin.positionYAmountInSOL
+    if (
+      bin.positionXAmountInSOL + bin.positionYAmountInSOL >
+      bucket.positionXAmountInSOL + bucket.positionYAmountInSOL
+    ) {
+      bucket.positionXAmountInSOL = bin.positionXAmountInSOL
+      bucket.positionYAmountInSOL = bin.positionYAmountInSOL
+    }
   }
 
   return buckets
