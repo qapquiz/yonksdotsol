@@ -237,8 +237,6 @@ export interface OpenPortfolioSummary {
   solPrice: number | null
   /** Server-reported total open position count (last page wins; server keeps it global) */
   totalCount: number
-  /** Σ pool `totalDepositSol` across pages (gross historical deposits, SOL) */
-  totalInitialDepositSol: number
   /** Σ `positionsOutOfRange.length` across pages */
   outOfRangeCount: number
   /** Pool-value-weighted 24h fees/TVL, daily ratio (0.0131 = 1.31%); null when no weight */
@@ -246,11 +244,16 @@ export interface OpenPortfolioSummary {
 }
 
 /**
- * Walk every page of /portfolio/open and roll up the three fields the
- * server doesn't aggregate (gross deposits, out-of-range count, weighted
- * fees/TVL). One call replaces the widget's full on-chain pipeline.
+ * Walk every page of /portfolio/open and roll up the two fields the
+ * server doesn't aggregate (out-of-range count, weighted fees/TVL). One
+ * call replaces the widget's full on-chain pipeline.
  * Throws DlmmApiError on transport failure or if the page limit is reached
  * before the result is complete.
+ *
+ * Note: per-pool `totalDepositSol` is deliberately NOT rolled up — it is
+ * gross historical deposits and double-counts redeposits after a
+ * withdrawal. Consumers wanting a deposited figure must derive a net cost
+ * basis (value − uPnL), as the widget does.
  */
 export async function fetchOpenPortfolioSummary(params: FetchOpenPortfolioParams): Promise<OpenPortfolioSummary> {
   const page_size = params.page_size ?? DEFAULT_PAGE_SIZE
@@ -271,13 +274,11 @@ export async function fetchOpenPortfolioSummary(params: FetchOpenPortfolioParams
     throw new DlmmApiError('DLMM API /portfolio/open returned no data')
   }
 
-  let totalInitialDepositSol = 0
   let outOfRangeCount = 0
   let weightedFeeSum = 0
   let feeWeightSum = 0
 
   for (const pool of pools) {
-    if (pool.totalDepositSol) totalInitialDepositSol += parseFloat(pool.totalDepositSol)
     outOfRangeCount += pool.positionsOutOfRange?.length ?? 0
 
     const ratio = parseFeePerTvl24h(pool.feePerTvl24h)
@@ -293,7 +294,6 @@ export async function fetchOpenPortfolioSummary(params: FetchOpenPortfolioParams
     total,
     solPrice,
     totalCount,
-    totalInitialDepositSol,
     outOfRangeCount,
     feesTvl24h: feeWeightSum > 0 ? weightedFeeSum / feeWeightSum : null,
   }

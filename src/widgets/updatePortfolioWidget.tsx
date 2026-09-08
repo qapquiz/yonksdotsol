@@ -345,11 +345,18 @@ export async function fetchPortfolioSummary(walletAddress: string): Promise<Port
     return null
   }
 
+  const totalValueSol = summary.total.balancesSol != null ? Number(summary.total.balancesSol) : 0
+  const totalPnlSol = summary.total.pnlSol != null ? Number(summary.total.pnlSol) : 0
+
   return {
-    totalPnlSol: summary.total.pnlSol != null ? Number(summary.total.pnlSol) : 0,
+    totalPnlSol,
     totalPnlPercent: summary.total.pnlPctChange != null ? Number(summary.total.pnlPctChange) : 0,
-    totalValueSol: summary.total.balancesSol != null ? Number(summary.total.balancesSol) : 0,
-    totalInitialDepositSol: summary.totalInitialDepositSol,
+    totalValueSol,
+    // /portfolio/open only exposes GROSS deposits (Σ pool totalDepositSol),
+    // which double-counts redeposits after a withdrawal. The net cost basis
+    // is derived from the server's own value/uPnL pair — the same fallback
+    // semantic as the in-app computePoolPnLSummary (ADR 0002).
+    totalInitialDepositSol: totalValueSol - totalPnlSol,
     totalUnclaimedFeesSol: summary.total.unclaimedFeesSol != null ? Number(summary.total.unclaimedFeesSol) : 0,
     positionCount: summary.totalCount,
     outOfRangeCount: summary.outOfRangeCount,

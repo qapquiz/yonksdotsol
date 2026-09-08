@@ -144,19 +144,17 @@ describe('fetchOpenPortfolioSummary', () => {
     expect(summary.totalCount).toBe(1) // last page's server-global count
   })
 
-  it('rolls up deposits, out-of-range count, and pool-value-weighted fees/TVL', async () => {
+  it('rolls up out-of-range count and pool-value-weighted fees/TVL', async () => {
     fetchMock.mockResolvedValue(
       openPage([
         poolItem({
           poolAddress: 'A',
-          totalDepositSol: '1.5',
           positionsOutOfRange: ['pos1'],
           feePerTvl24h: '1.00', // → 0.01 ratio
           balancesSol: '0.2',
         }),
         poolItem({
           poolAddress: 'B',
-          totalDepositSol: '2.25',
           positionsOutOfRange: ['pos2', 'pos3'],
           feePerTvl24h: '2.00', // → 0.02 ratio
           balancesSol: '0.6',
@@ -165,7 +163,6 @@ describe('fetchOpenPortfolioSummary', () => {
     )
     const summary = await fetchOpenPortfolioSummary({ user: 'WALLET' })
 
-    expect(summary.totalInitialDepositSol).toBe(3.75)
     expect(summary.outOfRangeCount).toBe(3)
     // (0.01×0.2 + 0.02×0.6) / 0.8
     expect(summary.feesTvl24h).toBeCloseTo(0.0175, 10)
@@ -177,7 +174,6 @@ describe('fetchOpenPortfolioSummary', () => {
 
     expect(summary.totalCount).toBe(0)
     expect(summary.pools).toEqual([])
-    expect(summary.totalInitialDepositSol).toBe(0)
     expect(summary.outOfRangeCount).toBe(0)
     expect(summary.feesTvl24h).toBeNull()
   })

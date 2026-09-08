@@ -30,9 +30,14 @@ plan 006 was superseded before landing.
 - Two summary numeration paths exist **deliberately**: in-app =
   position-value-weighted, net cost basis (deposits − withdrawals);
   widget = server totals + cross-page rollups (pool-value-weighted
-  fees/TVL, gross deposits). The two may differ slightly for wallets with
-  withdrawals or heterogeneous pools; both derive from the same per-event
-  server data, and PnL semantics are unchanged (ADR 0001).
+  fees/TVL) with deposited derived as **value − uPnL** from the same
+  server snapshot. The server's per-pool `totalDepositSol` is gross and
+  double-counts redeposits after a withdrawal — on a real wallet it read
+  14.16 SOL deposited vs the in-app net of 4.58 SOL, so the gross rollup
+  was removed from the client and the widget derives the net basis instead
+  (same fallback semantic as `computePoolPnLSummary`). The two deposited
+  figures can still differ slightly (event history vs derived basis);
+  PnL semantics are unchanged (ADR 0001).
 - The widget data path has **no RPC, SDK, or Helius dependency** — it works
   whenever the DLMM Data API is reachable.
 - The owned client replaces `metcomet` for this app; its error semantics
