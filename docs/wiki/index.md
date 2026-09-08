@@ -2,7 +2,7 @@
 title: Wiki Index
 type: index
 created: 2026-04-18
-updated: 2026-06-30
+updated: 2026-09-08
 tags: [index, wiki]
 ---
 
@@ -18,16 +18,17 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 
 ## Entities
 
-| Page                        | Description                                | Location                                         |
-| --------------------------- | ------------------------------------------ | ------------------------------------------------ |
-| [[Connection]]              | Singleton Solana RPC connection            | `src/config/connection.ts`                       |
-| [[CacheManager]]            | Centralized caching with TTL and dedup     | `src/utils/cache/CacheManager.ts`                |
-| [[PositionInfo]]            | Meteora DLMM position data structure       | `@meteora-ag/dlmm`                               |
-| [[SettingsStore]]           | Zustand store for theme and preferences    | `src/stores/settingsStore.ts`                    |
-| [[ShimmerBlock]]            | Skeleton loading animation component       | `src/components/ui/ShimmerBlock.tsx`             |
-| [[usePositionsPage]]        | Main data orchestration hook for positions | `src/hooks/usePositionsPage.ts`                  |
-| [[useWalletLifecycle]]      | Wallet connection lifecycle hook           | `src/hooks/useWalletLifecycle.ts`                |
-| [[computePositionViewData]] | Pure position → view model transformer     | `src/utils/positions/computePositionViewData.ts` |
+| Page                        | Description                                   | Location                                         |
+| --------------------------- | --------------------------------------------- | ------------------------------------------------ |
+| [[Connection]]              | Singleton Solana RPC connection               | `src/config/connection.ts`                       |
+| [[CacheManager]]            | TTL, dedup, and invalidation during requests  | `src/utils/cache/CacheManager.ts`                |
+| [[DlmmApi]]                 | Typed requests and complete paginated results | `src/services/dlmmApi.ts`                        |
+| [[PositionInfo]]            | Meteora DLMM position data structure          | `@meteora-ag/dlmm`                               |
+| [[SettingsStore]]           | Zustand store for theme and preferences       | `src/stores/settingsStore.ts`                    |
+| [[ShimmerBlock]]            | Skeleton loading animation component          | `src/components/ui/ShimmerBlock.tsx`             |
+| [[usePositionsPage]]        | Main data orchestration hook for positions    | `src/hooks/usePositionsPage.ts`                  |
+| [[useWalletLifecycle]]      | Wallet connection lifecycle hook              | `src/hooks/useWalletLifecycle.ts`                |
+| [[computePositionViewData]] | Pure position → view model transformer        | `src/utils/positions/computePositionViewData.ts` |
 
 ## Components
 
@@ -49,7 +50,7 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 
 | Page                      | Description                                                              |
 | ------------------------- | ------------------------------------------------------------------------ |
-| [[Caching Strategy]]      | TTL-based caching with request dedup                                     |
+| [[Caching Strategy]]      | Shared caching, query extension, and request invalidation                |
 | [[Theming]]               | Dark/light mode with Uniwind tokens — see [`DESIGN.md`](../../DESIGN.md) |
 | [[Connection Lifecycle]]  | Singleton pattern for RPC connection                                     |
 | [[Position Architecture]] | One pair → many positions relationship                                   |
@@ -57,13 +58,14 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 
 ## Guides
 
-| Page                          | Description                               |
-| ----------------------------- | ----------------------------------------- |
-| [[ast-grep]]                  | Structural code search patterns and rules |
-| [[Number Formatting]]         | Formatting conventions for numbers        |
-| [[Loading States]]            | Skeleton vs empty vs data patterns        |
-| [[Performance Optimizations]] | Memo, FlashList, and render optimization  |
-| [[Testing]]                   | Vitest setup, patterns, and coverage      |
+| Page                                       | Description                                            |
+| ------------------------------------------ | ------------------------------------------------------ |
+| [[ast-grep]]                               | Structural code search patterns and rules              |
+| [[Number Formatting]]                      | Formatting conventions for numbers                     |
+| [[Loading States]]                         | Skeleton vs empty vs data patterns                     |
+| [[Performance Optimizations]]              | Memo, FlashList, and render optimization               |
+| [[Testing]]                                | Vitest setup, patterns, and coverage                   |
+| [[Codebase Improvement Report 2026-09-08]] | Cache and pagination fixes, comparison, and validation |
 
 ## Raw Staging Area
 

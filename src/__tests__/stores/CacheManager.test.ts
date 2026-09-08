@@ -1,13 +1,31 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { CacheManager } from '../../utils/cache/CacheManager'
+
+interface Deferred<T> {
+  promise: Promise<T>
+  resolve: (value: T) => void
+  reject: (reason: Error) => void
+}
+
+function deferred<T>(): Deferred<T> {
+  let resolve!: (value: T) => void
+  let reject!: (reason: Error) => void
+  const promise = new Promise<T>((resolvePromise, rejectPromise) => {
+    resolve = resolvePromise
+    reject = rejectPromise
+  })
+  return { promise, resolve, reject }
+}
 
 describe('CacheManager', () => {
   let cache: CacheManager
 
   beforeEach(() => {
-    // Get fresh instance and clear it
-    cache = CacheManager.getInstance()
-    cache.clear()
+    cache = CacheManager.createFresh()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   describe('getInstance', () => {
@@ -58,6 +76,23 @@ describe('CacheManager', () => {
 
       expect(cache.get('key')).toBe('value')
       vi.useRealTimers()
+    })
+
+    it('expires at the TTL deadline', () => {
+      vi.useFakeTimers()
+      cache.set('key', 'value', 100)
+
+      vi.advanceTimersByTime(100)
+
+      expect(cache.has('key')).toBe(false)
+      expect(cache.get('key')).toBeNull()
+    })
+
+    it('does not retain a value with a zero TTL', () => {
+      vi.useFakeTimers()
+      cache.set('key', 'value', 0)
+
+      expect(cache.get('key')).toBeNull()
     })
   })
 
@@ -125,6 +160,19 @@ describe('CacheManager', () => {
   })
 
   describe('getOrFetch', () => {
+    it('caches null results for their TTL', async () => {
+      vi.useFakeTimers()
+      const fetchFn = vi.fn().mockResolvedValue(null)
+
+      await expect(cache.getOrFetch('key', fetchFn, 100)).resolves.toBeNull()
+      await expect(cache.getOrFetch('key', fetchFn, 100)).resolves.toBeNull()
+      expect(fetchFn).toHaveBeenCalledTimes(1)
+
+      vi.advanceTimersByTime(100)
+      await expect(cache.getOrFetch('key', fetchFn, 100)).resolves.toBeNull()
+      expect(fetchFn).toHaveBeenCalledTimes(2)
+    })
+
     it('returns cached value without calling fetch', async () => {
       const fetchFn = vi.fn().mockResolvedValue('fetched')
       cache.set('key', 'cached')
@@ -180,6 +228,18 @@ describe('CacheManager', () => {
       await expect(cache.getOrFetch('key', fetchFn)).rejects.toThrow('fetch failed')
     })
 
+    it('deduplicates synchronous fetch failures and allows a later retry', async () => {
+      const fetchFn = vi.fn((): Promise<string> => {
+        throw new Error('fetch failed')
+      })
+
+      const results = await Promise.allSettled([cache.getOrFetch('key', fetchFn), cache.getOrFetch('key', fetchFn)])
+
+      expect(results.map((result) => result.status)).toEqual(['rejected', 'rejected'])
+      expect(fetchFn).toHaveBeenCalledTimes(1)
+      await expect(cache.getOrFetch('key', async () => 'recovered')).resolves.toBe('recovered')
+    })
+
     it('clears pending after error', async () => {
       const fetchFn = vi.fn().mockRejectedValue(new Error('fetch failed'))
 
@@ -214,5 +274,108 @@ describe('CacheManager', () => {
 
       vi.useRealTimers()
     })
+  })
+
+  describe.each(['delete', 'clear', 'invalidatePattern'] as const)('%s during a fetch', (method) => {
+    const key = 'pnl:pool:wallet'
+
+    function invalidate(manager: CacheManager): void {
+      if (method === 'clear') manager.clear()
+      else if (method === 'delete') manager.delete(key)
+      else manager.invalidatePattern(':wallet')
+    }
+
+    it('does not restore invalidated data when an old request completes', async () => {
+      const old = deferred<string>()
+      const oldRequest = cache.getOrFetch(key, () => old.promise)
+      await Promise.resolve()
+
+      invalidate(cache)
+      old.resolve('stale')
+
+      await expect(oldRequest).resolves.toBe('stale')
+      expect(cache.has(key)).toBe(false)
+    })
+
+    it('starts a fresh request after invalidation and protects its result', async () => {
+      const old = deferred<string>()
+      const oldRequest = cache.getOrFetch(key, () => old.promise)
+      await Promise.resolve()
+      invalidate(cache)
+
+      const fetchFresh = vi.fn().mockResolvedValue('fresh')
+      const freshRequest = cache.getOrFetch(key, fetchFresh)
+      // Release both so an incorrect join fails assertions instead of timing out.
+      old.resolve('stale')
+      await oldRequest
+
+      await expect(freshRequest).resolves.toBe('fresh')
+      expect(fetchFresh).toHaveBeenCalledTimes(1)
+      expect(cache.get(key)).toBe('fresh')
+    })
+
+    it('does not overwrite a newer cached result when the old response arrives last', async () => {
+      const old = deferred<string>()
+      const oldRequest = cache.getOrFetch(key, () => old.promise)
+      await Promise.resolve()
+      invalidate(cache)
+
+      // An explicit write also supersedes any previous fetch.
+      cache.set(key, 'fresh')
+      old.resolve('stale')
+      await oldRequest
+
+      expect(cache.get(key)).toBe('fresh')
+    })
+
+    it.each(['resolve', 'reject'] as const)(
+      'keeps the new request deduplicated when the old one %ss',
+      async (outcome) => {
+        const old = deferred<string>()
+        const fresh = deferred<string>()
+        const oldRequest = cache.getOrFetch(key, () => old.promise).catch(() => 'failed')
+        await Promise.resolve()
+        invalidate(cache)
+        const freshRequest = cache.getOrFetch(key, () => fresh.promise)
+
+        if (outcome === 'resolve') old.resolve('stale')
+        else old.reject(new Error('old request failed'))
+        await oldRequest
+
+        const duplicateFetch = vi.fn().mockResolvedValue('duplicate')
+        const joinedRequest = cache.getOrFetch(key, duplicateFetch)
+        fresh.resolve('fresh')
+
+        await expect(freshRequest).resolves.toBe('fresh')
+        await expect(joinedRequest).resolves.toBe('fresh')
+        expect(duplicateFetch).not.toHaveBeenCalled()
+        expect(cache.get(key)).toBe('fresh')
+      },
+    )
+  })
+
+  it('preserves unrelated pending requests during pattern invalidation', async () => {
+    const pending = deferred<string>()
+    const request = cache.getOrFetch('pnl:pool:other-wallet', () => pending.promise)
+    cache.invalidatePattern(':wallet')
+    const duplicateFetch = vi.fn().mockResolvedValue('duplicate')
+    const joinedRequest = cache.getOrFetch('pnl:pool:other-wallet', duplicateFetch)
+    pending.resolve('other wallet')
+
+    await expect(request).resolves.toBe('other wallet')
+    await expect(joinedRequest).resolves.toBe('other wallet')
+    expect(duplicateFetch).not.toHaveBeenCalled()
+    expect(cache.get('pnl:pool:other-wallet')).toBe('other wallet')
+  })
+
+  it('does not let a pending fetch overwrite an explicit set', async () => {
+    const old = deferred<string>()
+    const request = cache.getOrFetch('key', () => old.promise)
+    await Promise.resolve()
+    cache.set('key', 'fresh')
+    old.resolve('stale')
+    await request
+
+    expect(cache.get('key')).toBe('fresh')
   })
 })

@@ -16,7 +16,7 @@ export const DLMM_API_BASE = 'https://dlmm.datapi.meteora.ag'
 
 // ─── Errors ──────────────────────────────────────────────────────────
 
-/** Raised on network failure or non-OK responses. Callers catch and degrade. */
+/** Raised on network/HTTP failure or incomplete pagination. Callers catch and degrade. */
 export class DlmmApiError extends Error {
   readonly status: number | null
 
@@ -38,6 +38,28 @@ async function requestJson<T>(url: string): Promise<T> {
     throw new DlmmApiError(`DLMM API ${response.status} for ${url}`, response.status)
   }
   return (await response.json()) as T
+}
+
+const DEFAULT_PAGE_SIZE = 50
+const MAX_PAGES = 10
+
+interface PaginatedResponse {
+  hasNext: boolean
+}
+
+/** A result is complete only when the server says there are no more pages. */
+async function fetchPages<T extends PaginatedResponse>(
+  fetchPage: (page: number) => Promise<T>,
+  startPage = 1,
+): Promise<T[]> {
+  const pages: T[] = []
+  for (let offset = 0; offset < MAX_PAGES; offset++) {
+    const response = await fetchPage(startPage + offset)
+    pages.push(response)
+    if (!response.hasNext) return pages
+  }
+
+  throw new DlmmApiError(`DLMM API pagination exceeded ${MAX_PAGES} pages; result is incomplete`)
 }
 
 // ─── Wire types: GET /positions/{pool}/pnl ───────────────────────────
@@ -125,6 +147,14 @@ export async function fetchPositionPnL(params: FetchPositionPnLParams): Promise<
   if (params.page) url.searchParams.set('page', String(params.page))
   if (params.page_size) url.searchParams.set('page_size', String(params.page_size))
   return requestJson<PositionPnLResponse>(url.toString())
+}
+
+/** Fetch all position PnL pages for a pool, or reject without returning partial data. */
+export async function fetchAllPositionPnL(params: Omit<FetchPositionPnLParams, 'page'>): Promise<PositionPnLData[]> {
+  const pages = await fetchPages((page) =>
+    fetchPositionPnL({ ...params, page, page_size: params.page_size ?? DEFAULT_PAGE_SIZE }),
+  )
+  return pages.flatMap((response) => response.positions ?? [])
 }
 
 // ─── Wire types: GET /portfolio/open ─────────────────────────────────
@@ -215,32 +245,26 @@ export interface OpenPortfolioSummary {
   feesTvl24h: number | null
 }
 
-const SUMMARY_PAGE_SIZE = 50
-const MAX_SUMMARY_PAGES = 10
-
 /**
  * Walk every page of /portfolio/open and roll up the three fields the
  * server doesn't aggregate (gross deposits, out-of-range count, weighted
  * fees/TVL). One call replaces the widget's full on-chain pipeline.
- * Throws DlmmApiError on transport failure.
+ * Throws DlmmApiError on transport failure or if the page limit is reached
+ * before the result is complete.
  */
 export async function fetchOpenPortfolioSummary(params: FetchOpenPortfolioParams): Promise<OpenPortfolioSummary> {
-  const page_size = params.page_size ?? SUMMARY_PAGE_SIZE
+  const page_size = params.page_size ?? DEFAULT_PAGE_SIZE
+  const pages = await fetchPages((page) => fetchOpenPortfolio({ ...params, page, page_size }), params.page)
 
   let pools: PoolOpenPortfolioItem[] = []
   let total: TotalMetrics | null = null
   let solPrice: number | null = null
   let totalCount = 0
-  let page = params.page ?? 1
-
-  for (let fetched = 0; fetched < MAX_SUMMARY_PAGES; fetched++) {
-    const response = await fetchOpenPortfolio({ ...params, page, page_size })
+  for (const response of pages) {
     pools = pools.concat(response.pools ?? [])
     total = response.total
     solPrice = response.solPrice != null ? Number(response.solPrice) : null
     totalCount = response.totalCount
-    if (!response.hasNext) break
-    page += 1
   }
 
   if (!total) {

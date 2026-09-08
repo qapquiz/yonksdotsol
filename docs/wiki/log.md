@@ -121,3 +121,9 @@ The home-screen widget (`src/widgets/updatePortfolioWidget.tsx`) was the last su
 - **Structure aligned to the Readout hero:** title → "N POSITIONS" (dropped literal title + count badge); total value lifted from a buried stat column to the anchor line under the PnL hero; stats row → DEPOSITED / UNCLAIMED FEES / 24H FEES TVL (VALUE folded out, yield band folded in). Error/no-positions states share the cleaned header.
 - **theme.ts:** `themeTokens` now declared `as const satisfies Record<ThemeMode, ThemeTokens>` so direct readers (widget, PixelAvatar) get precise literal types (assignable to RemoteViews `ColorProp`); the `useThemeTokens` hook still returns the widened interface.
 - DESIGN.md gains an "Android Widget" section.
+
+## [2026-09-08] fix | Cache request ownership and complete pagination
+
+Fixed stale cache writes after invalidation, interference between old and new pending requests, repeated fetches for cached `null`, and expiration at the TTL deadline. Added complete position PnL pagination and shared its page walker with widget summaries; incomplete results now reject at the page limit.
+
+Updated [[CacheManager]] and [[Caching Strategy]], created [[DlmmApi]], and recorded before/after behavior, verification, and remaining scope in [[Codebase Improvement Report 2026-09-08]]. The expanded suite passes 181 tests across 13 files. Updated [[index]] with the changed pages.

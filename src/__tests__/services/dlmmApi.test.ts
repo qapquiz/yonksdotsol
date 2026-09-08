@@ -188,4 +188,32 @@ describe('fetchOpenPortfolioSummary', () => {
     expect(err).toBeInstanceOf(DlmmApiError)
     expect(err.status).toBe(503)
   })
+
+  it('rejects an incomplete summary when the page limit is reached', async () => {
+    fetchMock.mockResolvedValue(openPage([poolItem({})], { hasNext: true }))
+
+    await expect(fetchOpenPortfolioSummary({ user: 'WALLET' })).rejects.toThrow(DlmmApiError)
+    expect(fetchMock).toHaveBeenCalledTimes(10)
+  })
+
+  it('accepts a complete summary ending on the last allowed page', async () => {
+    for (let page = 1; page <= 10; page++) {
+      fetchMock.mockResolvedValueOnce(
+        openPage([poolItem({ poolAddress: `POOL-${page}` })], { hasNext: page < 10, page }),
+      )
+    }
+
+    const summary = await fetchOpenPortfolioSummary({ user: 'WALLET' })
+
+    expect(summary.pools).toHaveLength(10)
+    expect(fetchMock).toHaveBeenCalledTimes(10)
+  })
+
+  it('does not return partial rollups when a later page fails', async () => {
+    fetchMock
+      .mockResolvedValueOnce(openPage([poolItem({})], { hasNext: true }))
+      .mockResolvedValueOnce(jsonResponse({}, false, 503))
+
+    await expect(fetchOpenPortfolioSummary({ user: 'WALLET' })).rejects.toThrow(DlmmApiError)
+  })
 })

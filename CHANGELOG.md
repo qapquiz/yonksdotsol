@@ -22,6 +22,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   the prop after mount, which left the chart blank whenever data arrived
   after first render.
 
+## [5.1.4] - 2026-09-08
+
+### Fixed
+
+- Cache invalidation now detaches pending requests so late responses cannot
+  restore stale data, overwrite explicit writes, or disrupt newer requests.
+- Successful null cache results are retained for their TTL, and entries expire
+  at the exact deadline, including a zero TTL.
+- Position PnL now loads all pages before caching and aggregation, including
+  positions that were previously omitted after the first page.
+- Widget summaries reject incomplete results when the pagination limit is
+  reached, using the existing error path instead of displaying partial rollups.
+
+### Changed
+
+- Shared cache freshness and API pagination rules simplify future data queries.
+- Pipeline tests exercise the real API client with fixture HTTP responses;
+  the suite now contains 181 passing tests.
+- Added the [codebase improvement report](docs/wiki/guides/Codebase%20Improvement%20Report%202026-09-08.md)
+  with the before/after comparison, validation, and remaining limitations.
+
 ## [5.1.0] - 2026-09-03
 
 ### Added

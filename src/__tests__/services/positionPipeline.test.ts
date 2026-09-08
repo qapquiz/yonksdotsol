@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { PositionPnLData } from '../../services/dlmmApi'
 import { createPositionPipeline, type PositionPipeline } from '../../services/positionPipeline'
 import { CacheManager } from '../../utils/cache/CacheManager'
@@ -29,10 +29,14 @@ vi.mock('@solana/web3.js', () => {
   return { Connection: vi.fn(), PublicKey: MockPublicKey }
 })
 
-// Mock the DLMM API client
-vi.mock('../../services/dlmmApi', () => ({
-  fetchPositionPnL: vi.fn(),
-}))
+// Exercise the real API client and pagination; replace only its network transport.
+const fetchMock = vi.fn()
+
+function pnlPage(positions: PositionPnLData[], hasNext = false): Response {
+  return new Response(JSON.stringify({ positions, hasNext }), {
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
 
 // Mock token fetching
 vi.mock('../../tokens', () => ({
@@ -129,7 +133,13 @@ describe('PositionPipeline', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    fetchMock.mockReset().mockRejectedValue(new Error('API unavailable'))
+    vi.stubGlobal('fetch', fetchMock)
     cache = CacheManager.createFresh()
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
   })
 
   describe('loadPortfolio — empty wallet', () => {
@@ -151,7 +161,7 @@ describe('PositionPipeline', () => {
   })
 
   describe('loadPortfolio — with positions', () => {
-    it('returns resolved positions and summary when all fetches succeed', async () => {
+    it.each([false, true])('resolves and caches every PnL page (paginated: %s)', async (paginated) => {
       // Create a mock position
       const mockPosition = {
         publicKey: { toString: () => 'pos-pubkey', toBase58: () => 'pos-pubkey' },
@@ -176,6 +186,13 @@ describe('PositionPipeline', () => {
         ],
       }
 
+      if (paginated) {
+        mockPosition.lbPairPositionsData.push({
+          ...mockPosition.lbPairPositionsData[0],
+          publicKey: { toBase58: () => 'pos-addr-1' },
+        })
+      }
+
       const positionsMap = new Map([['pool1', mockPosition as any]])
       const DLMM = await import('@meteora-ag/dlmm')
       vi.mocked(DLMM.default.getAllLbPairPositionsByUser).mockResolvedValue(positionsMap)
@@ -187,33 +204,35 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
       // Mock PnL fetching
-      const { fetchPositionPnL } = await import('../../services/dlmmApi')
-      vi.mocked(fetchPositionPnL).mockResolvedValue({
-        positions: [MOCK_PNL_DATA],
-        tokenX: null,
-        tokenY: null,
-        tokenXPrice: '0',
-        tokenYPrice: '0',
-      } as any)
+      fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA], paginated))
+      if (paginated) {
+        fetchMock.mockResolvedValueOnce(pnlPage([{ ...MOCK_PNL_DATA, positionAddress: 'pos-addr-1' }]))
+      }
 
       pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
 
       const result = await pipeline.loadPortfolio('wallet1')
 
-      expect(result.positions.length).toBeGreaterThan(0)
-      expect(result.positionCount).toBe(1)
+      expect(result.positions).toHaveLength(paginated ? 2 : 1)
+      expect(result.positionCount).toBe(paginated ? 2 : 1)
       expect(result.poolAddresses).toEqual(['pool1'])
       expect(result.hasPnLData).toBe(true)
       expect(result.summary).not.toBeNull()
-      expect(result.summary!.totalPnlSol).toBeCloseTo(0.5)
+      expect(result.summary!.totalPnlSol).toBeCloseTo(paginated ? 1 : 0.5)
       expect(result.outOfRangeCount).toBe(0) // activeId 50 is within range 40-60
 
       // API feePerTvl24h is a percentage (1.31 = 1.31%); the view model
       // stores the internal ratio (0.0131), so the UI renders 1.31% — not 131%.
       expect(result.positions[0].vm.feesTvl24h).toBeCloseTo(0.0131)
+      if (paginated) expect(result.positions[1].vm.pnlSol).toBeCloseTo(0.5)
+
+      const cachedResult = await pipeline.loadPortfolio('wallet1')
+      expect(cachedResult.summary).toEqual(result.summary)
+      expect(fetchMock).toHaveBeenCalledTimes(paginated ? 2 : 1)
+      if (paginated) expect(fetchMock.mock.calls[1][0]).toContain('page=2')
     })
 
-    it('returns hasPnLData=false when PnL fetch fails', async () => {
+    it.each([false, true])('does not cache partial PnL when a page fails (later page: %s)', async (laterPage) => {
       const mockPosition = {
         publicKey: { toString: () => 'pos-pubkey', toBase58: () => 'pos-pubkey' },
         tokenX: { mint: { address: { toBase58: () => MOCK_TOKEN_X.mint } } },
@@ -247,8 +266,8 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
       // PnL fetch throws
-      const { fetchPositionPnL } = await import('../../services/dlmmApi')
-      vi.mocked(fetchPositionPnL).mockRejectedValue(new Error('API error'))
+      if (laterPage) fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA], true))
+      fetchMock.mockRejectedValue(new Error('API error'))
 
       pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
 
@@ -260,6 +279,12 @@ describe('PositionPipeline', () => {
       expect(result.summary).toBeNull()
       // Position view models have null PnL
       expect(result.positions[0].vm.pnlSol).toBeNull()
+
+      fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA]))
+      const retried = await pipeline.loadPortfolio('wallet1')
+      expect(retried.hasPnLData).toBe(true)
+      expect(retried.summary!.totalPnlSol).toBeCloseTo(0.5)
+      expect(fetchMock).toHaveBeenCalledTimes(laterPage ? 3 : 2)
     })
 
     it('returns positions with null token info when token price fetch fails', async () => {
@@ -306,7 +331,7 @@ describe('PositionPipeline', () => {
       expect(result.positions[0].vm.totalValue).toBe('$0.00')
     })
 
-    it('returns hasPnLData=false when heliusApiKey is not set', async () => {
+    it('skips PnL requests when the legacy feature flag is disabled', async () => {
       const mockPosition = {
         publicKey: { toString: () => 'pos-pubkey', toBase58: () => 'pos-pubkey' },
         tokenX: { mint: { address: { toBase58: () => MOCK_TOKEN_X.mint } } },
@@ -339,11 +364,12 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_X as any)
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
-      pipeline = createPositionPipeline({ cache, heliusApiKey: undefined })
+      pipeline = createPositionPipeline({ cache, heliusApiKey: '' })
 
       const result = await pipeline.loadPortfolio('wallet1')
 
       expect(result.hasPnLData).toBe(false)
+      expect(fetchMock).not.toHaveBeenCalled()
     })
   })
 
@@ -410,14 +436,7 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_X as any)
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
-      const { fetchPositionPnL } = await import('../../services/dlmmApi')
-      vi.mocked(fetchPositionPnL).mockResolvedValue({
-        positions: [MOCK_PNL_DATA],
-        tokenX: null,
-        tokenY: null,
-        tokenXPrice: '0',
-        tokenYPrice: '0',
-      } as any)
+      fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA]))
 
       pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
 
@@ -467,16 +486,7 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
       // PnL succeeds for pool1, fails for pool2
-      const { fetchPositionPnL } = await import('../../services/dlmmApi')
-      vi.mocked(fetchPositionPnL)
-        .mockResolvedValueOnce({
-          positions: [MOCK_PNL_DATA],
-          tokenX: null,
-          tokenY: null,
-          tokenXPrice: '0',
-          tokenYPrice: '0',
-        } as any)
-        .mockRejectedValueOnce(new Error('Pool2 PnL failed'))
+      fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA])).mockRejectedValueOnce(new Error('Pool2 PnL failed'))
 
       pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
 

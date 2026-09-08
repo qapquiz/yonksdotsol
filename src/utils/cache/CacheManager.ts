@@ -5,8 +5,8 @@ interface CacheEntry<T> {
 
 export class CacheManager {
   private static instance: CacheManager
-  private cache: Map<string, CacheEntry<any>> = new Map()
-  private pending: Map<string, Promise<any>> = new Map()
+  private cache = new Map<string, CacheEntry<unknown>>()
+  private pending = new Map<string, Promise<unknown>>()
   private readonly DEFAULT_TTL = 15 * 60 * 1000
   private cleanupCounter = 0
   private readonly CLEANUP_INTERVAL = 50
@@ -26,22 +26,11 @@ export class CacheManager {
   }
 
   get<T>(key: string): T | null {
-    this.maybeCleanup()
-
-    const entry = this.cache.get(key)
-
-    if (!entry) {
-      return null
-    }
-
-    if (this.isExpired(entry)) {
-      this.cache.delete(key)
-      return null
-    }
-
-    return entry.value as T
+    const entry = this.getEntry(key)
+    return entry ? (entry.value as T) : null
   }
 
+  /** Explicit writes supersede any in-flight fetch for the same key. */
   set<T>(key: string, value: T, ttl?: number): void {
     this.maybeCleanup()
 
@@ -50,28 +39,18 @@ export class CacheManager {
       expiresAt: Date.now() + (ttl ?? this.DEFAULT_TTL),
     }
 
-    this.cache.set(key, entry as CacheEntry<any>)
+    this.pending.delete(key)
+    this.cache.set(key, entry)
   }
 
   has(key: string): boolean {
-    this.maybeCleanup()
-
-    const entry = this.cache.get(key)
-
-    if (!entry) {
-      return false
-    }
-
-    if (this.isExpired(entry)) {
-      this.cache.delete(key)
-      return false
-    }
-
-    return true
+    return this.getEntry(key) !== undefined
   }
 
+  /** Invalidation detaches pending work; existing callers still receive its outcome. */
   delete(key: string): void {
     this.cache.delete(key)
+    this.pending.delete(key)
   }
 
   clear(): void {
@@ -80,26 +59,24 @@ export class CacheManager {
   }
 
   invalidatePattern(pattern: string): void {
-    const keysToDelete: string[] = []
-
-    this.cache.forEach((_, key) => {
-      if (key.includes(pattern)) {
-        keysToDelete.push(key)
-      }
-    })
-
-    keysToDelete.forEach((key) => this.cache.delete(key))
+    // Pending-only keys matter too: the first response may not have arrived yet.
+    const keys = new Set([...this.cache.keys(), ...this.pending.keys()])
+    for (const key of keys) {
+      if (key.includes(pattern)) this.delete(key)
+    }
   }
 
   /**
    * Returns the cached value if present and fresh, otherwise calls `fetchFn`,
    * caches the result, and returns it. Deduplicates concurrent calls for the
-   * same key so only one in-flight request exists at a time.
+   * same key until it is invalidated or explicitly set. Invalidated requests
+   * can finish for their original callers, but cannot change the cache or
+   * detach a newer request.
    */
   async getOrFetch<T>(key: string, fetchFn: () => Promise<T>, ttl?: number): Promise<T> {
-    const cached = this.get<T>(key)
-    if (cached !== null) {
-      return cached
+    const entry = this.getEntry(key)
+    if (entry) {
+      return entry.value as T
     }
 
     // Dedup: reuse in-flight promise if one already exists for this key
@@ -108,17 +85,33 @@ export class CacheManager {
       return pending as Promise<T>
     }
 
-    const promise = fetchFn()
+    // Register before invoking the fetcher, including fetchers that throw synchronously.
+    const promise = Promise.resolve()
+      .then(fetchFn)
       .then((value) => {
-        this.set(key, value, ttl)
+        if (this.pending.get(key) === promise) {
+          this.set(key, value, ttl)
+        }
         return value
       })
       .finally(() => {
-        this.pending.delete(key)
+        if (this.pending.get(key) === promise) {
+          this.pending.delete(key)
+        }
       })
 
     this.pending.set(key, promise)
     return promise
+  }
+
+  private getEntry(key: string): CacheEntry<unknown> | undefined {
+    this.maybeCleanup()
+    const entry = this.cache.get(key)
+    if (entry && this.isExpired(entry)) {
+      this.cache.delete(key)
+      return undefined
+    }
+    return entry
   }
 
   private maybeCleanup(): void {
@@ -129,8 +122,8 @@ export class CacheManager {
     }
   }
 
-  private isExpired(entry: CacheEntry<any>): boolean {
-    return Date.now() > entry.expiresAt
+  private isExpired(entry: CacheEntry<unknown>): boolean {
+    return Date.now() >= entry.expiresAt
   }
 
   private cleanup(): void {

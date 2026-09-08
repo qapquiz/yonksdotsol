@@ -1,17 +1,18 @@
-import type { PositionInfo } from '@meteora-ag/dlmm'
 import DLMM from '@meteora-ag/dlmm'
-import type { PositionPnLData } from './dlmmApi'
-import { fetchPositionPnL } from './dlmmApi'
-import { PublicKey, Connection } from '@solana/web3.js'
+import type { PositionInfo } from '@meteora-ag/dlmm'
+import { PublicKey } from '@solana/web3.js'
+import type { Connection } from '@solana/web3.js'
 
+import { CACHE_TTL } from '../config/cache'
 import { getSharedConnection } from '../config/connection'
 import { env } from '../config/env'
-import { CACHE_TTL } from '../config/cache'
-import { createDataServices, type DataServices } from './data'
+import type { TokenInfo } from '../tokens'
 import { CacheManager } from '../utils/cache/CacheManager'
 import { computePositionViewData, type PositionViewModel } from '../utils/positions/computePositionViewData'
 import { computePoolPnLSummary, findPositionPnL, type PoolPnLSummary } from '../utils/positions/pnlAggregation'
-import type { TokenInfo } from '../tokens'
+import { createDataServices, type DataServices } from './data'
+import { fetchAllPositionPnL } from './dlmmApi'
+import type { PositionPnLData } from './dlmmApi'
 
 // ─── Re-exported types (for consumers) ────────────────────────────────
 
@@ -70,7 +71,7 @@ export interface PipelineDeps {
   cache?: CacheManager
   /** Solana Connection — defaults to getSharedConnection() */
   connection?: Connection
-  /** Helius API key — defaults to env.heliusApiKey; omit to skip PnL fetching */
+  /** Legacy PnL feature flag — defaults to env.heliusApiKey; an empty string disables PnL fetching. */
   heliusApiKey?: string
   /** DataServices factory override — defaults to createDataServices(cache) */
   dataServices?: DataServices
@@ -216,7 +217,7 @@ export class PositionPipeline {
         try {
           const positions = await this.cache.getOrFetch(
             pnlCacheKey(poolAddress, walletAddress),
-            () => fetchPositionPnL({ poolAddress, user: walletAddress, status: 'open' }).then((r) => r.positions ?? []),
+            () => fetchAllPositionPnL({ poolAddress, user: walletAddress, status: 'open' }),
             CACHE_TTL.UPNL_PER_POSITION,
           )
           results[poolAddress] = positions
