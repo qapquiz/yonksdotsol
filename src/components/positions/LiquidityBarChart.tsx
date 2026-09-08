@@ -2,6 +2,7 @@ import { memo, useCallback, useMemo, useState } from 'react'
 import { Text, View } from 'react-native'
 import { Line, Rect, Svg } from 'react-native-svg'
 import type { LiquidityShape } from '../../utils/positions/computePositionViewData'
+import { downsampleChartBins, MAX_CHART_BINS } from '../../utils/positions/downsampleChartBins'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
 import { ChartPanel } from './ChartPanel'
 
@@ -42,12 +43,20 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
       return []
     }
 
-    const maxLiquidity = Math.max(
-      ...liquidityShape.binDistribution.map((b) => b.positionXAmountInSOL + b.positionYAmountInSOL),
+    const distribution = downsampleChartBins(
+      liquidityShape.binDistribution,
+      MAX_CHART_BINS,
+      liquidityShape.currentActiveId,
     )
     const currentActiveId = liquidityShape.currentActiveId
 
-    return liquidityShape.binDistribution.map((bin) => {
+    let maxLiquidity = 0
+    for (const bin of distribution) {
+      const liquidity = bin.positionXAmountInSOL + bin.positionYAmountInSOL
+      if (liquidity > maxLiquidity) maxLiquidity = liquidity
+    }
+
+    return distribution.map((bin) => {
       const liquidity = bin.positionXAmountInSOL + bin.positionYAmountInSOL
       const isActive = bin.binId === currentActiveId
       const isLeft = bin.binId < currentActiveId
