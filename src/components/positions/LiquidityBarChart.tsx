@@ -1,6 +1,7 @@
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Text, View } from 'react-native'
 import { Line, Rect, Svg } from 'react-native-svg'
+import Animated, { Easing, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import type { LiquidityShape } from '../../utils/positions/computePositionViewData'
 import { downsampleChartBins, MAX_CHART_BINS } from '../../utils/positions/downsampleChartBins'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
@@ -13,10 +14,16 @@ interface LiquidityBarChartProps {
 
 const CHART_HEIGHT = 120
 const CHART_PADDING = { top: 10, bottom: 10, left: 0, right: 0 }
+const CHART_INNER_HEIGHT = CHART_HEIGHT - CHART_PADDING.top - CHART_PADDING.bottom
 const BAR_GAP_RATIO = 0.3
+
+// Active-bin highlight slide duration
+const ACTIVE_SLIDE_MS = 500
 
 // 8-digit hex alpha suffixes for grid lines (≈0.3 opacity)
 const GRID_ALPHA = '4D'
+
+const AnimatedRect = Animated.createAnimatedComponent(Rect)
 
 function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityBarChartProps) {
   const tokens = useThemeTokens()
@@ -87,20 +94,51 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
     return liquidityShape.binDistribution[liquidityShape.binDistribution.length - 1].price.toPrecision(6)
   }, [liquidityShape])
 
-  const svgContent = useMemo(() => {
+  const barGeometry = useMemo(() => {
     if (chartData.length === 0 || containerWidth === 0) return null
+    const barWidth = containerWidth / chartData.length
+    return { barWidth, actualBarWidth: barWidth * (1 - BAR_GAP_RATIO) }
+  }, [chartData.length, containerWidth])
+
+  const activeBar = useMemo(() => {
+    if (!barGeometry) return null
+    const index = chartData.findIndex((b) => b.binId === liquidityShape?.currentActiveId)
+    if (index === -1) return null // active bin outside the position's range — nothing to highlight
+    return {
+      x: index * barGeometry.barWidth + (barGeometry.barWidth * BAR_GAP_RATIO) / 2,
+      width: barGeometry.actualBarWidth,
+    }
+  }, [barGeometry, chartData, liquidityShape?.currentActiveId])
+
+  // Active-bin highlight: a shared X that slides from the old bar to the new
+  // one when the active bin moves between refreshes.
+  const activeX = useSharedValue(0)
+  const slideScopeRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    if (!activeBar) return
+    // Slide only when the same position at the same layout sees its active
+    // bin move — mount, FlashList card recycling, and relayout jump directly.
+    const scope = `${liquidityShape?.positionAddress ?? ''}|${containerWidth}`
+    const shouldSlide = slideScopeRef.current !== null && slideScopeRef.current === scope
+    slideScopeRef.current = scope
+    activeX.value = shouldSlide
+      ? withTiming(activeBar.x, { duration: ACTIVE_SLIDE_MS, easing: Easing.out(Easing.cubic) })
+      : activeBar.x
+  }, [activeBar, activeX, containerWidth, liquidityShape?.positionAddress])
+
+  const activePillProps = useAnimatedProps(() => ({ x: activeX.value }))
+
+  const svgContent = useMemo(() => {
+    if (!barGeometry || containerWidth === 0) return null
 
     const chartWidth = containerWidth
-    const chartInnerHeight = CHART_HEIGHT - CHART_PADDING.top - CHART_PADDING.bottom
-
-    const barWidth = chartWidth / chartData.length
-    const gapWidth = barWidth * BAR_GAP_RATIO
-    const actualBarWidth = barWidth - gapWidth
+    const { barWidth, actualBarWidth } = barGeometry
 
     const bars = chartData.map((bar, index) => {
-      const x = index * barWidth + gapWidth / 2
-      const barHeight = (bar.value / 100) * chartInnerHeight
-      const y = CHART_PADDING.top + chartInnerHeight - barHeight
+      const x = index * barWidth + (barWidth * BAR_GAP_RATIO) / 2
+      const barHeight = (bar.value / 100) * CHART_INNER_HEIGHT
+      const y = CHART_PADDING.top + CHART_INNER_HEIGHT - barHeight
 
       return (
         <Rect key={`bar-${bar.binId}`} x={x} y={y} width={actualBarWidth} height={barHeight} fill={bar.color} rx={2} />
@@ -109,7 +147,7 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
 
     // Add horizontal grid lines
     const gridLines = [0, 25, 50, 75, 100].map((percent) => {
-      const y = CHART_PADDING.top + chartInnerHeight - (percent / 100) * chartInnerHeight
+      const y = CHART_PADDING.top + CHART_INNER_HEIGHT - (percent / 100) * CHART_INNER_HEIGHT
       return <Line key={`grid-${percent}`} x1="0" y1={y} x2={chartWidth} y2={y} stroke={colors.grid} strokeWidth="1" />
     })
 
@@ -117,9 +155,19 @@ function LiquidityBarChartComponent({ liquidityShape, currentPrice }: LiquidityB
       <Svg width={chartWidth} height={CHART_HEIGHT}>
         {gridLines}
         {bars}
+        {activeBar && (
+          <AnimatedRect
+            animatedProps={activePillProps}
+            y={CHART_PADDING.top}
+            width={activeBar.width}
+            height={CHART_INNER_HEIGHT}
+            fill={colors.active}
+            rx={2}
+          />
+        )}
       </Svg>
     )
-  }, [chartData, containerWidth, colors])
+  }, [chartData, containerWidth, colors, barGeometry, activeBar, activePillProps])
 
   const legend = (
     <View className="flex-row items-center justify-center mt-2 gap-4">

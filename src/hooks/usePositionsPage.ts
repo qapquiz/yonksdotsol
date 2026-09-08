@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { AppState } from 'react-native'
 import { env } from '../config/env'
 import { Observe } from '../observe'
 import { createMockPortfolioResult, MOCK_SOL_USD_PRICE } from '../services/mockPortfolio'
@@ -30,8 +31,8 @@ export interface PositionsPageResult {
   tokenDataReady: boolean
   /** Live SOL→USD price for the SOL/USD display toggle; null while loading or on failure */
   solUsdPrice: number | null
-  /** Pull-to-refresh handler */
-  refresh: () => void
+  /** Refresh handler (pull / button); `silent: true` skips skeleton and spinner (auto-refresh) */
+  refresh: (options?: { silent?: boolean }) => void
   /** Wallet ready status */
   walletReady: boolean
   /** Wallet address */
@@ -39,6 +40,9 @@ export interface PositionsPageResult {
 }
 
 // ─── Hook implementation ─────────────────────────────────────────────
+
+/** Foreground auto-refresh cadence — keeps bin/shape state current without pulls */
+const AUTO_REFRESH_INTERVAL_MS = 60_000
 
 export function usePositionsPage(walletAddress: string | undefined, walletReady: boolean): PositionsPageResult {
   const pipeline = useMemo(() => createPositionPipeline(), [])
@@ -102,28 +106,43 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
 
   // ── Throttled refresh (30s cooldown) ──
   const lastRefreshRef = useRef(0)
-  const refresh = useCallback(() => {
-    if (env.devMock) return // dev mock: no-op refresh
-    if (!walletAddress) return
-    const now = Date.now()
-    if (now - lastRefreshRef.current < 30_000) return
-    lastRefreshRef.current = now
+  const refresh = useCallback(
+    (options?: { silent?: boolean }) => {
+      if (env.devMock) return // dev mock: no-op refresh
+      if (!walletAddress) return
+      const now = Date.now()
+      if (now - lastRefreshRef.current < 30_000) return
+      lastRefreshRef.current = now
 
-    pipeline.invalidateWallet(walletAddress)
-    setLoading(true)
-    const startedAt = Date.now()
-    pipeline.loadPortfolio(walletAddress).then((res) => {
-      setResult(res)
-      setLoading(false)
-      setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
-      Observe.logEvent('positions.refreshed', {
-        attributes: { durationMs: Date.now() - startedAt, positionCount: res.positionCount },
+      const source = options?.silent ? 'auto' : 'pull'
+      pipeline.invalidateWallet(walletAddress)
+      // Silent (auto) refreshes keep the current data on screen — no skeleton,
+      // no RefreshControl spinner; numbers just update in place.
+      if (!options?.silent) setLoading(true)
+      const startedAt = Date.now()
+      pipeline.loadPortfolio(walletAddress).then((res) => {
+        setResult(res)
+        setLoading(false)
+        setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
+        Observe.logEvent('positions.refreshed', {
+          attributes: { durationMs: Date.now() - startedAt, positionCount: res.positionCount, source },
+        })
       })
-    })
-    getCurrentSolUsdPrice()
-      .then(setSolUsdPrice)
-      .catch(() => setSolUsdPrice(null))
-  }, [walletAddress, pipeline])
+      getCurrentSolUsdPrice()
+        .then(setSolUsdPrice)
+        .catch(() => setSolUsdPrice(null))
+    },
+    [walletAddress, pipeline],
+  )
+
+  // ── Foreground auto-refresh (silent; skipped in dev mock) ──
+  useEffect(() => {
+    if (env.devMock || !walletAddress) return
+    const interval = setInterval(() => {
+      if (AppState.currentState === 'active') refresh({ silent: true })
+    }, AUTO_REFRESH_INTERVAL_MS)
+    return () => clearInterval(interval)
+  }, [walletAddress, refresh])
 
   // ── Dev mock mode: return static portfolio, bypass the pipeline ──
   // When "disconnected" (no wallet address), return empty data so the
