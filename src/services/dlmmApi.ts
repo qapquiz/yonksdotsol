@@ -8,7 +8,7 @@
 // Replaces the `metcomet` dependency: same endpoints, owned wire types,
 // explicit errors (no silent nulls). Wire types are transcribed from the
 // documented response schema; money values arrive as strings and are
-// converted to numbers only at the rollup layer, never in the transport.
+// converted to numbers by consumers, never in the transport.
 
 import { parseFeePerTvl24h } from '../utils/positions/formatters'
 
@@ -102,8 +102,9 @@ export interface PositionPnLData {
   isClosed: boolean
   pnlUsd: string
   pnlPctChange: string
-  pnlSol: number | null
-  pnlSolPctChange: number | null
+  /** Live responses use decimal strings; older responses may use numbers or omit SOL fields. */
+  pnlSol?: string | number | null
+  pnlSolPctChange?: string | number | null
   allTimeDeposits: TokenPairWithTotal
   allTimeWithdrawals: TokenPairWithTotal
   allTimeFees: TokenPairWithTotal

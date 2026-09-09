@@ -64,6 +64,14 @@ export interface ComputePositionViewDataInput {
 
 // ─── Internal helpers (previously in calculations.ts) ────────────────
 
+/** Normalize API decimals at the view-model boundary; unavailable values must not become zero. */
+function parsePnlNumber(value: string | number | null | undefined): number | null {
+  if (typeof value !== 'string' && typeof value !== 'number') return null
+  if (typeof value === 'string' && value.trim() === '') return null
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
 /** Convert a pair of raw BigInt token amounts to their combined USD value */
 function calculateTokenPairUSD(
   xRaw: bigint,
@@ -246,8 +254,8 @@ export function computePositionViewData(input: ComputePositionViewDataInput): Po
     unrealizedFeesValue,
     claimedFeesValue,
     liquidityShape,
-    pnlSol: pnlData?.pnlSol ?? null,
-    pnlSolPctChange: pnlData?.pnlSolPctChange ?? null,
+    pnlSol: parsePnlNumber(pnlData?.pnlSol),
+    pnlSolPctChange: parsePnlNumber(pnlData?.pnlSolPctChange),
     feesTvl24h,
   }
 }

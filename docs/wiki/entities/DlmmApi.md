@@ -3,7 +3,7 @@ title: DlmmApi
 type: entity
 location: src/services/dlmmApi.ts
 created: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-09
 tags: [data, pagination, pnl]
 related:
   - CacheManager
@@ -32,7 +32,11 @@ If page 10 still has `hasNext: true`, the helper throws `DlmmApiError` instead o
 
 The position pipeline caches only the completed PnL array. If a later page fails, that pool's PnL is omitted from the current result, other pools can still succeed, and the next load retries the failed pool. The widget uses its existing error path for incomplete summaries.
 
-Per ADR 0001, the client does not calculate historical prices locally. Per ADR 0002, widget summaries continue to use server totals while the app aggregates per-position data. The pipeline's Helius configuration remains a legacy PnL feature flag; it is not sent to this client.
+Per ADR 0001, the client does not calculate historical prices locally. Per ADR 0002, widget summaries continue to use server totals while the app aggregates per-position data. PnL requests do not require a Helius key; the obsolete pipeline key check has been removed.
+
+## PnL Wire Values
+
+Live position responses can encode `pnlSol` and `pnlSolPctChange` as decimal strings. Their wire types also accept numbers, null, or omission. The transport preserves the response; [[computePositionViewData]] converts these fields to finite numbers before app cards and [[PositionLiquidityWidget]] consume them. Zero remains zero, while missing, blank, or invalid values become null. Passing a numeric string directly to the widget's `Number.isFinite` check would incorrectly hide available uPnL.
 
 ## Extension and Testing
 

@@ -22,13 +22,13 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 | --------------------------- | --------------------------------------------- | ------------------------------------------------ |
 | [[Connection]]              | Singleton Solana RPC connection               | `src/config/connection.ts`                       |
 | [[CacheManager]]            | TTL, dedup, and invalidation during requests  | `src/utils/cache/CacheManager.ts`                |
-| [[DlmmApi]]                 | Typed requests and complete paginated results | `src/services/dlmmApi.ts`                        |
+| [[DlmmApi]]                 | PnL wire types and complete paginated results | `src/services/dlmmApi.ts`                        |
 | [[PositionInfo]]            | Meteora DLMM position data structure          | `@meteora-ag/dlmm`                               |
 | [[SettingsStore]]           | Zustand store for theme and preferences       | `src/stores/settingsStore.ts`                    |
 | [[ShimmerBlock]]            | Skeleton loading animation component          | `src/components/ui/ShimmerBlock.tsx`             |
 | [[usePositionsPage]]        | Main data orchestration hook for positions    | `src/hooks/usePositionsPage.ts`                  |
 | [[useWalletLifecycle]]      | Wallet connection lifecycle hook              | `src/hooks/useWalletLifecycle.ts`                |
-| [[computePositionViewData]] | Pure position → view model transformer        | `src/utils/positions/computePositionViewData.ts` |
+| [[computePositionViewData]] | Position view models with normalized API PnL  | `src/utils/positions/computePositionViewData.ts` |
 
 ## Components
 

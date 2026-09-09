@@ -1,10 +1,18 @@
+import { buildWidgetTree } from 'react-native-android-widget/src/api/build-widget-tree'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { PositionPnLData } from '../../services/dlmmApi'
 import { createPositionPipeline, type PositionPipeline } from '../../services/positionPipeline'
 import { CacheManager } from '../../utils/cache/CacheManager'
+import PositionLiquidityWidget from '../../widgets/PositionLiquidityWidget'
 import { toPositionWidgetData } from '../../widgets/positionWidgetData'
 
 // ─── Mocks ────────────────────────────────────────────────────────────
+
+vi.mock('react-native-android-widget', async () => ({
+  ...(await vi.importActual('react-native-android-widget/src/widgets/FlexWidget')),
+  ...(await vi.importActual('react-native-android-widget/src/widgets/TextWidget')),
+  ...(await vi.importActual('react-native-android-widget/src/widgets/SvgWidget')),
+}))
 
 // Mock DLMM SDK
 vi.mock('@meteora-ag/dlmm', () => ({
@@ -332,7 +340,7 @@ describe('PositionPipeline', () => {
       expect(result.positions[0].vm.totalValue).toBe('$0.00')
     })
 
-    it('includes position widget uPnL without a Helius API key', async () => {
+    it.each(['number', 'string'])('renders API uPnL without a Helius key (wire: %s)', async (wireType) => {
       const mockPosition = {
         publicKey: { toString: () => 'pos-pubkey', toBase58: () => 'pos-pubkey' },
         tokenX: { mint: { address: { toBase58: () => MOCK_TOKEN_X.mint } } },
@@ -366,14 +374,31 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
       pipeline = createPositionPipeline({ cache })
-      fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA]))
+      // Live position PnL responses can encode these SOL fields as decimal strings.
+      const pnlSol = -0.12129474620252356
+      const pnlSolPctChange = -0.8565415711963087
+      fetchMock.mockResolvedValueOnce(
+        pnlPage([
+          {
+            ...MOCK_PNL_DATA,
+            pnlSol: wireType === 'string' ? String(pnlSol) : pnlSol,
+            pnlSolPctChange: wireType === 'string' ? String(pnlSolPctChange) : pnlSolPctChange,
+          },
+        ]),
+      )
 
       const result = await pipeline.loadPortfolio('wallet1')
 
-      expect(toPositionWidgetData(result)[0]).toMatchObject({
+      const [position] = toPositionWidgetData(result)
+      expect(position).toMatchObject({
         value: '$151.00',
-        pnlSol: 0.5,
+        pnlSol,
       })
+      const tree = buildWidgetTree(
+        PositionLiquidityWidget({ position, index: 0, count: 1, width: 320, height: 340, updatedAt: null }),
+      )
+      expect(JSON.stringify(tree)).toContain('"-0.1213 SOL"')
+      expect(result.positions[0].vm.pnlSolPctChange).toBe(pnlSolPctChange)
       expect(result.hasPnLData).toBe(true)
       expect(fetchMock).toHaveBeenCalledTimes(1)
     })

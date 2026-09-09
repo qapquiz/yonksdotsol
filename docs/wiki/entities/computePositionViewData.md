@@ -3,7 +3,7 @@ title: computePositionViewData
 type: entity
 location: src/utils/positions/computePositionViewData.ts
 created: 2026-04-28
-updated: 2026-04-28
+updated: 2026-09-09
 tags: [utility, positions, pure-function]
 related:
   - PositionInfo
@@ -64,6 +64,7 @@ interface PositionViewModel {
 - Returns `$0.00` / `-` placeholders when token data is missing
 - Uses `BigInt` for precise token amount calculations
 - Formats all values via [[Number Formatting]] utilities
+- Normalizes [[DlmmApi]] SOL PnL amounts and percentages from strings or numbers to finite numbers. Missing, blank, or invalid values stay null; numeric and string zero remain zero. This keeps [[PositionLiquidityWidget]] from rejecting valid API decimals as unavailable.
 
 ## See Also
 

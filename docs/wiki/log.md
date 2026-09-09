@@ -139,3 +139,7 @@ Added [[PositionLiquidityWidget]] as a separate Yonks Positions picker entry, wi
 ## [2026-09-09] fix | Position widget uPnL without a Helius key
 
 Removed the pipeline's obsolete Helius-key check, which silently skipped public DLMM Data API PnL requests and left [[PositionLiquidityWidget]] showing a value with missing uPnL. SDK and token-info requests still use the configured RPC endpoint. A pipeline-to-widget regression covers an API response with PnL and no Helius key; widget rendering asserts the SOL uPnL text. Updated [[index]] and the widget's data-path documentation.
+
+## [2026-09-09] fix | Normalize string-valued position uPnL
+
+Reproduced the remaining widget dash using a live position API response whose SOL PnL fields were decimal strings. [[computePositionViewData]] had passed them through despite promising numbers, so the widget rejected them with `Number.isFinite`. Updated [[DlmmApi]] wire types and normalized the fields at the view-model boundary. A transport-to-native-widget regression now covers both number and string responses, with separate checks for zero, unavailable, and invalid values. Updated [[index]].

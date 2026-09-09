@@ -258,6 +258,39 @@ describe('computePositionViewData', () => {
     expect(vm.pnlSolPctChange).toBeNull()
   })
 
+  it.each([0, '0'])('preserves zero PnL from the API (%s)', (value) => {
+    const vm = computePositionViewData({
+      positionData: createMockPositionData(),
+      activeId: 50,
+      positionAddress: 'pos1',
+      poolAddress: 'pool1',
+      tokenXInfo: mockTokenX,
+      tokenYInfo: mockTokenY,
+      pnlData: { pnlSol: value, pnlSolPctChange: value } as PositionPnLData,
+    })
+
+    expect(vm.pnlSol).toBe(0)
+    expect(vm.pnlSolPctChange).toBe(0)
+  })
+
+  it.each([undefined, null, '', '  ', 'not-a-number', '1.2 SOL', 'Infinity', Infinity, NaN])(
+    'keeps missing or invalid PnL unavailable (%s)',
+    (value) => {
+      const vm = computePositionViewData({
+        positionData: createMockPositionData(),
+        activeId: 50,
+        positionAddress: 'pos1',
+        poolAddress: 'pool1',
+        tokenXInfo: mockTokenX,
+        tokenYInfo: mockTokenY,
+        pnlData: { pnlSol: value, pnlSolPctChange: value } as PositionPnLData,
+      })
+
+      expect(vm.pnlSol).toBeNull()
+      expect(vm.pnlSolPctChange).toBeNull()
+    },
+  )
+
   it('converts API feePerTvl24h percentage to internal ratio', () => {
     // The Meteora API returns a percentage string ("1.31" = 1.31% daily).
     // The view model must store the ratio (0.0131) so the UI renders 1.31%.
