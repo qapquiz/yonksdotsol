@@ -32,20 +32,20 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 
 ## Components
 
-| Page                         | Description                                                     | Location                                                |
-| ---------------------------- | --------------------------------------------------------------- | ------------------------------------------------------- |
-| [[PortfolioSummary]]         | Portfolio PnL summary with SOL values                           | `src/components/positions/PortfolioSummary.tsx`         |
-| [[LiquidityBarChart]]        | SVG bar chart for liquidity distribution                        | `src/components/positions/LiquidityBarChart.tsx`        |
-| [[PositionLiquidityWidget]]  | Android widget with per-position navigation and liquidity graph | `src/widgets/PositionLiquidityWidget.tsx`               |
-| [[PositionCard]]             | Individual position display card                                | `src/components/positions/PositionCard.tsx`             |
-| [[PositionHeader]]           | Token pair, range badge, value header                           | `src/components/positions/PositionHeader.tsx`           |
-| [[PositionFooter]]           | Fee display footer                                              | `src/components/positions/PositionFooter.tsx`           |
-| [[TokenIcons]]               | Overlapping token icon pair                                     | `src/components/positions/TokenIcons.tsx`               |
-| [[EmptyState]]               | No positions empty state                                        | `src/components/positions/EmptyState.tsx`               |
-| [[PositionCardSkeleton]]     | Skeleton placeholder for PositionCard                           | `src/components/positions/PositionCardSkeleton.tsx`     |
-| [[PortfolioSummarySkeleton]] | Skeleton placeholder for PortfolioSummary                       | `src/components/positions/PortfolioSummarySkeleton.tsx` |
-| [[PixelAvatar]]              | Pixelated avatar component                                      | `src/components/ui/PixelAvatar.tsx`                     |
-| [[ShimmerBlock]]             | Skeleton loading animation                                      | `src/components/ui/ShimmerBlock.tsx`                    |
+| Page                         | Description                                                                | Location                                                |
+| ---------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [[PortfolioSummary]]         | Portfolio PnL summary with SOL values                                      | `src/components/positions/PortfolioSummary.tsx`         |
+| [[LiquidityBarChart]]        | SVG bar chart for liquidity distribution                                   | `src/components/positions/LiquidityBarChart.tsx`        |
+| [[PositionLiquidityWidget]]  | Android widget with per-position navigation, liquidity graph, and API uPnL | `src/widgets/PositionLiquidityWidget.tsx`               |
+| [[PositionCard]]             | Individual position display card                                           | `src/components/positions/PositionCard.tsx`             |
+| [[PositionHeader]]           | Token pair, range badge, value header                                      | `src/components/positions/PositionHeader.tsx`           |
+| [[PositionFooter]]           | Fee display footer                                                         | `src/components/positions/PositionFooter.tsx`           |
+| [[TokenIcons]]               | Overlapping token icon pair                                                | `src/components/positions/TokenIcons.tsx`               |
+| [[EmptyState]]               | No positions empty state                                                   | `src/components/positions/EmptyState.tsx`               |
+| [[PositionCardSkeleton]]     | Skeleton placeholder for PositionCard                                      | `src/components/positions/PositionCardSkeleton.tsx`     |
+| [[PortfolioSummarySkeleton]] | Skeleton placeholder for PortfolioSummary                                  | `src/components/positions/PortfolioSummarySkeleton.tsx` |
+| [[PixelAvatar]]              | Pixelated avatar component                                                 | `src/components/ui/PixelAvatar.tsx`                     |
+| [[ShimmerBlock]]             | Skeleton loading animation                                                 | `src/components/ui/ShimmerBlock.tsx`                    |
 
 ## Concepts
 

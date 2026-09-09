@@ -60,7 +60,8 @@ export default function PositionLiquidityWidget({
   message,
 }: PositionLiquidityWidgetProps): ReactElement {
   const chartWidth = Math.max(120, width - INSET * 2)
-  const chartHeight = Math.max(message ? 32 : 48, Math.min(160, height - 280 - (message ? 16 : 0)))
+  const baseChartHeight = Math.max(message ? 32 : 48, Math.min(160, height - 280 - (message ? 16 : 0)))
+  const chartHeight = Math.max(32, Math.round(baseChartHeight * 0.85))
   const graph = buildLiquidityGraph(position?.liquidityShape ?? null, chartWidth, chartHeight)
   const statusColor = position?.inRange ? C.primary : C.secondary
   const pnl = position?.pnlSol

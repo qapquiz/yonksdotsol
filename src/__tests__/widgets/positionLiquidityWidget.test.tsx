@@ -185,6 +185,7 @@ describe('position liquidity widget', () => {
     expect(visible()).toContain('SOL / USDC')
     expect(visible()).toContain('position-A')
     expect(visible()).toContain('$1,250.00')
+    expect(visible()).toContain('+0.2000 SOL')
     expect(visible()).toContain('IN RANGE')
     expect(visible()).toContain('1 / 3')
     expect(svg()).toContain('<rect')

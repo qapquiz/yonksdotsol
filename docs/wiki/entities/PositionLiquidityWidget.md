@@ -29,6 +29,8 @@ The default footprint is 4 × 4 cells, with a 320dp minimum width and height. Bo
 
 `syncPositionWidgets.tsx` loads positions through `PositionPipeline.loadPortfolio`, including actual per-bin amounts. The SDK is imported lazily, and no position fetch runs when this widget type is absent. The portfolio summary continues to use server totals via [[DlmmApi]].
 
+Per-position uPnL comes from the public DLMM Data API and does not require a separate Helius API key. The SDK and token info still use the configured RPC endpoint (including its `getAsset` support). The pipeline no longer skips PnL when `EXPO_PUBLIC_HELIUS_API_KEY` is absent. API failures or missing SOL-denominated PnL still show `—`; value and unrealized fees alone cannot determine uPnL.
+
 `positionWidgetData.ts` projects the pipeline result into JSON-safe display data, retaining the actual position address instead of the pipeline's index-based row ID. Position order is stable by address. It does not persist SDK objects or BigInts.
 
 Snapshots and per-widget selections live in the `position-widget` MMKV instance, scoped to the persisted wallet address and connection revision. Empty results replace old positions. Disconnect clears obsolete snapshots; reconnecting the same wallet starts a new session. The request counter rejects old successes and failures. Navigation reads the latest snapshot at draw time, so a tap during refresh neither cancels the fetch nor loses the chosen position. The shared `renderWidgets` helper checks request ownership after Android's asynchronous widget lookup.

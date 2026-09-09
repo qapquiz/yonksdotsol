@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { PositionPnLData } from '../../services/dlmmApi'
 import { createPositionPipeline, type PositionPipeline } from '../../services/positionPipeline'
 import { CacheManager } from '../../utils/cache/CacheManager'
+import { toPositionWidgetData } from '../../widgets/positionWidgetData'
 
 // ─── Mocks ────────────────────────────────────────────────────────────
 
@@ -45,7 +46,7 @@ vi.mock('../../tokens', () => ({
 
 // Mock env
 vi.mock('../../config/env', () => ({
-  env: { rpcUrl: 'https://test.rpc', heliusApiKey: 'test-helius-key' },
+  env: { rpcUrl: 'https://test.rpc' },
 }))
 
 // Mock config/cache
@@ -209,7 +210,7 @@ describe('PositionPipeline', () => {
         fetchMock.mockResolvedValueOnce(pnlPage([{ ...MOCK_PNL_DATA, positionAddress: 'pos-addr-1' }]))
       }
 
-      pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
+      pipeline = createPositionPipeline({ cache })
 
       const result = await pipeline.loadPortfolio('wallet1')
 
@@ -269,7 +270,7 @@ describe('PositionPipeline', () => {
       if (laterPage) fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA], true))
       fetchMock.mockRejectedValue(new Error('API error'))
 
-      pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
+      pipeline = createPositionPipeline({ cache })
 
       const result = await pipeline.loadPortfolio('wallet1')
 
@@ -319,7 +320,7 @@ describe('PositionPipeline', () => {
       const { fetchTokenFromRpc } = await import('../../tokens')
       vi.mocked(fetchTokenFromRpc).mockRejectedValue(new Error('RPC error'))
 
-      pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
+      pipeline = createPositionPipeline({ cache })
 
       const result = await pipeline.loadPortfolio('wallet1')
 
@@ -331,7 +332,7 @@ describe('PositionPipeline', () => {
       expect(result.positions[0].vm.totalValue).toBe('$0.00')
     })
 
-    it('skips PnL requests when the legacy feature flag is disabled', async () => {
+    it('includes position widget uPnL without a Helius API key', async () => {
       const mockPosition = {
         publicKey: { toString: () => 'pos-pubkey', toBase58: () => 'pos-pubkey' },
         tokenX: { mint: { address: { toBase58: () => MOCK_TOKEN_X.mint } } },
@@ -364,12 +365,17 @@ describe('PositionPipeline', () => {
         .mockResolvedValueOnce(MOCK_TOKEN_X as any)
         .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
 
-      pipeline = createPositionPipeline({ cache, heliusApiKey: '' })
+      pipeline = createPositionPipeline({ cache })
+      fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA]))
 
       const result = await pipeline.loadPortfolio('wallet1')
 
-      expect(result.hasPnLData).toBe(false)
-      expect(fetchMock).not.toHaveBeenCalled()
+      expect(toPositionWidgetData(result)[0]).toMatchObject({
+        value: '$151.00',
+        pnlSol: 0.5,
+      })
+      expect(result.hasPnLData).toBe(true)
+      expect(fetchMock).toHaveBeenCalledTimes(1)
     })
   })
 
@@ -438,7 +444,7 @@ describe('PositionPipeline', () => {
 
       fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA]))
 
-      pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
+      pipeline = createPositionPipeline({ cache })
 
       const result = await pipeline.fetchPortfolioSummary('wallet1')
 
@@ -488,7 +494,7 @@ describe('PositionPipeline', () => {
       // PnL succeeds for pool1, fails for pool2
       fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA])).mockRejectedValueOnce(new Error('Pool2 PnL failed'))
 
-      pipeline = createPositionPipeline({ cache, heliusApiKey: 'test-key' })
+      pipeline = createPositionPipeline({ cache })
 
       const result = await pipeline.fetchPortfolioSummary('wallet1')
 

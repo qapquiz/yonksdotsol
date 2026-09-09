@@ -135,3 +135,7 @@ Bound widget refresh snapshots to a wallet address and connection revision, clea
 ## [2026-09-09] feature | Position liquidity home-screen widget
 
 Added [[PositionLiquidityWidget]] as a separate Yonks Positions picker entry, with per-instance Previous/Next navigation, actual liquidity shapes, range status, value, uPnL, and unrealized fees. Snapshots and selections follow wallet revisions; refreshes reject stale responses and retain the graph on errors. Both widget types now share guarded native rendering. Added native-tree/behavior tests, a browser layout audit script, picker artwork, and documentation in DESIGN.md and [[Caching Strategy]].
+
+## [2026-09-09] fix | Position widget uPnL without a Helius key
+
+Removed the pipeline's obsolete Helius-key check, which silently skipped public DLMM Data API PnL requests and left [[PositionLiquidityWidget]] showing a value with missing uPnL. SDK and token-info requests still use the configured RPC endpoint. A pipeline-to-widget regression covers an API response with PnL and no Helius key; widget rendering asserts the SOL uPnL text. Updated [[index]] and the widget's data-path documentation.

@@ -5,7 +5,6 @@ import type { Connection } from '@solana/web3.js'
 
 import { CACHE_TTL } from '../config/cache'
 import { getSharedConnection } from '../config/connection'
-import { env } from '../config/env'
 import type { TokenInfo } from '../tokens'
 import { CacheManager } from '../utils/cache/CacheManager'
 import { computePositionViewData, type PositionViewModel } from '../utils/positions/computePositionViewData'
@@ -71,8 +70,6 @@ export interface PipelineDeps {
   cache?: CacheManager
   /** Solana Connection — defaults to getSharedConnection() */
   connection?: Connection
-  /** Legacy PnL feature flag — defaults to env.heliusApiKey; an empty string disables PnL fetching. */
-  heliusApiKey?: string
   /** DataServices factory override — defaults to createDataServices(cache) */
   dataServices?: DataServices
 }
@@ -89,13 +86,11 @@ export class PositionPipeline {
   private readonly cache: CacheManager
   /** Resolved lazily — constructing the pipeline must not require an RPC URL (web mock mode) */
   private readonly injectedConnection: Connection | undefined
-  private readonly heliusApiKey: string | undefined
   private readonly dataServices: DataServices
 
   constructor(deps?: PipelineDeps) {
     this.cache = deps?.cache ?? CacheManager.getInstance()
     this.injectedConnection = deps?.connection
-    this.heliusApiKey = deps?.heliusApiKey ?? env.heliusApiKey
     this.dataServices = deps?.dataServices ?? createDataServices(this.cache)
   }
 
@@ -106,7 +101,8 @@ export class PositionPipeline {
   /**
    * Load all position data for a wallet.
    *
-   * Best-effort PnL: if heliusApiKey is missing or PnL fetch fails,
+   * Best-effort PnL from the public DLMM Data API, independent of RPC credentials.
+   * If every pool's PnL fetch fails,
    * positions still return with pnlSol/pnlSolPctChange = null and hasPnLData = false.
    */
   async loadPortfolio(walletAddress: string): Promise<PortfolioResult> {
@@ -206,10 +202,6 @@ export class PositionPipeline {
     poolAddresses: string[],
     walletAddress: string,
   ): Promise<Record<string, PositionPnLData[]>> {
-    if (!this.heliusApiKey) {
-      return {}
-    }
-
     const results: Record<string, PositionPnLData[]> = {}
 
     await Promise.allSettled(
