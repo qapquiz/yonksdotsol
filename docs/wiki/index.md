@@ -2,7 +2,7 @@
 title: Wiki Index
 type: index
 created: 2026-04-18
-updated: 2026-09-09
+updated: 2026-09-10
 tags: [index, wiki]
 ---
 
@@ -35,7 +35,7 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 | Page                         | Description                                                                | Location                                                |
 | ---------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------- |
 | [[PortfolioSummary]]         | Portfolio PnL summary with SOL values                                      | `src/components/positions/PortfolioSummary.tsx`         |
-| [[LiquidityBarChart]]        | SVG bar chart for liquidity distribution                                   | `src/components/positions/LiquidityBarChart.tsx`        |
+| [[LiquidityBarChart]]        | Liquidity bars with an animated dashed active-bin marker                   | `src/components/positions/LiquidityBarChart.tsx`        |
 | [[PositionLiquidityWidget]]  | Android widget with per-position navigation, liquidity graph, and API uPnL | `src/widgets/PositionLiquidityWidget.tsx`               |
 | [[PositionCard]]             | Individual position display card                                           | `src/components/positions/PositionCard.tsx`             |
 | [[PositionHeader]]           | Token pair, range badge, value header                                      | `src/components/positions/PositionHeader.tsx`           |

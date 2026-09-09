@@ -143,3 +143,7 @@ Removed the pipeline's obsolete Helius-key check, which silently skipped public 
 ## [2026-09-09] fix | Normalize string-valued position uPnL
 
 Reproduced the remaining widget dash using a live position API response whose SOL PnL fields were decimal strings. [[computePositionViewData]] had passed them through despite promising numbers, so the widget rejected them with `Number.isFinite`. Updated [[DlmmApi]] wire types and normalized the fields at the view-model boundary. A transport-to-native-widget regression now covers both number and string responses, with separate checks for zero, unavailable, and invalid values. Updated [[index]].
+
+## [2026-09-10] update | Dashed active-bin marker in the app
+
+Changed [[LiquidityBarChart]] from a filled full-height active-bin highlight to a dashed line and top pointer matching [[PositionLiquidityWidget]]. Retained the existing 500ms slide animation and proportional liquidity bars, and updated the legend to a dashed "Active bin" swatch. Documented the marker and current theme tokens in DESIGN.md, the chart page, and [[index]].

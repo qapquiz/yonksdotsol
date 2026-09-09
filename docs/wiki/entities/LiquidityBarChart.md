@@ -3,7 +3,7 @@ title: LiquidityBarChart
 type: entity
 location: src/components/positions/LiquidityBarChart.tsx
 created: 2026-04-19
-updated: 2026-04-19
+updated: 2026-09-10
 tags: [component, chart, liquidity, svg]
 related:
   - PositionInfo
@@ -32,11 +32,13 @@ interface LiquidityBarChartProps {
 
 ### Bar Colors
 
-| State            | Color   | Hex       |
-| ---------------- | ------- | --------- |
-| Below active bin | Emerald | `#10b981` |
-| Active bin       | Cyan    | `#22d3ee` |
-| Above active bin | Zinc    | `#3f3f46` |
+| State            | Theme token        |
+| ---------------- | ------------------ |
+| Below active bin | `tokens.secondary` |
+| Active bin       | `tokens.primary`   |
+| Above active bin | `tokens.border`    |
+
+The active bin is marked by a 1.5px vertical line with a `3 3` dash pattern and a small top pointer, matching [[PositionLiquidityWidget]]. The line and pointer share a position and slide together over 500ms when the active bin changes. Mounting, recycled positions, and width changes place the marker immediately. Out-of-range positions have no in-chart active marker. Liquidity bars retain their proportional heights, including the active bar; the legend identifies the dashed marker as "Active bin".
 
 ### Layout
 
@@ -49,15 +51,16 @@ interface LiquidityBarChartProps {
 
 - Min price (left): First bin price
 - Max price (right): Last bin price
-- Current price: Displayed in top-right badge
+- Current price: Displayed as quiet text at the top right
 
 ## Data Processing
 
 The component calculates:
 
-1. **Max liquidity** — Highest total liquidity across all bins
-2. **Bar values** — Each bin's liquidity as percentage of max
-3. **Active bin index** — Position of current active bin
+1. **Downsampling** — At most 100 bars, retaining each bucket's peak bin
+2. **Max liquidity** — Highest total liquidity across displayed bars
+3. **Bar values** — Each displayed bin's liquidity as percentage of max
+4. **Active bin center** — The marker is centered on the displayed bucket containing the active bin
 
 ### LiquidityShape Type
 

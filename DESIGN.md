@@ -230,6 +230,8 @@ Charts render in SVG, so colors can't use Uniwind classes — they read tokens v
 | Above active | `tokens.border` (neutral)   |
 | Grid lines   | `tokens.border` + alpha     |
 
+The active-bin marker is a 1.5px dashed vertical line (`3 3`) with a small top pointer, matching the position widget. It slides between bin centers over 500ms; the active liquidity bar keeps its proportional height. The legend uses a dashed swatch labeled "Active bin".
+
 **Price candlestick chart:**
 
 | Element         | Derivation                           |
