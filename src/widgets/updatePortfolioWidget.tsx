@@ -2,9 +2,9 @@
 
 import type { WidgetRepresentation } from 'react-native-android-widget'
 import { FlexWidget, SvgWidget, TextWidget } from 'react-native-android-widget'
-import { createMMKV } from 'react-native-mmkv'
-import { fetchOpenPortfolioSummary } from '../services/dlmmApi'
+
 import { themeTokens } from '../config/theme'
+import { fetchOpenPortfolioSummary } from '../services/dlmmApi'
 
 // ─── Colors ──────────────────────────────────────────────────────────
 // The widget renders to native Android RemoteViews (not Uniwind), so it
@@ -15,38 +15,6 @@ import { themeTokens } from '../config/theme'
 // If a token changes in theme.ts, the widget tracks it automatically.
 
 const C = themeTokens.dark
-
-// ─── Last-rendered cache ─────────────────────────────────────────────
-// Headless task runs get their own JS realm, so we can't keep the last
-// summary in module memory across runs. MMKV is file-backed and readable
-// from the headless context (same pattern as getStoredWalletAddress), so
-// we persist the last successfully rendered summary there. This lets the
-// refreshing state show the user's *actual* data (with an "Updating…"
-// marker) instead of a blank — the tap confirms instantly without
-// erasing the numbers they're looking at.
-
-const widgetMmkv = createMMKV({ id: 'widget' })
-const LAST_SUMMARY_KEY = 'last_portfolio_summary'
-
-function saveWidgetSummary(summary: PortfolioSummary): void {
-  try {
-    widgetMmkv.set(LAST_SUMMARY_KEY, JSON.stringify(summary))
-  } catch {
-    // Non-critical — refreshing just falls back to the minimal state.
-  }
-}
-
-function loadWidgetSummary(): PortfolioSummary | null {
-  try {
-    const raw = widgetMmkv.getString(LAST_SUMMARY_KEY)
-    if (!raw) return null
-    const parsed = JSON.parse(raw) as PortfolioSummary
-    if (typeof parsed.positionCount !== 'number') return null
-    return parsed
-  } catch {
-    return null
-  }
-}
 
 // ─── Shared types ────────────────────────────────────────────────────
 
@@ -379,9 +347,6 @@ export function buildWidgetTree(summary: PortfolioSummary | null): WidgetReprese
     return <NoPositionsWidget lastUpdated={formattedLastUpdated()} />
   }
 
-  // Cache the last good render so a subsequent refresh click can show the
-  // user's data (with an "Updating…" marker) instead of a blank.
-  saveWidgetSummary(summary)
   return <PortfolioSummaryWidget summary={summary} lastUpdated={formattedLastUpdated()} />
 }
 
@@ -391,18 +356,16 @@ export function buildErrorWidget(message: string): WidgetRepresentation {
 
 /**
  * Optimistic state to render the instant a refresh click reaches the
- * handler, before the (slow) fetch completes. Shows the last cached
+ * handler, before the (slow) fetch completes. Shows the last validated
  * summary with the refresh icon turned sage and the footer reading
  * "Updating…"; falls back to a minimal UpdatingWidget if no cache exists.
  *
- * `renderWidget(buildRefreshingWidget())` is meant to be called immediately
- * on REFRESH, followed by `renderWidget(buildWidgetTree(fresh))` once the
- * fetch resolves — giving instant confirmation that the tap registered.
+ * The sync coordinator supplies only a summary belonging to the current
+ * wallet session. Rendering itself never reads or writes persistent state.
  */
-export function buildRefreshingWidget(): WidgetRepresentation {
-  const cached = loadWidgetSummary()
-  if (cached) {
-    return <PortfolioSummaryWidget summary={cached} lastUpdated="Updating…" refreshing />
+export function buildRefreshingWidget(summary: PortfolioSummary | null): WidgetRepresentation {
+  if (summary && summary.positionCount > 0) {
+    return <PortfolioSummaryWidget summary={summary} lastUpdated="Updating…" refreshing />
   }
   return <UpdatingWidget />
 }

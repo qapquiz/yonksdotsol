@@ -1,41 +1,37 @@
 'use no memo'
 
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget'
-import { getStoredWalletAddress } from '../stores/walletStore'
+
+import { syncPortfolioWidget } from './syncPortfolioWidget'
 import {
-  buildErrorWidget,
-  buildRefreshingWidget,
-  buildWidgetTree,
-  fetchPortfolioSummary,
-} from './updatePortfolioWidget'
+  deletePositionWidget,
+  navigatePositionWidget,
+  POSITION_WIDGET_NAME,
+  syncPositionWidgets,
+} from './syncPositionWidgets'
 
-async function portfolioWidgetTaskHandler({ widgetAction, clickAction, renderWidget }: WidgetTaskHandlerProps) {
-  if (widgetAction === 'WIDGET_DELETED') return
-
-  const isRefreshClick = widgetAction === 'WIDGET_CLICK' && clickAction === 'REFRESH'
-
-  // Optimistic feedback: the instant the refresh click reaches us, redraw
-  // the last cached summary with the refresh icon turned sage and the footer
-  // reading "Updating…". The fetch below then swaps in fresh data. This
-  // confirms the tap registered without erasing the numbers on screen.
-  if (isRefreshClick) {
-    renderWidget(buildRefreshingWidget())
-  }
-
-  const walletAddress = getStoredWalletAddress()
-
-  if (!walletAddress) {
-    renderWidget(buildErrorWidget('Connect wallet in app to see portfolio data'))
+async function portfolioWidgetTaskHandler({
+  widgetAction,
+  clickAction,
+  widgetInfo,
+}: WidgetTaskHandlerProps): Promise<void> {
+  if (widgetInfo.widgetName === POSITION_WIDGET_NAME) {
+    if (widgetAction === 'WIDGET_DELETED') {
+      deletePositionWidget(widgetInfo.widgetId)
+    } else if (
+      widgetAction === 'WIDGET_CLICK' &&
+      (clickAction === 'NEXT_POSITION' || clickAction === 'PREVIOUS_POSITION')
+    ) {
+      await navigatePositionWidget(widgetInfo.widgetId, clickAction === 'NEXT_POSITION' ? 1 : -1)
+    } else {
+      await syncPositionWidgets(widgetAction === 'WIDGET_CLICK' && clickAction === 'REFRESH')
+    }
     return
   }
+  if (widgetInfo.widgetName !== 'PortfolioSummary') return
+  if (widgetAction === 'WIDGET_DELETED') return
 
-  try {
-    const summary = await fetchPortfolioSummary(walletAddress)
-    renderWidget(buildWidgetTree(summary))
-  } catch (e) {
-    console.error('Widget: render failed:', e)
-    renderWidget(buildErrorWidget('Failed to load portfolio data'))
-  }
+  await syncPortfolioWidget(widgetAction === 'WIDGET_CLICK' && clickAction === 'REFRESH')
 }
 
 export default portfolioWidgetTaskHandler

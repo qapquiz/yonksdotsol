@@ -2,7 +2,7 @@
 title: Caching Strategy
 type: concept
 created: 2026-04-18
-updated: 2026-09-08
+updated: 2026-09-09
 tags: [caching, performance, architecture]
 related:
   - CacheManager
@@ -67,6 +67,16 @@ Invalidation also detaches matching requests already in flight, even before they
 4. Reuse the existing invalidation methods; callers need no additional cache generation bookkeeping.
 
 Expiry is inclusive at the TTL deadline. All cache reads share one freshness rule.
+
+## Widget Refresh Snapshots
+
+`src/widgets/syncPortfolioWidget.ts` owns a separate MMKV snapshot for refresh feedback. It stores the last successful nonempty summary with its wallet address and wallet revision. A revision changes on every connect, switch, or disconnect, so reconnecting the same address cannot reuse a previous session. Empty results and wallet transitions remove obsolete snapshots; legacy snapshots without a wallet identity are discarded.
+
+This snapshot does not replace API fetching. Manual, foreground, and background refreshes share the coordinator and update every installed widget instance. A persisted request ID prevents older successes or failures from replacing newer results, including across headless module loads. Wallet identity and request ordering are checked before saving and again inside the native draw callback, after Android's asynchronous widget lookup.
+
+`useWidgetSync` subscribes to persisted wallet changes and bypasses its normal debounce for them. Disconnect draws the connect-wallet message; connecting replaces old numbers with an updating state before fetching. Unmount removes the subscription and cancels pending timers. Regression tests exercise these transitions through the real hook and task entry points with mocked native storage, widget draws, and HTTP.
+
+[[PositionLiquidityWidget]] uses a separate `position-widget` MMKV instance for JSON-safe per-position snapshots and selections. Each widget's selection is an actual position address scoped to the wallet revision. Refresh replaces the complete position list, including empty results. Navigation is local and reads the latest snapshot at draw time; it does not supersede a pending refresh. Both widget types share the guarded native renderer in `src/widgets/renderWidgets.ts`.
 
 ## See Also
 

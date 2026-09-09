@@ -1,112 +1,82 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
+
 import { AppState } from 'react-native'
-import { requestWidgetUpdate } from 'react-native-android-widget'
+
 import { env } from '../config/env'
-import { getStoredWalletAddress } from '../stores/walletStore'
+import { subscribeStoredWalletAddress } from '../stores/walletStore'
 import { registerWidgetBackgroundSync } from '../tasks/widgetBackgroundSync'
-import { buildErrorWidget, buildWidgetTree, fetchPortfolioSummary } from '../widgets/updatePortfolioWidget'
+import { syncWidgets } from '../widgets/syncWidgets'
 
-const WIDGET_NAME = 'PortfolioSummary'
 const FOREGROUND_DEBOUNCE_MS = 3_000
-const PERIODIC_INTERVAL_MS = 30 * 60 * 1000 // 30 minutes
+const PERIODIC_INTERVAL_MS = 30 * 60 * 1000
 
-/**
- * Keeps the home-screen widget in sync:
- *
- * 1. When the app returns to the foreground, re-fetches portfolio data and
- *    pushes a fresh widget update.
- * 2. While the app stays in the foreground, refreshes the widget every
- *    30 minutes (Android's updatePeriodMillis is unreliable due to Doze / OEM
- *    battery optimisations).
- */
-export function useWidgetSync() {
-  const appStateRef = useRef(AppState.currentState)
-  const lastUpdateRef = useRef(0)
-  const intervalRef = useRef<ReturnType<typeof globalThis.setInterval> | null>(null)
-
-  async function updateWidget() {
-    // Mock mode: never fetch on-chain data or push the real widget
-    if (env.devMock) return
-    const walletAddress = getStoredWalletAddress()
-    if (!walletAddress) return
-
-    const now = Date.now()
-    // Prevent rapid double-updates
-    if (now - lastUpdateRef.current < 10_000) return
-    lastUpdateRef.current = now
-
-    try {
-      const summary = await fetchPortfolioSummary(walletAddress)
-      const widgetTree = buildWidgetTree(summary)
-
-      await requestWidgetUpdate({
-        widgetName: WIDGET_NAME,
-        renderWidget: async () => widgetTree,
-      })
-    } catch (e) {
-      console.error('useWidgetSync: update failed:', e)
-      try {
-        await requestWidgetUpdate({
-          widgetName: WIDGET_NAME,
-          renderWidget: async () => buildErrorWidget('Failed to load portfolio data'),
-        })
-      } catch {
-        // Widget may not exist on home screen — ignore
-      }
-    }
-  }
-
-  function startPeriodicTimer() {
-    stopPeriodicTimer()
-    intervalRef.current = globalThis.setInterval(() => {
-      if (AppState.currentState === 'active') {
-        updateWidget()
-      }
-    }, PERIODIC_INTERVAL_MS)
-  }
-
-  function stopPeriodicTimer() {
-    if (intervalRef.current !== null) {
-      globalThis.clearInterval(intervalRef.current)
-      intervalRef.current = null
-    }
-  }
-
+/** Sync on wallet changes, app launch/foreground, and every 30 minutes while active. */
+export function useWidgetSync(): void {
   useEffect(() => {
+    if (env.devMock) return
+
+    let appState = AppState.currentState
+    let lastUpdate = 0
+    let mounted = true
+    let timeout: ReturnType<typeof globalThis.setTimeout> | undefined
+    let interval: ReturnType<typeof globalThis.setInterval> | undefined
+
+    function updateWidget(walletChanged = false): void {
+      if (!mounted) return
+      const now = Date.now()
+      // Wallet transitions must clear/redraw immediately, even during the debounce window.
+      if (!walletChanged && now - lastUpdate < 10_000) return
+      lastUpdate = now
+      void syncWidgets(walletChanged).catch((error) => {
+        console.error('useWidgetSync: update failed:', error)
+      })
+    }
+
+    function scheduleUpdate(): void {
+      globalThis.clearTimeout(timeout)
+      timeout = globalThis.setTimeout(() => updateWidget(), FOREGROUND_DEBOUNCE_MS)
+    }
+
+    function stopPeriodicTimer(): void {
+      globalThis.clearInterval(interval)
+      interval = undefined
+    }
+
+    function startPeriodicTimer(): void {
+      stopPeriodicTimer()
+      interval = globalThis.setInterval(() => {
+        if (AppState.currentState === 'active') updateWidget()
+      }, PERIODIC_INTERVAL_MS)
+    }
+
+    const unsubscribeWallet = subscribeStoredWalletAddress(() => {
+      globalThis.clearTimeout(timeout)
+      updateWidget(true)
+    })
     const subscription = AppState.addEventListener('change', (nextState) => {
-      const cameToForeground = appStateRef.current.match(/background|inactive/) && nextState === 'active'
-      appStateRef.current = nextState
-
+      const cameToForeground = appState.match(/background|inactive/) && nextState === 'active'
+      appState = nextState
       if (cameToForeground) {
-        // Debounce to let the app's own data fetches start first
-        globalThis.setTimeout(() => {
-          updateWidget()
-        }, FOREGROUND_DEBOUNCE_MS)
-
+        scheduleUpdate()
         startPeriodicTimer()
       } else if (nextState === 'background') {
+        globalThis.clearTimeout(timeout)
         stopPeriodicTimer()
       }
     })
 
-    // Also update immediately on mount (app launch)
-    globalThis.setTimeout(() => {
-      updateWidget()
-    }, FOREGROUND_DEBOUNCE_MS)
-
+    scheduleUpdate()
     startPeriodicTimer()
-
-    // Register background fetch so widget updates while app is closed
-    if (!env.devMock) {
-      registerWidgetBackgroundSync().catch((e) =>
-        console.error('useWidgetSync: failed to register background sync:', e),
-      )
-    }
+    registerWidgetBackgroundSync().catch((error) => {
+      console.error('useWidgetSync: failed to register background sync:', error)
+    })
 
     return () => {
+      mounted = false
+      unsubscribeWallet()
       subscription.remove()
+      globalThis.clearTimeout(timeout)
       stopPeriodicTimer()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only run on mount
   }, [])
 }
