@@ -271,7 +271,7 @@ Charts render in SVG, so colors can't use Uniwind classes — they read tokens v
 
 The home-screen widget (`src/widgets/updatePortfolioWidget.tsx`) renders to **native Android RemoteViews** via `react-native-android-widget` (`FlexWidget` / `TextWidget` / `SvgWidget`) — not Uniwind classes. Despite the different surface, it shares the **same token source**: it imports `themeTokens` directly (pure constants, headless-task safe — no React hook is available in the headless render context) and binds `themeTokens.dark`.
 
-The widget is **dark-only and SOL-only by design** — it's a glanceable readout, not an interactive screen (no theme toggle, no currency toggle).
+The portfolio summary widget is **dark-only and SOL-only by design** — it's a glanceable readout, not an interactive screen (no theme toggle, no currency toggle).
 
 ### Structure — mirrors the portfolio hero
 
@@ -286,9 +286,19 @@ The widget follows the same **PnL-led Readout** hierarchy as the in-app hero, co
 
 ### Refresh feedback (optimistic)
 
-A tap on the refresh icon re-renders **immediately** before the fetch completes, so the button feels responsive instead of dead for several seconds. The handler calls `renderWidget(buildRefreshingWidget())` the instant the click arrives, then `renderWidget(buildWidgetTree(fresh))` once data resolves. The refreshing state shows the **last cached summary** (kept in MMKV — file-backed, so readable from the headless task's JS realm) with two reinforcing signals: the refresh icon turns **sage** (active), and the footer reads **"Updating…"** instead of the timestamp. The user's numbers stay visible throughout — no blank loading state. Falls back to a minimal `UpdatingWidget` if no cache exists yet. (Caveat: the tap can only reach JS once the headless task has spawned, so there's an inherent ~1–2s delay before feedback if the app process is cold — unavoidable in RN's headless model.)
+A tap on the refresh icon redraws before the fetch completes. `syncPortfolioWidget` supplies `buildRefreshingWidget` with the **last cached summary for the current wallet session**, persisted in MMKV. The refresh icon turns **sage**, and the footer reads **"Updating…"** instead of the timestamp. A missing cache shows the minimal `UpdatingWidget`. Cold headless task startup and native widget lookup still add latency before this feedback appears.
+
+Wallet changes immediately replace the previous numbers with an updating state; disconnect shows the connect-wallet message. Empty portfolios clear the cached summary. Foreground, background, and manual updates share the coordinator, which checks wallet revisions and request ordering before caching or drawing. All installed widget instances follow the same wallet. See `docs/wiki/concepts/Caching Strategy.md` for the persistence contract.
 
 The `ErrorWidget` and `NoPositionsWidget` states share the same header and surface treatment.
+
+### Position liquidity widget
+
+**Yonks Positions** is a separate, resizable widget (`src/widgets/PositionLiquidityWidget.tsx`) that shows one position at a time. It uses the same dark token palette and rounded surface. The header identifies the pool and position; value, uPnL, range status, the liquidity shape, and unrealized fees follow. Value and fees retain the position view model's explicit USD formatting; uPnL is labeled SOL.
+
+Previous/Next controls browse positions locally and retain a separate selection per widget instance. The graph uses the app's liquidity-shape amounts, grouping wide ranges into at most 48 bars. A dashed active-bin marker stays correctly positioned; out-of-range markers sit at the nearest edge with explanatory text. Range prices state their Token Y / Token X units. All controls have at least 44dp touch height and accessibility labels.
+
+`scripts/preview-position-widget.mjs` renders the production tree into browser previews for layout audits and picker artwork. See `docs/wiki/entities/PositionLiquidityWidget.md` for data, refresh, and installation details.
 
 ---
 

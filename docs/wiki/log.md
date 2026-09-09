@@ -127,3 +127,11 @@ The home-screen widget (`src/widgets/updatePortfolioWidget.tsx`) was the last su
 Fixed stale cache writes after invalidation, interference between old and new pending requests, repeated fetches for cached `null`, and expiration at the TTL deadline. Added complete position PnL pagination and shared its page walker with widget summaries; incomplete results now reject at the page limit.
 
 Updated [[CacheManager]] and [[Caching Strategy]], created [[DlmmApi]], and recorded before/after behavior, verification, and remaining scope in [[Codebase Improvement Report 2026-09-08]]. The expanded suite passes 181 tests across 13 files. Updated [[index]] with the changed pages.
+
+## [2026-09-08] fix | Widget wallet lifecycle and stale updates
+
+Bound widget refresh snapshots to a wallet address and connection revision, clearing obsolete data on empty portfolios and wallet transitions. Unified foreground, background, and manual updates with persisted request ordering and a final check after native widget lookup. Wallet changes now redraw immediately, and hook cleanup cancels pending timers. Updated [[Caching Strategy]] and DESIGN.md; regression tests cover stale responses, reconnects, multiple widget instances, and headless module reloads.
+
+## [2026-09-09] feature | Position liquidity home-screen widget
+
+Added [[PositionLiquidityWidget]] as a separate Yonks Positions picker entry, with per-instance Previous/Next navigation, actual liquidity shapes, range status, value, uPnL, and unrealized fees. Snapshots and selections follow wallet revisions; refreshes reject stale responses and retain the graph on errors. Both widget types now share guarded native rendering. Added native-tree/behavior tests, a browser layout audit script, picker artwork, and documentation in DESIGN.md and [[Caching Strategy]].
