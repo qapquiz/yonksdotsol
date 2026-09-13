@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3067df321193290c950c8e61a13ff485f465cefa608212992d05b331d9b4d15c",
+  "claims": [
+    {
+      "id": "claim_f828f1b7a49747a1a4d5d8d8398f63d8",
+      "statement": "All check gates run through Bun scripts: `bun run build` = `tsgo --noEmit && expo prebuild -p android` and `bun run ci` = type check + `expo lint` + `oxfmt --check` + prebuild; type checking must use the @typescript/native-preview compiler (`tsgo --noEmit`) — AGENTS.md explicitly forbids plain `tsc` — against a tsconfig that only extends expo/tsconfig.base with `strict` enabled.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L277-L283",
+          "version": "repo-lines-v1:sha256:f1df5ab9c5a13d477622fd570b7da9f0f7f986c43cbe442edbee93a63c579199:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2EyZDczOTZjOGFhMGFiOWExMmYyNTE5Y2UzMzg0NmIwYjI4MjExOWQ1MTUxNTg0Y2M5YTZjY2ExNzkwN2Q0ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2IzNTFkMTc1ZTZjMDgwMTJhNjcwNzQ3MjAzYzNhOTE4Nzg2MzRlYWY4Y2ZlYWYwYmI5N2Y5YjY3ZGFlNTFjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWZkMDRhNjczZmYwNTU2N2NmMjc2MmYzN2MyYzQyZmVhNzFmMTA1YTJlOWZhYzdhZWNmY2I4NWUzMmQwYWYyMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDFhNzE0ZTcwYzI0NzZmODI5OTYxYzkyNWExZGVlMzgyYWI5NjlmZDFkMjI5NWJlMmZkNzFlOWRiMWJkZDVjZiJ9"
+        },
+        {
+          "resource": "repo://AGENTS.md#L9-L15",
+          "version": "repo-lines-v1:sha256:81ff112ba31c5214cc36c510359d74f005e07ba0db480b7dfd8dbe1a0e9be762:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGNlMGY2ZGZkNDQ4MTBiNjFkMDdkZjc1ZWVmNmNmNjFmOTUzOWIzNDVkMTVhZjY0NjIxNzE3YTkxNzMxZjhhZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTgzNTlhOWE4NmI3MDk4NWM1ZGU3MTViYmIzMTZmMzVjNjYyOTk5ODFmOGQ3NGMxNjUyMmE2OTA1OTIyNmVhOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzlhMmQyZjJmM2I3Njg5YzZiNjE0YTM5OWM3ZTQ3M2VlMDNkNTVhNTczNjU0NDRlOGE0MzRjOWI4NjkxMWEyNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDQzZTMxZmUwMzhjMjU5NDAzZWM2ZWI4YTViODMzMmM4ZjQzZThhNDFiMDY3OGFlNjVmZjgwMmQzN2ZkYWRmYSJ9"
+        },
+        {
+          "resource": "repo://package.json#L3-L20",
+          "version": "repo-lines-v1:sha256:d68b42f35f664d5098a903c0ecb67d6af046605c1ab1007e86550465df6043e1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM0ODMzZDU5NDljMDNhNDBjYTk1MjQ5MTYxMGE2NjU5NjQ0YjNhYTQ2NjM2MmY3OTkwMjBkYmYxOTgxNTQ3ZGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNWNkMmZiNGYzZGY4ODQ1MTUyNTViMzk1MjNmMmY4YjU0NzJiZWVhOWY1NjZmZmNhMjA0ZGI4MDI1NjEwNDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjoyLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRkNzIxNWY5ZWU3MTdhZTZiNzJkMDQzMjZjMmQ4OTQ1NjgyZGM5MGY0ODFjMTRhOGNlNzMyN2Y2N2I5ZjA5MTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdiNWZjOWVkYzgxZDVkYjgxZjVmNjZkYzIwM2RiY2EwYzdjODExYzM3MWE2MGVmNmIyYzVhMjYzY2FjMDQyZTYifQ"
+        },
+        {
+          "resource": "repo://tsconfig.json#L1-L6",
+          "version": "repo-lines-v1:sha256:712583ff9cdb4b4e4f9b000a4a56d68db8dc1921cbfbc36d490a3a9f2be3dd72:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTZmYjA4ZmRhMWFjYjk1N2I2MTE2YmQzNzgxMWExZmU0MWEwMTYxMWMwNjMxZWRiZjc4NmQ2ODg5YTI3YTU1YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_897df1972c314525abeeda67d233a5d2",
+      "statement": ".oxfmtrc.json (migrated from Prettier) sets 120-column width, no semicolons, single quotes, always-parenthesized arrows, and trailing commas, and its ignorePatterns exclude generated/native trees — /android, /ios, /dist, /coverage, and the Metro-generated src/uniwind-types.d.ts — so formatting never touches prebuild output or generated typings.",
+      "evidence": [
+        {
+          "resource": "repo://.oxfmtrc.json#L1-L21",
+          "version": "repo-lines-v1:sha256:6def2c63b05762649d3b91fbb3f4ae2227050505ea5760dc2e1b654f4c9cf98c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://AGENTS.md#L65-L70",
+          "version": "repo-lines-v1:sha256:6fffbb155f3b18c7a65573a02e996358438b50d101085e626f0e3f0965c150e2:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjczODAzZDkwYWMyZTAyZDY1MTk1Mzg1ZTQyNzc0ZjcyY2ZkYmY2NjE0MTlhMDE0MzBjODA1MTg3NTQ2MzM0NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODExMGQ1ZTZiNWRjOGI3N2FiNmZjZjk3YTQ2MDJlYzAwZGM3MTQ0Y2M5ZWRlYWI3ZjAyMTFjMjcwOTlmMDYxYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2IyNjk4ZDc4ZTdiOWFkNGRhMjZmMTY2MTE5OWExODI5ZmJmM2ZmZTNkMjQzYjBjYTIxNTQyY2E0YzljNTVjOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWNkZjJiNTYxMzVjMDlmZTdmZjRiN2VjOGU4YzllNDkxZjg1MTNmZGM3NzcwMWJjNjE3ZTNkMjAyZGI4ZDUyMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_c46b5dad17024e00afa05a00aa8d11ce",
+      "statement": "metro.config.js wraps Expo's default Metro config in withUniwindConfig with cssEntryFile ./src/global.css and dtsFile ./src/uniwind-types.d.ts; this wrapper is what compiles the CSS design tokens and generates the Uniwind typings, so any build path that bypasses it leaves Uniwind classes silently non-functional (no error is raised).",
+      "evidence": [
+        {
+          "resource": "repo://metro.config.js#L8-L13",
+          "version": "repo-lines-v1:sha256:57346da28774d20b5d694cfbc6fd7695c4e5eba7747c801f22aa7c9b31445945:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTk3NjA3YWY2N2UxYzRlYTNjNjQ3OGEyNGQ5MDUyZGVlZGNjNWZhNGZhN2ZkNDJmMjIwNTQ3Mzc3ZDdjN2Q1ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjllYTcyMTc0MThlOTIxYTBkMWE5Nzg4MzU0YTJhNTk2NDgyN2VjNWJkYTJhNzdlYjJhYWQyMjE1YmZmOWY3ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTZiM2UzNTVlYWNkMGI4YzMzNjExOTY0ODNmNTI1ZDI4ZmMzMDI5MzlkZWM5Y2I4MGQ5ODBlZDhhN2NlMTY5OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_169414e86b154dbea4e2f478763629e2",
+      "statement": "The two Android home-screen widgets declared in app.json are matched by widget code via their literal `name` strings: syncPortfolioWidget queries getWidgetInfo('PortfolioSummary'), and syncPositionWidgets exports POSITION_WIDGET_NAME = 'PositionLiquidity', which the shared task handler (portfolioWidgetTaskHandler) dispatches on for delete, click-navigation, and refresh actions; renaming a name on one side only orphans the widget because getWidgetInfo would then find no instances.",
+      "evidence": [
+        {
+          "resource": "repo://app.json#L44-L74",
+          "version": "repo-lines-v1:sha256:aaefcd1a943dd13666e878259f280c0a8193c495072086a005e001a913387011:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY2YzdhMGM0MDA3YmVjNzAxZmQ1MGE4NTg4YTA4MzM4MmYwM2UwNjEzMzZlN2EzZTExOGMwMjg0YmY0M2I2NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg5NDE5MTE5Nzk5YTUwNDVmOWY5OTkxY2YxZjkxMGE0OGZjYmNlNDU4MmRlMDE3NmM4MzJhNjRhYmM3ZmYzNmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU3ZTc4MTZkNjU2ZjIzZGM0YzY0OWQwZTU4N2ZhNTk3OWRlMDlhYmQzNDllZmU4ODI3YmNkZmIxMDE4Y2I0MGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU0NDM1OWI2NWZhODI4NTY5Yjg2YjAzMjY1NGI4ZjgxYWRmMWU5ZGI3ODJhNzIxODM0MGM2Mzg4MTczZDU3YjcifQ"
+        },
+        {
+          "resource": "repo://src/widgets/portfolioWidgetTaskHandler.tsx#L18-L34",
+          "version": "repo-lines-v1:sha256:b8f40e4e99da48dcf88004fa188ca5a63b319686a45f8444f957550b416e729c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3MjM3OTQ4ZWRhNmJkMTk4MjIwZjI3NGM2ODJlN2E4MjMyNjE1MjgxZTY1YWUzZTM1ZTUxOTZhNzI2OTM1ZjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwMmJhZjc1ZjRhNWY1MDU2N2FmNjAzNzJiN2ZhYjYwN2ZkNWE0N2E3NjVmNGZmNDYyMWM5ODY2ODg4ZWNjMjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAxN2EzNTkxZTE2YjRlOTJhMmZiM2YzMzczZjVhY2MzMGVjMGRjNWJjN2NlNjdmMWQwYjcyZDMxNmE5YjNkMTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYxYmI1MDg4OTNlOTk5NGQ4ODI0Njk3N2M3OGM0YjdiN2U3OGFhODQyMGJhM2ZkOGJmNmI3ZjZkMWIyODA4OTMifQ"
+        },
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L17-L17",
+          "version": "repo-lines-v1:sha256:506ac8882b4e65c92929f4d4260d08384865ed6d671d034ac384b659a0bfcf06:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA2YWM4ODgyYjRlNjVjOTI5MjlmNGQ0MjYwZDA4Mzg0ODY1ZWQ2ZDY3MWQwMzRhYzM4NGI2NTlhMGJmY2YwNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA2YWM4ODgyYjRlNjVjOTI5MjlmNGQ0MjYwZDA4Mzg0ODY1ZWQ2ZDY3MWQwMzRhYzM4NGI2NTlhMGJmY2YwNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzQ3NTA4MDE5ZTY5NjQ4MzAzMDQyNzFkNWNhMTIzNjUwMmQ1NWUwNTcwNWVkZjllZGRhOWUyZGQ5YTJlODcxYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNmIwNDdiZTU3NWE5NWQ5ZmJmYmFjMjk3ZjU2Y2FlNTZkMDZhNGM0MmM2MTM3ZjdiMTg4Mjk4OWEzMTE5YWIwZSJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L74-L74",
+          "version": "repo-lines-v1:sha256:224d8b1c64f67e040bf97034385a16f17f4ae7b998da1931d23b2415d09e40b9:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjI0ZDhiMWM2NGY2N2UwNDBiZjk3MDM0Mzg1YTE2ZjE3ZjRhZTdiOTk4ZGExOTMxZDIzYjI0MTVkMDllNDBiOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjI0ZDhiMWM2NGY2N2UwNDBiZjk3MDM0Mzg1YTE2ZjE3ZjRhZTdiOTk4ZGExOTMxZDIzYjI0MTVkMDllNDBiOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWMwN2E5MWNhZDlmYzVjY2Q1YmM5MDg5NmZjMThjZDgyNjA4M2Y2ODc4OThjYzMyNmQ3MmNkZTExZjRiZGJlZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODczZmUwOWUwNTY4YjJiYTI5ZWM0Yzg0ODEwOTVhMGVlZWQ3MGRjODY2ZTk2N2U3NWQ5MjVhZDg5YzgwZjBhNiJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L17-L17",
+          "version": "repo-lines-v1:sha256:a860d93034a545b9d296dc5355c55790bbd629982ece3682b002bec1f3069f44:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTg2MGQ5MzAzNGE1NDViOWQyOTZkYzUzNTVjNTU3OTBiYmQ2Mjk5ODJlY2UzNjgyYjAwMmJlYzFmMzA2OWY0NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTg2MGQ5MzAzNGE1NDViOWQyOTZkYzUzNTVjNTU3OTBiYmQ2Mjk5ODJlY2UzNjgyYjAwMmJlYzFmMzA2OWY0NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYThiNGY0MjY3ZmQyYmY3NzY1ZTNkNzFkZmQ5ODhlYzc5NmEzZjk0ZmYwZDQ2ZGZjMWJiZWFmNDViNmIxYmEzNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzhkMzBlMGQzYWQ1ZTRiMGE5MzI4NzlkOTczOWJiODg0OTFmM2NjZmM2YzAwNTJiYTliMGRkYzUxOTA4OGE1OSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b29837881fe147a9886c583be464be3a",
+      "statement": "Both widget declarations set updatePeriodMillis to 1800000 (30 minutes), deliberately matching the app's own 30-minute foreground sync interval (useWidgetSync's PERIODIC_INTERVAL_MS) and the background task's minimumInterval of 1800 seconds, so OS-scheduled widget refreshes and app-driven syncs share one cadence.",
+      "evidence": [
+        {
+          "resource": "repo://app.json#L58-L58",
+          "version": "repo-lines-v1:sha256:37d584ed1ec9b34fd4eb3304c0ff6428f8209116f1260f89424ee685cebdf191:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzdkNTg0ZWQxZWM5YjM0ZmQ0ZWIzMzA0YzBmZjY0MjhmODIwOTExNmYxMjYwZjg5NDI0ZWU2ODVjZWJkZjE5MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzdkNTg0ZWQxZWM5YjM0ZmQ0ZWIzMzA0YzBmZjY0MjhmODIwOTExNmYxMjYwZjg5NDI0ZWU2ODVjZWJkZjE5MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmY2MzBiMDBmODRmYzEwMmMxYjFhZjgwOGQyNDY3NzQ5MjVmZmNlYmY0ZjhkNmU1MzZlNjBiMTQ1OTQxNGY5YiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2E4ZjVlMzQ2MDkyMjUyZDkzYmI3MzM4ZTJiNzM0MWQ0M2ZiNjZkOTYyMDBjYzVjOTY5NWViMWE2YjVhZTZmZiJ9"
+        },
+        {
+          "resource": "repo://app.json#L70-L70",
+          "version": "repo-lines-v1:sha256:37d584ed1ec9b34fd4eb3304c0ff6428f8209116f1260f89424ee685cebdf191:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzdkNTg0ZWQxZWM5YjM0ZmQ0ZWIzMzA0YzBmZjY0MjhmODIwOTExNmYxMjYwZjg5NDI0ZWU2ODVjZWJkZjE5MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzdkNTg0ZWQxZWM5YjM0ZmQ0ZWIzMzA0YzBmZjY0MjhmODIwOTExNmYxMjYwZjg5NDI0ZWU2ODVjZWJkZjE5MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzEzNzQ0MTg5ODgzYmNjYTJmZmZkMTgyYzA2OTljNGQ4MWU2MGIzZDZiODI4ZmZlYzZhNGNkZjViNDZkMTEwNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDA4MGI1OGVhZDY1ZTZkYjliMzdkYmIwODM4MTNlOWQ1OGQwN2FjOWMxMDMzNjMwZTA1YTIzN2I5M2FiODIwOSJ9"
+        },
+        {
+          "resource": "repo://src/hooks/useWidgetSync.ts#L10-L11",
+          "version": "repo-lines-v1:sha256:8abbb6cfa41eb304bc8486c7cb53c17ebe9be8a6a49e8d01e1737c7700a5f131:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGIwNjE5ODkxMTA0YzEyYjRmMGRmMWQwZDBjYmMwMTNhZDhkYzliZTc1MGE0ODhjY2RhNjcwNDIyNzA0MWI4MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDBlMTM5OGVjMGJiOGNjMGQyZTJlZjk2NGZlNDE1YzI1ZTg3NDllMTE2YjNkODc0Mzc4MzUyZDFjN2IxNDVmNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGQyMTczYmNmMTZlMmI3ZTc3NjYyZGMxNWFmNTUyZDY2MzYwMWE5OTI5NDI4YjVlNzc1MjM1NDAzNjZkOTk1YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOGVhZDdkM2VlNTA1YmI2MTNjOTNjNDBjYmI0M2UxNWZiMWVjYTUzMGQyNjM2ZTVlN2M3YWNiNmYwNDMwNTZmMCJ9"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L60-L64",
+          "version": "repo-lines-v1:sha256:a2bed52644f325f7cce7b3ac85c10501b8fdb77c4e7a5635f899e567cbeb80d7:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODZlMGM0YzYxZjE3ZTU0OGY5YTlmMjJkNTgyN2M1ZmM2YWFkZTFhMGU0OGYxMDVlOTkxNGQ1MDRkNjk0N2NiYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjIzNTI1ODljMzRkM2M2MDY4NTkzMWI2ZWNjNGQ1MDk5MWE3YzU2YzhmYmEyODk0MTE0NjU3NjkwMjcyY2FjMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODMxOTQ3MzRjOWQ4ZTczYzgwMGM1MmMwOTQ5ZmVkZjA3YzMzOGQyZWQ2NzExOTZhY2YzZTM4YmUwY2ZjMGRhYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTFkMDMyOGUxMDA0NWNlYmQ1ZDhhMGU2MTZiZTUwMWU5ZTM1N2Y1YjhiYjMzZTA3OWJmYzYwYTA1NDVlNzdhZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_63eea436e08c441380afb7e0b7fb7c88",
+      "statement": "app.json bundles exactly four fonts through the expo-font plugin (GeistPixel-Square.ttf, Geist-Regular.ttf, Geist-Bold.ttf, DepartureMono-Regular.otf), and every consumer references them by family name rather than path: global.css maps the four families to Uniwind roles under @theme (font-pixel/font-sans/font-sans-bold/font-mono), and config/fonts.ts exposes GeistPixel-Square and DepartureMono-Regular as the two runtime-selectable pixel fonts.",
+      "evidence": [
+        {
+          "resource": "repo://app.json#L33-L43",
+          "version": "repo-lines-v1:sha256:1c34bf1ee36d3a19a34335496f7d41d0bbd73f606639d994dc07883492c45fc7:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY2YzdhMGM0MDA3YmVjNzAxZmQ1MGE4NTg4YTA4MzM4MmYwM2UwNjEzMzZlN2EzZTExOGMwMjg0YmY0M2I2NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg5NDE5MTE5Nzk5YTUwNDVmOWY5OTkxY2YxZjkxMGE0OGZjYmNlNDU4MmRlMDE3NmM4MzJhNjRhYmM3ZmYzNmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE2YjhmMWFlNmRlYjIzNWY2Y2M0ZGJmNGQzNTQ2YjhiMjExYjg1YzBkODRjNDJmYjlhYWE0NDViNDg0NzE4MDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc1NDFhMWNlNDFjZjM2NjkwNDhiODVlMDg0MmViY2U5M2UwMDVjNjgwYmUyNzhkYjk2NDViMzQ0N2NmNDJmOTgifQ"
+        },
+        {
+          "resource": "repo://src/config/fonts.ts#L14-L31",
+          "version": "repo-lines-v1:sha256:031ccabd3f18130a32465e4ac6db9c10b8b1492459fe26307806f9b04f3b787c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU1YTAzMjY2MTg2NzliNTVkMTI4ZjcwNTZkOGMxOTdkOTZjNjMxYTYyNjUzOTM0NDNmNTUwMjdmNTBiZDYzNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJlYzQ3OTdlOTRjZTQ3OTBhMTI2NDI0NDFmNjRmY2ZiZjM5OTFjMWU5ZmQ0NzllN2Q0YzJkMDcyNDI1M2ZlNDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/global.css#L6-L11",
+          "version": "repo-lines-v1:sha256:bbd5db43c0d7e300411f016b2b5f0cc818ce605e6a1b940eea4e4ebba567526d:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGY3Njk1YWJjMjJlZjE3MWEyYjI0NDcwOTc3N2JmZDJlMTViYTRjN2FiOTViMWM5ZmMxMDUyNjUzYzA2OTVjNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzMzYzc0NmNhYWVmOTNlYmNjMjhkNWM3MmVmYjkyMjUzNDczNmI3NGIyZGMzNDk5ZjM5ZThiYzIwYmY3MWIxYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWE4YTNkMTdmMGRkM2M1MTU4ODdkNmFiNDU5YWZjOWVmZWZlMzcwNTE4ODAwNWY4ZDE4ZmU0YzNhN2Y2YzM2OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_451d800416fb4ceea16cb975e4962946",
+      "statement": "The Android config declares android.permission.POST_NOTIFICATIONS — the permission the background task's out-of-range local notifications require — and explicitly blocks android.permission.SYSTEM_ALERT_WINDOW; the expo-notifications plugin sets the notification accent color to #8FA893 (the sage app-primary).",
+      "evidence": [
+        {
+          "resource": "repo://app.json#L15-L23",
+          "version": "repo-lines-v1:sha256:c4b9c0c66992519d50c75383411eff55aa43a1d95412c465408d994cbbc6b9ab:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjU0OWRiZDdhYjcwMTk1MTEyMGZmYzY1ZDQ0OWNkZGMwNzBmY2FjODk2OWI2MDEyYTM5NTVmYzQyMTRkOWNmMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTk4MjRlY2FiM2ExOWFmNmUwMGVhYTY5MDc4ZjZkZWExOGM1OTlmZTFmMDAzZjUzY2FhMThlYTU0MDlmMzE2MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWZhMTk1ZDczOTg1MjE3MDg2NTBhNDkxNTcwYmQ5MmJjODU5YWZiNDJkYzU0YmI1YzI1NWFhMTM4YmRmYWFlZiJ9"
+        },
+        {
+          "resource": "repo://app.json#L77-L82",
+          "version": "repo-lines-v1:sha256:a5e9b4a22e9967393b45fb908d26e30833ee0c431ee2b3897232ce1e266b78ce:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjZjN2EwYzQwMDdiZWM3MDFmZDUwYTg1ODhhMDgzMzgyZjAzZTA2MTMzNmU3YTNlMTE4YzAyODRiZjQzYjY2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjQyMjM5YjFiZDgyYjg1ZWQ1MGMxOGFiZTZiOGU5OTc4NzU1ZGFjNmZkODA0MDkyNGM4YTg4MGM1MmYwNjVkMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjc1YjgyZGFmYzVkNjdhNDlmNTc5ODgyNjc2OTFmZmY2OGNkMDgyMDdmNzcyYmEwMWI2YzUwNTYwZjYwNTgyZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYThkYjQ1MTkyYTkzMjhiNTk2YjE0N2RlZDFjNTQzNzEzN2EwZmU4YWM5NzYzMzU1OTE0ZWIzZTc5ZmVkM2M4ZCJ9"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L31-L48",
+          "version": "repo-lines-v1:sha256:2d751a97d0edb91c89cdaf50a8d905442b6c6d2ca3881d9dfe7c71ee0d720807:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljMDdhNjNkNjRmYzIxMTQ3MTg4YTI1MzZhMzk2Y2Y1ZTQyYTRmODgyODg0YThlOTY5ZmIyYzFjNjZjZTdhZjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBkYzRmZDJkYTFhNTMwZTZiYzFiNzVlZGJlOTE2ZjNkMTEzYzgyNzNiZThiNWZlZTJlZDE2YmIzYWMzYjhlNjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU1MTc1YWYyNzUwMzA2ZDdlNTU3ODY3MGMwY2UwNmQ1M2FjNjhjZDYxMWM4MDg0MTQwMDBkZDllNjhhNjNmNjQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_636bbe06c90f4526adaa9007cffc3d1d",
+      "statement": "plugins/withGradleHeap.ts (registered as ./plugins/withGradleHeap in app.json) rewrites org.gradle.jvmargs -Xmx to 4096m via withGradleProperties, wrapped in createRunOncePlugin; the fix must be a config plugin because expo prebuild regenerates android/gradle.properties on every build (android/ is gitignored), and it exists because the v4.5.8-beta tagged build OOM'd with 'Java heap space' in :app:compileReleaseArtProfile under Expo's default 2 GB heap.",
+      "evidence": [
+        {
+          "resource": "repo://.gitignore#L3-L3",
+          "version": "repo-lines-v1:sha256:6b36dc2dd025111ba65c469fbef24ac432ba2aab39dd1e949cfedcf22c31cfe6:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmIzNmRjMmRkMDI1MTExYmE2NWM0NjlmYmVmMjRhYzQzMmJhMmFhYjM5ZGQxZTk0OWNmZWRjZjIyYzMxY2ZlNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNmIzNmRjMmRkMDI1MTExYmE2NWM0NjlmYmVmMjRhYzQzMmJhMmFhYjM5ZGQxZTk0OWNmZWRjZjIyYzMxY2ZlNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzYyYTNiOWJmM2M4Mzc3MTRlOTU1NDgxYzMxZDYyMDgxNWZiZjA3MGFiYTMwNmRiMDUwMjY1NDhlYzA5NmM1ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjdmODU0YjEzODFhYjBhODBiOGU1ZTA5MGNhZTM2ZDg4OGZlZGZlNjc5NzZhNjAzMzFkMmNkNzE1ZjhjZjIwYSJ9"
+        },
+        {
+          "resource": "repo://app.json#L75-L75",
+          "version": "repo-lines-v1:sha256:f9e15269e1e4f7608991474714dd31bd59cd1da6b46f709bdaddbaf0346bbba5:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjllMTUyNjllMWU0Zjc2MDg5OTE0NzQ3MTRkZDMxYmQ1OWNkMWRhNmI0NmY3MDliZGFkZGJhZjAzNDZiYmJhNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjllMTUyNjllMWU0Zjc2MDg5OTE0NzQ3MTRkZDMxYmQ1OWNkMWRhNmI0NmY3MDliZGFkZGJhZjAzNDZiYmJhNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTdlNzgxNmQ2NTZmMjNkYzRjNjQ5ZDBlNTg3ZmE1OTc5ZGUwOWFiZDM0OWVmZTg4MjdiY2RmYjEwMThjYjQwZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWVhZTVjZDQ3Y2M2MDgzNzRmNDMxYWFiMWM3YmJjNGY5MGJlMjllZTAyNGQ4Zjg0Y2I3MjE2ZWRkMjM5ODQ1NiJ9"
+        },
+        {
+          "resource": "repo://plugins/withGradleHeap.ts#L1-L31",
+          "version": "repo-lines-v1:sha256:01f6bcf35f4475af46463c0718abfd06bbb6eff168d3e2798acb0530e75eac93:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM2NjhlYTViZDZlYjgwMTFiN2VjNTliNDA5MDNiYjk1MGYwODllNDljOTUwNmI5ZDI3ZjRkODU5Mjg2NjBiZDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjczMTMwMzUwNmNlNjdiMjFmNzRmNGQyM2Y0YTg3MjVkYmZjNGE5NzUyMmRlZDc5NGM1ZmE5MzYwYjlkOTAyMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e6f253ee5c0c4201a3ee742780b8eede",
+      "statement": "app.json's extra.eas.projectId and owner bind EAS builds and the EAS Observe telemetry to the Expo project; Observe is configured in code, not config — _layout.tsx calls Observe.configure at module scope (toggling it later throws) and wraps the root layout in ObserveRoot.wrap to measure Time to First Render — and all Observe access flows through the src/observe platform seam (real expo-observe on native, no-op stubs on web).",
+      "evidence": [
+        {
+          "resource": "repo://app.json#L24-L29",
+          "version": "repo-lines-v1:sha256:95a96d0132fe1b45f0d89cbd950113117daf2605aff78bd90562180dbb3325e8:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzk3MjlkMmQ1NTdjMmJhMTRkNTIxN2Y4NTE1MmE0Y2Y5MTM0Y2I4MjdhZWJhMGYzMTVlMDQyZWZkNjczNDNjOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFlMjFmYTYzNjJkMWZhZjJkZGJmZDllZGUwY2JmZmMxYWIxMWRiZWYzYmMxYWJjNWQwY2Y0ZWY3NGRkMDQ1NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI3ZDE3YjZhNjhjNTcyMGZkNTBmYWRhODg5NTU4OWYyZmFkODEwOWJkODAxOWJkOTg0MzFjYTVkNzIxZDQ0NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTZiOGYxYWU2ZGViMjM1ZjZjYzRkYmY0ZDM1NDZiOGIyMTFiODVjMGQ4NGM0MmZiOWFhYTQ0NWI0ODQ3MTgwMSJ9"
+        },
+        {
+          "resource": "repo://src/app/_layout.tsx#L14-L18",
+          "version": "repo-lines-v1:sha256:2e7d85723c4c9f930aa9640cba17c8a9cebe4b5008ef198f61d37508ba5b4cdc:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGRhZjBiZGU3YjM3NGZlNTBjOGJlNzc3NmM0NDk4N2EwZjQ3MjU3ZDAyM2M1ZDdkYzMyNmMzZTk0YmI1ZTkzMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDUxYzY4ZGRlMmQwNDdkMTFlODg3MDgxMDVhMTNhNmVkMTQ1MWVmM2NmYWMxN2FiY2MzM2Y4MWM3Y2MxZTM0YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjIxMjBiYWNlOWRhNWUwZmU5ODY1ZGY1ZTBjMmNhY2FjNWFlMWZkYzExOTFmYTIyNmViMDBkMTMwYzExYmM0NSJ9"
+        },
+        {
+          "resource": "repo://src/app/_layout.tsx#L49-L50",
+          "version": "repo-lines-v1:sha256:00a5931cbf8358808594cf75038f547b1a957085ea9a6a28737874488059b517:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjg4MzkxYzliNTAyNzVkMWI1MTdhNDNjNTFmMzlkNjBmYmY4YzE5YjNhMmVmYTY5ODAyZTU4ZTZiYjIxMzg2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM3NmY4OGQ4N2JjNzM2N2M5YzMwYTlkY2I2YjYzZmQ2MTAyMjMzZjI0MjhjZDIyMmZlMDk4MTFjYjhjYmIzYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzQwYzVkM2RjM2E3NzMwNzkzYzg5Mjc5NDhiNTU5NjY0MjA3Zjc5YmE4Nzc3M2MyMTUwMDQ0MzE5NjJmZDQ4OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/observe/index.ts#L1-L8",
+          "version": "repo-lines-v1:sha256:45b0d3f9cc739db3326664a022f9e2a7ce183f77e56b449336343c3b2e3e2be8:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTQ3MTFkNDU0YWYzMjVmOTljNWRmYTUzYjhlZGQ1YmJiZWU4Nzk2YjBhNTIwN2EwODk0ZmZiNWQxMjBhMDRlYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_dd0afd9c5b76414cba0a36588a3cce13",
+      "statement": "app.json enables Expo's React Compiler (experiments.reactCompiler) and sets userInterfaceStyle to automatic, while effective theming is store-driven: _layout.tsx mirrors the persisted settingsStore.theme into Uniwind.setTheme rather than following the OS appearance setting.",
+      "evidence": [
+        {
+          "resource": "repo://app.json#L4-L7",
+          "version": "repo-lines-v1:sha256:6bc35b11ff94975fb01d6f8aeea11e19faac4a720275b1b5e6f0c2afbb5654ed:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGVjMTBlNDllZGE2YjMwOTkyODhmOTIyZTM1N2I2ZGQ5ODA4NTA4NzIyN2MzZWJiZTQyMjc1ZTZkNGJhOGNiZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDVkMjlmOTcyNzMyZTIyMWE4N2UxYWIzOTFmZWU4OTBhNzhiODRlOGViYjAwOTE3OTlmNzE1NGZmZDU5NmMxYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTRlNTFjMzA3NGFjYjQ1MDVjODkzNzY5MDVkNmNhOGU0NTVmN2E3YTFlZGMwY2ZkZmI4ODgxZDAzYTYyYWU5NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjU0Yzg4OTMxZTM3Y2ZiNTQ5YWFhYWVhMGIwODg1MDY2ZTZiNjdlMDE2OWI1MjFhNDBjY2E1ODU2NWVkMTExZSJ9"
+        },
+        {
+          "resource": "repo://src/app/_layout.tsx#L27-L33",
+          "version": "repo-lines-v1:sha256:5353708b1f157fc270285ff45b3cb78b55d20acb87c8efc7c8bc261939837457:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU4Mjg4ZTUwNjA3OTYyNjY3NmU1NDZiOTNlMTQ5Njk0MWNlN2Y3YWI5YzlmMTZjZmUyMGNhNWVhOTZkZDlmZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2IxNzk0MzI5NWMxYzc0MWVkYWExMjE1MDVlNGY5NzBmMTQzNDcwY2I5OGQ2NjdkN2NmYTM2MTdkNzYyZmQ1MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjQ2MDg0M2JmNzdlMTlhYjFmNDgwYzExZDllYjBlMzhiNDkwNWQ5Yjc0YmVjODJlOGExYjZiOWQ3NmM0ZGFkYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzBjYmFmZTViOWUzZmRhYTVjMjM4YjNiNzJjZjc4YTIyYWEzNjdjMGJiOGE4ZTg5NWQ1N2QxMzI4M2YwYThkYSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_45ca24d5c9e44674aa534036eafa80db",
+      "statement": "eas.json defines the build profiles: `preview` builds an APK for internal distribution and is the profile the tag workflow builds; `production` and `dapp-store` set autoIncrement with appVersionSource remote (version authority lives on EAS's side); `dapp-store` builds in the production environment with EAS-managed env bindings for EXPO_PUBLIC_RPC_URL and EXPO_PUBLIC_HELIUS_API_KEY plus EAS_GRADLE_CACHE=1; the CLI requires eas-cli >= 18.0.3.",
+      "evidence": [
+        {
+          "resource": "repo://eas.json#L1-L37",
+          "version": "repo-lines-v1:sha256:4dd617c76ed6e513610647ca97fab8ead2e86bd57caa12ce00e026635fa1e5a8:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8664e2006eaf43a69323083f7a8c82ab",
+      "statement": "Pushing any `v*` tag (or workflow_dispatch) runs .github/workflows/android-build.yml: it provisions Bun, a Zulu JDK 17, and the Android SDK on the GitHub runner, installs dependencies with `bun install --frozen-lockfile`, authenticates EAS with the EXPO_TOKEN secret via expo/expo-github-action, then runs `bunx eas-cli build --platform android --local --profile preview --non-interactive` with EXPO_PUBLIC_RPC_URL and EXPO_PUBLIC_HELIUS_API_KEY injected as build env — the --local build is why the runner needs its own Android SDK and the Gradle-heap plugin — and uploads *.apk/*.aab as an artifact named android-<tag ref>.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/android-build.yml#L1-L52",
+          "version": "repo-lines-v1:sha256:141ec9a72683355ff6a9767d8886cfdc5fe38cdabb77e38f68c99ebfa18130eb:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBkM2M2ZjU5MThlMmQ1ZTYyNzJiMzMzMjQ1MDkxN2ExZTY0ZjM2YjNiMGIwNDA2YTM4MmYzODcyMjRjMzUxMGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzNDE3YWVjOTcyNmUyNzU2MTVmYTY2MWU0MmExOGNhODdhODgyM2U1ZDE4YjViNGRhZWIzYzg4Zjk1NmRlNWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ef5a9b94dcb842239eeb9272829e633a",
+      "statement": "scripts/palette-check.py audits a web-preview PNG against a token table duplicated from src/config/theme.ts (per-channel tolerance 8), auto-detecting the theme by coverage scoring and exiting nonzero when the best theme covers under 20% of sampled pixels; a per-token miss is reported with a note to check before treating it as drift — absence is not automatically a failure.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/palette-check.py#L104-L108",
+          "version": "repo-lines-v1:sha256:b35f3f0fd8cb4426ea6dcba1b7ea153486905905be00f8d7b9a77cc9510f368c:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTllYjdmN2FiNjMzNDM3ZmQ1YzRlNzA1OGZlMmViMGEwZTZlOWQ5NGZhZjZhYjFiMTNlNTA4OTIyMTQ0OTYyYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjRlYjUxOTU3ZGJhYWRjMzE2OGU1Nzg2OGRmYjc0ZjlmY2U3M2U3YjA4Y2IwYTIzZTI5YWQ1NzhmMGUwYjNhNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2VjMmViZGQxYTMyYzE0ZGM3Mjk1YjFmYmMxYWJkNzZjOTJhNGU0MzUyZDNiZmYzMDE0YjFiYzg3ZTU1MGEzNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjg3OGViNDI5NzgwMWNlMWVjYjQ4YmY2YjFjOTdhNmY0NDllMjgzZjk4NDFhNTFlMmUyM2MyZDQ2MTI4Njk2MSJ9"
+        },
+        {
+          "resource": "repo://scripts/palette-check.py#L27-L28",
+          "version": "repo-lines-v1:sha256:c712f7297eecce1c07680157c00a410366c62773fff2100eadd7531d47efec1a:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjA5MTBlZDdjOWM5NGZmMjdkYmQ2ZDQxYzA4YjIxNGIxYzZhZjA3OTE0ZDZiOTA0MTYzYjY4OWFlZDVmNDA2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4M2FlYzEwZjE0YmM1ODU5ZjM5ZmUzOTcxNzM0MWU0NmU1OGUwZWNlMGJjNmU5MTNkYzY0NWI0YmI2NjI2MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2UwMzBjNWU2ODgzMzA0OGNlNTZmMTI4YTYwNjA0YWZmOGM5YjBmYTcwOWQwMmZjODQzYTE1OTNkOTBhY2I1YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTdkZjE4M2ViMzBjYmQ1ZWIxYmY5MzEwMWZlZmNlMDZlYjk0ZDQ1OWNkZWZiNTdlNjM2MGM4ODU4NGY4ZWU2YyJ9"
+        },
+        {
+          "resource": "repo://scripts/palette-check.py#L57-L57",
+          "version": "repo-lines-v1:sha256:1a9fa1ab599ff1fa9649dd34fd9e97bee8311e0a582d44f8c5c4caf59db64985:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWE5ZmExYWI1OTlmZjFmYTk2NDlkZDM0ZmQ5ZTk3YmVlODMxMWUwYTU4MmQ0NGY4YzVjNGNhZjU5ZGI2NDk4NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWE5ZmExYWI1OTlmZjFmYTk2NDlkZDM0ZmQ5ZTk3YmVlODMxMWUwYTU4MmQ0NGY4YzVjNGNhZjU5ZGI2NDk4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjc2YTU0NGNjMDIzZWQ0MDVlM2I5OGI4YTM1NDA5MGZhZDE2ZTllMThkNWVlOWY3YmE2YzNlNzAwNTMwMDlkMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDQ3N2RjNGU0ODQ1Y2U5NmU1Yzc0YWIyOGIzN2M3ZjVmM2Q3MjRmYTdmMzM3MjRkZmU1MTIxNGRhNDNkYTczYiJ9"
+        },
+        {
+          "resource": "repo://scripts/palette-check.py#L67-L86",
+          "version": "repo-lines-v1:sha256:1fb5e36e0f1e92d445496a1482d5311a3a13e2861e6d5061794f37bd2b57db10:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkMjY3ODE5NDg2MjdiMzk2ZjRkOTg5ZTQxYWRmY2Q1MGRkMWJhMGM3YzgxM2FlODY3ZmVjYzQwNzM0YzM1NGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhZDc3MWE2NTdmMjM3OTU5MzJiODY5YmM5MGYyMmRmMWM0Yzc3OWI3Y2FmN2U4ZjI1MWExMjg5MTVmZGRlNjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFhZmM1MGUyYTZkZTlkMTJjOTU2ZGRhM2VkMGY3NGYxMTQ5OTM5OGIyYmI4NGUwZGVhNTYwNTA4MTBlOWMwMmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc3MGY4MDI1Zjk2M2I1YWJlZDk5N2QwMjMyNGQ1YTQxYmZkM2U3NDkxODM5OWM4NzM0ODM5ZmQ1ZjkyYzIzYjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_944a12fb02f64adb8683da41447faeae",
+      "statement": "scripts/preview-position-widget.mjs renders the production PositionLiquidityWidget component to static HTML files under .expo/ for visual checks and picker art, stubbing react-native-android-widget and env via bun:test's mock.module and feeding the widget mock portfolio data plus themeTokens.dark; it is a layout preview only — native RemoteViews still require device testing.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/preview-position-widget.mjs#L1-L20",
+          "version": "repo-lines-v1:sha256:a5038b5c50575994a1c70702e25f38af8fc27691430133688596c71c0a000f41:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmNWU4NWQyNDAzNzVlNTNiZTdhNTA0NWY4ZDUxZmJmMWU5OTNiNzY0MGRlMDY0MGJiOWY0N2U2YzVhYTdiOGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU4Mjk2ZjlmZTZlZjc0OTE4YmQ3OWYyMzMwZTkxMjBhMDUxYTY3MGQ0Zjc3NTgxMWFlYjYxZWM1ZWIzMGFjZTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjMwMzFkMWZmNjAyMWU3NjM1Y2U1Mzk4ZDNiOGQxODhmMGU1NWQxZjdiZDQxZDg0Nzg1MDRhZTU0MjI5NWUwYmEifQ"
+        },
+        {
+          "resource": "repo://scripts/preview-position-widget.mjs#L102-L111",
+          "version": "repo-lines-v1:sha256:7d32ca8b0c23a5ba4e96d4ccb92496b487d8695f02ca4b9accafe8814964f4f7:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU0YWE5NjgwYjI2NWY5NWFlZDE2YTM3NjhmYTgwY2M3MDBlMDZlNWZiMzYzZWJkZGYwNjY0YWQ1YmIzYzFkMzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4M2MyZTY5YjAxOTlhODk1NTFjOTgyNDQ1NzBlNmFiNDMyN2U4MmE1ZjkyYjdhMmFhNTY5ZTdlMjMxMmFmYTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4OWI3NTFmMWM3YzFjNDU5ZmUxMjkwMDJlMDY2ZGNhZWVkOTc3NDFjYzFhNTkyYWExNzhkODZhMzg2ZmM5ZDAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

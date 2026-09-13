@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:55c6da84bbeedd06cf6fdace367fcbe47f586e374ef79b109e98492583faa1e0",
+  "claims": [
+    {
+      "id": "claim_0020aa8765ae47aa893556809ab60e2e",
+      "statement": "src/config/theme.ts is the canonical source of design-token hex values: it exports themeTokens, a pure constant record keyed by ThemeMode ('dark' | 'light', dark first/default) whose `as const satisfies Record<ThemeMode, ThemeTokens>` makes the compiler enforce identical key sets across modes; src/global.css mirrors every color as a --color-app-* Uniwind CSS variable inside @variant dark/@variant light blocks and defines the four font families under @theme, with a header comment pointing back to theme.ts and a keep-in-sync rule that a value change requires editing both files.",
+      "evidence": [
+        {
+          "resource": "repo://DESIGN.md#L3-L5",
+          "version": "repo-lines-v1:sha256:56af6370edf670cbab7b056d45da85cc5f1e052adc225fb60acc10fec456307b:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmU5NmYxOWM2NDU3M2Y5YmMxMDQ4YjU2NTcwNGUyNDQ1ZTM5OGYxYTE5ODViZDliNzcyYWRjZmMwMDFmNzMyMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzZkYTVjNDM3YjllNzcwODQxMDI4YWM4Mzg0NTlhNjdhZDE2ZmM1NDZmNTc3NWJlNDdlMjE2YTIyODhmNmYwMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGQwODBjYjY0MTljZmFhOWVlZGQ0OWU2ZDFhMDAxY2Y2YjY5MDJiOGEwYmFjZTg2ZTM4ZjIzNGE1MzE0MWQzOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSJ9"
+        },
+        {
+          "resource": "repo://src/config/theme.ts#L48-L97",
+          "version": "repo-lines-v1:sha256:b887caa956270be2e939ebf5af6c04a95dd6451d70fb955d6cf33da45afe6910:eyJzZWxlY3RlZExpbmVDb3VudCI6NTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxNzNhYjA3MTliOTM2YWRiZGY1NDExMTU5MWE4Y2MzNDk1M2E4NDdjZDA2MzRhNGM2MDg5ZmJiMTU1MTdiYzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgwMWQ0ODFkNmI4Y2NiYTIyZjRjYjY5YzUwMTExYzc3Y2EyM2I3MTA4YjU3YTlkYjg1MDE1N2Y3NTlhODI0MzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM2MTc2YjIyNTAyZTQ4YTk2ODRiZWZmZjVjNTE1YmE1YTc1ZGQ3ZDcxMGJiOGIwODAwM2Q4MDg2MzhjYzg5ZDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/global.css#L4-L69",
+          "version": "repo-lines-v1:sha256:02f6d9e938660e7e83f411e980429d1c5f56c40f11b1e56f3839c6340c92f41c:eyJzZWxlY3RlZExpbmVDb3VudCI6NjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAyODllYmRlMWY4MTU0NTkyZTg1M2JhNmE1YjI3ODhiNjA2YzIxNGY0NTA3ZmMyNmE3MGU0ZTVlOWI2NDkxYTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdkOGRkZWRjODJlZWQ2MmVhNmJkNzAwMzlhMDc1MGMzM2YwOGE5YjE2OWYzMDk0MzM5ZjAwMDgzMjE4MGQ2NzciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ec011ceb664043ba93c77e58cb0ae222",
+      "statement": "src/__tests__/config/theme.test.ts mechanically enforces the theme.ts-to-global.css mirror: it regex-extracts --color-app-* variables from each @variant block in global.css, asserts dark and light token key parity, and spot-checks the extracted values against themeTokens.dark/.light case-insensitively, so CSS-variable drift from theme.ts fails the vitest run.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/config/theme.test.ts#L10-L62",
+          "version": "repo-lines-v1:sha256:a77d91910e5046727dbd589d3e214dd94fd066e65d218ff953052d063c71413e:eyJzZWxlY3RlZExpbmVDb3VudCI6NTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4YjRjNjg4MDJhYmFhZmQwN2VlNGFjZWEzZjM5MmRjOWQwNjgxOTM3MmY1NDBiMTgyNTdhMzZiYjUyMWMyMTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY1Y2E1NjBjODNlYTZjM2MwZmRlMjlhYjIzZmQ0NDQ2MWRmMmZhZGE4NThhYTNlMGM0ZmQzZWI2YTY5ODEzOTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_147271915ce24cdfb75f135263451d2d",
+      "statement": "Theme selection is owned by the zustand settingsStore (`theme`, persisted to MMKV, default 'dark'); the root layout syncs it to Uniwind via Uniwind.setTheme(theme) in an effect, which is what activates the matching CSS variable set for all class-based styling.",
+      "evidence": [
+        {
+          "resource": "repo://src/app/_layout.tsx#L27-L47",
+          "version": "repo-lines-v1:sha256:53dfba3e00b1e441155b7bb44df9fa875160241ef8ae8aefe011e622dfaf9d4d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA1ODI4OGU1MDYwNzk2MjY2NzZlNTQ2YjkzZTE0OTY5NDFjZTdmN2FiOWM5ZjE2Y2ZlMjBjYTVlYTk2ZGQ5ZmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY0NjA4NDNiZjc3ZTE5YWIxZjQ4MGMxMWQ5ZWIwZTM4YjQ5MDVkOWI3NGJlYzgyZThhMWI2YjlkNzZjNGRhZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMwNGExMDNkOGYwNjlkZDBhOWMyZGU5NTVkMTY4YWMwMDI2NjdhNDlmMGE4ZTI0M2Q2YjFmODZmNjQxNzg5MWQifQ"
+        },
+        {
+          "resource": "repo://src/stores/settingsStore.ts#L19-L58",
+          "version": "repo-lines-v1:sha256:cc4e8e1d008c8b38bab27e5db0e415af32aefc3211bf6b763ea82ccb5db8615f:eyJzZWxlY3RlZExpbmVDb3VudCI6NDAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ1NmY0ZGQzNDg0NjA2OTFhZTRlOGY3OWIyOWI1MmM4Y2IxOTNjZWUyY2RlNGE3MjdlNGY1OTM5ZTE0YjQ2ZTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcwMTk5NWYyYTNlNGEzYTcwZjJlYzZlZWVjZjdiODE2YmQ2OTI3OGQ0ZTNhNjc2YTlmZjQ5MTk0NDBiYWM3MmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU2ZjI4OWE2MTY2YzE2YzA4NjAwOWI3ZGEwNWIyNzhlMTUyOWUwNzA0ZjQyM2YwYjEzMGY1ZDkwMDFiMTc3Y2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZhZmJhMDUyN2MzOTUzYzRiNmUwZTViNTczOWJhODM2MTJmODA1M2JjZGM5NDY2NzMwMTkzY2QxZDU5MGI0MDgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e1d1f9f1631a4aacb72eb739ace17a6a",
+      "statement": "useThemeTokens() is the JS consumption path: it returns themeTokens[theme] so surfaces whose colors cannot travel as Uniwind classes still read from the token — e.g. SafeAreaView background, RefreshControl tintColor (tokens.refreshTint), expo-status-bar style (tokens.statusBar), Ionicons color props, and SVG fills.",
+      "evidence": [
+        {
+          "resource": "repo://src/app/index.tsx#L130-L130",
+          "version": "repo-lines-v1:sha256:4360514d7303c444042173b0f98e00c9aa47ebcbc7f45dbb7750aa78940e935a:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDM2MDUxNGQ3MzAzYzQ0NDA0MjE3M2IwZjk4ZTAwYzlhYTQ3ZWJjYmM3ZjQ1ZGJiNzc1MGFhNzg5NDBlOTM1YSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDM2MDUxNGQ3MzAzYzQ0NDA0MjE3M2IwZjk4ZTAwYzlhYTQ3ZWJjYmM3ZjQ1ZGJiNzc1MGFhNzg5NDBlOTM1YSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjNhZWY0NGZlNGVkNzM1N2M2ZDllNWUwZWIxMjQwM2EyYWVmZDdhMjNkMGVmNDM5ZDY2YzZjY2ViZDY2NTMyNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTg1NWFlMTk1ZGQyODY4NDhiOWYzODc0ZGUwYzhhYmYzYmQ1NmQxZDc2Yzk5M2IzYTMwZjI0MzUyZDY2YWJlYiJ9"
+        },
+        {
+          "resource": "repo://src/app/positions/index.tsx#L97-L112",
+          "version": "repo-lines-v1:sha256:fb378527ac9ef38389a062b4bba38e5174ebef2a9149e18d8a390f255662d205:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYwNzc3ODA5Yjg3OTg5NzdhNzk5MTM1OGFlZTlkZmU0MDBiNTRmZGRlYzUxMDkwZWY1MjZkZjFlODE3NzhjZmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjczOWFiOWUyYmUxMDNiMjEzOTUyYWMzNDM4OTY0OGRhOWRhOWQ5NmMzMGUyNmIzOGI0MzNiYjUwZjY0N2MzMjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU5Yjk5MGRmMjUwYmUyODVhMTEyYjU2YTI2MzQ5YzQ0OWVlZTZhYzNiNWMyMjdhOTNhNmQwMjI1NmQ4NmQ3NDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRlMGEyNjIzZmI4YTMzMGJmMjgxMDM1ZmE3NmIxYWUwOWJiZDNhNWJmMzlmYmRjZGY1NzM2NWRmZjA4ZTBlNWMifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useThemeTokens.ts#L1-L9",
+          "version": "repo-lines-v1:sha256:e2123fa2ad0376795a112ff76795f7122b5b54e0eea4d210408e5af7baebc84a:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzVjMDZkYzI1ZWRjYjJiZjlmYzZjMGY0N2NlNGJhNzY3ZWJhYWVlZTc0Yzk0ZmQ5OGIxOTEzMGMyYmNkZjM2ZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTA3NDkwNTVjNDk4NjVmNDAxYTA1OTIyMWRlNjhmYjRkZjk5YjUwZmFjNDEwMDFmZjMyZTkxOWZiYTQ3ODkzZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b481ba2c73bc410d91d9d6bddc950d28",
+      "statement": "State colors are mapped onto the accent palette rather than forming a separate design language: profit/in-range/accruing uses app-primary (sage), loss/error uses app-negative (clay-red), and out-of-range/caution/claimed uses app-secondary (copper) — applied consistently in the range badge (primaryDim/secondaryDim bg), hero PnL color, and fee rows where state is carried by color, never emoji.",
+      "evidence": [
+        {
+          "resource": "repo://DESIGN.md#L74-L86",
+          "version": "repo-lines-v1:sha256:660fc7845cc2a71070f449b18ff35522635a69a75241b4d030731ba4345ee585:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdkMTEyMWM5MjZkODM1YTM3YzY2M2VhZmI0OWZmNDEwOGVhZDI2ZmZiYTg0ZjNmNTg2NjBiYTRjODg0MjY2ODIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkNmJlZDg3NzQ5YjJiMzg2YWM3N2ZiMDliODZlMTNkZmNmMDM4MDg1MGUyNzgwMWU1MjVlODMxMDFmNjEyYTIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAwMWYyZWMxNzU5M2MxMDU0ZWI0NjM2N2Q4NDUzZWYyNGExNzNjZTk2YjcxMTdkOTFmOWE2OGQ0NGZlZjhiMDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAwMWYyZWMxNzU5M2MxMDU0ZWI0NjM2N2Q4NDUzZWYyNGExNzNjZTk2YjcxMTdkOTFmOWE2OGQ0NGZlZjhiMDEifQ"
+        },
+        {
+          "resource": "repo://src/components/positions/PortfolioSummary.tsx#L122-L123",
+          "version": "repo-lines-v1:sha256:dc8b124db79b919ee3dcac212855aaf365c4a05da455ca6f3703c1432d44b1f4:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA3ODgxMmFmYTIyYjEzZjc4NzI3YjdkMjY5NWY3M2JiNzM3OTM1NjU5ODdlNGQ1Y2Y4M2UyODk1ZTBiMWZmMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDk5YzZlMDVjZTAwMmVjOWQzOTMwZGMxNTI3YmNhNjJkNTIwZWQwMTgyMGRmZGQxNzEyZGM0NTNiM2MzOGMyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGU1OWFkZTgxNzBkZWM1ZTA2ZTJmM2E5ZTI5ZGNhYjRmODJiZjRhYjRmNDI3NzE1ZGI2NjRlNGUwZmIxYzZjMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGM1MDEzYjUzNDY2MTk0NmMyNjQ2ODNkOGZhOWExNmQ4YWRiYzg4NjY4NGExNjU1N2RlMGNmYjU5MmIzOTM4NCJ9"
+        },
+        {
+          "resource": "repo://src/components/positions/PositionFooter.tsx#L24-L65",
+          "version": "repo-lines-v1:sha256:2c27ecc4e84b37fc4698ac9c26e3cf590718d8f364c51ca81f2358fd3e35b3c2:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE5MzczZWIwZTYwNDA1ZWYzZjk1OTI3NTE5YmVlZjQ1MDM4ODY3ZjQxZTdkMmY4ZTA1NmNiM2M3ZjRmZmJiZWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg0MzJiZWQ4ZmFlNWViMTc2ZmViZjM3ZmRhYzc0NmNjYzVmMzg5Mzg3MjM5M2M1MDUyNzk2MjNkYzRmN2IxNmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlYjNkODQ2MzQ1MzM5MmU4OTg3NGNlZDlhNjgyYWQ2NmYwMzMwMDBjZTJjMjgxNjc4ZGJiNjBkNjQxZGNkMWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVlODhlNzY0M2JiNzM5NGY2NDU5MzVlNGE4NDU0YTRkZjVkZDU5ZWE0YWQwOGUwMWJlNTExY2ZlMmZiMGI1MmUifQ"
+        },
+        {
+          "resource": "repo://src/components/positions/PositionHeader.tsx#L53-L59",
+          "version": "repo-lines-v1:sha256:eec3587b07aae7355ad65a2226463c08b434895c1e6ada1d0cf154ac7fd0ee23:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTM0YTIyN2FhMjQ0YzdlOTQyMDhiZTNlZjQxMWQ5YzVmODJkNzEyN2Y3OGVkY2UzNzg5ZjVlNTMzZjk2ZmYxYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2EyNDA2ZDA0YjNlYTNjYWZlNzU5MGEyOGEyZTM4MDU3OTUwN2YyZmNlMTRmNmNhZDk4MDllZTdjZTI3OWUyYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjAxZWEyOGMwMzA0NDhmNDA0ZGNjMjllZWIzZjNiNzExOTI5NjgxMjc0NDNiNWNmZDkwNmUxNDIzMzcwOWM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDdlYjBiNTVjYzQ5OTQwYTliZDczMmVkZDRkNDMyZDk4YTk1MGU1ZWQ0NjY5ZmVlOGMyYzhiMDZlZmRlMzcxOSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5c3519e1180c475a84798aa521e6edea",
+      "statement": "Text or icons on tinted fills must use the paired on-color token, never the raw accent: primaryDim/secondaryDim/negativeDim take their primaryDimText/secondaryDimText/negativeDimText partners, and full-strength primary/secondary fills take onPrimary/onSecondary; theme.ts documents that raw negative on negativeDim is 4.18:1 (below AA for small text) while negativeDimText is 5.36:1. This replaces non-theming raw-alpha patterns like bg-emerald-500/20.",
+      "evidence": [
+        {
+          "resource": "repo://DESIGN.md#L86-L86",
+          "version": "repo-lines-v1:sha256:1d6bed87749b2b386ac77fb09b86e13dfcf0380850e27801e525e83101f612a2:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWQ2YmVkODc3NDliMmIzODZhYzc3ZmIwOWI4NmUxM2RmY2YwMzgwODUwZTI3ODAxZTUyNWU4MzEwMWY2MTJhMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWQ2YmVkODc3NDliMmIzODZhYzc3ZmIwOWI4NmUxM2RmY2YwMzgwODUwZTI3ODAxZTUyNWU4MzEwMWY2MTJhMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzQ0M2IzY2FkMTY5MmQ2NTY5YTU1NGMwYTgwNjQ4MTE5OWFmYjRkMWE2NjVjZDhkNGUyYjhhYjRiMzhlNDQwMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSJ9"
+        },
+        {
+          "resource": "repo://src/components/positions/PositionsErrorState.tsx#L25-L34",
+          "version": "repo-lines-v1:sha256:c834cc5bf132bac91dbbc04c7d66427e09a0a41f68c5cf93fd5e01ec22db7e7a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiODUxMDMyYzBhMjQwMDFlNDQ3ZjRlM2Q5YTM2OTMxMTc5NGQ2MWY4YWZjMDFlZTFiZmJjM2RhZTYyMDU4OGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg0YTRlZmNjNjdiOTIxN2VkOGUwZWM1OTg3MTVmMjA2ZjE1MzU0Y2FlMjUwOWM2NzVlMmEyY2RhZDExNDkzNmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ1NzgzYzc4OTEwNDQwYjJkNDE5NmVlMTY3NGFmMzY4NjA3ZGU4MDI1MDQ1ZGZjODRmZDg2OGM2OWRhZTNhZWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVlODhlNzY0M2JiNzM5NGY2NDU5MzVlNGE4NDU0YTRkZjVkZDU5ZWE0YWQwOGUwMWJlNTExY2ZlMmZiMGI1MmUifQ"
+        },
+        {
+          "resource": "repo://src/config/theme.ts#L20-L31",
+          "version": "repo-lines-v1:sha256:5a6cf744df9c6005a22120ac8aa531e0f5a33d89ce9b302874cbc93ace0d06e1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjczM2RjZWExZWZiNzJjMWJiN2NjZTFiOGU4OTFmMzE5M2FhMWY0YjZmNzE1NmMxODU5NWViNWJlMDEzYmJiNDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxZDE4MzljYTQzNzkzNDFjMTFjOTU5YWY1ODQwYjk3OGIzMDJjY2ViNTE4MDJhNTRhODlmZDczNWIxZjYzMmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyZDZmODlkODkwYmI2NWY4M2U0OGRjMWE3OGZiZDkzZmJjMDZlZTY2ZDJiODlhODQzNGEzYTAzZTZiNmU5MmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgyNjk4ZDY3NTcyZGQwMWM5NzExZjZjMmQwZjkwMjNhZjkwMTc1ZWIxYjY2NGVmMzhiZGI5ZDBkMDJiYmVmZmEifQ"
+        },
+        {
+          "resource": "repo://src/config/theme.ts#L61-L64",
+          "version": "repo-lines-v1:sha256:2660a57f963904fa538998f57dcc30c3475b55e72c713ed7c11dd8640d31b107:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTAwZTM4ZTIzZjRmNzczZjYzYThmZGRlNzU0MzAxMjZiOTM4OGRhMzA3ZmQyYjIxNDRiN2FmYWYyMjE5YzQ3MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTQzZWRjMWMyOTM4Y2NlYzkzNzA0N2IyN2Q4NWQzYTEzNmYyY2Q5ZTZjM2QxOWE0NjY3N2VlNDc2MzBkYjg4MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDdkNWQ5MmE3Y2FiMjM1YWI0NjJiODQwNjM2ODkyYWRlMjdmMDdjMmI4NDQ2NmNmNzRhM2M4Zjg5MmNhMmQxOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWViNTRlNDY1YTBjZDUxODVjZjdhM2ZkMjk1MmVjM2YwZWM3MTg5MjczYWYwMmVhZTFhYTQyMTQ3MGU0MjQxOSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_3356eca1a84845b494d5d3da08509476",
+      "statement": "Typography has four roles fixed in global.css @theme (font-sans Geist-Regular, font-sans-bold Geist-Bold, font-pixel GeistPixel-Square, font-mono DepartureMono-Regular); font-bold is banned because it renders faux-bold on Geist-Regular — all bold weight must use font-sans-bold (the codebase contains zero font-bold occurrences) — and mono is reserved for tabular reference data such as chart axis labels and price chips, never primary values.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L124-L125",
+          "version": "repo-lines-v1:sha256:1018ada3ad9a2694724f80a93e774896753127a988957d194838a6e11a43dc34:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGJkMDIzZDRjNGFmMjgzNGRlY2JlYmFiNDg4NjU3MzIzODZiNjQ3ODlmZGE2Zjc1MmQyNDllYWNlOTA5OGY0NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWQwNDBkYmNhNGJiYWM4Y2IyNWM0ZDgzNDhjMDIzMGI3MTYzMmRhMTc4MTMyM2VmYThmYmZmNTNlZjY0NjNkYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjlhZWZlZjg2NWVhZDJhOWZiYjA5MGNmYzQxNTA1Nzk4ZGEzMzlkMjIzOWJiNWE0NzkzY2IyM2VlOTdmODJhYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGY2ZDkxOWEzNTFmYzM5NGYxNTcyMTJkZWY3NTExNDhkZTlkZGFmN2NlODI2YmQzNDU4ZGI1MjZkMjUxYTYxMSJ9"
+        },
+        {
+          "resource": "repo://DESIGN.md#L101-L116",
+          "version": "repo-lines-v1:sha256:e500f3a94d39a171255bd496f673e54611b40453974e3601da340508463c3f73:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVmZTM0YjkwZDYwNTllNDBlOGEzNTNjMWZiZTdhNmFiOTJjMzZmMzNjMzljNmUyZTAwYTgxMDI1ODcyZjQ1NGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjYTM1YzNlMmZkNjRkZmI4ZmE4NzMyZTBjNmRmOWYyYjUzYTA0OGUyYzkyYTc5ZTM4OGI2NDNiZjc1NzNjMGIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRiNjVkZTAzMzU5NjQwNjhhMjUxNDM4NDZmOTU5YzM0ZmI3Yjk4Y2YyYzQzNWQ3ZGMxMTdhZDg2OWEwOGZjMjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAwMWYyZWMxNzU5M2MxMDU0ZWI0NjM2N2Q4NDUzZWYyNGExNzNjZTk2YjcxMTdkOTFmOWE2OGQ0NGZlZjhiMDEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_f917e37f45804c7da3a9df9dfd39e270",
+      "statement": "The pixel font (used for all numerics: values, SOL amounts, PnL) is the only runtime-configurable font role, so it never travels as a class: PixelFontProvider is mounted at the app root, resolves settingsStore.pixelFont through getPixelFontFamily() (Geist Pixel or Departure Mono, unknown ids falling back to the default), publishes it via React context, and components consume it with usePixelFont() applied as an inline style={{ fontFamily }}.",
+      "evidence": [
+        {
+          "resource": "repo://src/app/_layout.tsx#L40-L44",
+          "version": "repo-lines-v1:sha256:769e9f6201aa201e97d491e69eab97b86afce94392e88d6b307fc244aa91d1d9:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWU3ODViNmExNjhmYjhmZTJlMjM2OTg5MmU1ZWQ4ZjdkYjA5NzYxNjZkZGY0ODI1MmVhYWMyN2U0MTA4MTAxMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWQ2YzYxMTk2OTk3OGRkZTMwYTNlZDU1ZDZkZTJmNjgzYTE2YWIzODkxZDM0YzRhMjg4MjcyNzIzNTQ1Mjk2MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjRjYWFkMTk0YWIzMzljZmY2MDY2ZTA1YmYxOTMxMzhhODZhZGZlM2RlMzA2NWY1MTNjY2UwODA1OTM2MzcwNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTg1NTVlMjYxY2QyZjU1MjYzZDQwNWY4NWEzNjg4MDU2Zjk4ZGY2NjYzZDkzZGUxMzBhZTBhYTcyYmYyYTRmZSJ9"
+        },
+        {
+          "resource": "repo://src/config/fonts.ts#L14-L31",
+          "version": "repo-lines-v1:sha256:031ccabd3f18130a32465e4ac6db9c10b8b1492459fe26307806f9b04f3b787c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU1YTAzMjY2MTg2NzliNTVkMTI4ZjcwNTZkOGMxOTdkOTZjNjMxYTYyNjUzOTM0NDNmNTUwMjdmNTBiZDYzNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJlYzQ3OTdlOTRjZTQ3OTBhMTI2NDI0NDFmNjRmY2ZiZjM5OTFjMWU5ZmQ0NzllN2Q0YzJkMDcyNDI1M2ZlNDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useFontConfig.tsx#L1-L17",
+          "version": "repo-lines-v1:sha256:22ee7e6815be178f90c805307a539d9d6a5281ea5104c31f3e269f90f545630a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYzZjEwMjQzOTA0NDU0Yjk3ZDE5Zjc5YmIxYjVhNzI5NzNhZTc4ODQxYjMwMzYyOTdhN2M3MDUyYmJjMTcxNzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ea9d33c76bbc4c7288eb8b42e5c55de6",
+      "statement": "In-app charts render SVG and therefore cannot use Uniwind classes: both LiquidityBarChart and PriceChart read useThemeTokens() and derive SVG strings — liquidity chart: active bin tokens.primary, below-active tokens.secondary, above tokens.border, grid border+alpha; price chart: up candles tokens.primary, down candles tokens.negative, range band primary at low/high alpha; the alpha convention appends 8-digit hex suffixes (1F≈0.12, 4D≈0.3, 80≈0.5) to the 6-digit token — while legend swatches stay as Uniwind classes so they track the theme automatically.",
+      "evidence": [
+        {
+          "resource": "repo://DESIGN.md#L222-L247",
+          "version": "repo-lines-v1:sha256:6ea73e50f4b1b6f1f4e2a95f31c103a8f1b5ff6744108bb0facfb7ef0520b77a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyNDA5M2IzODRlMDljODA0NzY4NDJiMjI3YmEwOGI3OTM3ODNjNWM1OTQxZmYxNTZlYzYxYTNlZWZhODJkMmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIzMjQzOTY4YjE4ZjY2YjdmNGU1ZTY0MGYyYzM4NDJiOThkMTdlYTM3Nzg3MGVhMDgzYTYzYjNhMjlmM2JjZmYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk1ZDk3NmEzMjZhZjMzMGQ2ZmYzNTBlNWIyZGYwOGVkMWFmODJiNDZhN2JiNzhhODQwYTFiMWJhMWEwNjdlMDAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjAwMWYyZWMxNzU5M2MxMDU0ZWI0NjM2N2Q4NDUzZWYyNGExNzNjZTk2YjcxMTdkOTFmOWE2OGQ0NGZlZjhiMDEifQ"
+        },
+        {
+          "resource": "repo://src/components/positions/LiquidityBarChart.tsx#L20-L43",
+          "version": "repo-lines-v1:sha256:1e8872ed0679c0933583977da706d4332b73ae355a70c4850dc2b83012ff8171:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQyZmZlZjI5ZGRiMTlkNDFiNWVjMWJiZWI3MjkwNTg2N2Q2OTg0YTBiMzhmOTJhZWY3Nzk1NzRkYTEzMGU0NzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2MjY3OTM1ZmM2MzM0NjVkODQ4YjQwYTRlZDY5NjdlN2I3YTMyM2Y4MWNkNTNjMTEwYWUyMTAyOTY4N2FhMTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEwZjA2YmM0Y2MwNGQ2MWQ3MmU4NDIzZTk0ZWEzZjEwZGQzMjBkY2IwMzlkZDllZDdkZWE5YmQyZDAxNjE5ODEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcxNTZhNTdmMTYwYThlNmQ4YjcxMjE1MjA3NmEyNDgyZTFjYWYwM2RmMDNhMWEwOWZiMTU4MTdjYjM5N2NiZjMifQ"
+        },
+        {
+          "resource": "repo://src/components/positions/PriceChart.tsx#L17-L50",
+          "version": "repo-lines-v1:sha256:1cc4e99477c9fa3780cc6073d03d0ed500ba50c75f8952ccfadfd1fceaae8878:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhZWM1MzYyNWM0NzlmMmMxMGNmZTJkMTc2OWU1OGEyOTJjNmFhZTVjM2UxOWZmNThkMTZmM2QzYjM4NTBmMmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2MjY3OTM1ZmM2MzM0NjVkODQ4YjQwYTRlZDY5NjdlN2I3YTMyM2Y4MWNkNTNjMTEwYWUyMTAyOTY4N2FhMTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRlNzE2ZjMyNTZhZTI1OGM3N2U0NTdkMjgzNTc3YTU4ZGYzNjJlNjJjZDI3NWVkNzg5MGNjNmE1OWUzYzkyN2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcxNTZhNTdmMTYwYThlNmQ4YjcxMjE1MjA3NmEyNDgyZTFjYWYwM2RmMDNhMWEwOWZiMTU4MTdjYjM5N2NiZjMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_19250c104a4543418c0e0a1581330920",
+      "statement": "Android home-screen widgets render to native RemoteViews via react-native-android-widget, where Uniwind classes and React hooks are unavailable in the headless task-handler context; both widgets therefore bind a module-level `const C = themeTokens.dark`, making them dark-only and SOL-only by design (a glanceable readout with no theme/currency toggle), and because they consume the constant rather than a copy, a hex change in theme.ts propagates into widgets automatically. The widget liquidity-graph builder reuses the same constants and derivations.",
+      "evidence": [
+        {
+          "resource": "repo://DESIGN.md#L272-L276",
+          "version": "repo-lines-v1:sha256:2f988a47e20ec6da2841f61f1c93c0090964c32a8f2a287cbd9a9c10356a42e7:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzAxYWFjNDhkOGUzOTIyZGEzMWE5NzA4ZDEzMWVlM2E5NmEzZDdiZDBjZDZlYjlmNDg1YTVlNTFjOGY3NTFmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTZiMDIyNzI1YmIzZmZhMjg1NTFlNjY2YTNiNTZjMGQxYjY1OTY4ODdmMzYwYWY2ZmJiYmE1OGU5NDExNzgyOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDU3NTA5ODVhM2U0YzgyMjkwOTkxOWVmYmE3Nzc5ZDhiMmRmZjgwODY1OGRlZGJjODA5MThjOWZjNWNmZDJkMiJ9"
+        },
+        {
+          "resource": "repo://src/widgets/PositionLiquidityWidget.tsx#L7-L12",
+          "version": "repo-lines-v1:sha256:3b6743297f273f0ce6baa2f4b7c7052403b4e1afa2c0b76b6a56d1e14dddaaa5:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTk1MjA2YTFiZGM3MDRiM2ZjYjU2NjVlODU3NTIwNWZkNzM1MmVlM2EzYjRiMmEwNGU5OTk3NmIwYTE1NzM0MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWU4NDcxOWExMWNlZDllM2UwM2YxM2QyYzA1MjAyNzQ5MmFlZjYxYTdmN2I0YjQ2MzNkYjI2ZGVjNjY3MGEwZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTJhNDdhZTQyZmI5MDU1MGU4YzQ0YWRjOTQyYjU5NzM0ZGQxYzU0ODI1MzJhMjQyZjZmODcwYTBhMWMwNjdhNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTA0YmY2MDE5YjBkZDljZTU0YTcxMTlmY2I5OWM5NzA1MjYyZTk4YWQyZjJhNDUwOTllNjUyYjc4ODY3N2I5NCJ9"
+        },
+        {
+          "resource": "repo://src/widgets/liquidityGraph.ts#L1-L6",
+          "version": "repo-lines-v1:sha256:f6f79586c2f5e75a814cd988d12040f5baa635e6f8e363900515519cb9f1efe8:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTk1MjA2YTFiZGM3MDRiM2ZjYjU2NjVlODU3NTIwNWZkNzM1MmVlM2EzYjRiMmEwNGU5OTk3NmIwYTE1NzM0MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTlkNzFiMjEwZTY2MmU4ZWQ4NmM4YTEwOGViMTE0ZjYxNjMyMDJhMTQzZTEwN2RiMjE2ZGY1MTk0NDllNDM4YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjE3MzI2MjdiY2M0MTY0ZGUzMjdkMjJjNDEzNzhmNDU2OGNkYzBlOTlkNDQwNjIzNGJhOWMxMjA5NDg2ZTU3YiJ9"
+        },
+        {
+          "resource": "repo://src/widgets/updatePortfolioWidget.tsx#L9-L17",
+          "version": "repo-lines-v1:sha256:29206d25824c43fc52489f382ed06b02955f9de28a5bb16d367bfb45fea41ce9:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjA2MGU5NDNhYTM0M2VmYWQ2YjcyYmQ5NTc2ODhmYjY0NmI0MjlmNzliMjM2ZTM4YjU4ZWI0ZDlkYjc0YmU2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWU4NDcxOWExMWNlZDllM2UwM2YxM2QyYzA1MjAyNzQ5MmFlZjYxYTdmN2I0YjQ2MzNkYjI2ZGVjNjY3MGEwZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTE3OWQxMDM4ZDA3NmJmMjJhNDhmMmMyYjAyYzI1NzYwMWQ1YzNjY2Q3OWIwNWQxNWQwYzhiMTRmZWVlNDQ4NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjE4ZjE1Nzk0MmI2NWYwMjI0MjI1YmFkNzU2NmQ5OTljN2VkZDIzODg0ZGU5ZjdjYzFkZjNiOGQyMmQ2MzdkNyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_2ad57bfdbfcf4cccb434fcdbaabb6094",
+      "statement": "The widget tests pin the shared token source: positionLiquidityWidget.test.tsx asserts the rendered liquidity SVG contains the literal themeTokens.dark.primary and themeTokens.dark.secondary hex values for the active/marker stroke and out-of-range marker, proving the widget builds from the same constants as the app.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/widgets/positionLiquidityWidget.test.tsx#L366-L371",
+          "version": "repo-lines-v1:sha256:7c170c8826f7e6e2443d80aaf1bb3a54592ab047233949e582ec9d683fcf125f:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2QzODBmNGZiZjY5YjI5OGNmNmZlZmU1OTU5MzNiZDQyOWY4MTY0M2I3ZGUwNzQ5ZmU3YTdhNzIyMmZiOTA1OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjIzNTI1ODljMzRkM2M2MDY4NTkzMWI2ZWNjNGQ1MDk5MWE3YzU2YzhmYmEyODk0MTE0NjU3NjkwMjcyY2FjMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzY3MzUzYWY2Y2I0ZTAxZWI4M2M5NDE3NmE2YThkYjg0YTQ1YTk1YjgyYzM3MmRkYjAzOTgzZWJlMWYyZmM1MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTcwZGUwYzA2Y2QzMmZkNjdjZmQ1NmE2NmUyM2NkYzIyYjcyY2ZjYzRmZDcwOTBkMjY4NTE1ZmUwNTdjNzBmNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_47ed3209e5e74736955f80aeb8feb1cc",
+      "statement": "scripts/palette-check.py audits a web-capture PNG against rendered pixels to catch the global.css Uniwind variables drifting from theme.ts (or a capture taken in the wrong theme): it keeps a TOKENS table duplicated from theme.ts (comment says keep in sync), matches pixels within a per-channel tolerance of 8, auto-detects the theme by scoring which token set covers more sampled pixels (failing below 20% coverage unless --theme is passed), and reports per-token coverage while noting a legitimately unrendered token is not necessarily drift.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/palette-check.py#L1-L15",
+          "version": "repo-lines-v1:sha256:c94ac0ec2513b75423fd6eb64487ba1c203ed35143413c794c41f700c63a363b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2ODJjYmRiNGM4YjA3NTE4YmY0ODZjNTg5OTBmYzM5MTc4M2FhMjBhOTE2YmZiMjdhZDIxMWViMWQ1YzM2NDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE2ZDUyMGY3ZGNmZjc2MjE0Nzg5YzE4MzRjNTlkZGViMmI1OTcyYTU2NDViZGNlN2NhM2M4YjNhZGU2MTYzNjIifQ"
+        },
+        {
+          "resource": "repo://scripts/palette-check.py#L27-L57",
+          "version": "repo-lines-v1:sha256:3136a484ca83461dae6e500630eaf8c2cf725642451bd4c6c007602c471361a0:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIwOTEwZWQ3YzljOTRmZjI3ZGJkNmQ0MWMwOGIyMTRiMWM2YWYwNzkxNGQ2YjkwNDE2M2I2ODlhZWQ1ZjQwNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhOWZhMWFiNTk5ZmYxZmE5NjQ5ZGQzNGZkOWU5N2JlZTgzMTFlMGE1ODJkNDRmOGM1YzRjYWY1OWRiNjQ5ODUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdlMDMwYzVlNjg4MzMwNDhjZTU2ZjEyOGE2MDYwNGFmZjhjOWIwZmE3MDlkMDJmYzg0M2ExNTkzZDkwYWNiNWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ0NzdkYzRlNDg0NWNlOTZlNWM3NGFiMjhiMzdjN2Y1ZjNkNzI0ZmE3ZjMzNzI0ZGZlNTEyMTRkYTQzZGE3M2IifQ"
+        },
+        {
+          "resource": "repo://scripts/palette-check.py#L67-L86",
+          "version": "repo-lines-v1:sha256:1fb5e36e0f1e92d445496a1482d5311a3a13e2861e6d5061794f37bd2b57db10:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkMjY3ODE5NDg2MjdiMzk2ZjRkOTg5ZTQxYWRmY2Q1MGRkMWJhMGM3YzgxM2FlODY3ZmVjYzQwNzM0YzM1NGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhZDc3MWE2NTdmMjM3OTU5MzJiODY5YmM5MGYyMmRmMWM0Yzc3OWI3Y2FmN2U4ZjI1MWExMjg5MTVmZGRlNjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFhZmM1MGUyYTZkZTlkMTJjOTU2ZGRhM2VkMGY3NGYxMTQ5OTM5OGIyYmI4NGUwZGVhNTYwNTA4MTBlOWMwMmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc3MGY4MDI1Zjk2M2I1YWJlZDk5N2QwMjMyNGQ1YTQxYmZkM2U3NDkxODM5OWM4NzM0ODM5ZmQ1ZjkyYzIzYjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d6aeea03167742af824a9abb7b69aaaa",
+      "statement": "DESIGN.md is the authoritative design-system document and supersedes the historical docs/wiki/concepts/Theming.md and docs/raw/theme-guide.md pages; those older pages still carry outdated values (e.g. the pre-change dark surface/border shades and different light-theme accents) and explicitly defer to DESIGN.md when they disagree, so they must not be treated as current guidance.",
+      "evidence": [
+        {
+          "resource": "repo://DESIGN.md#L1-L5",
+          "version": "repo-lines-v1:sha256:f9619540c5078db84a8a6374d1a433c51d4623538888573880c74a1e508147e1:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDFhNzEwNDMzNDRhMjU0M2VjYWQxNmM0MDgyNWU3ZWI0NTcwNTlmNTJhOTZmMmRkNDEwMWIxYzdiMTM2YThmZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzZkYTVjNDM3YjllNzcwODQxMDI4YWM4Mzg0NTlhNjdhZDE2ZmM1NDZmNTc3NWJlNDdlMjE2YTIyODhmNmYwMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSJ9"
+        },
+        {
+          "resource": "repo://docs/raw/theme-guide.md#L12-L22",
+          "version": "repo-lines-v1:sha256:2dcaa1602a6b1a5bcb5cc94b54ec474d7c43742c564add7424b3e09b4c7d0fd1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxYzQ3ZmE3N2ZiZTY1MWUyN2I4NmVjM2M5ZDkyMmJlOGFjZjA2NzgxMDkxZThkODIyNzRkMmQ1NzUwY2VkMzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNkODg3OTE3NTAzYWFkMDU0MGViMzBmMDJhNjM3MWUxOWM2M2MxYWYzNzk3Y2JiMWZlNTQ5YWEzYjA5NjBiYzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3MjRlYmNiNWUyYWVjMWRlZTA1NzM1M2Y1YjI2M2NkNWNhOWQzZTI1Y2YxNDM1MjRkYjZlNDUxMjc5NTQxYzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE1MmRhOGVlZDNhM2M1ZjcwMjkxNjZiYTc1YjkyZTliZTY5YjNmODQ1ZjJkNjlkNTc5NDJkNWE2NDlhYmRjNzEifQ"
+        },
+        {
+          "resource": "repo://docs/wiki/concepts/Theming.md#L17-L17",
+          "version": "repo-lines-v1:sha256:19d4d8c1e6197c537b13fc4957545c61dbf8f262bd58ae5a08724cbd205d26ab:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTlkNGQ4YzFlNjE5N2M1MzdiMTNmYzQ5NTc1NDVjNjFkYmY4ZjI2MmJkNThhZTVhMDg3MjRjYmQyMDVkMjZhYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTlkNGQ4YzFlNjE5N2M1MzdiMTNmYzQ5NTc1NDVjNjFkYmY4ZjI2MmJkNThhZTVhMDg3MjRjYmQyMDVkMjZhYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWUwM2NiMTgyNjc0OTBhYTMzMzkxY2IwNDk1YmI3YzI4ZjBhZDU1YjI2MTc4NzQwOTE0MjgwMGY5Y2Q1ZjRmYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTVlZDE4MDBmNzQ2MTY5OTU2ODdjZDRlYzhhYjJiMGZkNmNkZTI3MTViYzM4ZTEwNGM4N2M5ZjVkOTc5OGE3YSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1b06d7ee3f27495ab194b002037ed6ce",
+      "statement": "Three shared primitives are the single implementations of their patterns and must be imported, not duplicated: ChartPanel (chart eyebrow + current-price header directly on the card, no nested container), SegmentedControl (the only segmented toggle — chart-mode and SOL/USD both render through it — with a sliding primaryDim indicator pill tracked to measured geometry and a 130ms label crossfade honoring ReduceMotion.System), and ShimmerBlock (the only shimmer, a 2s repeating opacity loop 0.4→0.7; a duplicate in PositionCardSkeleton was removed). Skeletons keep the loaded card background (bg-app-surface), use bg-app-border placeholder blocks for contrast, leave static labels unshimmered, and match the real layout to avoid shift on load.",
+      "evidence": [
+        {
+          "resource": "repo://DESIGN.md#L209-L216",
+          "version": "repo-lines-v1:sha256:f126e162a59afb1b2c3cfd6581e30631f435ae090e4fea7b6fed9115737b8c38:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmQ0MmI0MjBlMTIwNDMwNTE3OGE2MmJhOGRiYmQ3MzgyNDM2MTA3NjcyMWE1ZjNhNWY5OTAxY2Y4MWVjYjFkZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDBkODgyZDlhZjJhOThjMTI4MjhlYWNiMThhNjMzY2M0OGIwZTlkNWNmMWJkMWQxZTU3ZjczZDgxYThkM2E0ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2YxZjE1ZTRiOGM4NDAyNzNjNjlmNzYyZjhhMzY3NzU2OWNkMjFhNDBmMmRkZjE4NTlkYWNhZjdlMjI4OTJlZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSJ9"
+        },
+        {
+          "resource": "repo://src/components/positions/PositionCardSkeleton.tsx#L7-L11",
+          "version": "repo-lines-v1:sha256:9d212e9af0ed190bf4408667c02e4164a25b26af10b1eae3e9c19545a2ba578d:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjg1MTUzMGFiYmI1YzVhM2ZhN2Y1YzQ0ZmM1NzZiODBmMDYyYzVmMjEwNDc2YjkwODExZjQ1ZWE1Yjc4N2YyYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWI1YmE0M2EwZjg0YTdlODU5YmIyZjFiYTlhNTFkZmVkMDI5MThlYzU2MzU1ODZlNGJlMThhMTIwYTgxZTA1MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjk4NzkyMjRjM2U1NDg5OTEwMDdkOTRiMTJkYzdkMzk3NjY4NTljYjkxYWY1NTlmYTRjM2Q3YWQ0NmE0MWMyOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWVhZDllYTEyMTljOWYzYzdlZjMyMzQxODgwYWFkODM5Nzg5MGIyMTk2OTRjMWNjNDU0Njc0OGY3ZThhZTA5NiJ9"
+        },
+        {
+          "resource": "repo://src/components/ui/SegmentedControl.tsx#L37-L68",
+          "version": "repo-lines-v1:sha256:00dda4505dd5ce18048445630c6c5187b9068f0856aad9dd66dccb04f6ceadf1:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3MmE0MjkzODJiMmUxNDcxOGUwZTM3YjA1NzBhOGExNzAyOTkxZmNkODQ5OGNkODQwNjBhOGJmNGYwNTAxN2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdiNTY4ODE5YjY2MjAyYTg1NDUzYmJhMWVjMzIwM2U4N2E2OWFkMTA4Mzg0MzEwMDgwN2I1MDlmMTVmNWE3ZmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM4MTlmODZjMjhhOTM2YzU3MzZkY2IzNThlYTlmZDhhYjRhMWUxYTYyN2M3ODU3ODk4ODhlY2JkYzNiYzg0NTYifQ"
+        },
+        {
+          "resource": "repo://src/components/ui/ShimmerBlock.tsx#L5-L26",
+          "version": "repo-lines-v1:sha256:be32db073cd848aacfe93a318e0cf6d00c772a3cfcec8bc63b1f3053df08649f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlZTdlMDMyZTliMWYzOGQyMzYyNjU2NmI3NjdkZjhkYmE2NjUyZTAyOGRkZGQ0ZGI5MGE0NTQ5ZTc2ZTNhNjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNlZGI5OTRiYzlhYWI4MjFmN2RhNGNmZTlmYWE5OTk2MmVjY2ZmYjFmMzY4ZWIzNDYyNTg5YzgxOTUzZjVhZDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1be97203aa254ba78f5a82ba2e84dcc0",
+      "statement": "Cross-cutting styling conventions enforced by DESIGN.md and AGENTS.md: never use raw Tailwind palette classes (emerald-*, red-*, zinc-*, …) — state colors map through the semantic app-* tokens; never hardcode hex in components — even native-prop/SVG surfaces take values from useThemeTokens(); never mix inline style and className for the same property (inline wins); and every interactive Pressable gets active:opacity-80 as its state layer, except press-to-dismiss scrims and stop-propagation containers.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L123-L123",
+          "version": "repo-lines-v1:sha256:935828fe2f7924934691de61ec2967c4f377221d1087880148bec4a7aebc94d7:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTM1ODI4ZmUyZjc5MjQ5MzQ2OTFkZTYxZWMyOTY3YzRmMzc3MjIxZDEwODc4ODAxNDhiZWM0YTdhZWJjOTRkNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTM1ODI4ZmUyZjc5MjQ5MzQ2OTFkZTYxZWMyOTY3YzRmMzc3MjIxZDEwODc4ODAxNDhiZWM0YTdhZWJjOTRkNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTkwNWQxNWViOTJhZjc3MThjMWZmNTJjYzllN2Y4MWIxNjYzNjhkMzM3MDczODYwMjg0MzUzMTIwMGFlYzFhYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODFmMjNhZDE1ZTRkNDViYTcyYThiOTM2ZWYyYjk4YTMzNjEzOGEwNmU1NGVlNWU5NjUwNDFjZGM2ZTM1YTM4ZSJ9"
+        },
+        {
+          "resource": "repo://DESIGN.md#L152-L154",
+          "version": "repo-lines-v1:sha256:5a5fe0d761d85cb0849c0ea599224152f05cb6c193eb35ac35199a6cebf32e6a:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDUyNzI2MjM1M2Y4ZmIyM2E0NWJkNTQ1YjI5NjE2NWQzMGQ1OTY3OTM1ZGMyMjk3MDBhMmI4YTFhOWRiMzcwNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2NmNzU2YzJhYWUxNTViNGI0OTJlYjVhZmViY2MwZmI2OGIyZmVjNzI4ZDVjZTE0MTJiNWUyZjdkMGRiYTA4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTQxY2U5NjE4ODU3MjBkZWZmZmY3MzIxZDY0Yzk2MDRkMTZiYWZjZmU5MWY4ZGQ1NDg3ZGVmOWYzYmQ4MWUyOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSJ9"
+        },
+        {
+          "resource": "repo://DESIGN.md#L251-L269",
+          "version": "repo-lines-v1:sha256:31c7027f39951b85735bfe9993c83415b2428a068e3a4d263dcf9d723613de5a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2ZTBmOTI2ZjM2ZmIzNGMxY2UwNDAxMjFiYWM5ZjhjMDNjMGQ3YjUxZmEyMjgwYjhlMzlhNjcyMjUzZTEzN2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAwMWYyZWMxNzU5M2MxMDU0ZWI0NjM2N2Q4NDUzZWYyNGExNzNjZTk2YjcxMTdkOTFmOWE2OGQ0NGZlZjhiMDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUyZTEyOTNkMDI4ZTQyMDlkYTM3YjhiMzAxODZlY2Q4NDM3ZmZjMjM3Y2U3ZDQyYWEyM2QxMGIzYmM0NzVkODMifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

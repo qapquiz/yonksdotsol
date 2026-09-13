@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:fd51d6ffc01cf8c8cec9e9c1606dfb337cf131c7d599b85b5ff0e4a355ada4e8",
+  "claims": [
+    {
+      "id": "claim_b2ca71c866df4a74bd648abe88f56fa6",
+      "statement": "env.devMock is true when EXPO_PUBLIC_DEV_MOCK=1 or Platform.OS === 'web', so the web target is always in dev mock mode (no wallet adapter, no RPC), while native builds opt in explicitly via the env var; src/config/env.ts is the only place it is computed and all consumers read it from there.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L25-L29",
+          "version": "repo-lines-v1:sha256:9e8d380fc2b9f0f2bf63e2c3066be7da87b2058e184db3b776233132da5fc428:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2ViZjdlYjM4ZGVjYWVhNzNjOTY3YTdkOGVhZWU5MmE2ZTIxZTY1YzA1ZDUyMzA5YmU1M2UwYjMyN2UxYzBiNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjNkOTUxM2U4NWM3OTBjNjY4YWU0MTRhOWMyZjBkMzIxYzk3ZDdlZTc1YTIxMTJiMjhiYjRkZWI0NWY4YzRkMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2VlMDBhZTAwZWUzNzY0NDNjY2ZkYzc3NjY0YmRkZjU5NGFjZDdjNjNkODE3OTJiMjBkNDA5YmFhYWI4YTcyNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2M4ZjA3MDExOTFmZTgyMjE0YTQwYTEyZmQ3MmQwNTMwNWRjYmRlMTJmOGEzMzZmMjgzNGUzNzU0ZmRhYTE2OSJ9"
+        },
+        {
+          "resource": "repo://src/config/env.ts#L11-L21",
+          "version": "repo-lines-v1:sha256:c869c8416adf0d95647c629ef946cefd89d763fa9bccdcd480e0ef075021a05a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1ZTRjODI0NWQxNTUzMWU5ZDE0Zjc1NWIzYmFhNmEyNDEyNWVhMmY2Y2E0MDEyYzYyYTFiNjk4NmUwMzRmNTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMzOWRjNTFhMDU0NDlhMjdkYTM3MmRhNTM4N2M3Yjk3MGM3OTAwYTdhMTYzN2Y0ZjA3Mjk1MzQyMGNhMjlmZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e6a4bcbf862845a2ae532daab8f0f3d5",
+      "statement": "Every env.devMock consumer short-circuits before any SDK, wallet, or RPC call: useWalletLifecycle returns a toggleable fake wallet (MOCK_WALLET_ADDRESS), usePositionsPage returns createMockPortfolioResult() synchronously with refresh as a no-op, usePoolOhlcv serves getMockOhlcv() instead of the Meteora REST endpoint, useWidgetSync returns immediately, the widget background task returns NoData, and syncPortfolioWidget/syncPositionWidgets return 'no-data'.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/usePoolOhlcv.ts#L45-L56",
+          "version": "repo-lines-v1:sha256:c2f436b4dd04bb469f78706cd95427851b5f9d8b2b8a9c19b4b58e1bf78d4369:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUxZDUxOTA3ZWEzMTVmODI2NzQwYzFhMWQ0NzFlNDQ5YjgxNTc2YTJkNDU0M2EzMjFiOWYzMDA0Y2E1YzcxNTYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZkOTdmZmEwN2I3MDkxYzkxODdkZWI0MTAyY2JhMmNkOTIzZWI1MGI2ODA0OTQ3NzExN2Q5NzFjOGJjYTE5ZGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU1ODE0NGJmMzQ2ZjQ1N2FjY2QxZWE5MjVhZmQ5MTE1M2NhNjQ0MjU3OWVkOWVkNDc1MmQzMWFkYTFkNTRkNWUifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L147-L181",
+          "version": "repo-lines-v1:sha256:87b11f638ae369638a9d1ff83ed779e60359a643e39407bbf6b7d72ef2002145:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiMjJhMDlmZmU3ZmQ4MmU2YjY4OWZlOGFlNmExMWRhM2ZmZTcwODg1MWNhMDA3OTZlYTk5ZDlmYjYwOTVmZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA0NDhkMjY4NGE0YzQ4YmE1MDJkNjc3NjYxMWYxZWVlYjA0NzlkMzJiMDA2NmYxYTg4MjI0Nzc5OTIzNjFjZGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIzYWVmYTQ0NmE1YThiZmFlYmUyYjg1YzhjMTI3OTMyNzc0OGFkNzMyZWRhYjVmOWE1NjMwYWEzMDBkMjljNzkifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L107-L116",
+          "version": "repo-lines-v1:sha256:cd5e28e7f04d9799a2a530540fdffc4087e402e444c404186a7356667bc86e05:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4ODQ3NDU3MzZlZjQxMDVhMTViNWQzMWEwYjcxYWIwMWM4YjMwNzY2NTQ1NThmNzIyMjIzNmI4ODNlNTA5NDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQxZDVjNmE1NzQ5Yzg3ZTMzMWEzOWVjOTJlZmM2YTNmMzYxNTU2MWM2YmQzMWYzZDM4YWY0ZWE0MTIxYmY1NGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQzN2Y3N2UzM2U1ZGYwMTYwNzE4MDg1YmE2ZWI3ZjVmZmZiZTA3NTc2ZWI5NDcwYjk0ZTQ1NTZlMDEyNGYwZmIifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useWidgetSync.ts#L14-L17",
+          "version": "repo-lines-v1:sha256:3b194f3bd0dc62f61de879d174c7eab633cefd850e46826fe4549f614228998f:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTczMDM4ZjliYzdmNjUyOTgwZDRiZmFiZjY2MWE0YThmMmE2MjZlNzBlMjcwOTI4ZjFlOWJjNzdhNTFmZGE2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2QzYzgxNTBiOGMxZjcyZTcwODE4ZTQxZjhmMjI2MTA0MGY3OTdhMmZiZDRiZmJjNGE3ZDkxYTAwZjEyZTdiNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGU5OGRkYmJiNjkzMDlhODRiNTRkZjJlY2RiMTQ3Y2I3MDBjMGFiNDJkYzY5OTJlN2E5ZDUwMzZlNjg3MGY4MiJ9"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L18-L19",
+          "version": "repo-lines-v1:sha256:a3e93dcba4a186c437bb7f818e09015d039caa76f6e7ff10e01bfa316d94ce18:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGFmYTY3NzVmMGQwZDg2NGExNTMyZTczNTRmZWVkYzllMzBhZDk1ZWQ2YTE5YTZiMjlhNGU2MjRiOWI1NGUwMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2ZmZDhhNzRlYTEyYTMxZTI0NjQ3ZjkxOGViNmUyN2VjOTBkNDZkY2I3YWU0MzdkMDRlYzg4YWFkYzVhMzIyNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmI5YjQwMzk5ZGVkZGE2MDk2NTgyZTAyZTM1ODNiMzVlMjJjOThkYjc3MDc3ZTc1MjBhNDI5NWJiMmM1NGQwNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTQwMGVlNjA3MjZhMzVkNDYzZmQzZmUyZjlkYmJhNDE5MGE1NjIwMmRmMzMyMzQ3N2ZhYTNmMDRjOWQ4NWY4YiJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L63-L64",
+          "version": "repo-lines-v1:sha256:9305b4069ec429c4ac4efb40a7c1f25f6b82a4e3d6b0c795ebc7b837e67a0842:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTU1OGIxZDlmMzIzZjQwZGVjODNkNTdkNTdjNTA2NTFkNmRhZGFhMTIwYjFhOWY5NTgwY2Q4MDdlYzU1MjRlMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjYzNjg0ODkxZWUzN2FhYjc4MTU1NTE5YzFhMmEyZDRkZDUxNmVkNjhjYTA2Mjc5N2I4MDA5M2Y0ZGE4YTNiYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOWE2N2NiNjk1OGNiMTA5NDVjMmY2NjZjMDdmM2FiNzIxODc5ZjVkNGIwNjcxNWUxNzIxYmUyNTY2Yzg4ODE5ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTVjYjNjNTNlMDhiYTNhMGQ1YTU4OWZiMTAxMmNkNjVlNjJkYjM3OTkzZmJmYTlhNzRjNWNiMzNmOTIwZjhiYiJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L134-L135",
+          "version": "repo-lines-v1:sha256:a6ce977f05ff54ba76520df1181ebed9a40edcb060b37385b38fe29433d436f7:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzQzMTE1Njk1ZWNiNjBmZjg2MWU1NDNjMjk0ZWYzNWFjM2Y2MTVmZDYyNTJiNGM3ZTg4YzVjMGZkM2Q2NGZiNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjYzNjg0ODkxZWUzN2FhYjc4MTU1NTE5YzFhMmEyZDRkZDUxNmVkNjhjYTA2Mjc5N2I4MDA5M2Y0ZGE4YTNiYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDE3Y2MwNTMzMzg0MmE1OTI0NWVhNTQ0NzI5MDI4MGZhNWFkOGM2NzViZGQ4ZjQ0ZDVhMDNhMTA5ZTcwYjA0ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTIwMjI5MTk2ZDdmZTc1ZTJiNjdlNzgxNjBiYzZjYzZmZWZkZDdjYTBjMmQwZTI2M2E5NmMyZmJiODU4MWUxYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_834f3169cb4d4a3fa12f205649a72919",
+      "statement": "Because devMock mode can construct and call usePositionsPage without the pipeline ever fetching, the PositionPipeline resolves its Solana Connection lazily: getSharedConnection() builds the shared Connection on first chain access and only then throws a guidance error when EXPO_PUBLIC_RPC_URL is unset — never at import or construction time. This laziness is what lets the RPC-less web bundle boot the full module graph.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/connection.ts#L6-L16",
+          "version": "repo-lines-v1:sha256:19ef3c39f061d22808c9dc9fa7ab3b7960b70890aa7e4531e096330178fe00fa:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3MGQ5NzAzMTEyZDZiYzBjYzAxNzE4Y2MyMjlkODQzNTMzMTYyOWVmNmEyNmZhMGRjZjk5YTBhODVhMmNiZWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdiMWFkMjA1MjVhNjMxNDU0YmQyM2MyMWEyYzcxYWFhYzBjMzNiMWM2ZmE5ZmEzYTI2MjU1NTQ4ZDBiYTc3MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L48-L49",
+          "version": "repo-lines-v1:sha256:22fe725e686d710f1cc367e69a64655d4d20c814e7ae43816f6f7e09733a9f4e:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODhjNjcwYWUwNjQzNjYwOWMzNmM2MWZlMmU4NjE4OGQ2NTExYTc3ZTM5Yzk0ZWJlOGM4YzU0NTIxYjYzZWNkZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjM2ODA4YTU1NTY2NDc1ZmVmODNmYmRiMzdjYzVjZTRjYzllMDhlZTBlMWFkM2RkOGM2YmJmOTJmNzdkMDUwZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTE2ZjEyYzYwNTNiNjQ3N2FjNDZlNThiODE0YTc4YzM3ZjgxOTU4MTdlMGRkN2RmNGEzZThlZTliZDU5YTc1MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTRkNzhmMzRkMjczMWJlMjQ5NTU3NzdlMzc2ZTgyYTZkN2M2OGE3Njc1ODA0ODViMDI3ZWViODY2MmVhY2NjNyJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L94-L98",
+          "version": "repo-lines-v1:sha256:03366a84528b2734eec2fe1cadd1644e2f60b93e86084e319161f609f7d8d17f:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjgxZTg3MzRhNzYwZjc1ZTdkMmI2YjNmM2RkZTRkNWE5YmUzZWRhMGJlZTE5MjM5MmViMTg0YmY4YmY5ZGVhNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODk2YTU4ODkxMjZiMzFlODg2ZjE0MTY4ZTRhOTM2ZjhiYmE0NjczZmI3YTY0OTA5ODJiNWRmODViNTdmOTQ4MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGJlMWY5NGI4OThmNDIxMzJhOGM5NDY1Y2Y0MzYwM2I0ODgyYTNlMGVhNTFiNDA5ODRlMWIyMzZhNzNlNjA4NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWE5MjkzZmQ4MDU0YjZlNDcyNDgzNzNmMzlmNGRkNzc4MDAxMDVlYjc1ODM0ODY4NzI1NDI4NWNkMTI4MmI3OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a0c7883ba2b347c9b30ce16519a26e31",
+      "statement": "createMockPortfolioResult() builds three mock positions (SOL/USDC and JUP/SOL in range, BONK/SOL deliberately out of range) from real domain types so the Positions UI exercises its genuine render path; the raw on-chain PositionInfo is stubbed as an empty object because the UI layer only consumes vm and token info, the portfolio summary is derived from the position list (SOL totals, value-weighted fees/TVL), and a defensive guard returns an empty PortfolioResult if called with devMock off.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/mockPortfolio.ts#L1-L22",
+          "version": "repo-lines-v1:sha256:3152b3f46757e74966b4273238220f2a4d8dcedac7a1129a9ef60b43cc588c03:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0YWMwYjNiNTlhMjdmNzViZDgxNDdjZWQ1MTFjZDY2YTAzY2Q2OTYyMTcwNjJiZGQ2NGExYTk4MjM4OTFlMzUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFlYmNjNTc0ZDZmNjYwYTVlMDIwZTFiYjFlOGFjZDkzZTA0YWY0MjU3NTZkNDgxZGVkMDFkM2M0MDBkMTViZmEifQ"
+        },
+        {
+          "resource": "repo://src/services/mockPortfolio.ts#L205-L231",
+          "version": "repo-lines-v1:sha256:b0af5e22f27b9c40f336e587e9d39b0efa816f4ab7c000689e620cc702d5611c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiNDFlNDBkNGU3NDhjOWE0ZTZiM2Y4NzI0NzFlYzk2MGFhOThjODM0NjllOGIwYmM4ZWJlM2VjNzBjZTkxNTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUyODQzMmU2MTgzMjZmMThiMWE5MTZmNTgyMjRkOWNhZDIyNDFmNTMzNjkyNjAxZTNkMDJhYzBmMjAyZTE3ZTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU3ZDgzZTg4YzYxOGY1ZTIxMTQ2YzA2ODA3OTMxY2MxNmI5ODJjMDU5ZDBhODFhMDcwZDBjOWM5NDVmMGFjNWYifQ"
+        },
+        {
+          "resource": "repo://src/services/mockPortfolio.ts#L236-L287",
+          "version": "repo-lines-v1:sha256:b60d254af53ead2634048524a5ecda8fa899df5c6484f8ea39d1179e800b66ad:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVkZTJhNDFlMGQ5YjExNjMwODE3YzllNmYxNGFhYzk3YzMzZGEyYjY0M2MzMzBkODRkOTBiNzkzNWUwOWMxMTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjUxY2RkOGEzNDIwMjNlYTg0OTZjMWI1ZjA1MDAwMjY2NzhhOWNkYmIxY2IwZTUwMjMxZTZhYjBhZDZiZWNmYmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b04c6a41842d426f9b7e77eb8433748c",
+      "statement": "getMockOhlcv(pairAddress, timeframe) generates deterministic display-only candles: seeded by FNV-1a hash of pairAddress:timeframe driving a mulberry32 PRNG, anchored at the fixed timestamp 1_700_000_000 for byte-stable reloads, walking within ±8.5% of the pool's base price from MOCK_POOL_BASE_PRICES (the same anchor as the mock liquidity bin range), cached per pairAddress:timeframe in a module Map, and returning null for pair addresses the mock portfolio doesn't know.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/mockOhlcv.ts#L27-L44",
+          "version": "repo-lines-v1:sha256:cc5b618907f322985562990d625c50e55aeb38122903e62a60b8fd46c91bbad2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUxYWNhMDM3N2NmNGEzNjU3ZWQzOWM2OGM1M2FmMTY2ODUwYWMwNGJhYTA2N2UyYjNiYThlODY4MmU3ODJmN2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUyNzg1ZDU3MzI5ZjFlYzg3ZGMyNWM4ZmQ2MTE3MzZiYjViNDc0MjUzMmNiNGQ4NWQ1MWZiM2ViNWIzNGYzY2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcxYjBjNTg3ODAyMjljY2U5MDBkMWNhNWJlZTBhNGZkODdhM2EyMWNjZjljY2IzNzhiMjA3MDIzZDUwMmY2MWYifQ"
+        },
+        {
+          "resource": "repo://src/services/mockOhlcv.ts#L58-L102",
+          "version": "repo-lines-v1:sha256:e99bbd77ec1b91caa17921ba027fc95b21dae88a9491661bb390ef576737acb3:eyJzZWxlY3RlZExpbmVDb3VudCI6NDUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/services/mockPortfolio.ts#L205-L208",
+          "version": "repo-lines-v1:sha256:2a18b3c2522aeaa538ca367239860536200ccd0a1f90d6be28245c06184ddcfc:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmI0MWU0MGQ0ZTc0OGM5YTRlNmIzZjg3MjQ3MWVjOTYwYWE5OGM4MzQ2OWU4YjBiYzhlYmUzZWM3MGNlOTE1NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmFmYmEwNTI3YzM5NTNjNGI2ZTBlNWI1NzM5YmE4MzYxMmY4MDUzYmNkYzk0NjY3MzAxOTNjZDFkNTkwYjQwOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTI4NDMyZTYxODMyNmYxOGIxYTkxNmY1ODIyNGQ5Y2FkMjI0MWY1MzM2OTI2MDFlM2QwMmFjMGYyMDJlMTdlMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTg0ZGJkZmZkMzljYzZlZjUxNDYyZjQyZjVlMWRkMWM0ZTQ4ZjlkNjBhZGI5ZjdkZDcxNjBhYWRlNzE4YmI4NyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6442ffbabe9942ee8786cc72062f7424",
+      "statement": "polyfill.js must be imported before expo-router/entry in index.js and its internal order is fixed: react-native-get-random-values first, then react-native-quick-crypto import, then react-native-url-polyfill/auto, then @craftzdog/react-native-buffer assigned to global.Buffer, then the prototype patches, with quick-crypto's install() running last — so every SDK module Metro evaluates later sees the patched globals.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L165-L194",
+          "version": "repo-lines-v1:sha256:75c694e2f0587d7cea776a428ce9621a9005a61b96abadf13fdc1195fd19561e:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjNGQyY2I2NzMwNzc0Y2I0Mjg2OWMwOGYzYzUwOGY2MDNlNWZhMzkxYTRkYzU3ZTNlZmY0OGFiM2Q2YmViOGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM2ZWVhM2Y4MDJmOTc1MTQ3ZDNkZDQwMjQyYzI3MDY4ZDBhMDY4NTZlM2M1MDBiYTQ0OWU4OGQwMjFmMTlhOTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM5MmU3NmM2YjU1ODlkMjI2MGIxODFjNjRmNDkwNjJhMjg3ZWFjMjZlZTUxMWNhMGJlYTVhZjQxZTRlZTEwZGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRhODFiODQyNTdlMjdkOTViMDBlYjhhMjc4NjljZTkwMzZhN2FkNGEzMjRlOGQ3NGUyYjIzNzQ1M2RlN2E2NmYifQ"
+        },
+        {
+          "resource": "repo://index.js#L1-L6",
+          "version": "repo-lines-v1:sha256:50b5960281391bab460355989c165b8ba76d4109ab2ec583ae11593d066ba581:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWExNjMwM2IyNTRmNjc1ODBlYTA0MDEzZmE5YTg5M2QwZDUwZDY4MGRkZWM1MTYwZjMzZDM1NzQ0MmMyNjQ5NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzVmZTE3YjJhMmZjNTczMzA1MDliOWFjMDdkNWU2OTZiMzU4OTc0NGE0NjdkNTQwNDQyMDUyZWY5NzlkNDRmMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://polyfill.js#L1-L91",
+          "version": "repo-lines-v1:sha256:ff9e5de8aee2da45a877d47d009486d3d450e9be95600eef25f1732c338eb5ef:eyJzZWxlY3RlZExpbmVDb3VudCI6OTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkZWUzOGEwZWRhMmE5ZmI0NmExZGZmNTNjZGQ4YWU4MTdhMzA0MTU3ODgyNWQ3ZjdjZjYwMjg2MjRiMzA5NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE2OWZlMzliOGQ4YTBmMjA1MWNmZWI2ODk4Nzk5ZWE5ZTFlZjVkMDJlNTFlYzhhYThlYjk2NGY1YWMzYjQ5MGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://polyfill.web.js#L1-L11",
+          "version": "repo-lines-v1:sha256:01344ed595aad47281c7be88752f4bcf870a618eaa40144e983df3886bed44ab:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlYjhjMjc4OTc1OWNjMWFmMDQ4NjBlNWQ0ZjM2ZWQ2YmMyZWFhOWY5Y2IxYWYzYzMyMTUyZjQ1Y2U5MGVmM2MiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlMmFkZmViZGQzZjE1MjE3OGJhYTU1M2ViMTY3YzhjZTljMTcxNTExOTJiZmZjNWJiOWNhNWZiM2M1MTM3ZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_202ceb851c9849ecb1b23cb4033b984e",
+      "statement": "polyfill.js applies three patch mechanisms for the Hermes/Uint8Array gaps that @solana/web3.js, @solana/kit, Anchor, and Meteora DLMM hit: Buffer.prototype.subarray/slice are wrapped to restore Buffer prototypes via Object.setPrototypeOf (fixing Anchor discriminator extraction), ~27 Buffer read/write/copy/fill methods are injected onto Uint8Array.prototype forwarding through a zero-copy Buffer view (fixing buffer-layout deserialization), and Uint8Array.prototype.equals is implemented directly for Anchor discriminator comparisons.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L165-L189",
+          "version": "repo-lines-v1:sha256:8b63a0015dc8ab10f2f05d8dbfb018055e29cd0a859ecb2b06c2cd5b7a8b7746:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjNGQyY2I2NzMwNzc0Y2I0Mjg2OWMwOGYzYzUwOGY2MDNlNWZhMzkxYTRkYzU3ZTNlZmY0OGFiM2Q2YmViOGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjNjViMjVkNWRiNTQwOTU4YWZjY2EyZjRjMGJhYmVlNjJlMWY4ODgxZDUzNDNlNTFmZjFiNWFjYzE2YTNiNDYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM5MmU3NmM2YjU1ODlkMjI2MGIxODFjNjRmNDkwNjJhMjg3ZWFjMjZlZTUxMWNhMGJlYTVhZjQxZTRlZTEwZGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFiNzllOGJhZWY3YTIzZThjNzRiMzg5ZGFkNDIzYWE5MTY1MjE1YjI3YWUwZDdkMThjZDBhZjg3OWY0NmU4ZDQifQ"
+        },
+        {
+          "resource": "repo://polyfill.js#L12-L30",
+          "version": "repo-lines-v1:sha256:5c42964010db6d304b6274ca281d8b0ba8275724ace57d1cd3b5a967dba28328:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg5N2U1NmFlM2Y0ZWQ5ZDRkYzViNTc2MTY0ODg2NzZkYmVmNzJiOTczYTI4ZDUxNGY4YmJiNWE5YmJiNzU4ZjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJkYzk2MDNkMjE4YzVmOTQzZGZjZDM0NmVmZDRmZGI3YmQyYTg2NGRhYWQ3MzNiMmM4MTllODNhYTNkODNiYzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZjYzYxNDM2YzNkOWU2ODhhOTcwMjk3ZTExOGFlYWFlMDYzODQyNTg3YzJiN2I3Njg0MjZmNjAyMDRiN2U0OGMifQ"
+        },
+        {
+          "resource": "repo://polyfill.js#L36-L89",
+          "version": "repo-lines-v1:sha256:00e44df179f0ea1316d0ebe133aa646fd2d8b5dd3b69a119c838ac3cac8d6a01:eyJzZWxlY3RlZExpbmVDb3VudCI6NTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNhZTk4YWVlNzdjNjFhOTVmOTJhNTI3ODAxN2YyY2FlNGQ0Njc2ZTc4NjQ5MzVjOWE1ODMxZTEyMjJmMzlmNjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE0YTBjNzc2ODc3NWY2YmNiZjVlNThlMWI0ZTI3M2NjMzkzZTk3MjFlYzYxNTkwN2EwNTU4OGQ0OWRhZDdjNGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJkYmYyNWJhNDc1MzAzZDczZjI5NjZjN2E5YjU0ODkzNjczYjZkMjM0YjMxN2M3N2NlN2ZlZDkzMTdlZjcyMmMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3a10790bf6cd4ee69b640e86a5642c90",
+      "statement": "When a Solana SDK throws 'X is not a function' for a Buffer method, the required fix is to extend polyfill.js (add to the forwarding list or use the setPrototypeOf pattern); forking the SDK, swapping @craftzdog/react-native-buffer for the npm buffer package, or changing the polyfill load order are all prohibited. On web Metro resolves polyfill.web.js instead, which only sets global.Buffer from the npm buffer package since browsers already provide crypto and URL.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L183-L189",
+          "version": "repo-lines-v1:sha256:4ccd581c7d7c49288b65a53cc05f4006d636ea3690116357d372191401903850:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGNhY2E0OTVlYjA1MTAxNzBmZjFiY2U1NzNjODI2MjVkZDFjOTRhNTM0M2QxNTYxMjNlYjcwMjVhMjIxYTdlZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2M2NWIyNWQ1ZGI1NDA5NThhZmNjYTJmNGMwYmFiZWU2MmUxZjg4ODFkNTM0M2U1MWZmMWI1YWNjMTZhM2I0NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTJhODc4OTgzNDc5YmMwYjk2NDhiYzExYjhmMDdjODcwOThmOWJlOTRmYTkxMjY0ZTUzNzk0ZmE0NzIyZGVmZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWI3OWU4YmFlZjdhMjNlOGM3NGIzODlkYWQ0MjNhYTkxNjUyMTViMjdhZTBkN2QxOGNkMGFmODc5ZjQ2ZThkNCJ9"
+        },
+        {
+          "resource": "repo://polyfill.web.js#L1-L11",
+          "version": "repo-lines-v1:sha256:01344ed595aad47281c7be88752f4bcf870a618eaa40144e983df3886bed44ab:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlYjhjMjc4OTc1OWNjMWFmMDQ4NjBlNWQ0ZjM2ZWQ2YmMyZWFhOWY5Y2IxYWYzYzMyMTUyZjQ1Y2U5MGVmM2MiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlMmFkZmViZGQzZjE1MjE3OGJhYTU1M2ViMTY3YzhjZTljMTcxNTExOTJiZmZjNWJiOWNhNWZiM2M1MTM3ZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8c9c9082697f486c8282acbe5f91c627",
+      "statement": "Native-only integrations hide behind five platform-split module pairs that Metro resolves by platform extension (the .web sibling loads only on web, native never sees it): polyfill(.web).js, src/wallet/walletKit(.web).tsx, src/hooks/useWidgetSync(.web).ts, src/widgets/registerWidgetTask(.web).ts, and src/observe/index(.web).tsx. App code imports only the native-named module; each pair's exports must be edited together or exactly one platform breaks. The web wallet stub renders children inertly with a throwing signIn, and the web Observe stub exports no-ops importing only ObserveConfig as a type so the native package never loads on web.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L25-L29",
+          "version": "repo-lines-v1:sha256:9e8d380fc2b9f0f2bf63e2c3066be7da87b2058e184db3b776233132da5fc428:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2ViZjdlYjM4ZGVjYWVhNzNjOTY3YTdkOGVhZWU5MmE2ZTIxZTY1YzA1ZDUyMzA5YmU1M2UwYjMyN2UxYzBiNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjNkOTUxM2U4NWM3OTBjNjY4YWU0MTRhOWMyZjBkMzIxYzk3ZDdlZTc1YTIxMTJiMjhiYjRkZWI0NWY4YzRkMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2VlMDBhZTAwZWUzNzY0NDNjY2ZkYzc3NjY0YmRkZjU5NGFjZDdjNjNkODE3OTJiMjBkNDA5YmFhYWI4YTcyNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2M4ZjA3MDExOTFmZTgyMjE0YTQwYTEyZmQ3MmQwNTMwNWRjYmRlMTJmOGEzMzZmMjgzNGUzNzU0ZmRhYTE2OSJ9"
+        },
+        {
+          "resource": "repo://src/hooks/useWidgetSync.ts#L1-L12",
+          "version": "repo-lines-v1:sha256:449833d55b73f8f844019f688edca47fb0a02f3ef55e105d74a870764498f029:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVkYjEwNDk5ZmU1OTEyNmYyNDA4MmJhYWU5YzY0NjhmYTg1Yzg5NmE0YmYwMzBjMTliYTc3ZWJkYTkzNWFiNDAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk2ZjE2NjljNTRjNTVkYmNiZDNkZThiYWFhMmJkNTM3NzU0OGJlYzNmYTJlYjkwOGJlYjhhNDJkZTY4ZDI4NDUifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useWidgetSync.web.ts#L1-L10",
+          "version": "repo-lines-v1:sha256:140ef66b676f11cfdaf82ddfd57e496eca741817ef4a42568cb746c35bbd0a93:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/observe/index.ts#L1-L8",
+          "version": "repo-lines-v1:sha256:45b0d3f9cc739db3326664a022f9e2a7ce183f77e56b449336343c3b2e3e2be8:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTQ3MTFkNDU0YWYzMjVmOTljNWRmYTUzYjhlZGQ1YmJiZWU4Nzk2YjBhNTIwN2EwODk0ZmZiNWQxMjBhMDRlYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/observe/index.web.tsx#L1-L35",
+          "version": "repo-lines-v1:sha256:d225efd620638a39d4b913096124cdcceb203780cdaeea42f0b0662ff55da14c:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/wallet/walletKit.tsx#L1-L9",
+          "version": "repo-lines-v1:sha256:b9087fdbd2184c824cdc410296c5635fdd8f73d7aede39708ce3c5bbe3b7c9b6:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTQ5NTRlZmI0YzM2YzhjZmMwY2U3N2I1M2ZmZDIxYTM3OWFiYzhjZTQ0NmZhYzA2ZDIzOWU5NTEzOTAzY2E1ZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/wallet/walletKit.web.tsx#L1-L41",
+          "version": "repo-lines-v1:sha256:51eb45ca0a29dd6573006d64b96d997dea9cc5e8604d3cd711151a79bc6b18d1:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/widgets/registerWidgetTask.ts#L1-L13",
+          "version": "repo-lines-v1:sha256:24f9921b2233901f93fb04bf2496670af49301de714f173f39eb3e5eb1df64b5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/widgets/registerWidgetTask.web.ts#L1-L8",
+          "version": "repo-lines-v1:sha256:7e5ab04351424f6fe18801c513677583356e59806c5209910b2d8134678de0f8:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6ab22f593da64b0fb6aa5b2c2584f116",
+      "statement": "expo-observe resolves its native module at import time, which fails in the Node Vitest environment; vitest.config.ts therefore aliases 'expo-observe' to src/observe/index.web.tsx (the web no-op stub), keeping every module in the test graph — including hooks that emit Observe events — importable without a native runtime.",
+      "evidence": [
+        {
+          "resource": "repo://src/observe/index.web.tsx#L1-L8",
+          "version": "repo-lines-v1:sha256:e99a27cdabb21e1cbcaecbdf547e5a2b57c1b39a2dc44313d89641a78499e56a:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTcyYTQyOTM4MmIyZTE0NzE4ZTBlMzdiMDU3MGE4YTE3MDI5OTFmY2Q4NDk4Y2Q4NDA2MGE4YmY0ZjA1MDE3YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTljZWNlNWU1MTNhMzRmYmE0MWJmNzBmOWZkNWI2NTQ2YWUxMjA2NTBkYjVjMDdmOGVlOWQ0NDBiZDQ3YTAwNiJ9"
+        },
+        {
+          "resource": "repo://vitest.config.ts#L22-L30",
+          "version": "repo-lines-v1:sha256:c9e4d896a101fa586467bc09bc0279ec1d40182ba44e8a56d78608bd34c4a463:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODkyN2EzODFhOTMzOGI0MjA4OGRiNWJlYTAwNjk3YjUzNzc1M2FlMmM5YTYwY2QwNTg0N2RmY2M5NTAzNzk0OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGQ1Y2QyZmI0ZjNkZjg4NDUxNTI1NWIzOTUyM2YyZjhiNTQ3MmJlZWE5ZjU2NmZmY2EyMDRkYjgwMjU2MTA0MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjIxYjQzOTlkNDI5MGY5MTUxYTYzNjI5YzIyNTllYjI3OGZlMTRjMzllMzA4MWI3NjkxOGMzZDViZGUzODUzNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6e266f1bf5164504a1cab5aa3535bbf0",
+      "statement": "src/__tests__/services/mockOhlcv.test.ts pins the mock OHLCV contract and is deterministic by construction: every mock pool yields a 20-candle series on the default timeframe, unknown addresses return null, repeated calls return the identical cached object, candles satisfy OHLC invariants with open chaining to the previous close, prices stay within ±10% of the pool base price, timestamps are spaced by the timeframe, and the series mixes up and down candles.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/mockOhlcv.test.ts#L14-L76",
+          "version": "repo-lines-v1:sha256:faea6cacd9c3256ae05d3907b3d5ef0b28eeb6f69548d32ce0e2f6ae2da57710:eyJzZWxlY3RlZExpbmVDb3VudCI6NjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNiZThjMDZkYjU1YzI1NTk5ODgxOTBjOTk4NjUwZDFiNzIxNWRmMWVmMTIwZDMzYzM4ZjA5YzljODk5ODE0YWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMWJmMGU1NTkyMjY5NTM5ZGE2MDZhMDc0MjYxOWUwZmRhYjE5NTcxNTdlYjU5N2JmODUwZjgwMDkzMTJjZDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/services/mockOhlcv.ts#L27-L44",
+          "version": "repo-lines-v1:sha256:cc5b618907f322985562990d625c50e55aeb38122903e62a60b8fd46c91bbad2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUxYWNhMDM3N2NmNGEzNjU3ZWQzOWM2OGM1M2FmMTY2ODUwYWMwNGJhYTA2N2UyYjNiYThlODY4MmU3ODJmN2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUyNzg1ZDU3MzI5ZjFlYzg3ZGMyNWM4ZmQ2MTE3MzZiYjViNDc0MjUzMmNiNGQ4NWQ1MWZiM2ViNWIzNGYzY2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcxYjBjNTg3ODAyMjljY2U5MDBkMWNhNWJlZTBhNGZkODdhM2EyMWNjZjljY2IzNzhiMjA3MDIzZDUwMmY2MWYifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

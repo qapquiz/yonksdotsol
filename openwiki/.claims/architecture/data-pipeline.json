@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:eb3ee1e993336d0e7febcaeebe19ab424b0fcea897f15d20bd5ca49a117a866d",
+  "claims": [
+    {
+      "id": "claim_6c0ab5a26404439da740fc637e369932",
+      "statement": "PositionPipeline.loadPortfolio turns a wallet address into a PortfolioResult through five ordered steps: an on-chain scan via DLMM.getAllLbPairPositionsByUser, batched token-price fetch for the union of mints, per-pool best-effort PnL fetch, resolution of one ResolvedPosition per lbPairPositionsData entry via the pure computePositionViewData (PnL matched with findPositionPnL, null when absent), and aggregation into a PortfolioSummaryData plus outOfRangeCount. Position count can exceed pool count because one pair holds many positions.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L108-L162",
+          "version": "repo-lines-v1:sha256:e936443471f067cc95438ad9efeba0eb866bd09fbeb6b60a03c4fea49c3cd661:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJiZGU5NmVhYTQ3YmRmOThmNzc4NGQxMWQwYWUzZDBhZmU5MGRiMjk2MjJkMGYyZjk3MzI0MjFhZWQxNWQzYWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFkNWVlMTUwNGZmODQyYzMwMWY2YmFjYjQ2MzJkZWQxZmIyZDU0MmQ0MWMxNWI4YzJhM2RlNjQ3YzM5MzU0NzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdkM2EwODUyYTZhN2U2YjBiYTBhYTE1MDdlMzhhOTc5MWVlZDc2YzE3YzU3MzBkNjA0ZWU4ZGQ0OTdiNzBkOTYifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L225-L277",
+          "version": "repo-lines-v1:sha256:c351a9b763d3a1a9947c1ecaac7585975a2ee28b8470da4ebbd2f48beb792c1b:eyJzZWxlY3RlZExpbmVDb3VudCI6NTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmMmEyZjk5NmYwOGU2ODBiZDI5MjEzNWE2ZmE0OTc4YmRhMjZlNjAyZDg0ZjMzY2IxZDU5NDc3NWQ0MzA0YjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk5NTZjNzM0NWYzOWY5Zjk2Y2UxYTM4YTIwYjI0NzI4Mzk4MDJiOTcyZjU1YzQ5OWE4YzEwY2FhZjgwOWZlYWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMwYTRiMjMwNzY1YTk2MzFhZTU5Nzc2YmUwOTliZGQwMDZhMTE0NGFjYmFkODcyZjI5MzJjNTE5ZWQ5MDJlYTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0a18b00b546f45f4b12c8d31e350befc",
+      "statement": "loadPortfolio short-circuits an empty wallet (no positions) to an empty result with summary null and hasPnLData false, and the convenience method fetchPortfolioSummary returns a widget-friendly subset of the summary fields — or null when the wallet has no positions.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L115-L125",
+          "version": "repo-lines-v1:sha256:c3039900920b61c281b7fb140e8181bf17522b0cb08fcd0b894d3a882d063682:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyY2UyNmM2MWY3OTE0MTNiMjJhY2JkY2JjNjg5Y2M1YWJkZmRkNjFmMGQ1MDIzY2JjNDgyOTk3OTNhZjExNDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkwNWQ0MWMyZGRlOGE1NDk4MTdkYzZiOTQyNjYyZWNhMGE3YmVmOWJkOGVlZTlhZDE4Y2QyYjhmMmM4MmUzYWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMyN2ZlYTY3Yzg5OWFmMDgxOWNiNDJiZjQ5MzliYzFkMWQ2NGE3MmViNzllYjE4ZmU5ZTVhM2UwNTc5NTY3NjkifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L164-L185",
+          "version": "repo-lines-v1:sha256:4e7c82179a4526e49f6813301c1bebb6ef37da80fefbb52b3a069b81b96b39fa:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmMmEyZjk5NmYwOGU2ODBiZDI5MjEzNWE2ZmE0OTc4YmRhMjZlNjAyZDg0ZjMzY2IxZDU5NDc3NWQ0MzA0YjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk3ZDg2MzJlNTRlOTI5OGFiYjk1ODcyN2UyZDUxNDA4YWJhZjEzNjYwMzUzNzkxMDE0MGFiZjY1YjMwYWI2MTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ1NDIxMzgyNzY3YzI5ZmFhYjViNDFmYjIwNzkwZmU0MTgwMDEyOWEzOTVkNDk0MDU4NDdjMjI3ZjZhNmFmMGUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_f2772c9786ba4ea0a72841c2aaaaeb89",
+      "statement": "Token prices are best-effort: TokenService.getPrices batch-fetches mints with Promise.allSettled and omits failed mints, the pipeline maps missing entries to null TokenInfo, and computePositionViewData degrades to $0.00 values, \"-\" fee displays, and a null liquidityShape — positions still render when token prices fail.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L299-L341",
+          "version": "repo-lines-v1:sha256:880fc9d80cce5bf21a702b8fd124658154ccf8924280a4259c05a7fc9cd78e7f:eyJzZWxlY3RlZExpbmVDb3VudCI6NDMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM4N2JjNTI2NWIxODk4ZDNjNDcyZDE3NzA1MDU4NGM5ZjkyYzBhZjkwNDU3MWZjMDg0Zjc3NzJhZDQwMzYyZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRlZTMxMTllOTA5NTk1MzE1N2IyNDE1ZWFkNDA3ODZmYzQ2ZmI2NTIwNTQ0YjhmMzRhOGNjOTNhZGJhZmZlOWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRhYTRjZmM1ZmRmYWRmNTU1MGU4Yjk1NDdhNGVjMGVmZDM5YWRkZTY5YzhlN2YzZDI2YzZlNDFjZDc4YjdiOGIifQ"
+        },
+        {
+          "resource": "repo://src/services/data.ts#L48-L65",
+          "version": "repo-lines-v1:sha256:3142bfddea1b89324f0b3809ee04772a1da36740f4e54c3184347b790222186a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU3NzZmY2RiYjk3OWYyZjk2ODU3NmI2NzQzZWQ3NDU3NTMzZTEzMzM4NjJkOTdjMGM1ZjllOTA5ZjQ5NTU0NjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFlYmIwMDAzZWE0N2FhMTQ0ZDcxMDRiMWUxMTdmMDhkY2U4Yzc1MmQ4Nzg5YTQ4NWE5YzFhY2I0OGQ5MGE1YjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBjZTYzYWU5Zjg4MDVkMzFhN2IyOTE2MzcwYzJiMWMxMjM3MTI3YTQ5YzdiYzM2M2Y1OWU5YTQ2YWE5ZTA5NTYifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L243-L247",
+          "version": "repo-lines-v1:sha256:48e2b1979f41b7bcc64e46b8f56deda1b8c8a954066b79b52369deb913dbdd14:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmQ5ZTcxN2I0M2NlMWQxYWI3MTI4NTVmZTc4OGRhNTgzZDBkMmY3ZWNjMjE0Mzg5NTU5M2NjMTA2YjA2ZmUwMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzgyOWViZTFhMmY5NTgwZDI0NDQwNmE4MjM0ZmZlOWI0MDEwNWU5Mzk1ZDcyNTJjNjI2ZGY2MTdjOGFkY2ZjZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzgzZjA5M2VkMjQwNDlmNjAyMDY0YTEzMDliNjYzOGE5ZWQzYTM3OGMxNDhlMDg0YjljODM3ZWQ1YjdhMDhlMCJ9"
+        },
+        {
+          "resource": "repo://src/utils/positions/computePositionViewData.ts#L169-L183",
+          "version": "repo-lines-v1:sha256:516a90eba2f9a2d188cbc0cdef937cc7b0e51e0873531314f7746fd61fa137bb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEzN2VlMWJhZTkzNmJlMDdlZjg0MTY0YzUxMDQ2ZjQ0Njc1M2ZhNDMxYzQ4MWM3MjFiODcxYWVhNTAxZjljNzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIzNzQ1ZmNkNzJiMzIyOGEyYTE5MDUzZDFjODFlYTE0NjAwMjcyNTBiYTBlMDZiNDU4NWVjNWI4YmJmMjQyOGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMwODJhOTAxYzI2MTQzNTU2ZmYyODNiY2ZiZTc2NmJlZDg2MmJlMGZkZWM4M2MwODY1ZmIwNzkyZDg0MGQ1MGEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_481f9430edd54b149021a6c701d960ff",
+      "statement": "PnL is fetched best-effort per pool: fetchAllPnL wraps each pool's fetch in Promise.allSettled with its own try/catch, so one failing pool neither blocks the others nor rejects the pipeline; fetchPortfolioSummary still returns partial data (e.g. correct positionCount) with numbers from only the pools that succeeded.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L483-L529",
+          "version": "repo-lines-v1:sha256:826238005492b00bca88e06e5c3bce54e6e0c3a48e2e45c8eb2e934064a9f4e8:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYwN2ZmMDEzMDU4MTg1ZTIyYzJmOGEzNTU2Yzk2OGY4MjlhM2I0ZGNiMDQyMzFjODEwZjA4NGNkZDg1NzY4ODAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkzNmVhZDc4ZjllZjkxY2I0NzliOTliZDRlMmYzNGJmNjU5ZjYyMzVkMDI4Zjk4YTdmY2Q4M2M1NDEyZDViYzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYxYjIwODJhZGQ5YTI5ZTA2MmU2MGQ0NmRiYTFlMWY3YzUzYTBlMDUwYjg4MTE4YzExMDIxOGJjY2UwNTUyZDAifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L197-L223",
+          "version": "repo-lines-v1:sha256:dcfa10fc2b5d3bd2499c94d00694f234ec52c07678f39cd91c998ffd4efd8da5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmMmEyZjk5NmYwOGU2ODBiZDI5MjEzNWE2ZmE0OTc4YmRhMjZlNjAyZDg0ZjMzY2IxZDU5NDc3NWQ0MzA0YjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImViMTU1NGYzYzg3N2FjMjAwOWEwNDM0M2EwYmY4MDAxNzY2MTBkNTc4YTc5YWUxYjdmNmYxOTc5YTJlZWNjY2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRhN2U5MzY1ZTQyMzhlNzZmZWFkZTY3N2U2MGNlM2JlMjk0OTkyZWNiOGZmMjgwZjA0ZDgwZjllNWQzMjZlY2MifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L279-L306",
+          "version": "repo-lines-v1:sha256:3a5e78e18d07454e1b471cc0030740c36180d2d7d7757228b1752999e096cf3c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmMmEyZjk5NmYwOGU2ODBiZDI5MjEzNWE2ZmE0OTc4YmRhMjZlNjAyZDg0ZjMzY2IxZDU5NDc3NWQ0MzA0YjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg0ODcyZWU3MTMyZTE0NDdjNDE1MmYxMWRlYTRmNGFjZDI1MjgyMDMyMGVkOWVlOTljMDIwMmQxMzgyZTUyZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU0ZTVmNGQyOGVhYjcyNjA5NmJjNDFlZjY5ZmEzYjk4N2Y4NjIzYjFmYTI1NjkyYWY4ODAzYzJkMTc3MWNhNjMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_43c5bd721e2d40d0a1ebab00c7faebf5",
+      "statement": "computeSummary returns summary null and hasPnLData false when no pool produced PnL rows (all fetches failed); the positions array is unaffected — every position returns with vm.pnlSol = null and vm.pnlSolPctChange = null — and a later successful retry flips hasPnLData back to true because the failed fetch was never cached.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L244-L297",
+          "version": "repo-lines-v1:sha256:7021a542c2259a37a0e2b163a5f2778a8d681b9c2580012b989d7e3407df1999:eyJzZWxlY3RlZExpbmVDb3VudCI6NTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE3ZTc0YzM1YTYyMGRiZTA2YzBjNjY0ZWUwODhkNjJlYzlhMDdiMGExOWNlMTU2NTlhMzczYjEzNDllMmRiNTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIzOGE3NjQ1OTA3ZjgyYTVhYzhkOTczMGVhY2ZiMDU3Zjk3OTZkN2NlOWNlZTBhYWE3MjZlZmM2OGE5MTRkZjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZlNmQ4MTg5MzlhODg0NjVlN2Y1Yzg0M2MyNjM2OTQxYzJkYTViNWI4NTAzNTEyYTcxMjRhZTg2ODljZWE1MTgifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L279-L306",
+          "version": "repo-lines-v1:sha256:3a5e78e18d07454e1b471cc0030740c36180d2d7d7757228b1752999e096cf3c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmMmEyZjk5NmYwOGU2ODBiZDI5MjEzNWE2ZmE0OTc4YmRhMjZlNjAyZDg0ZjMzY2IxZDU5NDc3NWQ0MzA0YjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg0ODcyZWU3MTMyZTE0NDdjNDE1MmYxMWRlYTRmNGFjZDI1MjgyMDMyMGVkOWVlOTljMDIwMmQxMzgyZTUyZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU0ZTVmNGQyOGVhYjcyNjA5NmJjNDFlZjY5ZmEzYjk4N2Y4NjIzYjFmYTI1NjkyYWY4ODAzYzJkMTc3MWNhNjMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_f3521436178543aba536da5e02ce3d2e",
+      "statement": "computePoolPnLSummary defines totalInitialDepositSol per position as gross deposits minus gross withdrawals (principal RemoveLiquidity events; claimed fees live separately under allTimeFees so they are not double-subtracted). Gross deposits alone double-count redeposits after a withdrawal (deposit 4.5, withdraw, redeposit 4.5 reads 9.0 instead of the real 4.5 basis). When no deposit SOL data exists at all, the basis falls back to value − uPnL (posValueSol - posPnlSol).",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/pnlAggregation.test.ts#L118-L143",
+          "version": "repo-lines-v1:sha256:b8c437636d9042ebe87a40046f8e2956a700fcffd0725bd11e27b39515a4f305:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhmYWEwNmY2MTZkM2NlODhkMjcxZTZkYTlhNDI5NDk4Y2QxZmNiZjhiNGNmM2MwNGZmODZmZDg3MzllNTdmYWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU0ZmRhNWY4NjY2NTJmOTdmOWU1YTgxMDE4MDQwZTRlMDU5MzBhZmNiZjQwOTE1MmE4MWQ0YWNkMzk1NDRlYzIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYyYjUxNGI4MGMxNDc5YWQ2NDZiNjYyYmY0YzM3YmUyZDU3ZTFjMGJhOWU1YmUxMzg2OTE4MDMwNTUwMWE3YzMifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/utils/pnlAggregation.test.ts#L44-L78",
+          "version": "repo-lines-v1:sha256:cbc2c24c83b36206ad928181b657848589a63f1fe50068c2d34550bf85a8342b:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlZDY4NjE4MzRhMWZhYWJkYTc2NmE3ZGU1YzNlMmUyZGUxYTA2MzFmNDA1NzI0MWY4MTZjNzQwMjNlMzI5MjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjViMjhjY2YzZjJjNjFmYmE3NTc4YTMwMGFkNzQ3NWYxYWNkOGU4NWJiMzhhMGNmY2E0MGY1OWZmYmM4ZDM2NTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJlMWNmMDRiMTc0Y2U1OGQ1ZDUyYzQ5NzE3MzE5MWE2YjkwZTVmMWJlMjE1ZDlkMjA1MjZmNTFiOTMwOTk1MTUifQ"
+        },
+        {
+          "resource": "repo://src/utils/positions/pnlAggregation.ts#L52-L63",
+          "version": "repo-lines-v1:sha256:1a21ac4072bef9125a6bb4f7d6065030a1cd3fe3fcebd9c88f2cd5caf6da24a0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNiMWI3YjEwOTg5NDkzNDk1ZTU2NDMwNGRhMTczOTljZDIyZmM0NGIyNjBiMWRhYzdkNTBlNTY0OWYyYzNhOTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZmMjNmYzYxMmM1YmU4YmZjZTRjNmVhMGMzNjcwZGZhNGU3ODMxMWZmNjM5OGE0NjgyOWY3NjRlMjA4ODgwMzciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhiZDk3ZDc0NjA4YTcwMTI2ZGYzOWNkODg3YzQ1M2VmN2I3YmQ1OTA5ZWJiOWQyODIzZjRjM2ZjYmRlM2E0OWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY0Mzk3YTQ4ZjEyYjE5MDhjNjlmZTNhYTQzZTAzZGZiNGE4MzkwNWVlYTQxYTY1N2Q3YzNkNzQzNjk0MTdjZDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_313ceb77c13d48f68a5aff82a111483a",
+      "statement": "In the portfolio summary, totalPnlPercent is the |net cost basis|-weighted mean of per-position pnlSolPctChange (positions with a non-positive basis contribute no weight), and feesTvl24h is the position-value-weighted mean of parseFeePerTvl24h ratios, null when no position has both a ratio and positive value.",
+      "evidence": [
+        {
+          "resource": "repo://src/utils/positions/pnlAggregation.ts#L65-L80",
+          "version": "repo-lines-v1:sha256:a54df8f7fa1232f913c9dd20caf9611b5c7d1317bdb8baac3f2fe34e9cda7914:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYzMDFlYTk2OWU1NjJiMmFjOWYyYjI1YzZiMzcwYTFlODBiYjRlZWRhNGEzYzg1ZDczODliMWU4MGQwNzgxNGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE3ZjI5YzRhNDQ3NTJkODNhYWE4ZTM2ZDk4NGE3N2Y1NmZjYmFmYTc3NWYxNTA4NTEzODU2N2VlOTkyZjM1MzUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlNjg1MmUyMzYzZDIxNjVjMDA1NmI2ZmNlNDFkNjdmMzk0YWIyYWFiNGFkZjI2MmVlYzM4NWI4OGEzZTMyMTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBiNzJiNWM3NWExZTM5ZWQ2NjkxMzExMzVkYWRkMTQ0ZTg3ZjI5MzhmZTY3NDExYTQ3N2YzMGM5MmNkZjgwNGUifQ"
+        },
+        {
+          "resource": "repo://src/utils/positions/pnlAggregation.ts#L82-L100",
+          "version": "repo-lines-v1:sha256:1f7f48e37ca15067ba029ee057f46d3a20aec94e22fabd3d511434c90609b37e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1NDJkOWMzMjRiYmE5ZjNlMDMyNDY3NzgyZTQ5ZmU5N2RlNzNmZmFhNmExYzhhZDVhZWEyMTA0MzA5MTg2NzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRiNDIwNjAzYzIwNDM4OWYwZDcyNGE4MGU1Zjc1MzBmNjZkOGMyZDBkMzU4M2FjZjBlMDEyYmYyNDQxMmUxZWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMyYjA2MDA3YjdiZGM4Y2FjNDg3MWJkOTdlYmFmNWMxOWIwMjJkZjNmMGFmZWJiODgyMjk3Yzg0N2JmZWM2MTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI1ZWZiNDE3OTI2ZWI0MjA3ZTU3MDQ2ZDQ0MTljOTE1YzcwZjMzM2VhMzQ5NTQ0YjI0ZDdjYTA5NGZhZDE2OWEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b1bddf22471542c7b2649b02865eb4c5",
+      "statement": "Per-position value in the aggregation comes from unrealizedPnl.balancesSol; when the server provides no SOL figure it falls back to unrealizedPnl.balances / 200 — the raw balance divided by an assumed SOL price of ~200 USD.",
+      "evidence": [
+        {
+          "resource": "repo://src/utils/positions/pnlAggregation.ts#L43-L50",
+          "version": "repo-lines-v1:sha256:9b5a8786606a2ff981f40b75f7229ecfda3c22136f0a964e0756b73cea290218:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODI3NDExNTJhYjIyZTAxMGE5ZjQwZDMwMGVkN2I2MDUwZDJmZGViMmQ4MTRjMGFjMDY2MTA5MmY0ZDI2MDE0ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTU1ZTlkZWJkYjA0ZjRhNTA4Mzk4NTg0NTQ1YjdlZTMzZmNlZjBiNjViZDM4NmViODNjNTVhNDMxNTJhYWMxNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzE1ZjRhYzAyMjEyOTc5MDA5OWU0ZTgxMDZkNWQxNjM5N2Y2MDdkMDFlNDY4MzRiNGU5YTJkYjdmODliMzA4MiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e4847c34b3404891ad681dc0124dfd52",
+      "statement": "vm.pnlSol and vm.pnlSolPctChange (and the same fields on the PositionPnLData wire type) hold uPnL — unrealized PnL, current value minus initial deposit — despite the name; this is an inherited upstream naming convention recorded in UBIQUITOUS_LANGUAGE.md, and display always renders it as uPnL.",
+      "evidence": [
+        {
+          "resource": "repo://UBIQUITOUS_LANGUAGE.md#L103-L108",
+          "version": "repo-lines-v1:sha256:6d71d78c54a3f5dce645fc1c131031b753c1130c38aab4e41e2fba6758a6e8e5:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDc5Y2E3NzA2NjYxYTk2ZDUxOWYzMzc5NDFjNDcwYjIxYWJiZjM3MjVhODYwMzIzNDdlOGVkYjkwNTNjMzE3MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA4YzAxODg2NjE2OWUyYzRkZGY0OTg3MTRhZWYzYTVjZWVmOGZiYjJiNmE0Y2UxNTcxMzgyOGUzYmM0ODc5YyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTJjODg1MzBiZWE2ZWY5OTEzOGIxYTkyMGM0ZGM4MmY4NGEwNjdhOTgzZGI3OGRjZTY1YTI2YWJlYTQ1MTNmNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWU5OTYyMDQwZjQ0YjE1OTgzNzQ2NjM3MzllZDliOThlOTdkOWM5OTU2Y2MxMGE5NmE4NTYyOTRhYmY0NTcwNyJ9"
+        },
+        {
+          "resource": "repo://src/utils/positions/computePositionViewData.ts#L48-L52",
+          "version": "repo-lines-v1:sha256:1cbe76639c21265e81aefb0bc73e0e175e295554fe6304bb06d2c3eab3b9fa28:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTVlMmU3NmRmMzIyZmVlNmFkYmYxMmRjZGU5N2Q2Mjg0ZjMxOTdkNzVkNTYxMTA1MDE1NjRkMjkyYjNiODE5OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGQ4ODU1MzUxM2FhMDE0MmQ0ODMzMDM5Nzg2NGRjMGQ2ZGMzODU3MjBlMzM3NGFmZTRiMGI0YjBlMGQzNzg2YyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGQxZWVjZGY5YTBhZTZjOWVhMzdkNTg4ZWY1MTc0NTJhYWIyYThkMDgxNzMwNmNiYjJjMTdiYTYzYzg5MmRhNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOGVjZGViYWQ1ZWUyMWIxYjkzMmQ1ODRmZTZiOGM2Y2Q2MDQwODM1MjRkNDVlZmU5NWNlOTc2OTcxMmJhMzlmYiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8a8f1517187c49708712a616fe1b6e4f",
+      "statement": "The pipeline is testable without RPC through three PipelineDeps seams: cache (defaults to the CacheManager singleton; tests inject CacheManager.createFresh, a private-constructor instance made for tests), connection (resolved lazily via getSharedConnection only when the chain is actually scanned, so construction never requires an RPC URL), and dataServices (defaults to createDataServices(cache); fakes can be injected).",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L139-L152",
+          "version": "repo-lines-v1:sha256:c3dfedec8ae3b0b665d2fedee0454bd0be2ca9370a9c54e8bb39a06d10cd63b9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc2YzI3ZTZjMmRjYzg5ZWNhNDc4YmVhYWYxM2U3NmFhNDZiMDc3MzA2NmZmNzI0MmM5ZWZjOWJmNmFjODUwNjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhYWYwNWNlYjA3YWY2NTYzYjAyOTYwMDdlNmFiYmQ3NzZlYTdjY2EwNTRhZjU4YmU1YTBmZDQwYjU4OTk4NzMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM2ODhhNTlhYzk5NzQ2MTZjZjJkZTMzNTBiNWE5MzQ0Y2ViNGM2NmJkZWMxZjIxZWFiMjNmOThjYTA2M2RhNTkifQ"
+        },
+        {
+          "resource": "repo://src/config/connection.ts#L6-L16",
+          "version": "repo-lines-v1:sha256:19ef3c39f061d22808c9dc9fa7ab3b7960b70890aa7e4531e096330178fe00fa:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3MGQ5NzAzMTEyZDZiYzBjYzAxNzE4Y2MyMjlkODQzNTMzMTYyOWVmNmEyNmZhMGRjZjk5YTBhODVhMmNiZWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdiMWFkMjA1MjVhNjMxNDU0YmQyM2MyMWEyYzcxYWFhYzBjMzNiMWM2ZmE5ZmEzYTI2MjU1NTQ4ZDBiYTc3MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L66-L99",
+          "version": "repo-lines-v1:sha256:305ba49d7ae3af43662d74a44cc1c1d4618c7c68a74af13e4983bdd1a1f29cc0:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzNzMzNTI1NzEwMzJlZTQzMzZjZDFmMjBjZGUwMjZjNzRjYTA5Yzk0YjU0OGUzZTdiOWY0MWNkMGQ2OWM4MjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0MjNlMGQzYWIzNjUzMjc0YTNiM2JlN2Q3ZGIzMGM5MmU2OGFkMjZjMGYxY2Y4ZDE0ZDNkNzc0M2E4ZTZkMjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRiMGQ1YzlhNzAxYTlkYzM0OTcwOTY3NjM2MWYwMWY0NGE2YWMzMWRiYjMxMTYxZWUwNTYwZmRmMTMxYmI5ZTMifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L16-L26",
+          "version": "repo-lines-v1:sha256:03b3d53c6544ed3938f0c7fef53bc4e7972373c51285db18ed859190422f0c5a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4M2FmYzMxZDM4MGM0ZWQ0Y2JhNTlhMGMwYzc0ZWVhNWZhZDZkMWQ4MjhiNWZkMTIzNGJlNDVkZTFkOTRkNGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU4YmY4YTM2YzVhYTlkYTBhNzljMTE1ZDVhYWIzNmZlOTkzZmQwYjEyOTZjYWNhZjYyNThmZTQ2YzlmYTMzZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkwMzllODVkYjU1N2VlNDE3YTk2NDZmNjkyNzIyMDUxMzExNmNlZTVlMDliYTAwM2JhZWQyNDgyNjczYzU1YzEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3a83b32ed5ee42159295380ded41f9d4",
+      "statement": "Per-pool PnL is cached under the key pnl:{poolAddress}:{walletAddress} with TTL CACHE_TTL.UPNL_PER_POSITION (15 minutes) through CacheManager.getOrFetch, and the fetch requests only status: 'open' positions from the DLMM Data API.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/cache.ts#L1-L5",
+          "version": "repo-lines-v1:sha256:db8dfc4f1feeaa4638cbb6682e9e2fb3737ca7ea8628de323d1660de65cefda4:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTQzZTIzZDc0YTZlNDQxNzllMGJmZDRlZTk0OGRjNjUxODBmOGVlNTA5NTAwMjM3OTA1YmM2NjIxMjRmOGRiMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L205-L218",
+          "version": "repo-lines-v1:sha256:1eb947c5d71083b9fefb511f7ba62fc6f5b85c2c0680400c2a657fa3fad8e58e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY4MjJiZjFhYWZlNGNmODUyN2U1NjRlZDk0ZWVjMDFhYzlkYzUyY2RkNjM2MmFmYmFkNzFjMDMxN2MwN2U5ODEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEwOGM1MGJjNWY4OTUzYTM2MjYxZjY5NzBkYzlmMjMyY2U5M2M4NzllOGM3ZDg1ZjgyNmJmNDk0NzBlNTg5NWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFkNDY4N2JkNjJjODYxOWNlOTFmMjcwYjljNzg4YTY5ZGNmNTIzN2ZlMjQ4YjQxOWRkOGYyMGNjZmYwOGRhYzMifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L79-L81",
+          "version": "repo-lines-v1:sha256:da34bd09ddfc08bff7aef913098f0ddd628d7227be6b7ac5fc63778b2319aebb:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTI5YzY0MGQyMjJiOWExMjM4OTNiMDliMzc5ZmE3ZDgyMGY2ZmJhY2FkZmQ0NDEyYzAyZDhmNDg5MTRkNDdlZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGM5NmI1OWNlODJiZjZmNGRiYzdiNDI4OGJjMTAzM2M3YzJhZTAyY2JiMmMyMzQ5MTlkNGZjNWE0OGExYzBjNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTc3YTYxMTMwYmI2ZmM4NmJiMzFmZGVlYTJlOGQ3YmQzNTI0ZDI1MGUwNDYyYmQxNGVjMDg5NjFmNjUyM2M3YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_4e010633208a442084dd994029b31ea4",
+      "statement": "fetchAllPositionPnL walks PnL pages (50 per page, max 10) and rejects without returning partial data if pagination fails or exceeds the page cap; because only fulfilled fetches reach the cache, a mid-pagination failure leaves no cache entry and the next loadPortfolio retries the pool cleanly.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L244-L297",
+          "version": "repo-lines-v1:sha256:7021a542c2259a37a0e2b163a5f2778a8d681b9c2580012b989d7e3407df1999:eyJzZWxlY3RlZExpbmVDb3VudCI6NTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE3ZTc0YzM1YTYyMGRiZTA2YzBjNjY0ZWUwODhkNjJlYzlhMDdiMGExOWNlMTU2NTlhMzczYjEzNDllMmRiNTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIzOGE3NjQ1OTA3ZjgyYTVhYzhkOTczMGVhY2ZiMDU3Zjk3OTZkN2NlOWNlZTBhYWE3MjZlZmM2OGE5MTRkZjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZlNmQ4MTg5MzlhODg0NjVlN2Y1Yzg0M2MyNjM2OTQxYzJkYTViNWI4NTAzNTEyYTcxMjRhZTg2ODljZWE1MTgifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L153-L159",
+          "version": "repo-lines-v1:sha256:b651e0d3c969d5c39b5450c4446ffd0481134dbffc009a99f9564ad1d6993e5f:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTliZDg0NjhhODdmMjU5YmY2NDc3N2NlNmU1Y2E3ZTY5NWM0ODNiYWVmYTA2ZDU5ODc3NDY4YTIyODMzMGYxYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2UyN2RiY2JiM2YxMmIxYTQ0ZDgyNjdmNzI5OTE3MjU1YTYwMDhjOTY1MmVjMDRkZjM2MDE3M2E5N2NjODQxZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGU2NjkzNzZkMDMxZjVmNjE3YjI0ZWUzODYxM2IyZDIzMGE3NWM0N2EyYjVjOWU5NzY2M2E2YTU3M2JmYjA0OSJ9"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L43-L63",
+          "version": "repo-lines-v1:sha256:95a4bb028abeb2f038b5878b6c065fd2b0c91a359f5d757d79d0d5d8648349e4:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlYTc1ZTMxZWM3ZjA1ODY5MTAyOGZlYWJlOTRjY2NmOWE3ODdkMDM4ZjJlNGYyMTk5NTlkOTRjN2NjYmJlOGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRjODg4NzRlNjcyNWVkZDcwNDdmOTEwNThlNTViYmM4ZTc5ZGY1ZDM5MTg0ZDllYmRlNmE1NThlNDM2ZWJkMTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMyMDI4NjNlNTZmYWUxOGIyNjM1YTEzZTNlYjdhYWFjNjYyOWJmYmRhODgzM2UzYjhhNGE4MjY4YWYwOGY5NzIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_be2447a1ee12462e8f01ab1d1784f6a6",
+      "statement": "invalidateWallet calls cache.invalidatePattern(\":{walletAddress}\"), which matches only keys containing the wallet suffix — the PnL keys — so token_data: entries and other wallets' PnL data survive; usePositionsPage invokes it on wallet switch and before every refresh.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L407-L423",
+          "version": "repo-lines-v1:sha256:6e25079aab02b294d869394c514502caa569a929dc79000b45153b9ee98fa462:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZjZGIwMzdiNTRjOWJhYTQ5MTQ2NjBjM2YwZTAwMDY2NmRiOGQ1MTg0Zjc3ZmJkMWExY2ViOTJiMjcyODYyM2UiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMGVjOWI3YWQ3YTFhZDk3MjVmNDM0YmM3ZjFlYmM3NmIwMjU3MWVjMjgyOTU2MmUxYzdjNjc1ZDhjYmM0MjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRkMTIxN2Q2OTcwYTc3ZGNjMTRmNjM1MDY1NzE1ZTZhNTk0ZmIyYmNhM2M2YjE3ZTFhM2Y5YmFhMWI4NjVjMjkifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L187-L193",
+          "version": "repo-lines-v1:sha256:6d764c6ce62146bdf8e30befda46e423b40f1851ff4880562c4c06347d31f4ec:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGYyYTJmOTk2ZjA4ZTY4MGJkMjkyMTM1YTZmYTQ5NzhiZGEyNmU2MDJkODRmMzNjYjFkNTk0Nzc1ZDQzMDRiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTdkODYzMmU1NGU5Mjk4YWJiOTU4NzI3ZTJkNTE0MDhhYmFmMTM2NjAzNTM3OTEwMTQwYWJmNjViMzBhYjYxMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWIxNTU0ZjNjODc3YWMyMDA5YTA0MzQzYTBiZjgwMDE3NjYxMGQ1NzhhNzlhZTFiN2Y2ZjE5NzlhMmVlY2NjYyJ9"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L61-L67",
+          "version": "repo-lines-v1:sha256:5dd99cf10fe72cd6fce9ec8f084ab3810855884b40cbd26c99e9227044e9a190:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDIwMWI5ZThiZTVlNzc0ODNmM2NjNzE2Yjk4ZmUwZWY3OGRhNTlhYTNkNjg5NjBiOWIzZjQ4YzdkODA1MTZjMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzk3NzYzNTRlYjA0YmQ3ZTc1YTg5NTVhMDA1NDQwMTQ0ODdhODY0MmJjZDljYTMwNDNiNDhjYjBlZjlkMjEzYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDdlNWI0MDk3NzAyOTIzZjJjZjQwNDJhYTU3MTcxY2Y0OGI3NjU0ZDY1NjEyMGZhZDg0NGIzYzYwNGU2YmQyZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_671a589d010d4a4790aaec0141ef16a2",
+      "statement": "Two summary paths exist deliberately: the in-app summary is client-aggregated via computePoolPnLSummary (position-value-weighted, net cost basis), while the PortfolioSummary Android widget bypasses the pipeline entirely and reads server totals from dlmmApi.fetchOpenPortfolioSummary (ADR 0002), deriving its deposited figure as value − uPnL; PositionPipeline.fetchPortfolioSummary predates ADR 0002 and is no longer the widget's data path.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0002-widget-summary-from-server-totals.md",
+          "version": "repo-file-v1:sha256:f3261c624ccd8681ec4b4d33fb29d90daf86d82eb0efae8123ab175216142e49"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L54-L64",
+          "version": "repo-lines-v1:sha256:00936d0fe6ab814f0a34f2b5e24499b8de341cd8fd892a1495fa9deaebe190d6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjllZDU2NDY2ZmQyNDA5NjAxN2NmYmRjNzA4MzE1ZjM5Y2EzOWUxMGI0NDAyNzBkZmU5ZDYwNWJjMzNhOGE5ODgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJjY2I3NDQ1YmQxMTc1NjVmNjc1NGRhNzg1YWI4ZWM2ZDRiYjM1OTM3NmVmNzFiYWJkMWI2MmZhZWQ3MzQ0NDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNjYzI5MzU4NGIyNDVjNzAxOGRkZTA2OThmNjg5NzFlMDU0ZjUyYTM5MTRhODVmZmNmOGU3NDM4N2M5ZjhlMjQifQ"
+        },
+        {
+          "resource": "repo://src/widgets/updatePortfolioWidget.tsx#L307-L333",
+          "version": "repo-lines-v1:sha256:5b092b3dac8eb0d0abaa188104d43c8c312a4d0ec6f36679e9653524ed5d8b97:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZiOWVkZDBmZjI2N2ViYjEyODI5ZWZjMWU3NGVmMTMwMDMwMjMxNzA3NjQzMGM4MjI0YmZkNDAxYTk3M2QxZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0MGM1ZDNkYzNhNzczMDc5M2M4OTI3OTQ4YjU1OTY2NDIwN2Y3OWJhODc3NzNjMjE1MDA0NDMxOTYyZmQ0ODgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzMmRhZjQ2YTg1YzNkNTE3NjhmMTFkNGQyYzNkMWI5ZTYyMTQyZGZlNTQyMWI2ZmEzMzJmMTUwN2ZkNTgxNTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e76cc63a2fc8490287e053e473fcc28a",
+      "statement": "The owned dlmmApi transport raises DlmmApiError on network failure (status null) or non-OK HTTP (with status) — no silent nulls — and keeps money values as strings on its wire types (with legacy variance such as pnlSol?: string | number | null tolerated); consumers, not the transport, convert them to numbers.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L89-L109",
+          "version": "repo-lines-v1:sha256:c1ef539dc0297f2bce481584c4cf06c3877e8bca25f700096b2c6dfd2edfcd0d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY2ZTczZWRjYzJhNzVlOTQ1YzYzZWJhMDIwNzc4YWY1YmEyMDFhMWU2N2ZhYTM3NzhhYzk2ZjA5MTFmOGFlYTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhMDc4OTUyZWIyMTljODBiZTI4MzVkMDZhNGM1M2FkYThiNGUwNjQ2NjliOTk2YzA5N2UyNTZlM2Y1MzhmMDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIwOWM5MDMwNTlkYmMxZWRiMTA1ZDFiMWEwYWUyNjE4ZDc2YWZiNzQ0ZWViNDJiYzdjNTMzOWRlYWZkMjE0NTUifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L1-L41",
+          "version": "repo-lines-v1:sha256:2003bf8f678d4277a7ab45c3ac46492ab4bcbedabb91c3f6d32c57e437af42fa:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMwMTZjNjIwN2FhODgzOGFiZTQ3NzM4ZDc0YzU3ZWZiMzhhNTk0MGM0Y2I3MDUzMzNkYWI4ODYzNmQwNWQ1YTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU4NmQ1Mjg4YTZiOWVhZmZkNTcyMDNkNTIyZDVjNTA5ODIzNzYwZmQ4Mzc2NTk0ZTAzNjMwNzZlNDBmMThlNGEifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L95-L117",
+          "version": "repo-lines-v1:sha256:7d8f85889e942411d75dd4026cf3e5285eb1ab209fab05e43669ce6b8799218d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE2NjU3ODY5OGM2MmVkNzA4YWQyNjhhMzc4MWNmOGExMGFiYjZmMTBlYmE5NmIwNDUwZjI2MjYzMDVhMmM2MjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE5Y2RmOGEyYzMzMTAxNWZhYjcwZWVlZTE3MzYwYWFlM2U4NDRiMTU2Njc2NTYxMGE3YWRiMzdiNmVlZTZiMmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNjg1YTUzZDgyNDUwMzQxNjY1YmJjMTNiYzI2ZjZlZGUyMzA1NmQ0M2Q3YWFjZjg1MTY5ZjkyN2I3MTYyNzUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a5aac88f2fec45ca9527c71f44bb65e4",
+      "statement": "fetchOpenPortfolioSummary walks every /portfolio/open page and rolls up the two fields the server does not aggregate — outOfRangeCount (Σ positionsOutOfRange.length) and a pool-value-weighted 24h fees/TVL ratio — while deliberately not rolling up per-pool totalDepositSol because that figure is gross and double-counts redeposits after a withdrawal.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L147-L169",
+          "version": "repo-lines-v1:sha256:581cfc26678566b78d92c8a6d9de0029b79340cad0a80a3ce8f0acdb9cabcda0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlYzU5MDdkNTA5ZWY2MDM3ZTJlNTA4YzM5YTZkMjA2NGNiODI3MmQ3MWY4ZTZiNmQzMTdiZTRkZDVmMWFmNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE1ZWM2YzAwZTJhNmY1MmYzNGYxZjRhMzI4YTNlY2UxYmZmMTYzNDVlNWQ3ZThhN2JjZjQ0ZWQzM2I2YzU5YzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIxZTc3NTlmZmI2YjJiZWFiYjQyZjJhZDVhNjY2MmZlM2UwMjVmNmI2OWE2NjQ4ZWM5YTkyYjgxMDE4MzIyMjAifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L247-L301",
+          "version": "repo-lines-v1:sha256:0d929620c3c3ab4e3843425fca94882a445cbd67e5ebbca0aa65d5e00399f5fa:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0MjNlMGQzYWIzNjUzMjc0YTNiM2JlN2Q3ZGIzMGM5MmU2OGFkMjZjMGYxY2Y4ZDE0ZDNkNzc0M2E4ZTZkMjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e380ac3dae9b4fd1a83524d932cda240",
+      "statement": "parseFeePerTvl24h converts the DLMM API's feePerTvl24h percentage (\"1.31\" = 1.31% daily) into the internal ratio representation (0.0131), returning null for missing, non-finite, or negative values; the view model and both summaries store the ratio so display multiplies by 100.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L232-L236",
+          "version": "repo-lines-v1:sha256:48b02d3ca6ad5dfb5735397ae18b92945ccfcbfc88016d974d08e595f5244366:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjE0YWI0NTJjODk5MzU4YjVmZWM4NTQyOTA4YmJjNWQxNzRjYTFkZTU4ODA0MDQ0MTYyNDEwZjAzMDQ1YjFjNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmU4NDgyMjgxMmE1Y2Q5NWVmNWMxNTNlNTNiZmRkZjkwMjdlNGRmN2I2ZTI3NTgwYjk2YTdiZjgxNGI5YmZiYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjg4YTliNTdlOGM4NjRhNjRhYjMxMDc0ODExYzNhN2I1MTgwYjNiYjk4NDg2NzBmYTJlZTQ0OTY1M2ZlYzQ4MSJ9"
+        },
+        {
+          "resource": "repo://src/utils/positions/formatters.ts#L45-L60",
+          "version": "repo-lines-v1:sha256:ecaeda91b849f6798d5ae06e8999f01b21d9d252929feb9d2580a5efb6bca0dd:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFlYmZmMzUyY2QyYTY4NTM4ZThhNThmM2VlY2M5ZjA5ZTgyNjZiNzA2ODQwMzQ2YzhhYmM0YzA5MWJlZjUwNWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJhMjE0YjIzYTY3YmM3Mjc5NzhmYWFlNjkwMzI5MWNlNjY1MDhjZDFmNmE2NmUxN2ZjYzg2OWVhYWQ4ZmVmMDUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2e8ddf3658c345e19f210db326209670",
+      "statement": "computePositionViewData is a pure function (no store access, no side effects) mapping positionData + activeId + token infos + PnLData to a PositionViewModel; its parsePnlNumber normalizes string-or-number wire values to finite numbers and returns null for missing, blank, or non-finite input, so an unavailable PnL value never becomes zero. Missing positionData or tokens yield $0.00 / \"-\" / null liquidityShape defaults.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/computePositionViewData.test.ts#L71-L107",
+          "version": "repo-lines-v1:sha256:7e4a43765575a2896349e039a98feb62d4e7dc28c3d85d4f25b6ced8551938fe:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU1NWM3NDUwZDJiMWYzNGJlZmFiMzc4NWQ5MjEzNzllNjYyZWNmNWUzODM5NDQ2NTcwMzkyNmU2MTJiZmFmZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE3NGYzYTA5MGQ5YjkwMDE2NGEwZDAzZGUyN2ZiNjFjYjNlMThkNDc1ZjgxNGMxNjQyNTk2MjFmYmU4YjRmMTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZiYzhhMGQ4ZjgxM2M4YTI4ZDEzYzZiOTk4YTcwZTM0NWU1MzA1ZGU1M2U1NTAzY2RjMGQ2ZWU1MDU1NWExYzgifQ"
+        },
+        {
+          "resource": "repo://src/utils/positions/computePositionViewData.ts#L162-L166",
+          "version": "repo-lines-v1:sha256:e2041f83abc7bf2d51e8bb1d8058ea518cdcc5669b96f8365f136f245673eed7:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjA2OTg1NWI3OWQzNGNhNTMxZGVhNTMxNDdhMDBlNTYwZTQxNTU1ZTFhY2QxMTYxYWEzYTFiN2NiMDZkNzVhMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2Q1ZmE4YzQyOWFhNzU0YTIwMWYxMzg1MzM3OTY2MzI0ZDkzZTJlYmUzOTJhOWEwMDRmYWFiYzU0ZjlmYWFkNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTQ1MzQzODA2YjM2ZTU2ZTQ5YjVkMWJkNTVjOTI4NWJmOWUxYjRjNGJiNjc3OTI5ZTJkYTI3MTFmMzUxZTIxZiJ9"
+        },
+        {
+          "resource": "repo://src/utils/positions/computePositionViewData.ts#L244-L260",
+          "version": "repo-lines-v1:sha256:b4941fda7bfbeaeefee6d5e4d186af6c06b5034beb35fa2f22e7baf86b349ae9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1NDlkNzc3ZmIzMjIyYWI1MTdkYWRiOTFjZWI0Mzk3MTdjNjc1OTU2N2VjMWI4YjYwZWY3MDYwZjM2ZDcxNzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA5MWVhMjcxMDEyNDM2OGRhMzljOGM0ZWJlZGNhMmRjNWJhYTcyOTI3NDNlYmE0ZjAzZDJmOTNjYTkwZmFiNDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/utils/positions/computePositionViewData.ts#L66-L73",
+          "version": "repo-lines-v1:sha256:ef37deabd98ca580b3e80d48b8c03271454e668c2015b798091d12a5131951a2:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDEzMGU2MjA1M2MzZGE4ODlkODU2ODcwZjM1NjQxMTIxMGM4NjA0MTA2NWQ4MzBhZDM2ODNmZmZkM2U5OGY2MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTEwMmRmZjljMGY3NjQ0ODJkNjBlZTVmZGU0YjVhYmNmZDJiNmUwMGZiYjg3MTEzMmYzZjJiYjQ4YTJkZTc4YSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_bee5f42e2bfe45029de00c6fa0e4fc0d",
+      "statement": "Three consumers run the pipeline: usePositionsPage (loadPortfolio on wallet change, refresh throttled to one call per 30 s, silent auto-refresh every 60 s while foregrounded), syncPositionWidgets (loadPortfolio raced against a 20 s timeout, persisted as an MMKV PositionWidgetData snapshot), and the expo-background-fetch task widgetBackgroundSync (≥30 min interval) which reuses a pipeline result to detect out-of-range transitions from vm.inRange and send notifications.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L107-L145",
+          "version": "repo-lines-v1:sha256:b22702fe377c038e769cf8d28ee038da7a532d71a5bc15eca77f81d2b7bd75fa:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBmODIwNjI3MjQwMjI3NDVhZGY1ODE3MDk0YTY2MDA2Y2RjNjEwMzRlZTliNjNkZjA4NGYyMzliMTdjYzg5ZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYTRmNDM5NjVmNGFjNDVkZDMyMGViNTNkNDViNjE1Y2YxZjk1NmRmM2IzMDlkNGU0ZGQzMmYyMzYzMDY3YWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliYTRiYzEzNjIwOGVhMzRlNzRmZGQxMjNkNzE2MWE3MGRhM2M2NzRhZjdlNWJhZDdlMTM0Zjc4ZjIxM2I2YTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU2M2I5NzVlNjVkMDdmY2Y1ZTdlNzIzYzVhZGI4NzE1YWRiZTk0OTMzYzY2M2UxZGZlZDA5MThmNTkwNThmMGIifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L61-L95",
+          "version": "repo-lines-v1:sha256:1f435d42833dcf0a8d02f75161055a36ffe6150e7fe059f10d3836ae3cdc02e9:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5NjZmYmZhODg5OThkYTc0NjU2YzUwMTk0OTU2YzI1ZjA4NDk0NTc2NjBjMDA5ZmU2M2QxZTlmYTlkYzkzMWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMzYjI3ZWMwMjA5ZmQxODQ1N2NlZmI3YzRiZDVlOGU1ZTA3OTZmNWE1NGUyOTg3NGRlNDZkY2Q5ZTExNjc3NTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxOTJiNjVhMTA1M2JiMTFkYzExMTMzNWMyYWU0ZmM2ZTVmNDkzMWZmMmZiZTQwOTViMGQyOWMxYTA4OTQzODIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMzMWY2NWZlNjgwYjg5YTViYmEzNGViZWRkMDkxM2NmY2NlNWRlNmFjZWNjYzI0Y2M2ZmNmMThmNzI5MmFiZGEifQ"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L18-L65",
+          "version": "repo-lines-v1:sha256:a8e6b7382aa77b362077382aa01a074fc1b68015bda3aca37a489d6d34feb4a6:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhZmE2Nzc1ZjBkMGQ4NjRhMTUzMmU3MzU0ZmVlZGM5ZTMwYWQ5NWVkNmExOWE2YjI5YTRlNjI0YjliNTRlMDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJiOWI0MDM5OWRlZGRhNjA5NjU4MmUwMmUzNTgzYjM1ZTIyYzk4ZGI3NzA3N2U3NTIwYTQyOTViYjJjNTRkMDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc3NTI3OTNkYzI2MTE0NGE0MGRmYzk2MmUwMTY5NDU4OGE1MTMyMmIzODE3Y2M0Y2QyYWIwZGUyYjM5MGViZjUifQ"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L35-L48",
+          "version": "repo-lines-v1:sha256:a3881cec4b92d40b3b0bb62e022c20f523050fbe185d6f781efa33e0c7afda22:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJkYWY5ZDU1MzYzNWQzMTc2OGY1NWI3NmYxYzU1ZjA4YTY3Y2Q1MTUyNmJmNmI2Y2M2OTE5NTMxMzU0NWMwNmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAyZjg0ZWExOTJjZmNmZjMyN2Q2N2I3YTNmYzc0YTFjNWVjOTA4OWUzMmE5ZGQwZjM0NzJhNzk0MDk5MWViMzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImEzY2E3ZmMwZjhkOTY2NjU5YjQyZTYzNmQzOTFlZWNmNWFlNTc5NTRhMzcxZjRiM2I3Y2EzODMyYjY0NjcyNDUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_57efe132027e4aecb842e9bd55157411",
+      "statement": "Dev mock mode (env.devMock, forced on for the web target) bypasses the pipeline entirely: usePositionsPage returns a static portfolio from src/services/mockPortfolio.ts shaped exactly like a real PortfolioResult, so the positions UI renders without a wallet, RPC, or on-chain access.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/env.ts#L11-L21",
+          "version": "repo-lines-v1:sha256:c869c8416adf0d95647c629ef946cefd89d763fa9bccdcd480e0ef075021a05a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1ZTRjODI0NWQxNTUzMWU5ZDE0Zjc1NWIzYmFhNmEyNDEyNWVhMmY2Y2E0MDEyYzYyYTFiNjk4NmUwMzRmNTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMzOWRjNTFhMDU0NDlhMjdkYTM3MmRhNTM4N2M3Yjk3MGM3OTAwYTdhMTYzN2Y0ZjA3Mjk1MzQyMGNhMjlmZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L147-L181",
+          "version": "repo-lines-v1:sha256:87b11f638ae369638a9d1ff83ed779e60359a643e39407bbf6b7d72ef2002145:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiMjJhMDlmZmU3ZmQ4MmU2YjY4OWZlOGFlNmExMWRhM2ZmZTcwODg1MWNhMDA3OTZlYTk5ZDlmYjYwOTVmZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA0NDhkMjY4NGE0YzQ4YmE1MDJkNjc3NjYxMWYxZWVlYjA0NzlkMzJiMDA2NmYxYTg4MjI0Nzc5OTIzNjFjZGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIzYWVmYTQ0NmE1YThiZmFlYmUyYjg1YzhjMTI3OTMyNzc0OGFkNzMyZWRhYjVmOWE1NjMwYWEzMDBkMjljNzkifQ"
+        },
+        {
+          "resource": "repo://src/services/mockPortfolio.ts#L1-L12",
+          "version": "repo-lines-v1:sha256:6df8e02fadb41e16b0faa40a3fbd43960dc6d9cbf912357933cd98f04e43d187:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3MmE0MjkzODJiMmUxNDcxOGUwZTM3YjA1NzBhOGExNzAyOTkxZmNkODQ5OGNkODQwNjBhOGJmNGYwNTAxN2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE1ZDk1YTAxNGYxNjk2NGMzOTE3ODU0ZWU3Yjg4ZGM2M2VlOTJjNWM4OTNhMjAwYTYwMmY5MzMwZThhNWNhY2EifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c75907f638ea4c0f9ff10e96df097afe",
+      "statement": "Per ADR 0001 every monetary value in the pipeline derives from live-spot token prices (TokenInfo.price_info.price_per_token, SOL priced via the wrapped-SOL mint); the app does not fetch historical prices locally for PnL or value computation, and the OHLCV service in DataServices is display-only and must never feed PnL or value logic.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0001-no-local-historical-pricing.md",
+          "version": "repo-file-v1:sha256:9b23f73a3dd4703a3d43c6317a039fabfc35a249736aa9183a96bf3b74fcfe5d"
+        },
+        {
+          "resource": "repo://src/services/data.ts#L25-L30",
+          "version": "repo-lines-v1:sha256:86d7c5d5ffd344abb9c26b950fa098a4d36580ff02bafd6852c94a6506712a8b:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2NkYjc2MmViYTg1ODZiMGUyYTA4OWYxZGI1NmVlMjFmYjM2ZDFhZTIxOWIyMTg3NDIyYmY2YzNlMGJmNTY2ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjQ4ZWY3NTQzMTM5ZmM4OWZjMDYwMTFhMGIyYWNjNWRiNzkzZDAwNzQyNGNiOTYxNGU2ZWZjNDY0MjIyYjYyMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzY1OTIxNWEyNzJmYzIyOGQ5NWFlYzBhMTNhZDk4MWU4NjgyY2FkZmNmOGI1ZmE5ODFkZjU3ZTZiNzc1NmY1NyJ9"
+        },
+        {
+          "resource": "repo://src/services/ohlcv.ts#L1-L11",
+          "version": "repo-lines-v1:sha256:b398f562dee36707af64a1efe6b1683f17eefc13bb52bf90554fc3a396e9e1f7:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiMjBkNDYwMDQxMzg1M2QxNzZiZDRlZjQ3NTcyZmNhNzZhZGIxYmMwNWMwMzJmNmYwMWIwYTA5ZTMyZWExMWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3YjhhMjU4Mzk0N2Y4NWYzZGQ1OTFmNDg2YTNiOGJjMmUyM2QzYzA3OGM5YTExN2EyMmRlNmZmZDQ1MGNlMTUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdhMjY5ZWM5MGJiOGJjNzQyMmEyNDgzYzNjNDg5MzBiY2IxYzQyYzkyNjVmYTU2YTM4NjI3ZDJkNzA1OTU0MzkifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

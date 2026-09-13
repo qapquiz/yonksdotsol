@@ -1,0 +1,6 @@
+# Files
+
+- [App Boot & Wallet Lifecycle](app-boot-and-wallet.md) - End-to-end startup — the polyfill-then-router boot sequence outside the React tree, the root provider stack, wallet provider resolution with the 500ms walletReady latch, the connect and disconnect flows, and the persisted wallet address with its revision bump.
+- [Out-of-Range Alerts](out-of-range-alerts.md) - The notification feature — pure in-range to out-of-range transition detection against per-wallet stored range state in MMKV, the no-first-check-storm rule, wallet-session re-checks inside the background task, and best-effort delivery through expo-notifications.
+- [Positions Screen Data Flow](positions-screen.md) - The home screen's orchestration — the usePositionsPage lifecycle (wallet-change invalidation, 30s-throttled pull refresh, 60s silent auto-refresh), tokenDataReady gating that prevents a blank list frame, the SOL/USD display toggle fed by the wrapped-SOL price, and the four mutually exclusive UI states with the stale overlay on Data.
+- [Android Widget Sync](widget-sync.md) - How the PortfolioSummary and PositionLiquidity home-screen widgets stay current — foreground debounce/periodic sync, the >=30-minute background fetch task, click-action handling, the MMKV snapshot/selection handoff, and the request-ID plus wallet-revision guard that makes stale runs never render.

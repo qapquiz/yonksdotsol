@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:801c1f887e2b525ab5a4475aebde742b7609dc93a4ed51b5790da5db69450acc",
+  "claims": [
+    {
+      "id": "claim_824bb18faeec48b8b14356d7a8b9609b",
+      "statement": "Persistent state lives in five per-domain MMKV instances — 'settings' (settingsStore), 'wallet' (walletStore), 'alerts' (alertStore), 'widget' (syncPortfolioWidget), 'position-widget' (syncPositionWidgets) — each created at module scope by exactly one owning module; because MMKV is native storage readable from any JS context, these instances are the handoff medium between the app process and headless widget/background runs, and the regression tests model them as one map per instance id.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/alertStore.ts#L3-L5",
+          "version": "repo-lines-v1:sha256:973ff11de8fb0ec5e824978688bfd2439a32863b1b5d7641479d9124d7a6cff8:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjAyZTE4NDQ2N2ZkOWRiMDk4NTE2YjIyMjIwYjQ1NzUxNTliNGZkODNlZmJmNjc0N2EzOWRmMDc1MjA0NTQyMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjI3NGIzMTA2NmZkMjVkMjg1NTU1MGYyNjA4NmFjNzFjM2RlMjliMTI0OTU1YTQyNjA2OTQ0MDI3YWJjMWRiYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGUyMzA2MGE3YzI3ZTkwYWE4ODczNzYzZjQ2OWEyZTQ2YjI5OThmYjllODU3MmM1YjExYjNiNzFmOTE5OGQ0NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWIwZjU1YTUxMGRkM2NhNTBiN2Q2MGFjYTcwMzYwMDNiNmM1NmRhZmQ0ZDRjY2IzZjNmNzBmYWY1MmI4YjA0MCJ9"
+        },
+        {
+          "resource": "repo://src/stores/settingsStore.ts#L8-L8",
+          "version": "repo-lines-v1:sha256:e39e14600c8792b63f2b73913ba0cb9084548729809e14f051c61397077cb10f:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTM5ZTE0NjAwYzg3OTJiNjNmMmI3MzkxM2JhMGNiOTA4NDU0ODcyOTgwOWUxNGYwNTFjNjEzOTcwNzdjYjEwZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTM5ZTE0NjAwYzg3OTJiNjNmMmI3MzkxM2JhMGNiOTA4NDU0ODcyOTgwOWUxNGYwNTFjNjEzOTcwNzdjYjEwZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGZkMzJkYjJmNzE5NzEzNTk4Y2QwNmEzMGVmMjdlMmYyNTNiZjMzN2M4MDAzZjAwYmVlN2U1YWQ0MzFkMjA1MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWE3MzRkMjg0ZmMwMzU2OTY3YzgwZjIwOTdkMWM0ZjIxZjlmODg3NjhlZGJhYzdjNGVkOTI0MjRkYjdiYTAxZSJ9"
+        },
+        {
+          "resource": "repo://src/stores/walletStore.ts#L3-L6",
+          "version": "repo-lines-v1:sha256:b240c5b12e474928a9a3f68279ae4addb2fabcb887aba0536c9c167b795f97bf:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzk1ODA1OWY0MjdmOWY4ODBjNzQ4YWM4NDg2Y2RlZjI0NDVhZTk1ZWM5NDI2NTA4NmMyNDhmMzEzZDk4OGZmZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjEyYTMxOTU3Y2MxZDE2YjIyMWM4YThmNWUzOWZhNTJhODZhZDIyZDM0N2FkYTkxM2EyMzg1ZjI4ZjFhNDU5NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGUyMzA2MGE3YzI3ZTkwYWE4ODczNzYzZjQ2OWEyZTQ2YjI5OThmYjllODU3MmM1YjExYjNiNzFmOTE5OGQ0NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2Y0MTA3MTk5YzA1OWY2YWZhY2M1ZDJiODM5Njk1YjdmM2QwYzEzMzIyNDk4YmE0NWMzMWYzZjhkZDk2NDgyMCJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L17-L20",
+          "version": "repo-lines-v1:sha256:be91e2cdefa1e0c8e546061498336ced63d50e302c8cb8e966432b20c6fe857a:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA2YWM4ODgyYjRlNjVjOTI5MjlmNGQ0MjYwZDA4Mzg0ODY1ZWQ2ZDY3MWQwMzRhYzM4NGI2NTlhMGJmY2YwNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzIxNTlhMjNkZjdmMDE0MmNlZmUwMmZkMmM4YWUxYjMyZTM4MzdlNTEzN2U1MDFmZTUxY2RiYjExZDlhNzc4NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzQ3NTA4MDE5ZTY5NjQ4MzAzMDQyNzFkNWNhMTIzNjUwMmQ1NWUwNTcwNWVkZjllZGRhOWUyZGQ5YTJlODcxYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGM0YTAwZGFlMTcxNDkwY2UyOTU1NjZlYjhiOGMwOWZlNjQ5MWI3ZGY1ZWE2ZWJlNzhhZjQyMWRiMTY2MjE3YSJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L17-L22",
+          "version": "repo-lines-v1:sha256:08f4d73c70721fe43cee4047a07aa1a17f2f199170fef02bc61be18a6daa252c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTg2MGQ5MzAzNGE1NDViOWQyOTZkYzUzNTVjNTU3OTBiYmQ2Mjk5ODJlY2UzNjgyYjAwMmJlYzFmMzA2OWY0NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTQ3OGFkNDU0ZDM2MDc5ODQzMzIyM2ZiYmZkNDM5YWY5MjFiYWY2MTRjMzI0MjllODExMTU3ZWZlOGI1ODA4YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYThiNGY0MjY3ZmQyYmY3NzY1ZTNkNzFkZmQ5ODhlYzc5NmEzZjk0ZmYwZDQ2ZGZjMWJiZWFmNDViNmIxYmEzNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWFjNTQ5ZDViZDkyZjI0YjNiZjAzNjBlZTk2YzQ2MmE4NzIyNjU5YjJiZmNkZTA2ZDRkZTQzMjdjMTY4Mzk1MyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_829612542ce346ca87b7c80a4f8ac1cf",
+      "statement": "Only settingsStore is a Zustand store; walletStore and alertStore are plain module functions over MMKV with no React dependency, so headless code such as the widget-background-sync task reads wallet snapshots and alertsEnabled via direct function calls and useSettingsStore.getState() without mounting React.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/alertStore.ts#L10-L28",
+          "version": "repo-lines-v1:sha256:41ed537ca60f46ed2a93077f2c7d18407790c8849549cd8571233590eed03586:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhiNjRiYWE3N2M4OGU5ZDBlNTFiYzZmOGFhMTFiZWU2M2UyNjcwYjlmMDExNmI0ZDU5NjA2NzAyODY1Y2RkNDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3YzVkZTc0ZDM2NzkwNWU2ZjI4ZTc3NzEyZWRmZjcxOGM5NWI0MWQyYzI1YzYyYzg3MjI5NjZiM2YwYTZiNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjExMjIzYjFkZWI5ZTA4OGI3YWQ3MzkwMDU1MzBkZTlmNzMyMDcyYmJmNGJkNmU1YjA1NDZlMjdkNzhhNjU3ZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM0YzA1ZjhiNWIwMzNmMzY3YTM5NzZlMzU4ZTRhNjhiNDg0MmY5NjkzMGY3ZmI1OWU5MTcyYzQ2ZWY4YTZkMjAifQ"
+        },
+        {
+          "resource": "repo://src/stores/settingsStore.ts#L38-L58",
+          "version": "repo-lines-v1:sha256:91cf1230d51d826ae62d19c9c654a67ce9965a82c56318ef3145caa0cf12dd78:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUxOTJjYWM5N2ZkYmE3NGZhY2ViNWFlMDY2NGI5NGIxNThmYzhhMjlkMTQ5MDFmYjc3Mjc1ZGY3NTM5YmRiNDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcwMTk5NWYyYTNlNGEzYTcwZjJlYzZlZWVjZjdiODE2YmQ2OTI3OGQ0ZTNhNjc2YTlmZjQ5MTk0NDBiYWM3MmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNlMDA1MDVmNTVhZDM4YzhlMTg3M2Q4ZDRjMmYyMWZmYjY1YmZhYzJiYTM4Y2VmMmZlZTc4MDMxMGI5NjFhMGMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZhZmJhMDUyN2MzOTUzYzRiNmUwZTViNTczOWJhODM2MTJmODA1M2JjZGM5NDY2NzMwMTkzY2QxZDU5MGI0MDgifQ"
+        },
+        {
+          "resource": "repo://src/stores/walletStore.ts#L13-L28",
+          "version": "repo-lines-v1:sha256:0b5e978e167d47587b2e06c86dc873932a525b98656e001f07c1a5d765be69a5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlODQ5OGY2MDNiMDliOWVjOGU0MzRiZmYwMmVkYjExOTIxZTAzYzE0NTA4M2Y1MGNjMWVkODI0YjdlMzJhMzEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM1MzU4Nzk5ZDdlYzlhMjhmMDY2YmUzZDJhNzY0ZmE4ZDY0NjQ2NTlhYjAwODRjYTE5NzViYzlhNzU2MzQwN2YiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg2NmQ0NzgxNTVkOWFhMjQ0YmE5ZDAxNTA5MWI2MWYxMDY1YWZmNWE4MGZiOGY4M2U3OWRjNzQ1OGFhN2IxZWUifQ"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L33-L33",
+          "version": "repo-lines-v1:sha256:4b02e5a3b653f7454593bdd96d07c68ee9de709e4bb6bd26274fc969c6283872:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGIwMmU1YTNiNjUzZjc0NTQ1OTNiZGQ5NmQwN2M2OGVlOWRlNzA5ZTRiYjZiZDI2Mjc0ZmM5NjljNjI4Mzg3MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGIwMmU1YTNiNjUzZjc0NTQ1OTNiZGQ5NmQwN2M2OGVlOWRlNzA5ZTRiYjZiZDI2Mjc0ZmM5NjljNjI4Mzg3MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTU3OWIwMDg1YjNhZDRhMmQ0MDBhNjEzNTM5Zjg2MDhiMGFjMTEzZmQwZWRiYWQ5NzM4MmE0MjYxNzUzNmI5NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTk2MGQ4ZjBkYzE0NTE4ZGRhOTFkMjI4MWZkZmI3YzM1ZjM3ZmNiNmZjMmFlOGYxZTVlZDIzZjUxMzcxZWU3ZSJ9"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L6-L8",
+          "version": "repo-lines-v1:sha256:9423f569d84b59ebf7c6a4853bff81231052daa66d8d4bc303d9597c1748cb7e:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDE2ZGY4MWE5Njk0MzcyZWEyNmNiNTgzNWFlNjZhOWFhMmYzNjI2OTkzMzBjZTdjYzZlMTg4OTA3ZTVkMWNhZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDM4M2VlNGJmNTU3ZDk2NmFlOWYyYTVhYzIyM2JmOTIxMjdlYzAxZDBkN2FmZDRmYWEyZmEyZmRjZWRjZjAxZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGYyODFiYzRiYjViN2VmZjVjNWJkZTUzYjkwMjU0YzE2NTNjNjIxODljYTQzMzBmNDlkMzQ5YjE5MmU3M2FiYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGE0NWY5NDc4ZmEwZWRhYjE5MDQ4YmJlZjAzZTM1MTk4YWUzMGQ2ZWJkNmNlN2M4NWY5OTE0ZWE4ZjljZDBmZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_45f658c40dea4198b3567df80717a214",
+      "statement": "walletStore.setStoredWalletAddress is a no-op when the address is unchanged, and on a real transition it writes wallet_revision (incremented from the stored value) before writing or removing wallet_address, so MMKV value-changed listeners fired by the address write always observe a complete, self-consistent {address, revision} transition.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/walletStore.ts#L30-L40",
+          "version": "repo-lines-v1:sha256:2c9e8b5cda9ef9830b568bdfb2274a93693c9d58e80364fd203bc21016dbb0ad:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MDBjNTAzN2ExOTViZDIwYWZmOTU3MDA3NWQ5MDQzMmQ3YWYzMWUzODU1YjIwZGUwMjlhMTY3MzEyMjkwYTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU0M2JhNTZiODYzZGQ3NGVmMmIzODcyMDhlNzAzMzc5ODMxOTBkMjc4YzU2M2MzNDRiMjdmZDc4YzZiMmNlZDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4f1a09bee1714903a527467479f9c63e",
+      "statement": "The wallet revision counter distinguishes a reconnect of the same address from the address's previous session: it changes on every connect, switch, and disconnect, and all consumers gate work on the address+revision pair together (sameWallet in both widget syncs, walletIsCurrent in the background task), so reconnecting the same address cannot reuse the previous session's cached snapshots or let their in-flight requests win.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/walletStore.ts#L18-L21",
+          "version": "repo-lines-v1:sha256:e29420ad74ceca6d7a32e82ee234d99fbcfb95f14607cc2aaa20a8cef9d34544:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzJlZThmZDZlNDRjNDg1MDIxNTM1NDQ4MzUzMGFkN2RhNTU1OGRkYzZkMzY1ZGVkM2FiODE2ZGI1ZWMxMzY1NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDIyNDVkMjFmM2QwZWViMGM3YjFlNDk3ZGRlM2NiZjA4YjVhYWNhNmJjMGU5NGM5YmViYTVlNmIwZWJhNDkwNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjIwNmNkOGMyYThjMmVmZTViZjc2OTk5ZWNhMmZkYWRiNmI1MmQ1MzI5ODA4YTQ0MTc0ZTU2MjU0MWFhZjdiYyJ9"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L20-L24",
+          "version": "repo-lines-v1:sha256:2e0d47cbf8017406ef49eb2a8416349213dbb8f27d169d5190af8813509f92ec:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQzNTNkZGRlYzRlZDBlN2FkNzQzZGI2NmE5OGRmNGQwZjkyYzYyMTQyMTMyMzc0YzhjNmM2ZmJmNTJiMjUyMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDVkM2FlYTMyZGU0MmM1ODI2MDE4NDdjYmJkNGUyMjlhYWYyZTlmYWFiYjI4YzM1YjE3NzlkZjA0NWZlYzQ3ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzIwOGNiZjdkYzcyZTBkYjIzMmY1NWZkNDUwYTgwMTgwZWRjNWIxMTU0ZGVmNjJmM2MwYTE3Mzk2MWFiZGI1MSJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L29-L31",
+          "version": "repo-lines-v1:sha256:cbb55042ecd3f9e1d98744ff5263cc79017ac755ef75e4c51c35242af3014bd6:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzUzYWFkMzE0NzNiN2E0NjcyMWQ2ZDYyODBhODFmZjcyMjEwYzM1ODYyMjQzMTYyYTg4NWZmN2Y3MjQ0ZjdjZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMWIyZWQzNjY1NTk2MzljMzQwM2Q3YmJlNDUwOTJmMDc1ODk2YmQ1MDVjZDY5YWQ4MTNkYjNhYjNiMzYwN2YzOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOGQ1OGU4ZWU4YjZkODllZWUyZTllMWFlMGFkODc0Mjg0MDllNzc4MjFlY2Y3YzFjYzMwMThjNDIxOTkyYmI2MCJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L55-L57",
+          "version": "repo-lines-v1:sha256:cbb55042ecd3f9e1d98744ff5263cc79017ac755ef75e4c51c35242af3014bd6:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzUzYWFkMzE0NzNiN2E0NjcyMWQ2ZDYyODBhODFmZjcyMjEwYzM1ODYyMjQzMTYyYTg4NWZmN2Y3MjQ0ZjdjZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTM3NDE1ZTdmMjIzNjE4ZGM3YTJlZDM3ZjI5MDA0NzU2ZjAwMWYyYTc3NDRiM2MxM2QzM2Q5YTA1MjI4YTU2ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODVjNmY4MzcxMjY2ZDZmMzU4YTA4YWRhNTJmNzA1M2ViMDM2YzcwYjYwNGRjYTliMzM4NzZjYjJjYTM1MDUxNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8fb92d9cbb2546838ee424eef7b75a34",
+      "statement": "walletStore.subscribeStoredWalletAddress registers an MMKV value-changed listener filtered to the wallet_address key only; useWidgetSync uses it to trigger an immediate widget redraw on wallet transitions, bypassing its normal foreground debounce.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWidgetSync.ts#L52-L55",
+          "version": "repo-lines-v1:sha256:f8d2a766b55d6482b0c8388828ddcc32f349e65ae48c483f59d198eb8b38975e:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjUzZTgwMWE2MTZmZWNjNDliYTAyYTk4MjliNjA3YTExZDc1ZjgzOTQ4MWUyY2ZkOGNkNWJkZDhjNDYwNjFiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ3NWU5NGE5MDRhYzQ5YjMxNTRkNDY3MmE2NmU4NjI5Yjg2ZGFjNzRlM2UyOTM3YmU2OTI3YWUzZGExMWM1MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTA4MTMzYjYwZDg3NGRkYzZhZDU1NzUzMGVkOTJmNDNkYWIxMDQ5M2E0OGNjYzEwZGJkNjQ5YzVmYzRkYmRiOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMmFlODFlNmEyYzdhZTczNDBjMjk3M2UzZjk5M2VhYmEwODVkNzgwYTk2ODlkZmIyM2I3Njg0ZDJkOTEzMjAyMyJ9"
+        },
+        {
+          "resource": "repo://src/stores/walletStore.ts#L23-L28",
+          "version": "repo-lines-v1:sha256:06beb6cfa6b5ffeaf5e4fa382e215b7216d48348030a73a9dead858402bee772:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGQ5MWNjMzkzNDc0ZjQzZjg2OTZhODMzNzA4YzhlYWI5OGVmZmFmZmRjMmY0NjhmYTlhNjhlMjE4ZmYxYTBjYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDg2YWNiODRjMWM0ZmNiZDA1NjZlZDBmODViNzA1YjQ1ODBiM2RmNDQyNmE4YjBlMjEyOWY5MjIzMjk5ZjAxZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODY2ZDQ3ODE1NWQ5YWEyNDRiYTlkMDE1MDkxYjYxZjEwNjVhZmY1YTgwZmI4ZjgzZTc5ZGM3NDU4YWE3YjFlZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_0114b3ddf8774d818e16d1c701e3a8f3",
+      "statement": "settingsStore persists via zustand's persist middleware into the 'settings' MMKV instance through a synchronous getItem/setItem/removeItem adapter under the persist key 'settings-store', writing the whole state (theme, pixelFont, alertsEnabled, displayCurrency) as one JSON blob whose values are available as soon as the module evaluates.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/settingsStore.test.ts#L84-L95",
+          "version": "repo-lines-v1:sha256:c4cf6521de8002457985f655d118f7059e0a051e65497577182f14c4bc1f250c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUzMjQzNzJhNDU2NDgwM2VlN2YwOWJlMjE0N2E5ZDkwZDllMGY1NTY4MTliZGZhMDY3ZDAzYjExY2EyMWUwMWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMGVjOWI3YWQ3YTFhZDk3MjVmNDM0YmM3ZjFlYmM3NmIwMjU3MWVjMjgyOTU2MmUxYzdjNjc1ZDhjYmM0MjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwMGIxOWM2NTRkMDlhZjk5NzM3MDc1OTkyNjg3Y2MwNzY1NTFhOGQ5YjFjYjU3NGZlZmI5OTRmOTk4ZDA5OGMifQ"
+        },
+        {
+          "resource": "repo://src/stores/settingsStore.ts#L54-L57",
+          "version": "repo-lines-v1:sha256:cb076fe5f789c9d4b6c635cf754e41a1f0d6a5dac4430b160bf0f23d32d0e031:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZjljYTg5MWJmZjdhYzFmN2NlYWFlNDBlZjA1MTA2NmJlOWVmZTQ3YjRlNDI4MWU4NmMzMTliZTJjNTVlYmNlNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTA4N2VlY2IyNzcwMDAxMGIyYTJjODNjZjBmZmFiMzZkZDE1MzZmNzYwZmQ4ZDc4OTVjZmRjOTAyZTA5YzE2MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjM0YmEzM2Y1MDQwYzk3Y2I1YWRhNTQ1MDg0NjM0NjFmNmFhMjYwMTZhYTc2N2YzMTkzMDVjZTdhODI3MTJiYiJ9"
+        },
+        {
+          "resource": "repo://src/stores/settingsStore.ts#L8-L14",
+          "version": "repo-lines-v1:sha256:b8d5b3e070b41cffffe2e57243fc15d7a0ca36aa8536201b13a4e09c096df8f1:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTM5ZTE0NjAwYzg3OTJiNjNmMmI3MzkxM2JhMGNiOTA4NDU0ODcyOTgwOWUxNGYwNTFjNjEzOTcwNzdjYjEwZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGZkMzJkYjJmNzE5NzEzNTk4Y2QwNmEzMGVmMjdlMmYyNTNiZjMzN2M4MDAzZjAwYmVlN2U1YWQ0MzFkMjA1MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmVmMDJiMGMwNWMwNDhlNzUxMGIxNWY4MDBjNGIwZTY1M2MwZTg2OTkwNmQ5ZmVhYjA4NmFlNmUxZGNlOGE1ZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b1e49db8c5f94290ad7f8f120bacba23",
+      "statement": "On web the settings storage backs onto localStorage, and AGENTS.md documents seeding localStorage with the 'settings\\\\settings-store' key (persist JSON with state and version) before a reload so web preview boot-state tests start in a chosen theme, since theme is store-driven rather than media-driven.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L41-L41",
+          "version": "repo-lines-v1:sha256:11ba00396522811b010b3397dc609c30c65389977e1ca1f3b5c8b4e393af8230:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTFiYTAwMzk2NTIyODExYjAxMGIzMzk3ZGM2MDljMzBjNjUzODk5NzdlMWNhMWYzYjVjOGI0ZTM5M2FmODIzMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTFiYTAwMzk2NTIyODExYjAxMGIzMzk3ZGM2MDljMzBjNjUzODk5NzdlMWNhMWYzYjVjOGI0ZTM5M2FmODIzMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTQ0NDNiYTk2Y2U2MWM5NWFmNjFhNDRiNDI2NGZjNzc4MGZmMmM0ZWY4NzM3MjQ1NTZjMTA3N2VlNzhhMTllOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYWU0NjEwMDcwNDQzZmJhYjVlNzdiOGM2ZGE0ZTRmZjA3MGE5NDY3NDdhZDlkN2QyOGI4NGY2YTFhYmQxZjVjNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_86a712651e464246acb8df5ce5b1d07b",
+      "statement": "alertStore keeps one JSON key ('out_of_range_state') mapping wallet address to position-id → in-range from the last background check; getRangeState returns null for an unseen wallet or corrupt JSON, and null means first check — detectOutOfRangeAlerts records state but emits no alerts, preventing a notification storm; clearRangeState removes only that wallet's entry (wiping the whole key if the record is corrupt) and is called from useWalletLifecycle's handleDisconnect so a disconnect leaves no stale alert baseline.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L87-L97",
+          "version": "repo-lines-v1:sha256:b220ac426b2b1e279fda430ca3dc524bf3ce3ca246cf6ab2f8ecadf86c58849e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwOTcxMjUyYWM5MmJhZDIzZjVhNDQwZjFiMmQ5ZmY1YjIwYjM3MzkzYTgwNzUyZmFjOTc4NTE0NmIxYTIyOTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFjODQzMDMxZjQ1NWVkNWZhNWFkYzNhMjkxOGUyMjZkM2EwYWIxOWMxYTY3MjA3ODkxZDZhYmViNmNhMjlhN2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRkYjQ1YTI4MDAwMTcxYzNiMDU5NzIwMTcwNDVlN2M2OWVhYTY3ZDZkZDViOWM1MTZjNWFjNTViNjQwNTNhZDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA3YjZmMmE3MDYzOWQ3MmQzMzgxYTRkMTQxYWU4NjU1NjNmY2E2MTA4MWYyNzE5ZDhmMWNmNWZkNzg3Y2RmYTMifQ"
+        },
+        {
+          "resource": "repo://src/stores/alertStore.ts#L10-L39",
+          "version": "repo-lines-v1:sha256:371d64d710fc5a2a8b93c32986ce37922b10c1ed033601a2b77e539fb8ff3351:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhiNjRiYWE3N2M4OGU5ZDBlNTFiYzZmOGFhMTFiZWU2M2UyNjcwYjlmMDExNmI0ZDU5NjA2NzAyODY1Y2RkNDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjExMjIzYjFkZWI5ZTA4OGI3YWQ3MzkwMDU1MzBkZTlmNzMyMDcyYmJmNGJkNmU1YjA1NDZlMjdkNzhhNjU3ZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/utils/alerts/outOfRange.ts#L20-L46",
+          "version": "repo-lines-v1:sha256:39ef3925927d6b8be054acc86bdf929f15b9bc4034878198e5fd333431105fb3:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg0YzM4M2ZlNzlmYmUzM2Y4Yjg0MDdlOTU0NzM0MDZmMDQzMmI0NGRmYTE0ZmVhNDczMjI2Mjc4MDgyYWI3YTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE0Y2MxNWI2ZTkxYTE3MDY4N2UxMDc5ZjRmODdiN2YxZjk3ZmQ0MjU3Nzk2NDg4NWYxZTYwZDg4MjY1OGVlYzAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_93c4032c4ad04b538ffa15475621431a",
+      "statement": "Widget display snapshots embed the full wallet {address, revision} snapshot and are validated on read: a mismatched address or revision, malformed JSON, or a legacy entry without wallet identity causes removal and a cache-miss, so a snapshot can never render for another wallet or session; empty results clear the cache (positionCount 0 removes the summary; the position widget replaces its full list, including with an empty list).",
+      "evidence": [
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L33-L57",
+          "version": "repo-lines-v1:sha256:9f66bbbcaaefb561216e40998585dc8595979c7c75e0f56059f0acd95bfe7b41:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhhZmU3MjE5YzFkNDI5ZTMyMWI2MzQzMzkzYmY5ZGIzOTJkNDJiZDBkOTM2MDdlOWQzZTFiNTM0NWEzOTYxMzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ0MjI3Y2E0YWM1NDlmODQ1N2E3YjQ5ZjE2MDVhNDZlY2UwNzQ1NTIzZWZkOTdiNjkzZGI5ZjRhYTE3ZGFhYWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1NTg1YzcwYzMwYTM0MWI5OGI5ZjM3MWY5Zjg5NzY2NjEzMGY5MzEyMzUzNGNmMDc0ZjY1MzVmN2NjZTlhYjAifQ"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L157-L158",
+          "version": "repo-lines-v1:sha256:46cd2dac1ac7e1c0f4c3df6f570db49e766595cafdc5318b2b7553258d4c14ba:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGYxZjJhZjYzMTUwNzMzNGJhZjU0MmM5ZGY5OGQ0MzAyZmFhY2UxNDhjY2YyZGZkMWUwZDM3NDZjZGQwZDkxZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWQwZmU5YzcxODMzNTIxNDJkZmRiNGFlZmNkNzkwOTg2N2UzMzc1Nzc0N2UyNTU4NzI5NWI1MGZjODYxZDAwNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmRiOTE0YzVhMjMxOTkzN2E3NWVlMDRlNmM3MDAyZjIwN2RlZjlkZTY5ZjkwMDUxZjk0OGIwZjFhMjliYzc3ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWYyMTg1NzMxMjVjNmEwYTAzOWQ5MzhmMDk0NDEzYTAxOGRmMTQ0MGE2NThlYWU3YWQwZjg2YWRiN2EwMjdhOSJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L59-L76",
+          "version": "repo-lines-v1:sha256:39452e2011cc1d7a836c65633b84e16b6b8bdbce48e0dc9bc9e08c1942732367:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkNjBmZjVhZjkzYjY1ODc1NjA0ZmViOTMwYzBiMjE1YjQ5NzZhNmI3NGYxMGE3ZjRkMzc5ZGRjODU4YzRmOTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ0MjI3Y2E0YWM1NDlmODQ1N2E3YjQ5ZjE2MDVhNDZlY2UwNzQ1NTIzZWZkOTdiNjkzZGI5ZjRhYTE3ZGFhYWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE4MDU2NWExMTQ4ZjVhYzlhMTQ5MDhiMWUxNDM2M2MwNTM4ZDdjMGVjNjA0Nzc0NGI3MGExYjNmYmY0N2Q4YjEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_12e99209dd034ac9ad7eff7dede8a277",
+      "statement": "Widget syncs persist monotonic request counters ('latest_request_id' in 'widget', 'request' in 'position-widget') that are bumped at the start of every sync and re-checked together with the wallet snapshot before each cache write and draw; because they live in MMKV, ordering holds across processes and headless module reloads, and renderWidgets performs a final ownership check inside the native draw callback after Android's asynchronous widget lookup; a 'loading_request' value equal to the current request id marks a refresh as in progress.",
+      "evidence": [
+        {
+          "resource": "repo://src/widgets/renderWidgets.ts#L6-L26",
+          "version": "repo-lines-v1:sha256:45b3ad7a69499a3875e459dc268719d9e1ae4cb722a43ac78be3e3be36ea8e40:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAyOTIwZDVkNGIyNmMyMGJlZjEzZDg4M2FjNGQ4ODA4YjAxNmI2NWVlYWE3NjViMjhiYWVkZmJiNzI5NDQ3MzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2MjY3OTM1ZmM2MzM0NjVkODQ4YjQwYTRlZDY5NjdlN2I3YTMyM2Y4MWNkNTNjMTEwYWUyMTAyOTY4N2FhMTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI1ZGYwZjhkM2NlNTdjZGVjZWZmZmJjM2NlYjUxZjc4YzIyOGY1M2FiZjgxYzZhYzgwOGM2OTY2NDVjYWEyZGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L63-L70",
+          "version": "repo-lines-v1:sha256:8b1c9c1b088f60e2e2515e7232a435c8850d6c6cfa8d29492d682fddb4a44e64:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTU1OGIxZDlmMzIzZjQwZGVjODNkNTdkNTdjNTA2NTFkNmRhZGFhMTIwYjFhOWY5NTgwY2Q4MDdlYzU1MjRlMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjQ5OTA3MDZiZWQwN2ViNTc5ZWQ0Nzk2ZTE0OWVlOTE5NGVkMjY0MWM0NmJiMTYxNmE1OTk4MjU0MWYwMjIzYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOWE2N2NiNjk1OGNiMTA5NDVjMmY2NjZjMDdmM2FiNzIxODc5ZjVkNGIwNjcxNWUxNzIxYmUyNTY2Yzg4ODE5ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWMwN2E5MWNhZDlmYzVjY2Q1YmM5MDg5NmZjMThjZDgyNjA4M2Y2ODc4OThjYzMyNmQ3MmNkZTExZjRiZGJlZCJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L134-L160",
+          "version": "repo-lines-v1:sha256:8a3123d3deb99931da01951854834c3e9bc8fa45afcdd73160d987a843e66cbb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM0MzExNTY5NWVjYjYwZmY4NjFlNTQzYzI5NGVmMzVhYzNmNjE1ZmQ2MjUyYjRjN2U4OGM1YzBmZDNkNjRmYjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1MzU4ZGVhYmE0ZTE3ODRjNGM5NmYxNTEyODE5NGIwMTMyZDdjNzI2YzNkYTEzM2ZiNDllOTczOTNmOTVjN2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxN2NjMDUzMzM4NDJhNTkyNDVlYTU0NDcyOTAyODBmYTVhZDhjNjc1YmRkOGY0NGQ1YTAzYTEwOWU3MGIwNGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVhM2QxOWZiMjdlMmZhODExM2RlMTM0MmRhMTZkNzk3OTYzNjk0YTBjMzEzODc2ZmFjMGQ5NTNlZTU1ODYzM2EifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_573ed9403a1541edb0cae47af7b697e7",
+      "statement": "Each position widget instance persists its own selection under 'selection:{widgetId}', storing the selected position address scoped to the wallet snapshot; navigation is local (no fetch) and reads the latest snapshot at draw time so a tap overlapping a refresh neither cancels the fetch nor loses the choice, and deleting a widget removes its selection.",
+      "evidence": [
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L106-L115",
+          "version": "repo-lines-v1:sha256:dd19a4e8dff541205422816081f8f0f22089e1aa5ff0f93accd501a43e67be97:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgyM2ZiODkzMTlkNTE1NDBlYWVlNjQyNTNkYTg1ZDViZDM4YzI3OTIzOGFlMjQ0OThmNTY1NTgyNDAyZmIxZDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNhN2RhNzdjZGU2OTc3ZGY5MDgwZTc4OGIzMTljMDc0MzRkMzliZTgzZjU4OGM2NzEwY2M4ODc3ODc5YzhlOGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjEzOGYxMTNlYTE4Y2E4NjFhODdkYWMzNDMxNTgxNjEzOTIyZWM2YzRiZTI0MDA0Zjg5OWRiMzBiNmZlOGFiODgifQ"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L182-L205",
+          "version": "repo-lines-v1:sha256:aa51d7a9ce9b8b86f697db506291d623d0a98ac94ae353f2136eeee696f81362:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4NmNiZGZiNmU2YzE4ODliMzBlNTk3MTkyNjBkMzBmMDFlZjk5MTNhYzA3Mjg2ODYxODM0YzEwYTFhODYwNTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVmNjliMDljMWZmN2E1Mzk5YzcwNDYzODE5YmI4MmVkNzk1ODdkZjc4N2Y3MTkwMTEwNjdkYTkyZTRhMzIzYTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/widgets/syncPositionWidgets.tsx#L78-L96",
+          "version": "repo-lines-v1:sha256:0832520af6f3519fc9cd380587dae7b602047c20aaa8b30e64726b269b0aa377:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0YzlhZDEzNjkxNzA4YjgwMjY2NWY5NzY1ZmNmOWU3MTAyYWU5NmIwOTMyMWY5OTJhMWQ5NGM5MTJkMDJmMWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ4MDAzMmZkZGViNzBmMTg0NjBlM2JiZGEyMDRmYjg3ZmVkMmU4ZTQ1N2FkZGFkOGFmZDc2NTA1NGY2NGRhODMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4ZTIxNTM5YWNjYzU5YjI2YzlmZmViMGU2MWQ1ZjRjYmMxZGU4YjFlMjVkZDUwNTM0M2RmMjA3NTdlYzI1OWYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_831927b8008d45699eff04e9f3997d13",
+      "statement": "CacheManager is a lazy per-JS-context singleton (createFresh for tests) holding TTL entries and an in-flight promise map for dedup; it is deliberately never persisted and never crosses a process boundary — a headless run importing the pipeline starts with an empty cache — and it is owned by the data layer (createDataServices, PositionPipeline) with TTLs from src/config/cache.ts (token data 60s, OHLCV 60s, per-pool PnL 15 min), invalidated per wallet via PositionPipeline.invalidateWallet.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/cache.ts#L1-L5",
+          "version": "repo-lines-v1:sha256:db8dfc4f1feeaa4638cbb6682e9e2fb3737ca7ea8628de323d1660de65cefda4:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTQzZTIzZDc0YTZlNDQxNzllMGJmZDRlZTk0OGRjNjUxODBmOGVlNTA5NTAwMjM3OTA1YmM2NjIxMjRmOGRiMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/services/data.ts#L40-L41",
+          "version": "repo-lines-v1:sha256:1b252dddae8da2e9a8cddec4ce1f30a3dde0870390f431129ba2f9aeab455b87:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQxMzA1YjIzNDg1NGRlNDBhMTYzZDNiOTc4ODQ3NDk2ZTI4MDUzY2Q2OTFhZGQxOTQ4ZWM3NTg1YTJiZTg5OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTg3MjUxOTdiMjI0NWFmNTNiYzRiZGY2N2EwOThkZTljYWEwNzJhMDhmMGY4OTM5OTE4NjE2MmNiNjk2NzkzMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmQ4OTIyNzFjMWE5ODYzZTllN2E2YTI4YmUwOGFmMjg0MjgzMzhhYTA3ODQ2YjgwMDc2NWQwYTk3NDA3NmNhZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2IwNjE0MDBhNzMwYzM3NGY1MTBjY2I5ZDBlZGY2OTA2NDU0NDU2ZWIyYzhhODJhZGY3YjRlOTdhYTBlMjQxZSJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L187-L193",
+          "version": "repo-lines-v1:sha256:6d764c6ce62146bdf8e30befda46e423b40f1851ff4880562c4c06347d31f4ec:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGYyYTJmOTk2ZjA4ZTY4MGJkMjkyMTM1YTZmYTQ5NzhiZGEyNmU2MDJkODRmMzNjYjFkNTk0Nzc1ZDQzMDRiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTdkODYzMmU1NGU5Mjk4YWJiOTU4NzI3ZTJkNTE0MDhhYmFmMTM2NjAzNTM3OTEwMTQwYWJmNjViMzBhYjYxMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWIxNTU0ZjNjODc3YWMyMDA5YTA0MzQzYTBiZjgwMDE3NjYxMGQ1NzhhNzlhZTFiN2Y2ZjE5NzlhMmVlY2NjYyJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L91-L93",
+          "version": "repo-lines-v1:sha256:4be1f94b898f42132a8c9465cf43603b4882a3e0ea51b40984e1b236a73e6084:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTZiMDgyMDAwNWQ2MmIyNTQ0YWNkNTYxZTg0MWJlNGY2NDJkNmViMWY0MzYyYWU1N2Y1MzI0NDgyZTY1MWYzMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWEwZTk4MTVhNTVmZDExNDkwNjNiYmY4OTQyZjU5YjBjYmY0MjdiYmE1YWI4YmNkZTA0ODVmNmJjZGNiM2ZmMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTVhMDdiNTkzMWZiNzRiZGFmNzgwNzgxZDBlN2Q5ZDgwZGMzMzIzNjZiNzgyNTA5ZWYyMzlmODkwMmUyNGYzYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDkzODllYzM0NDU4YmI1NDMyZjg3ZGQ3MmQ0YjQ1NTM0ZjJkM2FiMDAwNDk5MjkzMTJiZmE0NmFlZmMxNGQ3YSJ9"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L6-L26",
+          "version": "repo-lines-v1:sha256:46d8328f52cea7dc08eae11f54f2bdb3254f6ff24e934b06fcc005124f76a3fa:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhiNGUwYjhkOTkxOTUyZjZiZmEyNjZhMGQwYTA2ZTdlOTkwODNlYWNjNjRhMWMyMGFmNjdkYTVlNzBiZjJhMGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ5ZjdiMWM4ZGQ1MjA2N2JmY2E0NzFiYzQ5ZjYyMzU5NDM5NDY5MmZlNzZmYjUyYTgxZTdiYmNhYmUyNWUxNTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkwMzllODVkYjU1N2VlNDE3YTk2NDZmNjkyNzIyMDUxMzExNmNlZTVlMDliYTAwM2JhZWQyNDgyNjczYzU1YzEifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

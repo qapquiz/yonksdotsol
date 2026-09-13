@@ -1,0 +1,302 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:bd91475c59982378d265e286b105772ac5195c56aec6a7ba3a8052774c037dd9",
+  "claims": [
+    {
+      "id": "claim_5537df0da90d47f2b13246fb68cb2a78",
+      "statement": "CacheManager state is two Maps on one instance — `cache` (key → {value, expiresAt}) and `pending` (key → in-flight Promise) — and every operation treats them as a unit: `set` writes an entry and deletes the pending promise, `delete`/`clear`/`invalidatePattern` remove from both, and `get`/`has` return misses for expired entries.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L39-L96",
+          "version": "repo-lines-v1:sha256:b4e76daa23346628b95c49e3e7b20ff1d8fe7dc78152f74b25567041fe0b17d2:eyJzZWxlY3RlZExpbmVDb3VudCI6NTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg4MzkwMjdmYTQzYTE3MTk0ODFlOGE4ZjQ4OThhZjQ5MjMxMzUzYzY2Y2IwOWE2ZTJiZjVhMTgxMWVlODJmMzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMGVjOWI3YWQ3YTFhZDk3MjVmNDM0YmM3ZjFlYmM3NmIwMjU3MWVjMjgyOTU2MmUxYzdjNjc1ZDhjYmM0MjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFmZjZlZDZmYzYwNWFjMWM0NDY4YmI3ZGMwYmM5OTkwN2U0OWY0MTdhODU5NTEyYzQzMDU5ZTIwMDYyMmRhNTkifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L6-L67",
+          "version": "repo-lines-v1:sha256:a670167ea2f3631e1f1dca902c2d1ba7161e577a93fe0b8bd38562b3dca22653:eyJzZWxlY3RlZExpbmVDb3VudCI6NjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhiNGUwYjhkOTkxOTUyZjZiZmEyNjZhMGQwYTA2ZTdlOTkwODNlYWNjNjRhMWMyMGFmNjdkYTVlNzBiZjJhMGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ5ZjdiMWM4ZGQ1MjA2N2JmY2E0NzFiYzQ5ZjYyMzU5NDM5NDY5MmZlNzZmYjUyYTgxZTdiYmNhYmUyNWUxNTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ3ZTViNDA5NzcwMjkyM2YyY2Y0MDQyYWE1NzE3MWNmNDhiNzY1NGQ2NTYxMjBmYWQ4NDRiM2M2MDRlNmJkMmQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_12e12b2ca89541d683f28aef3455b726",
+      "statement": "getOrFetch deduplicates concurrent callers: a second getOrFetch for a key with an in-flight promise joins that promise instead of invoking fetchFn, so one fetch serves every caller.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L205-L223",
+          "version": "repo-lines-v1:sha256:00edf149774f1ce917c4a41649d664869d9ba1d0539473b5401c6e865fa7f0f5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRiNmQxY2RlOTlhYmRkYzk5YmViMzE5Y2RlNDI5YTk4NmI1ZjQ3Y2FkNjdkNDg1NDdkNDU2MmFmMzY1ZjhhMzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4ZGM0YTk2NjE1NWRkZTgyODNkNTRjZmYzMTg0MGJhYzYwN2ViMjJhYjJhYTZhNDhiYTU3ODI5NzExZDAwYTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFhZjAwM2UwMWQwODVjOGIwMDMzODdhMDZiZTUyY2UwM2I0OGQ4NzYxNTYzNzQ4MjZkZjdmMjZlN2I2NjM3ODQifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L76-L105",
+          "version": "repo-lines-v1:sha256:c1118a0ac90b57604e7d1c6b37e4fa69c64b6d52256052c3e4720015c89c8224:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU3ZDc3MDY1NzEyNjhjZTEyMDc4ZDA0NDllOTNkMDdjOTBjMzIzMGU0ODFjNWQ3Mzg1OTJmZDA3NGYyOWMwYjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlYmY1ZDQ2NWMwZjJmYjYyMmExZDMyMjY4OWVkN2JmMWE4MmFhYTNhZjYxMTRhNGI0MGI4YjQzYWFhYTAyZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgxNmMxYTZjMGY2ODQzODEyYjhiYzE2NWI1MjZhYzIxNWUxZDYyMmM0MmRkMjc4NTM5NTkzODEwZmQ3ZjJjYmEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_940cb062dabe4dc5a15a0bda3b341951",
+      "statement": "The fetch promise is registered in `pending` before fetchFn is invoked (via Promise.resolve().then(fetchFn)), so a fetcher that throws synchronously still deduplicates — concurrent callers share one rejection — and because settlement clears the pending slot, a later call retries rather than reusing the failure.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L231-L255",
+          "version": "repo-lines-v1:sha256:027a2e7d2c0b1df847e3f8d200ea30efd0c3f589655766c4c201f11c30dd0997:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0YzFkOGM5ZmE1MTMxZWU2Mjk1ODgxN2U4NzhiYzkwMmNkMWExMGRiZTg5YWIxMDVlMjdlZDRiMWI2NmMyZGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI5MWZkYmMwZTdhOWFhZGRiN2E0YjEwMTQxMzVhYmQwMGQ3M2RmYWZjOWNkZWM1MWEwMTNkMGIwMjEwN2Q2YzciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI0MDJiZmFiNmM0M2JmZjQxZTg4MmI1ZWQyYzk2YWNhOGQ2MDM5Mjc3YTNlNWZkZWY2OGQxNjQxZWVhODhmNjMifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L88-L104",
+          "version": "repo-lines-v1:sha256:5cac30c19e60ff21f68407621af807ec73bdcb55eeb211995ea6f9bab685fe3f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJiNjc2NWM4MDE4MDYyOWM0YTQyYzAyOWMzMmZiZWM3NDg1NjkwZjA5N2QwYmMxZTYzZDA3ZWZlYTA5MWRhMDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYzMzllYTNkNDlhNGI2ZGQ5ZDU1ODk3ZjdkN2MzNGIyYTY3MWYyY2Y5NzM1YWFhNzIzNmMxZGI0ZGVlNzIyYzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3MGVhYmI5NDhhZmU3ODFjYWU2OTM3NDI3NzQ0OTQ0ZjZkYWU4Zjc4MTAyNjA4NzQ2ZjE3Y2U5NTIxZWJjNGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFiNmIwZmY4ZGFiODg1OWE0YjMwMDhlYTExMzM3MjRmZDg3MmQ0MjQ4YWM1M2U0NDEwNWNmN2EwN2M1NjdiZWUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d6a028cd62d64e638ad17e709b57e6fe",
+      "statement": "Only a fulfilled fetch reaches the cache: a rejected fetch propagates to all joined callers and leaves no cache entry (so the next request retries cleanly), while a fetched null IS cached for its TTL because getOrFetch checks entry existence rather than truthiness.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L163-L174",
+          "version": "repo-lines-v1:sha256:d9e24d1f1d0e06476a545b5d2c68db1862ef6e3e2152e991848a1c22df1b25ef:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZmNWNjNjgyZTg5NjhjYzU2ZWU0Mzc1ODMwNzNiMjU2ZDAwMGY1NjU5NWIwNGU0NjRiZGI0Nzg0ODNkOWQ2MGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMyY2Q1ZjYyMDA4NzQ1ZDY1ZjM5MTc4NGI2NzcwMzUwZDgwYjQ4YTI0MDc0NjAyMmJlMTk3ZjczODM3MWUzYjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRlNThkOGIwNjQyMzFjYzQ4YWM4NDY2MGE3YTllOTg1OWVjNjkwNWZkMWU0YjU1YmFkMjVkZDZiZDUzYzc4OTcifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L225-L229",
+          "version": "repo-lines-v1:sha256:a125932a2b602ce49f5676ec27dde735b7414a6b1cfa666bc24878a0b85fd328:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjE2ODFmNzkzN2Q2OWI0ODc4MGJjM2ZjNzk1YzVhMGE3ZGE3YTU2NWU2ZTFiN2M3YWFhMDVjOTkxMWQ2ZDE4YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ3NWU5NGE5MDRhYzQ5YjMxNTRkNDY3MmE2NmU4NjI5Yjg2ZGFjNzRlM2UyOTM3YmU2OTI3YWUzZGExMWM1MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmEyM2I2OWRlNzdiZTA5YTJkMmNhNDAxNDVjNzZhNGExMmY4MmNkNDMzZjYxMTNkNmYzNDk1MmYzMDg4ZDdkZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODVmYzE3NDc2MDY1NGJkY2ZlNzJkYTZmMmNhY2I5ODI0N2FlZGM5OGMzNGVlNzNlNjg5OTA0ZTVjNjllYTk2ZSJ9"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L77-L104",
+          "version": "repo-lines-v1:sha256:eeaaba06e51cce4ba1a91fd98dd31d576284047a9e969c07c4cc329b1c6281e9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRlOWUyODFmMjYyMDFmODk4M2EwNGNkMzQxN2FhYTZiOTJhMGRmZmRmMjVkYTRjZjRjNTY1M2ZmYWE5OGZiMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYzMzllYTNkNDlhNGI2ZGQ5ZDU1ODk3ZjdkN2MzNGIyYTY3MWYyY2Y5NzM1YWFhNzIzNmMxZGI0ZGVlNzIyYzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc1MTc3OWRhNjgzMWEzMmM5ODE4MDE3Zjg5OTlhZTAzY2YxMmI5ZGVjYjgxNmE2NjM5YjM0ZWJmMWVmMTJiYTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFiNmIwZmY4ZGFiODg1OWE0YjMwMDhlYTExMzM3MjRmZDg3MmQ0MjQ4YWM1M2U0NDEwNWNmN2EwN2M1NjdiZWUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_afaa5613d4c548eb998bb1a6ca166c9e",
+      "statement": "An explicit `set` supersedes any in-flight fetch for the same key: it deletes the pending entry before writing, so a late-arriving response from the superseded fetch cannot overwrite the explicitly written value.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L317-L329",
+          "version": "repo-lines-v1:sha256:af9c2d2b8511e7a0faf0cb2cf1ba4f5516822bb8de318034d1b70c589de9df32:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJjMjBjMWI4NzNmYThlNjAwMzdhMWE4YTMxMTAxNjFkOTBiNmFkMjQ0ZTM4YTY4NmU1N2M5MGQ0ZDBjOTg3NWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEwNjQ2MWI4YTI1MGZhY2YzMWU0MzA4MjFkNTEyZjYwMjYzNzYyNzkxYTdmZjQ5ZjU5M2VhZDM2MzI4ZmZkNjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUyZDRiNWU4NTVmMGVlOWM5YjRmODRkYmQ5OGYxM2M1ZGYwNzdkZTMzZWFhNTYwNjE0YjY0MzE4NjcwNDUzMzcifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L371-L380",
+          "version": "repo-lines-v1:sha256:e79887c96f3de473f742fcca1d903c407d12f82bfdb0cf1844726800c24f6fa1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0OTc0MTc3YzQ0NWVhN2ZlNmFkNGE3NzY0ZGFmMWQwMGNjMDkxMTIwYmVkOTRlZWZiMjUzZmU5ODZkMGRmODgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZhZDRkZDMyOWI5ZTc1YzVlNTdiNDRiYzAwNjg2OWE2Y2NkYTNlMTA5MzM2ZjJjZGYyYTYyZTExNzg3MTkyMmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L33-L44",
+          "version": "repo-lines-v1:sha256:39d4d4e2dec3475b151bee92d8af5e44b373ead8539a677a0a0835167123a9f9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUxY2VlMDZmOGRmZDUxYjhmMWVjMWQwYWYxYTVlZjNjM2JkNGE5N2U2ZTRlNWM2MWJhNzg3YjEyYWEzZDg5MjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFiODAzMTY2Y2VmYTU4OGQwYTVhNzFmNGEyNTQ3MGIzODFlYjIzMmNjYjFlNjczZTc3MTgyZTcwMDkxNzE0M2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY0MzcwOWVlMGE3M2YyOWJhMzJmODY1NDdmN2Y3MDVmNWE4OTk3OGRmNzFlNzI4Njc5NmU2NmMzYmY2ZDY1N2UifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_bc3a398d069540dab1bab313e9265874",
+      "statement": "Invalidation during flight (delete, clear, or invalidatePattern) detaches pending work: the original callers still receive the detached promise's outcome, but a post-settlement identity guard (pending.get(key) === promise) fails, so the late value can never repopulate the cache.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L279-L298",
+          "version": "repo-lines-v1:sha256:4ef263e059d2aa01e61831cc1154292b0c639ca30c7960d9c760cc045848253c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY5ZjQxNDZkYjVlOGM1OWQ4ZGU2NDcyYjkwN2Y2ZGIwMjNiNTk2ZjdlZjhlYzRhYTE1MTcxNGY2MzRmNGZlNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMGVjOWI3YWQ3YTFhZDk3MjVmNDM0YmM3ZjFlYmM3NmIwMjU3MWVjMjgyOTU2MmUxYzdjNjc1ZDhjYmM0MjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwMDc2ZTc1NDFhMTZhNDIyMWJlYzkxMDNlZDExZTQzNjFmZmM3N2YzZjYxYjA1YTkyZjBmMDQ0NjkyOWMxZDQifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L50-L67",
+          "version": "repo-lines-v1:sha256:08c669b4745cf3da8d7342438b8d33614040004b32603fad0d62ae0a84487802:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcyOTA5NzA4MzExMmFkNzU5NTljMWNlNjFkZWEyNTNkNmY5OWIyMWJiZGZiMGNiZGEwYTAzODU2NDZhYjUyOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQwNzA3OWI2ZWEwZTcyNWYyMjllYTk4NTJiY2Q4N2QyNWNhZWVkNDM5NzZhM2NiOWU3N2U5ZWFjOTY1OTUyZTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ3ZTViNDA5NzcwMjkyM2YyY2Y0MDQyYWE1NzE3MWNmNDhiNzY1NGQ2NTYxMjBmYWQ4NDRiM2M2MDRlNmJkMmQifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L89-L101",
+          "version": "repo-lines-v1:sha256:0cea475b89267165ca6610ca13d22d015ba65e8718ad63eff99c2083eb15d662:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4Nzg5ZGYxZDFmMTg0Yjk3ZTY4NDlhYTE3YWI0YjU3NDYwNzEzNTc1MGQxMTYzZWUzZmFiYzdkNzYwYjQ5ODMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MzU1MmFiNTcxNDk0YjM5OWIxODE5OTYyMmRiZTNiMzgyNmViNjFmY2QxZjc0Y2ZiMTJhYmNmODhlNGY3MjYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3YmNlMGQxZTVkMTkyODk5NjdjYmMzMDdmMjM0OTk5NjI5MTI3YWIxZGQwZjEyYzg3MDk4ZWMzNzE0ZDQyMGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNkM2U3MGY4ZGJhMzhiMTYwZDE5MmVhOGZmY2E3YjlhNzIwNDVkZTk2NzFiMDczZGZmYTY5OWM0ODRhMzk0ZTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_99619b77438742e8bba3caa35ed5cdd0",
+      "statement": "A getOrFetch started after invalidation launches a fresh fetch that owns the pending slot; the old request's settlement — whether it resolves or rejects — can neither overwrite the fresh result nor detach the fresh pending entry, so callers arriving after the old one settles still deduplicate onto the replacement.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L300-L354",
+          "version": "repo-lines-v1:sha256:6a6b31df1790f2da34903e8def2e11e17b17b4e9b6770b719b20280d4b521ae0:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU0MjA0ODY5ZGI3ZjFlOTJhNjY3NGJmNjc4ZGY1NGY4YzdmZGUxZTllNWUyMTFkMTU3MzIzMDdkNDIxYzg4YmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwYzFmMTg4ZjE0MmVkN2E4MjQ2ODBiMjA3MTcyYzU1MTliYzYxNGE0OGZkYTdjZjE2N2VkYjhkZGY3OTk1NmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRhZTQ1MDljZjM4ZjUzYTZlNDA0M2FiODA4M2Y4MmFjYjI2NGZhMTc2MmMxNmMyNjZlODE4N2YxNGQ0YjY3YTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQwYmQxNzZhNjhmOGQxOTUzNjk2ZThmNTMzODlkM2NhMjBhOGE0MjRkNWI1OTUyM2Y0OWE2NjczNGJlOThlMDMifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L91-L101",
+          "version": "repo-lines-v1:sha256:887ced4d2718092ed958c13d168dbf2ba1adb22aa1b8e226eb8913f7e732b418:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliZGY3NDhiNjFmYTMxYTQ1NzBlYjZlYWQ3MmE3NzlkMzQxMzQ3MTA0ZDA1NTBjYjk1NTVmMGY1M2QzNDkzZjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MzU1MmFiNTcxNDk0YjM5OWIxODE5OTYyMmRiZTNiMzgyNmViNjFmY2QxZjc0Y2ZiMTJhYmNmODhlNGY3MjYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNhMDk2M2VhODY0ZjlmYjY2MGE2YjZlMmY2MTdkOTBiNjNkMzIwYmJjYWM5Y2VhMDIxZThjNTkzNGMwZWRmNDYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNkM2U3MGY4ZGJhMzhiMTYwZDE5MmVhOGZmY2E3YjlhNzIwNDVkZTk2NzFiMDczZGZmYTY5OWM0ODRhMzk0ZTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_00ca2784f0b247c9bd86864c7fc1ddef",
+      "statement": "invalidatePattern(pattern) substring-matches the union of cached and pending keys, so keys that exist only as in-flight fetches are invalidated too, while non-matching in-flight requests keep their pending entries and continue to deduplicate.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L279-L298",
+          "version": "repo-lines-v1:sha256:4ef263e059d2aa01e61831cc1154292b0c639ca30c7960d9c760cc045848253c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY5ZjQxNDZkYjVlOGM1OWQ4ZGU2NDcyYjkwN2Y2ZGIwMjNiNTk2ZjdlZjhlYzRhYTE1MTcxNGY2MzRmNGZlNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMGVjOWI3YWQ3YTFhZDk3MjVmNDM0YmM3ZjFlYmM3NmIwMjU3MWVjMjgyOTU2MmUxYzdjNjc1ZDhjYmM0MjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwMDc2ZTc1NDFhMTZhNDIyMWJlYzkxMDNlZDExZTQzNjFmZmM3N2YzZjYxYjA1YTkyZjBmMDQ0NjkyOWMxZDQifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L357-L369",
+          "version": "repo-lines-v1:sha256:8a077bce0c82048a7d79e22be77aea2a3d9e995a4bf33524bce080949dac0982:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2MGM3MmZhYmRlNWMyMDNiMmMxM2ExOTRhZjg3YTIxMDAzMDM4NGE0YjdkZDI3MjVmNDJjYjM4ODA3ZWVkYmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFjNjQ1ZTIwZGU5MDUzNTE3YzUxZGNlOWI3ZDczMzc0NDMxYTMyYjgyMGUzZDhjYTJjZjM1MWI3ZDdjZWUzZDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUyNDcyZWVmZDQ5M2M4YmMxYjY5NjU2NTlmY2UxOGVkYzhjNzAxMDJmZjI2ODgwZjQ2NWNkMGI5ZDQ5YTBjYTQifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L61-L67",
+          "version": "repo-lines-v1:sha256:5dd99cf10fe72cd6fce9ec8f084ab3810855884b40cbd26c99e9227044e9a190:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDIwMWI5ZThiZTVlNzc0ODNmM2NjNzE2Yjk4ZmUwZWY3OGRhNTlhYTNkNjg5NjBiOWIzZjQ4YzdkODA1MTZjMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzk3NzYzNTRlYjA0YmQ3ZTc1YTg5NTVhMDA1NDQwMTQ0ODdhODY0MmJjZDljYTMwNDNiNDhjYjBlZjlkMjEzYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDdlNWI0MDk3NzAyOTIzZjJjZjQwNDJhYTU3MTcxY2Y0OGI3NjU0ZDY1NjEyMGZhZDg0NGIzYzYwNGU2YmQyZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a7ffe94d18a0442f90751183093eea84",
+      "statement": "Expiry is inclusive (dead at Date.now() >= expiresAt, so a zero-TTL value is never retained) and lazy — paid on read — supplemented by a counter-driven sweep every 50th read/write that evicts unread expired entries; pending promises are never swept, only invalidated or settled.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L81-L96",
+          "version": "repo-lines-v1:sha256:37bc7b3717e7920c933a7fa048f0f8d16d7177dfb078d44a06707c556b1c3e9b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjZGFjMGUyODU4ZDcwMzQzZjMzYjdmYTY5NzZmNGNkMDk4YzM2ZmFjMjAyNzRlODc1OWU4NTMyZWJjNGU2ZTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwYzhhNTZlMDY5MTQ5NzU0NjI5ZDUwOTViMTI4MmU4OGIwMjE4MWFlMWY5OTNmYmUwM2Q5MDE0YWYyZjVjM2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFmZjZlZDZmYzYwNWFjMWM0NDY4YmI3ZGMwYmM5OTkwN2U0OWY0MTdhODU5NTEyYzQzMDU5ZTIwMDYyMmRhNTkifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L10-L12",
+          "version": "repo-lines-v1:sha256:7abf2d677329f8736ceeca62411b76ff8abe556b38748a3da37a74e7134b5bd5:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGI1YmM4MzY0M2M3ZTQ5NWZmMzk2M2ExODQzYWRhYjFjMDhiNjkxYTdlZGJhODhjMDk1N2M3ZmYzOWE5Y2IyYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTFkMTcwYmRlMmJjYjlhMzE5ZGM3ODJmMzNkODM4YzQzMmQ3OTM4ODYxNWJkZGUxMWFkNDVjYTNjMjgzNjY2MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWM0ZmIxYjgyZDEzN2I4NWUyZjdkMmU1NTg5ZmVhOTE5OTM1YTY1OGI0NWFkMTMxYzhkYzQ1YzhiMWIxMDk1OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNThiZjhhMzZjNWFhOWRhMGE3OWMxMTVkNWFhYjM2ZmU5OTNmZDBiMTI5NmNhY2FmNjI1OGZlNDZjOWZhMzNlZCJ9"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L107-L139",
+          "version": "repo-lines-v1:sha256:ef31c183dbe1e0b1fb1dd8785a61b8fbfc709dcabb0679c853a2ea558c035bf7:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMjlkMzg3MTViZmVhOWNjNTY5YmJkZDNmNTY4NWUyNjljMDYyMzJiN2FhYmY4ZWY1MmFjMmU4OGY3ZmZlODEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFiZDliZDM5NDVmNjQzZTcyMGQxZjU3OTk4Njk0ZjhkNjUyYTE2YjFhOGZlNzM4YTRiYThmNmRkZmU2NmQwN2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_04fdf520ffee4067ab719db6a2cf2129",
+      "statement": "CacheManager has a private constructor split into two creation paths: getInstance() returns a lazily created process-wide singleton that is the production default for createDataServices() and PositionPipeline, while createFresh() builds an independent empty instance that tests inject through the dependency seams (createDataServices(freshCache), createPositionPipeline({ cache })) for isolation.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/data.test.ts#L37-L48",
+          "version": "repo-lines-v1:sha256:6208056b795f7328b976eaf09b97deb6e9349c07e9426c56ebee6b83a5cb5032:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhNjU5MmNlNzY1NWJjNDdlNTdiNTg4OWU0ZWQ3MjQ5OTIwODdhZWE3NDY2OTZkNmRiMjQzYzgyNzdkOGE2NjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc3YWI2YWJjOTk3M2Q5NmYzMTdhOGIzMjk2MDc2N2UwMTdiNTNjNDgxYzEwNjVjNzIzZTNjODY4YjYxN2U0OTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY4ZmQwNmFmMzVhNTRhMjIxNTUzMDdkNTY1ZTdmNDMwNDJmODFkYTdlNjRiODNiNzUzMjIyMTVhZWQ3MTljNTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjMxY2MyZWViNjBiYzIyMDdiNzJmZmM3MTA5MDA5MmI3MmMyZTVjYWY5NTNiYzNmZTVlZDhmZGE1NjIwOTg1MjQifQ"
+        },
+        {
+          "resource": "repo://src/services/data.ts#L40-L41",
+          "version": "repo-lines-v1:sha256:1b252dddae8da2e9a8cddec4ce1f30a3dde0870390f431129ba2f9aeab455b87:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQxMzA1YjIzNDg1NGRlNDBhMTYzZDNiOTc4ODQ3NDk2ZTI4MDUzY2Q2OTFhZGQxOTQ4ZWM3NTg1YTJiZTg5OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTg3MjUxOTdiMjI0NWFmNTNiYzRiZGY2N2EwOThkZTljYWEwNzJhMDhmMGY4OTM5OTE4NjE2MmNiNjk2NzkzMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmQ4OTIyNzFjMWE5ODYzZTllN2E2YTI4YmUwOGFmMjg0MjgzMzhhYTA3ODQ2YjgwMDc2NWQwYTk3NDA3NmNhZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2IwNjE0MDBhNzMwYzM3NGY1MTBjY2I5ZDBlZGY2OTA2NDU0NDU2ZWIyYzhhODJhZGY3YjRlOTdhYTBlMjQxZSJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L91-L94",
+          "version": "repo-lines-v1:sha256:0c70b2f88255dd2e62ae04bfc634c070e67f83a0723103568bd937d628b9ae6b:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTZiMDgyMDAwNWQ2MmIyNTQ0YWNkNTYxZTg0MWJlNGY2NDJkNmViMWY0MzYyYWU1N2Y1MzI0NDgyZTY1MWYzMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjgxZTg3MzRhNzYwZjc1ZTdkMmI2YjNmM2RkZTRkNWE5YmUzZWRhMGJlZTE5MjM5MmViMTg0YmY4YmY5ZGVhNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTVhMDdiNTkzMWZiNzRiZGFmNzgwNzgxZDBlN2Q5ZDgwZGMzMzIzNjZiNzgyNTA5ZWYyMzlmODkwMmUyNGYzYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2YxNjFhNDI4MjdiNjJkNDliYjgzOWM4YjdhMjRhY2M5YzdmNWI2MGQ1MTEyOTlmN2RhY2MxZjZlYWNlMmI1YiJ9"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L14-L26",
+          "version": "repo-lines-v1:sha256:04f1cebbe107174a4cca5dec127ccff7c2450882cc48990c168505a50e830b12:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjYWJmZDQ3MGIxNmU5MDMwY2RlYTRiYThiZDkzYjU5YTM0N2UzZmIxNjAxOGE3MmVmOTZkM2I2YTUxOWJhMDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI4NDVhNDY1MTlhNzg1ZjE1NjBlOWQ3ODE2OWE1YTkwN2E3MDZiN2VhMTZhNDhlYjI4NTg1Mzc5MWY0Mjg0ODEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkwMzllODVkYjU1N2VlNDE3YTk2NDZmNjkyNzIyMDUxMzExNmNlZTVlMDliYTAwM2JhZWQyNDgyNjczYzU1YzEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_479c7b6ed9e444f38abbe21271878d3f",
+      "statement": "CacheManager state lives only in in-memory Maps and is never persisted, so each JS context has its own cache: a headless widget/background sync that constructs its own pipeline starts empty and re-fetches, seeing nothing the app process cached.",
+      "evidence": [
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L34-L35",
+          "version": "repo-lines-v1:sha256:80f1e0ed1e47bb80df5cbf592bf7223c7c01ed0ec4c4c062cd431e661b367e2a:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWVlNzNhZTNhNmY1OTAzMmExZDNhZDY0NjIyNjJkNWY2M2NjOWFlYzY1NWI2OWQwOGJlZTVhM2ZhYTRjZjdkNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNmNmMjhmZTVhZTQ5OGQwZGI2ZjJmODFkMzEzY2FkZDIxM2FkODhjNDBiMjEwYmNkNDk0YWEzZWRhZjJhODJhOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmEwZjY5MjcwMDg0NGU1ZGQwYWYyMTE4ZmVhNGQzZGFjNmQ5ODg2ZGU3ODc5YWJlMjNiNWQ2NDdhOTYwYjQzMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODAzNmE4YzhhNDk4MmY5M2M4NzYxNjdiOWU2M2JlYmQxZDVhN2FlNGI4OGYwMjU0OWZhM2M0ZWUxYzdiNmExOSJ9"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L7-L9",
+          "version": "repo-lines-v1:sha256:ac4fb1b82d137b85e2f7d2e5589fea919935a658b45ad131c8dc45c8b1b10958:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTRiYjljOTZlNzdhYzBhMjc4NGRmYjFlOTI5Mzk2YTNhYWY4ODdjODk0OWEzOTc5ODAzZjYwYTVmYmUyYmNmMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTNjOTFkOWIyYWQ0NDUxOGRjOTk4ZGE4ZmIwNjYyOTI5MWQ5MWQ3YzIzMDEzODZmOWQyNmZkMDg0MGQ3ZjQzMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTc4YjRiNmM1MTQwYjUwZDc0M2YwOWFhYzZkMzgwYjI3Mzc4ODc1NjgxYjc2NWVhMzU3MmRjYWJmOTA1OTFhMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2FiZjJkNjc3MzI5Zjg3MzZjZWVjYTYyNDExYjc2ZmY4YWJlNTU2YjM4NzQ4YTNkYTM3YTc0ZTcxMzRiNWJkNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f11ad1dfdab4474ba11fcfcd74ba58c7",
+      "statement": "Production caching uses three key families with TTLs from src/config/cache.ts: token_data:{mint} (60s, CACHE_TTL.TOKEN_DATA), ohlcv:{pairAddress}:{timeframe} (60s, CACHE_TTL.OHLCV, display-only per ADR 0001), and pnl:{poolAddress}:{walletAddress} (15m, CACHE_TTL.UPNL_PER_POSITION); every production call site passes an explicit TTL, so the CacheManager's 15-minute default applies only to ad-hoc writes.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/cache.ts#L1-L5",
+          "version": "repo-lines-v1:sha256:db8dfc4f1feeaa4638cbb6682e9e2fb3737ca7ea8628de323d1660de65cefda4:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTQzZTIzZDc0YTZlNDQxNzllMGJmZDRlZTk0OGRjNjUxODBmOGVlNTA5NTAwMjM3OTA1YmM2NjIxMjRmOGRiMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/services/data.ts#L8-L14",
+          "version": "repo-lines-v1:sha256:7c6883779e8e0eb2dcf549cd35f3d93482880ca7ae5707757077c15d04b04da8:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQ0YjUxMzkwYmE0ZjE4NTFhYTVhZjY0ZDM3YTRiZTg3ZDhkZTcwNjYyMGViMjQzN2Y4Y2JhMTk2NGJjY2NhZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI0MjQ1NzcxMmU1NDU0MTFlYmMwYzBhYTE1ZjM0OTYyZTY4NGE1YzRiNTYyOWU0OTA5MzY1YThhZjkzZjljOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2E1NWI4ZDRhMWE3NWY4NTU0MGQ4Yzc2ZjExZWRiZjBkZTdiYmNhMzc3YmQ1ZWQ3NzU4ZmY3YjBhOTZkMjdjNiJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L79-L81",
+          "version": "repo-lines-v1:sha256:da34bd09ddfc08bff7aef913098f0ddd628d7227be6b7ac5fc63778b2319aebb:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTI5YzY0MGQyMjJiOWExMjM4OTNiMDliMzc5ZmE3ZDgyMGY2ZmJhY2FkZmQ0NDEyYzAyZDhmNDg5MTRkNDdlZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGM5NmI1OWNlODJiZjZmNGRiYzdiNDI4OGJjMTAzM2M3YzJhZTAyY2JiMmMyMzQ5MTlkNGZjNWE0OGExYzBjNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTc3YTYxMTMwYmI2ZmM4NmJiMzFmZGVlYTJlOGQ3YmQzNTI0ZDI1MGUwNDYyYmQxNGVjMDg5NjFmNjUyM2M3YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_2919fe9fd43e48b2b8487aed1da7fea3",
+      "statement": "PositionPipeline.invalidateWallet calls cache.invalidatePattern(\":{walletAddress}\"), which is suffix-scoped by the key grammar: it matches only pnl:{pool}:{wallet} entries (the family ending with the wallet address) for all of that wallet's pools, while token_data:{mint}, ohlcv:*, and other wallets' PnL entries survive.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L407-L423",
+          "version": "repo-lines-v1:sha256:6e25079aab02b294d869394c514502caa569a929dc79000b45153b9ee98fa462:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZjZGIwMzdiNTRjOWJhYTQ5MTQ2NjBjM2YwZTAwMDY2NmRiOGQ1MTg0Zjc3ZmJkMWExY2ViOTJiMjcyODYyM2UiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMGVjOWI3YWQ3YTFhZDk3MjVmNDM0YmM3ZjFlYmM3NmIwMjU3MWVjMjgyOTU2MmUxYzdjNjc1ZDhjYmM0MjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRkMTIxN2Q2OTcwYTc3ZGNjMTRmNjM1MDY1NzE1ZTZhNTk0ZmIyYmNhM2M2YjE3ZTFhM2Y5YmFhMWI4NjVjMjkifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L189-L193",
+          "version": "repo-lines-v1:sha256:f74da904e037dc2f60438c3037d35a029e7fffec84d381e1cb1d9b91c46d2900:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGNhYjVjYTU3Y2Q1ODIxMGE5MGFjOTI2MzNhNGU2NzM4MWIxMTJmYmFhMzdhZTEyOTIwYTcxNTg0ODJmMDBmYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDU0MjEzODI3NjdjMjlmYWFiNWI0MWZiMjA3OTBmZTQxODAwMTI5YTM5NWQ0OTQwNTg0N2MyMjdmNmE2YWYwZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWIxNTU0ZjNjODc3YWMyMDA5YTA0MzQzYTBiZjgwMDE3NjYxMGQ1NzhhNzlhZTFiN2Y2ZjE5NzlhMmVlY2NjYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_fef6e46f3bf94e57aeb252bc509a0534",
+      "statement": "usePositionsPage invalidates the previous wallet's PnL entries on every wallet change and invalidates the current wallet before every refresh (pull-to-refresh and the silent 60-second foreground auto-refresh both call refresh(), which invokes invalidateWallet before loadPortfolio), so the subsequent load re-fetches and any superseded in-flight fetch's late response cannot repopulate the cache.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L107-L145",
+          "version": "repo-lines-v1:sha256:b22702fe377c038e769cf8d28ee038da7a532d71a5bc15eca77f81d2b7bd75fa:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBmODIwNjI3MjQwMjI3NDVhZGY1ODE3MDk0YTY2MDA2Y2RjNjEwMzRlZTliNjNkZjA4NGYyMzliMTdjYzg5ZTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliYTRmNDM5NjVmNGFjNDVkZDMyMGViNTNkNDViNjE1Y2YxZjk1NmRmM2IzMDlkNGU0ZGQzMmYyMzYzMDY3YWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliYTRiYzEzNjIwOGVhMzRlNzRmZGQxMjNkNzE2MWE3MGRhM2M2NzRhZjdlNWJhZDdlMTM0Zjc4ZjIxM2I2YTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU2M2I5NzVlNjVkMDdmY2Y1ZTdlNzIzYzVhZGI4NzE1YWRiZTk0OTMzYzY2M2UxZGZlZDA5MThmNTkwNThmMGIifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L58-L95",
+          "version": "repo-lines-v1:sha256:d18fc319f32ab26b76e97258a17f9c8b2b86429e72e97885e4f0d9cc3b826d13:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2YmU5M2JhNTAwYTg0YmI0YTNlYTQ1YjI4YzU4Y2VmYjhmNTZlYTY0ZjNkODBiYTU1NTNhMTIzN2ZmZjE5MTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMzYjI3ZWMwMjA5ZmQxODQ1N2NlZmI3YzRiZDVlOGU1ZTA3OTZmNWE1NGUyOTg3NGRlNDZkY2Q5ZTExNjc3NTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkzYzY5OTAzZWEyMDNlNWM5OTFhMDgwNjI1ODU1OTM0NWU2YzQwZGYzYzI3ZjA3NjM1OTA5ZDk0ZDA0OTZiZDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMzMWY2NWZlNjgwYjg5YTViYmEzNGViZWRkMDkxM2NmY2NlNWRlNmFjZWNjYzI0Y2M2ZmNmMThmNzI5MmFiZGEifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L89-L101",
+          "version": "repo-lines-v1:sha256:0cea475b89267165ca6610ca13d22d015ba65e8718ad63eff99c2083eb15d662:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4Nzg5ZGYxZDFmMTg0Yjk3ZTY4NDlhYTE3YWI0YjU3NDYwNzEzNTc1MGQxMTYzZWUzZmFiYzdkNzYwYjQ5ODMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MzU1MmFiNTcxNDk0YjM5OWIxODE5OTYyMmRiZTNiMzgyNmViNjFmY2QxZjc0Y2ZiMTJhYmNmODhlNGY3MjYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3YmNlMGQxZTVkMTkyODk5NjdjYmMzMDdmMjM0OTk5NjI5MTI3YWIxZGQwZjEyYzg3MDk4ZWMzNzE0ZDQyMGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNkM2U3MGY4ZGJhMzhiMTYwZDE5MmVhOGZmY2E3YjlhNzIwNDVkZTk2NzFiMDczZGZmYTY5OWM0ODRhMzk0ZTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_cad1167bf7b0465d9618649850de5aea",
+      "statement": "TokenService.getPrices runs one getOrFetch per mint under Promise.allSettled and omits mints whose fetch rejects, so a batch with partial failures still returns the successes and each mint caches independently under token_data:{mint} for 60s; the same keys serve position cards, the pipeline, and the SOL price, deduplicating token RPC traffic process-wide.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/data.test.ts#L55-L89",
+          "version": "repo-lines-v1:sha256:c8107c1c3ec2ff7213f1af56b9a44b88f25914cd8453711b54e641155257075d:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZiZWE4MTdlOTJmYzY3MzBkY2Y1ZjFmZjA2NDhmMmUyYjY3YzQxMzgxNjNjZGNiZjI4ZTc2ODZhYzQwZDk1MGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxNTUxMGY2MDBlYjI0MmIwMjRlNDZlODI3ZDViYTg5YTRlZDhiODZhYzJmNWNhNzc3OWUzOGNlYjg2OTJjOWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJlOTNmMWMyNzczOTI2NjQ5ZmU3ZWY1MTk2NGEwNDkyMThkZTRmNDNiM2ZmODE3NmVkZWU3ODViNjlkYTYwNTYifQ"
+        },
+        {
+          "resource": "repo://src/services/data.ts#L44-L65",
+          "version": "repo-lines-v1:sha256:f343eb87a4de2ce10f7832dceb4ec36d7d9830068b8ab8e74f2da9ca96867bbd:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIxYWFkNTJiZTIwZjdkYWU2ZGNiMWIyOTg0MmFkZjgyNmY1YWE2ZDM1NTU2ZGQ0MzA1YmYwNjRjN2JjNzFkOTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUwN2FmYzcxNDczMTg5ODU5NDY1M2VjNGUzM2NmNTU5OGJhNzdmM2EyODViODcxMWRjZjcxM2UzODAwODg1ZjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBjZTYzYWU5Zjg4MDVkMzFhN2IyOTE2MzcwYzJiMWMxMjM3MTI3YTQ5YzdiYzM2M2Y1OWU5YTQ2YWE5ZTA5NTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_02e816f480ae4d20b88b2bde332d5b06",
+      "statement": "The OHLCV cache (ohlcv:{pairAddress}:{timeframe}, 60s, one key per timeframe over the pure fetchPoolOhlcv fetcher) is display-only per ADR 0001 — the series exists solely for the in-card price chart and must never feed PnL or value computation — and usePoolOhlcv relies on it for cross-card dedup, one fetch per pool+timeframe even when many position cards render.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0001-no-local-historical-pricing.md#L3-L16",
+          "version": "repo-lines-v1:sha256:6e2150d0032c2a93d530c84e75c846ff4f13cb462e15186bd41ec7bdf784781a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJhMmYwZDliNDkyMmFkOTliNzBjNmQ0ZDdjNzQ5MThiNTU2YjhiZDFlZTIyODM0OTAyMjNmNjViZWFhOGE2NzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA3NWI2YmM5MTgxNjdmNzc2ZjYzMTkzYjM4MzgyYTM1MjFjYzJmNWY1ZjQ5OTlmN2M5MzA4NTQ2ZDFlYWIyNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjoyLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQwNzM4NzVlMmExZTE0MzhlOGZmMjJkYzcwMTViNTU5NzBiNmI2MjYxZGI1NmUxMDY0YzUyOGNlZDFmZGRlYjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/services/data.test.ts#L109-L139",
+          "version": "repo-lines-v1:sha256:2f6ad0bffc23c08b060aae688f91ccc0845bd2f8ec46e570bf34d35854d6ac6b:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwYjNlY2RhMmY1MzQ4NTA3MzJhODc0MmM1NmY1YTExNDRiNzg3YTY4MzQ1ZGI5NTBjYWUxY2I2MWFhNWNjMWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE3ZjdhYWY2NjY2MGMxMjM4MjVkODRmN2RkNTdhNWY0ZDk2ZDYzY2UxZTU0NWYxOGY5ZTE1ODBmOGNlZDdiNWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYxYjIwODJhZGQ5YTI5ZTA2MmU2MGQ0NmRiYTFlMWY3YzUzYTBlMDUwYjg4MTE4YzExMDIxOGJjY2UwNTUyZDAifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePoolOhlcv.ts#L13-L23",
+          "version": "repo-lines-v1:sha256:3b8cab7bda822be2995d86919742a8b76305965a177d973a2724d1c41cebc2ad:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3MmE0MjkzODJiMmUxNDcxOGUwZTM3YjA1NzBhOGExNzAyOTkxZmNkODQ5OGNkODQwNjBhOGJmNGYwNTAxN2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI5NDVkMDAwMGEyODA0NzczMjM1NmMzYjM3OTE4MzczY2UzMDRiMGEyYWQxZjVmYTE2NWI0ZWNkOGNhMzE1ZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA4N2U2NTNkMTYyNWFiMTA1MzJiNWMxZTI1MGI1ZjYzOTUwYjQ2ZTNiNjAxOTg5NzY1OTc5NzFhZjQ2MjlkY2QifQ"
+        },
+        {
+          "resource": "repo://src/services/ohlcv.ts#L1-L31",
+          "version": "repo-lines-v1:sha256:41206d23de0d64781e88edb4062cea814148caa573373d4fdf4d4c57012b0d80:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiMjBkNDYwMDQxMzg1M2QxNzZiZDRlZjQ3NTcyZmNhNzZhZGIxYmMwNWMwMzJmNmYwMWIwYTA5ZTMyZWExMWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhNTE2MmVjYTJjMDJiNWM3YWE0MTQwNThlYmJmMzA4ZTYyNDM5ZmE5NGU4NmE0ZDQ0ZmQ3ZjY0ZjVhY2E2ZDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVkOGE1NjA5YTA5ZjVmYmM4ZjZlNGZlMGNkNWQyZTU0ZGYwYzQyOGQwNDVmZTkxNjRlZWNiNjZkZjQwYmM4MmMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1006ac038d9e461f8ad02676f414823f",
+      "statement": "fetchAllPnL caches per-pool PnL under pnl:{poolAddress}:{walletAddress} with status 'open' and a 15m TTL, wrapping each pool in its own try/catch so one failing pool neither blocks the others nor rejects the pipeline; because fetchAllPositionPnL rejects rather than returning partial data on pagination failure, and rejections are never cached, a mid-pagination failure leaves no entry and the next load retries the pool cleanly.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L153-L159",
+          "version": "repo-lines-v1:sha256:b651e0d3c969d5c39b5450c4446ffd0481134dbffc009a99f9564ad1d6993e5f:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTliZDg0NjhhODdmMjU5YmY2NDc3N2NlNmU1Y2E3ZTY5NWM0ODNiYWVmYTA2ZDU5ODc3NDY4YTIyODMzMGYxYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2UyN2RiY2JiM2YxMmIxYTQ0ZDgyNjdmNzI5OTE3MjU1YTYwMDhjOTY1MmVjMDRkZjM2MDE3M2E5N2NjODQxZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGU2NjkzNzZkMDMxZjVmNjE3YjI0ZWUzODYxM2IyZDIzMGE3NWM0N2EyYjVjOWU5NzY2M2E2YTU3M2JmYjA0OSJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L201-L223",
+          "version": "repo-lines-v1:sha256:59edc4bc5b03e8ad95e261eb37187268a34013db3c18511b8bc5f956f2cf06f5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM4MjJjYWU2ZjQ2NzUzYWExNGVjODgxMjBiYmVmYWU0ZDdlMzg4MTNmZDE2MDVkNDEwOWUzZDliOTk2MTA3MjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliYTFmZWMzZTAyMDUzZDI2OGVjMDU5YmU5NDYyMWExYzM5Y2QwMTBjN2I3NmQ3YjA5OTRlMjhjOWY3Y2NmZjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRhN2U5MzY1ZTQyMzhlNzZmZWFkZTY3N2U2MGNlM2JlMjk0OTkyZWNiOGZmMjgwZjA0ZDgwZjllNWQzMjZlY2MifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_634a0041714d43198d1b035b5267a992",
+      "statement": "getCurrentSolUsdPrice derives the SOL→USD price from the wrapped-SOL mint's TokenInfo through the shared CacheManager-backed token service, so repeated calls (e.g. on wallet change and every refresh) are served from the 60-second token_data cache and deduplicated.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/solPrice.ts#L1-L18",
+          "version": "repo-lines-v1:sha256:2e8bb0fe42ca0d026f4b83983faacd6f9e0210f0d93146b47424f4cf024125f2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMmUyNmY2NDcyY2M5NzFkZTk0NjIxYTJhNDg1ZDc4MmUyMTI2YzZhNjU0MTllZTZkZDNkYzgxMjJhYjIyNjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

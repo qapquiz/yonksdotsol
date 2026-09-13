@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:9b7663664ab2865bb494d773168ded7beb18a09d5c8e3df82bead5af4f046973",
+  "claims": [
+    {
+      "id": "claim_8faa58442cee4380a9d7cade951712e0",
+      "statement": "The app entrypoint index.js executes three steps in a load-bearing order: it imports ./polyfill first (polyfill.js on native, polyfill.web.js on web) so the Buffer/crypto/URL patches are applied before any Solana SDK module evaluates via the later expo-router import graph, then imports expo-router/entry, then calls registerWidgetTask().",
+      "evidence": [
+        {
+          "resource": "repo://index.js#L2-L6",
+          "version": "repo-lines-v1:sha256:3425bff2e443cbce50fe0abf97ae271836ce0af47b202c890c82fca21c853395:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWIzNDg4NjRkY2I4NDNiNzZlNjE3MzQ0NDMzMDU0NTg1NTBkMjkzYjQ2YjcwYTk5ZGI1NDFlZTVjZjdmMzhhZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzVmZTE3YjJhMmZjNTczMzA1MDliOWFjMDdkNWU2OTZiMzU4OTc0NGE0NjdkNTQwNDQyMDUyZWY5NzlkNDRmMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjEsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWExNjMwM2IyNTRmNjc1ODBlYTA0MDEzZmE5YTg5M2QwZDUwZDY4MGRkZWM1MTYwZjMzZDM1NzQ0MmMyNjQ5NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://polyfill.js#L1-L4",
+          "version": "repo-lines-v1:sha256:c946b206b7ac58a826af9041ff17e23d373541c70f87213fdc60c43c65848830:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWRlZTM4YTBlZGEyYTlmYjQ2YTFkZmY1M2NkZDhhZTgxN2EzMDQxNTc4ODI1ZDdmN2NmNjAyODYyNGIzMDk1NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzQ2YjQ4NTZkMjAzMTcxMzg4OGMzY2IxZWMzN2ZhMWY5MGI2N2MwMTJmZGYyNTNlNDc1OTY1MjI5N2U4ZWQxOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjVjYmJjZTVhYjFjNmJhODcxODUwMzllZTBjNmI1OTU2ZTc2ZDRhY2U1ZTNjNWNiZmVjM2ZhYjM3ZDdkNDIyMyJ9"
+        },
+        {
+          "resource": "repo://polyfill.web.js#L1-L11",
+          "version": "repo-lines-v1:sha256:01344ed595aad47281c7be88752f4bcf870a618eaa40144e983df3886bed44ab:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlYjhjMjc4OTc1OWNjMWFmMDQ4NjBlNWQ0ZjM2ZWQ2YmMyZWFhOWY5Y2IxYWYzYzMyMTUyZjQ1Y2U5MGVmM2MiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlMmFkZmViZGQzZjE1MjE3OGJhYTU1M2ViMTY3YzhjZTljMTcxNTExOTJiZmZjNWJiOWNhNWZiM2M1MTM3ZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6651f06cdf63404a89a1b31827b107c9",
+      "statement": "registerWidgetTask() registers the react-native-android-widget task handler (portfolioWidgetTaskHandler) at process start, immediately after the polyfill import and before any screen mounts, so headless widget interactions are served even when the app UI never mounts; on web Metro resolves the no-op registerWidgetTask.web.ts stub.",
+      "evidence": [
+        {
+          "resource": "repo://index.js#L2-L6",
+          "version": "repo-lines-v1:sha256:3425bff2e443cbce50fe0abf97ae271836ce0af47b202c890c82fca21c853395:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWIzNDg4NjRkY2I4NDNiNzZlNjE3MzQ0NDMzMDU0NTg1NTBkMjkzYjQ2YjcwYTk5ZGI1NDFlZTVjZjdmMzhhZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzVmZTE3YjJhMmZjNTczMzA1MDliOWFjMDdkNWU2OTZiMzU4OTc0NGE0NjdkNTQwNDQyMDUyZWY5NzlkNDRmMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjEsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWExNjMwM2IyNTRmNjc1ODBlYTA0MDEzZmE5YTg5M2QwZDUwZDY4MGRkZWM1MTYwZjMzZDM1NzQ0MmMyNjQ5NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/widgets/registerWidgetTask.ts#L1-L13",
+          "version": "repo-lines-v1:sha256:24f9921b2233901f93fb04bf2496670af49301de714f173f39eb3e5eb1df64b5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/widgets/registerWidgetTask.web.ts#L1-L8",
+          "version": "repo-lines-v1:sha256:7e5ab04351424f6fe18801c513677583356e59806c5209910b2d8134678de0f8:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_ddf3a49e55b543b3b73abf2877556c58",
+      "statement": "The root layout calls Observe.configure({ integrations: { 'expo-router': true } }) at module scope — before any screen mounts, because toggling the integration later throws — and wraps the default export in ObserveRoot.wrap to measure Time to First Render; Observe is only reached through the src/observe seam (native re-export, web no-op).",
+      "evidence": [
+        {
+          "resource": "repo://src/app/_layout.tsx#L14-L18",
+          "version": "repo-lines-v1:sha256:2e7d85723c4c9f930aa9640cba17c8a9cebe4b5008ef198f61d37508ba5b4cdc:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOGRhZjBiZGU3YjM3NGZlNTBjOGJlNzc3NmM0NDk4N2EwZjQ3MjU3ZDAyM2M1ZDdkYzMyNmMzZTk0YmI1ZTkzMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODU4MGI3NjUxOGRhZTk3OWZhZWJkMDIzNjdhMjkyOTJhNTBkOTc2MDkyMjUxYTM4YTZjZTMwODgwYmE0MjgyNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDUxYzY4ZGRlMmQwNDdkMTFlODg3MDgxMDVhMTNhNmVkMTQ1MWVmM2NmYWMxN2FiY2MzM2Y4MWM3Y2MxZTM0YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjIxMjBiYWNlOWRhNWUwZmU5ODY1ZGY1ZTBjMmNhY2FjNWFlMWZkYzExOTFmYTIyNmViMDBkMTMwYzExYmM0NSJ9"
+        },
+        {
+          "resource": "repo://src/app/_layout.tsx#L49-L50",
+          "version": "repo-lines-v1:sha256:00a5931cbf8358808594cf75038f547b1a957085ea9a6a28737874488059b517:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjg4MzkxYzliNTAyNzVkMWI1MTdhNDNjNTFmMzlkNjBmYmY4YzE5YjNhMmVmYTY5ODAyZTU4ZTZiYjIxMzg2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM3NmY4OGQ4N2JjNzM2N2M5YzMwYTlkY2I2YjYzZmQ2MTAyMjMzZjI0MjhjZDIyMmZlMDk4MTFjYjhjYmIzYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzQwYzVkM2RjM2E3NzMwNzkzYzg5Mjc5NDhiNTU5NjY0MjA3Zjc5YmE4Nzc3M2MyMTUwMDQ0MzE5NjJmZDQ4OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/observe/index.ts#L1-L8",
+          "version": "repo-lines-v1:sha256:45b0d3f9cc739db3326664a022f9e2a7ce183f77e56b449336343c3b2e3e2be8:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTQ3MTFkNDU0YWYzMjVmOTljNWRmYTUzYjhlZGQ1YmJiZWU4Nzk2YjBhNTIwN2EwODk0ZmZiNWQxMjBhMDRlYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1f88e2e9d9644f158c21468662fbe112",
+      "statement": "The root layout stacks GestureHandlerRootView → PixelFontProvider → MobileWalletProvider → Slot, with the MobileWalletProvider built once at module scope from createSolanaMainnet({ url: env.rpcUrl || '' }) plus a fixed app identity; MobileWalletProvider comes from the src/wallet/walletKit seam (a re-export of @wallet-ui/react-native-kit), whose web sibling renders an inert provider whose signIn throws because web always runs in dev mock mode.",
+      "evidence": [
+        {
+          "resource": "repo://src/app/_layout.tsx#L20-L47",
+          "version": "repo-lines-v1:sha256:8bb8a90824eb289cd20b025f1e951e6d667906489665bf14ad99d76d342e7b29:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiOGNjMTE1ZGIyZjRhZDFiNzJiM2FkNTY1NWQ2NGZhZmUzZjJkNjliYmRhMGI0NzNkOTc4Zjk4YjZkZjU5ZDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM3MjQ4ZDhkZjc0NDMxNzY4Y2RiNGI0ZDI5NDI3YjkzZjkzZjM0NGM2NWIxODRmYzAyMTYwMzA0OTI3MDljNjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMwNGExMDNkOGYwNjlkZDBhOWMyZGU5NTVkMTY4YWMwMDI2NjdhNDlmMGE4ZTI0M2Q2YjFmODZmNjQxNzg5MWQifQ"
+        },
+        {
+          "resource": "repo://src/wallet/walletKit.tsx#L1-L9",
+          "version": "repo-lines-v1:sha256:b9087fdbd2184c824cdc410296c5635fdd8f73d7aede39708ce3c5bbe3b7c9b6:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFmMjJjZjA3MzI1OTJjMjQ3MTQxY2JlNjFlZmExMTAxMjYxMmY1YTMxMjJiOWFmOWJiYWY1MmY1NzI0ZDE5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTQ5NTRlZmI0YzM2YzhjZmMwY2U3N2I1M2ZmZDIxYTM3OWFiYzhjZTQ0NmZhYzA2ZDIzOWU5NTEzOTAzY2E1ZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/wallet/walletKit.web.tsx#L19-L41",
+          "version": "repo-lines-v1:sha256:8a914fa1f312c93f1cf04bec1d342037966ed61468c0acb35bb33db1b3e1b03b:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNiN2Y0YWYxZWM2NTc5MjM5ZWI4MGQ1NWU0ZmFlYjJhZmRlYTkwMzEwNmNiMGJiMzc3ZDlhOGU3NWQwYTllYmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliYjNkYmJmYmI0M2ZmZTZhMzk0ZDA2OGU2NWEwZWFmYjI1MDZjMDkwNmE2MTk2NTE4NjczMGQxZGVkZTQwYWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_7197e0d25e74472286e2d1970c749537",
+      "statement": "useWalletLifecycle computes walletReady = accounts !== null || walletCheckTimedOut: the provider's accounts is null while no authorization is resolved and becomes the authorized-accounts array once one is, and a 500ms setTimeout (WALLET_TIMEOUT_MS) re-armed on every accounts change sets walletCheckTimedOut only if accounts is still null at that moment — so a resolved-but-disconnected provider is ready immediately with no timeout.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L22-L45",
+          "version": "repo-lines-v1:sha256:9e34f3f9d45c2ffef504cf531bc2e9e8fbecf50a712f64843156989e09417be7:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjNjYwYWY2NzcwMGM5NmEyZTZlZjM5YWUwODc1M2E5YjE3YmQ1ODA5OTRkZTYyNjcxOGVkODhmZmJmNmRjYWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYwYWNkZTIyY2E0Y2I2YjE3M2FiYzZhY2MxMWJkNzExYTM5M2UwODE4MmU0NmJkZmViNWQwMDRiODFjY2UwOWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlkZGRiNmNlMTU0YzBiNGM0NzVmNWYyNWQ5ZGZkMTk1NWNlZmY4ODI3MTgwMmMwMTE4ZDAxZjcxYzk4NzUwZTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk1ZmE2MzkzMDczNmZiOGE5NjM4NmEwOTlmNTE5OGNkZDIyZmQ5YTdlNGRmOTgyNzA3NDIyOThkZmRiNGUxYmQifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L61-L61",
+          "version": "repo-lines-v1:sha256:2576ead668de0db0159763747c4c533dda5ee4fac6c829e84f6cdd9912ab7128:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjU3NmVhZDY2OGRlMGRiMDE1OTc2Mzc0N2M0YzUzM2RkYTVlZTRmYWM2YzgyOWU4NGY2Y2RkOTkxMmFiNzEyOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjU3NmVhZDY2OGRlMGRiMDE1OTc2Mzc0N2M0YzUzM2RkYTVlZTRmYWM2YzgyOWU4NGY2Y2RkOTkxMmFiNzEyOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzE2ZjM5MGUwNzc3ZDZiNTc2NDZiOGVlY2VlYzIzNzc4YjE2YTI0ODJmNDA4MWVlN2M3ZjZjZDhmYTVmMjA5ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2YwNzk3YzRmMTE5MDhiZDhjYTlmYmUxNzg2NDU4NmU5OGExZmM3ZjJlNDIxZTA3ZWViZmQyMzgyYjU0MmE5ZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_44f6eed834404fdb83e8adc609d11796",
+      "statement": "Once a valid account address is seen, useWalletLifecycle latches readiness permanently: the effect on account?.address sets walletCheckTimedOut to true (nothing ever resets it), persists the address via setStoredWalletAddress for headless widget access, and clears the pending timeout — so disconnect, which returns accounts to null, never flips walletReady back to false.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L47-L61",
+          "version": "repo-lines-v1:sha256:32611cfc1f5e5bd5e3c410ae4b469a334b67fdf5e9c68b790f67430cf268f6d4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmYzMxNjQ5NDkyNmQxNzMyY2U4ZTE2NDQ3ZGY3MzBkNWQ4NDg1NWEyYjRhZGEyMzhjMTdjOWNmNTFmMmEzNzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI1NzZlYWQ2NjhkZTBkYjAxNTk3NjM3NDdjNGM1MzNkZGE1ZWU0ZmFjNmM4MjllODRmNmNkZDk5MTJhYjcxMjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU5Mzg4MTM4ZWIzMTY2NjVkMTJiYzc0OTFlNWYyMThjNTZmNGEyYzAyMmU1N2NhOGFiYzY5NjhjMTg5MjYyN2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdmMDc5N2M0ZjExOTA4YmQ4Y2E5ZmJlMTc4NjQ1ODZlOThhMWZjN2YyZTQyMWUwN2VlYmZkMjM4MmI1NDJhOWUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_97bb01ecde864f74b3d33c34c29decbb",
+      "statement": "handleConnect signs in over Mobile Wallet Adapter via signIn({ domain: 'yonksdotsol.app', statement: 'Sign in to access your DLMM positions', version: '1' }), logs an Observe wallet.connect event with success and durationMs attributes (warn severity on failure), and on failure calls await disconnect().catch(() => {}) so a rejected or partially-authorized session is never left half-connected; isConnecting spans the whole attempt and disables the wallet button.",
+      "evidence": [
+        {
+          "resource": "repo://src/app/index.tsx#L88-L97",
+          "version": "repo-lines-v1:sha256:db35f3dbb5f3065a6075c2b8b03bb7773284e8302d6f306047d1f916fd7891d2:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcyZWJmY2M5ZmIxMTQ1OWI2Mjk5Njg3ZjIxMmI4ZjViODUxOWRkYmI4OTc3MDA2ZmMzMTNiZWRmOTgxMzNmMmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxNjk2ODI5ZWE4MDUyMTQwNWE1ZWQyNzc2NTMwMjUwZWI1ZjA3ZTY0YjM2OGM4ZDk3OTU0NmNkYmViZTA3OTUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg3ZWY0MWE1ODQ3YTYyZmExZWU0OWQ2NzYxMzg3NzYzYzkwMzc2MzMwODc0ODRjZjg4NzY3YzIyNDAyZmExNzciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgyOGJmNGJiY2MyOTVhZjRkZWI4MGZhZjJjYmY0ZTEzM2EyYmM0MDZmYThjYWI3YmY1NDllZTE0Zjg5NmM0YzQifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L63-L85",
+          "version": "repo-lines-v1:sha256:31669d0088514699cca6b59f601e7a1a2c7ad97ac893ea9db03ab6a9a26fec34:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ1ZTY1N2YyNGVhNjI2ZDA1YjI4MGU4NmUzZTYwYjgzYjY0MzE3NmNhNzRjYTBmZGY0OWI2NTJkNzQ1NjFlMzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkZTQwM2ViZTYwODRiNmE5YWRhZWM0NTQ3ZGI2ODgzMWFmYWMzYjFhNzA4MjBlZmIyZjA5NTEwNzBjZDQyYjciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU0YzZiMzE0MTNlZjU2ZDRkNmZlYzhlZWU2OTk0NTUyOGU4ZTk4MTZlMTlhZTczYjJiMzNkNjFkMjQ2OWRkZjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk5MTA4YWNhMTA4M2U2N2U1NTE3NDFhZTQyYmMyMTM0N2RhODQ4NWQwOWY0YjEwMmFiZjg5ZDNiYzU1OTYxMDQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9333a752582c4da7953ab936c84c81cc",
+      "statement": "handleDisconnect reads the stored address before disconnecting, awaits the kit's disconnect, logs an Observe wallet.disconnect event with hadStoredAddress, and only when an address was stored removes it via setStoredWalletAddress(undefined) and calls clearRangeState(currentAddress) — deleting that wallet's alert baseline so a future session cannot transition against stale in-range state.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L87-L97",
+          "version": "repo-lines-v1:sha256:b220ac426b2b1e279fda430ca3dc524bf3ce3ca246cf6ab2f8ecadf86c58849e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwOTcxMjUyYWM5MmJhZDIzZjVhNDQwZjFiMmQ5ZmY1YjIwYjM3MzkzYTgwNzUyZmFjOTc4NTE0NmIxYTIyOTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFjODQzMDMxZjQ1NWVkNWZhNWFkYzNhMjkxOGUyMjZkM2EwYWIxOWMxYTY3MjA3ODkxZDZhYmViNmNhMjlhN2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRkYjQ1YTI4MDAwMTcxYzNiMDU5NzIwMTcwNDVlN2M2OWVhYTY3ZDZkZDViOWM1MTZjNWFjNTViNjQwNTNhZDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA3YjZmMmE3MDYzOWQ3MmQzMzgxYTRkMTQxYWU4NjU1NjNmY2E2MTA4MWYyNzE5ZDhmMWNmNWZkNzg3Y2RmYTMifQ"
+        },
+        {
+          "resource": "repo://src/stores/alertStore.ts#L28-L39",
+          "version": "repo-lines-v1:sha256:332f337b24f9cc868d119d35c4a024f29441773730937a706787930b056fb3e5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3YzVkZTc0ZDM2NzkwNWU2ZjI4ZTc3NzEyZWRmZjcxOGM5NWI0MWQyYzI1YzYyYzg3MjI5NjZiM2YwYTZiNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJiMWEyMzY5NTdhYTdkOWMxZTRjYWFmOTQwNTEwN2FmYzQ2NzEwYWYzODM0NmE1MzBiMmQyNmMzNzMwMjM2OGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ad2f7bb18fa24f498ff472819b7b64f4",
+      "statement": "setStoredWalletAddress writes to the dedicated wallet MMKV instance (keys wallet_address and wallet_revision) with two invariants: it no-ops when the address is unchanged so the revision only moves on real transitions, and it writes the incremented revision before the address write/removal so value-changed listeners always read a complete, self-consistent { address, revision } snapshot; the revision increments on every connect, switch, and disconnect, making a reconnect of the same address a new session.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/walletStore.ts#L18-L40",
+          "version": "repo-lines-v1:sha256:57f095c9fd15835f2cee3cac5169e44aed0128107b064fb7a1485510b7f64d5e:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyZWU4ZmQ2ZTQ0YzQ4NTAyMTUzNTQ0ODM1MzBhZDdkYTU1NThkZGM2ZDM2NWRlZDNhYjgxNmRiNWVjMTM2NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyMjQ1ZDIxZjNkMGVlYjBjN2IxZTQ5N2RkZTNjYmYwOGI1YWFjYTZiYzBlOTRjOWJlYmE1ZTZiMGViYTQ5MDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_af7fa4b8268443e6a35f4701c0d59d45",
+      "statement": "Headless and foreground consumers gate work on the { address, revision } pair rather than the address alone: widgetBackgroundSync's walletIsCurrent() and the widget sync modules re-check getStoredWalletSnapshot() before drawing, and useWidgetSync subscribes via subscribeStoredWalletAddress to redraw widgets immediately on any address-key change, bypassing its normal foreground debounce.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWidgetSync.ts#L24-L33",
+          "version": "repo-lines-v1:sha256:edd00a33aefabd4f38b08bcfa96394621f1a54309c6bf0a2e292aa686561fe8e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIxMTAxZDg1ZDBmYWFlODdiZDNkN2MyMzA0N2U2NzRkNzQwNDZiNzQ0ODE3MzA4MTU4M2M5ZTJlMjA5N2FhNTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZkZjgxNjM4MDllODFkYmY0ODQ1ODI4ZTI5ZWI2MzVjNTdlODMxNGY1MTAxMTNhMDU0N2VkZDVmYWM4N2UwOWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM1MDg5MTBiNWIyNjcxNzEwMTgzN2ExM2MxYTU0YTU3YTY0NGE1YzQ5YjQyYjBkZjFjNjVhNWI5MGM2YjMyNzUifQ"
+        },
+        {
+          "resource": "repo://src/hooks/useWidgetSync.ts#L52-L55",
+          "version": "repo-lines-v1:sha256:f8d2a766b55d6482b0c8388828ddcc32f349e65ae48c483f59d198eb8b38975e:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjUzZTgwMWE2MTZmZWNjNDliYTAyYTk4MjliNjA3YTExZDc1ZjgzOTQ4MWUyY2ZkOGNkNWJkZDhjNDYwNjFiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ3NWU5NGE5MDRhYzQ5YjMxNTRkNDY3MmE2NmU4NjI5Yjg2ZGFjNzRlM2UyOTM3YmU2OTI3YWUzZGExMWM1MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTA4MTMzYjYwZDg3NGRkYzZhZDU1NzUzMGVkOTJmNDNkYWIxMDQ5M2E0OGNjYzEwZGJkNjQ5YzVmYzRkYmRiOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMmFlODFlNmEyYzdhZTczNDBjMjk3M2UzZjk5M2VhYmEwODVkNzgwYTk2ODlkZmIyM2I3Njg0ZDJkOTEzMjAyMyJ9"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L18-L28",
+          "version": "repo-lines-v1:sha256:8f80a9e86002d258be3086350e31e9204c62ff8709c0c8d926cc0519e032e0a4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhZmE2Nzc1ZjBkMGQ4NjRhMTUzMmU3MzU0ZmVlZGM5ZTMwYWQ5NWVkNmExOWE2YjI5YTRlNjI0YjliNTRlMDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQwYzQ2OWQ2YTdlNzk3ZTBmODIyYTk4NjEwNGVmYWNiOWU2OGU1MWFjMmI4MWFjMzJiNjNhZWI4YjhkYTY5YzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJiOWI0MDM5OWRlZGRhNjA5NjU4MmUwMmUzNTgzYjM1ZTIyYzk4ZGI3NzA3N2U3NTIwYTQyOTViYjJjNTRkMDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImEyZmFhMDkyZDA1M2QyZWVmNTY0MDA2MTkxODRlYmQ0OTI3NTI1NzIxNzY4NWFjYzVlNmU0NjQwMDVmODhhMWQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_f7fbf7d2436d4ca998f4e76bbb445e50",
+      "statement": "The home screen binds useWalletLifecycle to usePositionsPage(walletAddress, walletReady): an address change invalidates the previous wallet's pipeline cache, resets loading/tokenDataReady/result, and loads the new portfolio plus SOL price, while a transition to no address clears results and price; a ready wallet with no address is terminal and the effect sets loading false and tokenDataReady true so the empty state renders without a fetch.",
+      "evidence": [
+        {
+          "resource": "repo://src/app/index.tsx#L23-L38",
+          "version": "repo-lines-v1:sha256:08895d3c1dd11845aa3fc3173a6085918cdb6d516f34e38266878aec8a3711bc:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRiYzgxMmRkMjIzMjBiMjQ3YTk3NmQ5MWJlZGFkMjliOTQ2YjY3NjJkNDc0YmNmYzY1OTAyMmQ4MGNlYjlkNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0YjA2NWZkMTZkMDg5MDIzMGU3N2E4ODg0Y2JkNmE0YTlkOTY4ZjAwOWZmM2M5ZWRlNTc5NTk3NTEzNDMwYTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUxZTM0N2ZlODRkZGJiMjdjMTEyYTljNDI1Y2I4M2U0ZTgyYTYyMTAwNzdjZWExNzcyNGY0MTdhNzczNzlkMzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY1M2E5N2VlYzg2ZDU1YTNjNjk5ODM4ZGM5YTIwOTNlYjM0YTljODllOTMzNjY3ZTg4YThkZjE0MTI2ZDdmNzMifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L61-L105",
+          "version": "repo-lines-v1:sha256:18713f40137dc9dbc58be73eb86c4845ec3e6e6998b02423d8b86d517e6e9ea8:eyJzZWxlY3RlZExpbmVDb3VudCI6NDUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5NjZmYmZhODg5OThkYTc0NjU2YzUwMTk0OTU2YzI1ZjA4NDk0NTc2NjBjMDA5ZmU2M2QxZTlmYTlkYzkzMWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQyYjhlNzVlYjIzYmYzMGMzODBmNWYwMGJkMjIzN2UyYWM3NmY1Y2Q2OTM1ZDUxMzM4ZDJiYzg1NDMyZjIwODgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxOTJiNjVhMTA1M2JiMTFkYzExMTMzNWMyYWU0ZmM2ZTVmNDkzMWZmMmZiZTQwOTViMGQyOWMxYTA4OTQzODIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc2MzkwMzIyYjVjNWRlZDFjNWRjZjIwODZkZWRiZGFhMWNjZGQ3NzM0YWU3NzNlNmY3ZTk0ZjI0NDhiZjk5NGYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c73d3cc635d0461e91eece4a0a7f68d2",
+      "statement": "The home screen marks EAS Observe Time-to-Interactive by calling markInteractive() when walletReady && tokenDataReady — tokenDataReady becomes true only when the loaded portfolio has zero positions or at least one position with token info, preventing a blank list frame; repeated calls are safe (only the first counts) and the web Observe seam makes it a no-op.",
+      "evidence": [
+        {
+          "resource": "repo://src/app/index.tsx#L31-L38",
+          "version": "repo-lines-v1:sha256:57c3e387e84a9f650fdc23ff941ea8109c7f4ae232cb84bd58a127aa67cf5146:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDE4NDkzYmU5MTJiYmU2NTQ4MGRjYmI4ZTQzNmExZGY0ZGZjMjU3YjkxZDg3ZTRkMGEwZThkZGIwMTVlNzhjNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjRiMDY1ZmQxNmQwODkwMjMwZTc3YTg4ODRjYmQ2YTRhOWQ5NjhmMDA5ZmYzYzllZGU1Nzk1OTc1MTM0MzBhMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDUxNDUwYmJhZWU2NzUzZGY1ZjU2NTE3Nzg0NWNiYTljYTA5MjQwMTBkNzcwMmRkYjE5NWUzYmYxNGE0YjI1MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjUzYTk3ZWVjODZkNTVhM2M2OTk4MzhkYzlhMjA5M2ViMzRhOWM4OWU5MzM2NjdlODhhOGRmMTQxMjZkN2Y3MyJ9"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L80-L82",
+          "version": "repo-lines-v1:sha256:2bbf83c8693b5c12cb710e0035b37c8ad1824dae930095ea52907852d452b566:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWZiOWFmYTkyYmM3OGMwYmUzNzkyYmQ3ZGE2NzcwM2UzZWNiODE0Yzk1ZGRmN2RlMzNmZjVkZTQ1NmZmMzliYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzk0YjUwMjNlYTc0MTY4ZDQzNWQ4YTNlM2U4ZTk1NWMyMzYxNmU3Y2YyMWI4M2NkOTkwNGExZTM4ZDhiZjExOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjNjYjNmZjg5N2RiZWE3NTAyOWI0MzRkODE1M2IxMDBjZmY4MGM2MThiOThmYTk1Y2FmMDdlODM2ODdjNDQ2YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2NiOTEwNzg5ZjMwZGMzZmQyNWJkMDk1NDhkNzZiMTRjNjFiYzBhNzJkNmIwMzg5MDkwZTlmNDhmZDgyMjg5ZCJ9"
+        },
+        {
+          "resource": "repo://src/observe/index.web.tsx#L32-L35",
+          "version": "repo-lines-v1:sha256:5c49f73933c4ef55cbe44f75a1b9dfdc28e6c9ea0ef8d31dcd64078a76ba8ff3:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjA3NWQ2MWI5YmIzNDY4N2ZjYzQ5N2FmNTg0NTAwZDAzM2MxZDU2YWJlYThmNzQxMWU4OTEwZWZjNDMwMGRjYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmYwZDA4YmFmZDAwOTZmZDVhODExMDk5NjAyMzMwNjVkMmRhNjZhODdlOWYxZjE1NzA3ZDUyZTIzMjMwYmI0MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a760bac45a3a4a03bbd4472c30f83ca3",
+      "statement": "Under env.devMock (always true on web, opted into on native via EXPO_PUBLIC_DEV_MOCK=1), useWalletLifecycle short-circuits before reading any wallet value: it returns walletReady: true with walletAddress toggling between MOCK_WALLET_ADDRESS and undefined, and connect/disconnect handlers that flip local state only, so no Mobile Wallet Adapter machinery runs.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/env.ts#L14-L21",
+          "version": "repo-lines-v1:sha256:1dd1b84a20bb674a055e6d294d66e2aba01313f16266f49107136b2863455967:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGYyYTJmOTk2ZjA4ZTY4MGJkMjkyMTM1YTZmYTQ5NzhiZGEyNmU2MDJkODRmMzNjYjFkNTk0Nzc1ZDQzMDRiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjQ0NGY3YTMwYjA4MGNjMmM4NDFjNDQwM2IwMjFjMzNlMmYyYmY5ZDllMWY2NzEwNjQ1NzU4MzllMzA5NWI3NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L107-L116",
+          "version": "repo-lines-v1:sha256:cd5e28e7f04d9799a2a530540fdffc4087e402e444c404186a7356667bc86e05:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4ODQ3NDU3MzZlZjQxMDVhMTViNWQzMWEwYjcxYWIwMWM4YjMwNzY2NTQ1NThmNzIyMjIzNmI4ODNlNTA5NDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQxZDVjNmE1NzQ5Yzg3ZTMzMWEzOWVjOTJlZmM2YTNmMzYxNTU2MWM2YmQzMWYzZDM4YWY0ZWE0MTIxYmY1NGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQzN2Y3N2UzM2U1ZGYwMTYwNzE4MDg1YmE2ZWI3ZjVmZmZiZTA3NTc2ZWI5NDcwYjk0ZTQ1NTZlMDEyNGYwZmIifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

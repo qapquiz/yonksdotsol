@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:cbed3774fe3d03de1c8af60917e99754b544c1724e1d2e4a14251803893b03f2",
+  "claims": [
+    {
+      "id": "claim_04d012b4654d4ae9bd8589875425838d",
+      "statement": "The Vitest harness runs in a Node environment with globals enabled, a global setup file (src/__tests__/setup.ts), test discovery over src/**/*.test.{ts,tsx}, and the `@` path alias resolving to src; resolve.alias additionally redirects `expo-observe` to the web no-op stub src/observe/index.web.tsx because the native package resolves its module at import time and would otherwise fail to load under Node.",
+      "evidence": [
+        {
+          "resource": "repo://src/observe/index.web.tsx#L1-L35",
+          "version": "repo-lines-v1:sha256:d225efd620638a39d4b913096124cdcceb203780cdaeea42f0b0662ff55da14c:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://vitest.config.ts#L1-L31",
+          "version": "repo-lines-v1:sha256:c288c66dd3022f3824c9f5ced3f33d09fc11a5f2ce8986fd604613cdd9a677ea:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIzNDYxYzY0YTBkNGFmMGRiOWRmMGVlZjVkNWIzMWZmMTA5NWVkYzMwNWY4Njk1Nzg5MjZhZDlkMjliYWYwNDAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5b0dfc8e5c524990b1e6fadd68dddac8",
+      "statement": "setup.ts globally mocks the React Native platform shell (Platform pinned to android, StyleSheet, core primitives, Dimensions 375x812, Appearance dark), expo-router hooks, and @meteora-ag/dlmm, and filters only React's ReactDOM.render/act warnings — but deliberately does NOT mock src/services/dlmmApi, which is a light owned leaf module that tests import for real while stubbing globalThis.fetch to control the wire.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/setup.ts#L1-L33",
+          "version": "repo-lines-v1:sha256:0540c0d9c87becd4f223be5b24e8874ecf70865d47a553dcf8f231b9a98bae6b:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3ZDIxNzU1NDNiZDFhYmRhNGFjNWQ4ZmM0MTRiZWQwNTBmNjVjOTFjYzQ4NzI5NjYxODk3ZGM0Nzk2YzIyMmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRkYjAyMTFmZTNmYTcwZmE3NWEzNzIzMzg1ZWFlOTNmNzhiZmQ2MDcyNDNmMGM2ZjQ0Mzg2NjZiNmViMmM0ZGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIwNGMzNzA5MGU1MzNiNDA4NDM3Y2U1MDc2ZmY4YjZhY2UxNDFkN2MyZTViNDMwNjBiNWE3YzA3Yzk3Yzk5N2UifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4ad6353410f14fe2a9e34fd6b9b3a069",
+      "statement": "Tests replace owned singletons via two dependency-injection seams: CacheManager.createFresh() returns an independent instance (the constructor is private and getInstance() is a process-wide singleton) built for testing, and createPositionPipeline(deps) accepts PipelineDeps {cache, connection, dataServices}; the connection default resolves lazily on first chain access, so pipeline tests construct and run the full flow without an RPC URL.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L66-L98",
+          "version": "repo-lines-v1:sha256:cda0d4f5ef7c9e38ecbc4ceaf2d528cde7df91ba176927a66f52a33429962912:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzNzMzNTI1NzEwMzJlZTQzMzZjZDFmMjBjZGUwMjZjNzRjYTA5Yzk0YjU0OGUzZTdiOWY0MWNkMGQ2OWM4MjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg5NmE1ODg5MTI2YjMxZTg4NmYxNDE2OGU0YTkzNmY4YmJhNDY3M2ZiN2E2NDkwOTgyYjVkZjg1YjU3Zjk0ODEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0MjNlMGQzYWIzNjUzMjc0YTNiM2JlN2Q3ZGIzMGM5MmU2OGFkMjZjMGYxY2Y4ZDE0ZDNkNzc0M2E4ZTZkMjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVhOTI5M2ZkODA1NGI2ZTQ3MjQ4MzczZjM5ZjRkZDc3ODAwMTA1ZWI3NTgzNDg2ODcyNTQyODVjZDEyODJiNzgifQ"
+        },
+        {
+          "resource": "repo://src/utils/cache/CacheManager.ts#L14-L26",
+          "version": "repo-lines-v1:sha256:04f1cebbe107174a4cca5dec127ccff7c2450882cc48990c168505a50e830b12:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjYWJmZDQ3MGIxNmU5MDMwY2RlYTRiYThiZDkzYjU5YTM0N2UzZmIxNjAxOGE3MmVmOTZkM2I2YTUxOWJhMDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI4NDVhNDY1MTlhNzg1ZjE1NjBlOWQ3ODE2OWE1YTkwN2E3MDZiN2VhMTZhNDhlYjI4NTg1Mzc5MWY0Mjg0ODEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkwMzllODVkYjU1N2VlNDE3YTk2NDZmNjkyNzIyMDUxMzExNmNlZTVlMDliYTAwM2JhZWQyNDgyNjczYzU1YzEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_61c8d88ee6fc43d1bc73dd3b1c80d179",
+      "statement": "Coverage is scoped to src/utils/**/*.ts, src/stores/**/*.ts, and src/hooks/**/*.ts (V8 provider, no thresholds) because the pipeline's logic lives in pure functions there — computePositionViewData, pnlAggregation, outOfRange, formatters, downsampleChartBins, and CacheManager — while services and widgets are orchestration exercised end-to-end rather than counted.",
+      "evidence": [
+        {
+          "resource": "repo://vitest.config.ts#L12-L17",
+          "version": "repo-lines-v1:sha256:b9c14cdd1ab212ef0457fee5f38b10f828db4b45ee38fce990611c9d89e1d2f0:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTgwODAyNjdkNDNlZjBkYjc4OGZhYTc0MWIwODYyNzUxZTdmNWMzMzcwZmZhNDc4NDYzMWUzYjM5NzQ1NWJkMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWYwY2RiOTcyYTdiZmI3ZWQyNDZmOWZmNjcyMzg1ZTU1ZjQ5NjhmYzExMDQzZGM1YjY4NGQ1MWRmYTMxZGJjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWVlYjhhMmQ3M2ZkMWZjZjU2MWYzNzQyMjdhMTYzYTQzZmIzMzk4MTYzZGRmM2UyZmJkN2E0MmI3M2Q3OWZjMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2MzZjBmNjJhNTQzOTQzZWNhZjRkNjFhYTZlOTk1NjBjMDE4YWEwYTk5Y2UzYWVkNDZhMTcxZjM3ODNlMzk4OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8417955ee0ab498bbed9314b439ab139",
+      "statement": "Test commands: `bun run test` runs `vitest run` once, `bun run test:watch` runs vitest in watch mode, and `bun run test:coverage` runs `vitest run --coverage`.",
+      "evidence": [
+        {
+          "resource": "repo://package.json#L17-L19",
+          "version": "repo-lines-v1:sha256:b77b0f19c3f52dbac1b9c5f0780b3094ec4198666dce48cd4ccb4290591eee82:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjQxZmMyNDllZmE3MWIwZTdhOTdmN2Y0ZWI4Yjg5NDk0YTU5Y2IzZjg3ZDcxYmU2YWFkNjNhYTNiYTVlM2QzYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOGI1MDk4YjQwYzkwYTNjZGI4OWFiY2E5YTI2MDk0MzI4YzliNjg2OWYyNmVkMzUyZjVlNjg1ZGRlYmRiYmUzNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTEzOTBiNTFhNjc5ODJkOGEyNDhiNzFiOTMzZTUyMTgwYTNjN2U3ZGNiODU5ZDgyMzQzODg4ZTdkZjA2OTA1ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjg4YzlhYWE0YWY0NjNkNjU5OGJkZWZhNTdlNmUyMWMzYWQzOWM4YmYyYmFhNGNiZDc5NDk0ODI1MzgzNjU3YyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_7cacfbc30676494387354868ccf9687e",
+      "statement": "Widget tests render real component trees without a device: they mock react-native-android-widget only at its transport (getWidgetInfo returns fake installed instances; requestWidgetUpdateById invokes the real renderWidget callback), keep the library's real FlexWidget/TextWidget/SvgWidget and buildWidgetTree conversion, record every rendered tree into an in-memory map plus a history list for flash assertions, and substitute react-native-mmkv with an in-memory Map stub (with change listeners where reactive reads matter).",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/widgets/portfolioWidgetSync.test.tsx#L14-L115",
+          "version": "repo-lines-v1:sha256:ff3e1d6753957010c66d64e42626c5c7bf6510e20bd7382c7ec5aaf39c20b257:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAyLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJhMTEyNDE5YmE1MDM3NDI3Y2ExZjJkNzdhZTg0Yjk0OWM0NzRmYTZlYTI1OGM4M2RiODVhZmExMWI0YTQ1ZjA1IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiIwMWJhNDcxOWM4MGI2ZmU5MTFiMDkxYTdjMDUxMjRiNjRlZWVjZTk2NGUwOWMwNThlZjhmOTgwNWRhY2E1NDZiIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIyMjZkYmI5MDhjNzE1ZjdkOGY1MGNkZWMzZDdiMWZmZTBlODg2ZDllMWM3ZGJkZDY0MzMxNDg3MjEyMTkyNzcyIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJmZWVjNDcyMGNhMWU5ZTI3YTMxMGY3OTQzNTdiYWY5NjMxYzcyNzNkZGU1YTYwMjM1OTE5MDU3YWYwMzk0Zjc4In0"
+        },
+        {
+          "resource": "repo://src/__tests__/widgets/positionLiquidityWidget.test.tsx#L34-L67",
+          "version": "repo-lines-v1:sha256:a61057d18f76c0a1793bd76c0e63772244c90b7fbac48aa1faea613f7f05cbfc:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZkZjRhNjI0NjU4MzM0MGZiMDUwYjhjZmNhNzQwMmUzZWNkNmYzZjBiNjVlNDg1MDc0YmYyZjc0Y2NmZGI5ZWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjMmQ3YjBlNmZjNGYwYzI5YjhkZjgzMmIzM2Y1NjJmZmEwMzg1MzQ4ODYzNWEzNDNhZTNhMjQ2NDcxNzRhMjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZiNTgwZTk2NGY4M2E0NzNmNDNkNDQzODQ2Mjk0OWQ2OGI1NjAwZmRhNzg3ZjE2Mzc0NWQwMGRlODljYmYzNmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdlMzNkZTQyODcxNTlhNTY4YzAzYzRmYmViYmU5ZjMwMDE4MjU5NWQ2MThmYjgwOTBmYjI0ZDVlNzZmMWQ0NzgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_924cc9f92d5b4da1be0269d3137293cd",
+      "statement": "portfolioWidgetSync.test.tsx (happy-dom, driving the real useWidgetSync hook and portfolioWidgetTaskHandler) pins the widget wallet lifecycle: current numbers stay visible with an Updating badge during manual refresh, closed positions are never restored, wallet switches never show the previous wallet's numbers, disconnected refreshes never flash cached data, late responses from previous wallets are ignored on success or failure, reconnecting the same address does not resurrect the prior session's cache, hook unmount cancels the scheduled launch update, wallet-less background tasks clear stale numbers, malformed or unowned persisted MMKV caches are discarded, and no requests run when no widget instances are installed.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/widgets/portfolioWidgetSync.test.tsx#L187-L386",
+          "version": "repo-lines-v1:sha256:59180c10df9388c8e1e61f65392fc437d513bb09f2a260e786a5ec4d59b8a919:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiJlY2UxMDRmNzZiMWRiODUxZmI1ODg5ZmE1YzI1Y2FjMDcyZDg1YTJmYTVhZjBiMzEzZTA4ZDYxOGVjNTlkMmM2IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJiMjM1MjU4OWMzNGQzYzYwNjg1OTMxYjZlY2M0ZDUwOTkxYTdjNTZjOGZiYTI4OTQxMTQ2NTc2OTAyNzJjYWMzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJiNjFjZjk1MjFiOWIzZTk5OGExOTYwYzk2NGFjMDcyOTdiZDVhZTNhMjcwZjAxODIzZDI0MGFmODhhZDMyMzZhIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJiZDRkOWIwODM0NzI0YzYwNjEyODEyY2VkZDRmYjY2ZGYxYjNhMmIxNThhOTdhMmRhNjUxNzBhNGNmMmUyYTBiIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_bda2a185946049afbfbdfeb3460d1ead",
+      "statement": "positionLiquidityWidget.test.tsx pins per-instance navigation without extra fetches, selection that follows positions across reordering and falls back when they close, refresh semantics (navigation kept alive mid-refresh, previous wallet's graph and late responses never reused, failed refresh retains the last graph with retry, stalled fetches hit the 20-second headless deadline), disconnect/reconnect clearing without restore, missing prices or liquidity rendering as unavailable instead of zeros, no fetch when the widget type is not installed, selection persistence across vi.resetModules() headless reloads, toPositionWidgetData producing JSON-safe snapshots with stable addresses and no raw position object, and SVG invariants (flat distributions stay flat, bounded bar count with finite coordinates, edge-clamped out-of-range markers).",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/widgets/positionLiquidityWidget.test.tsx#L183-L342",
+          "version": "repo-lines-v1:sha256:08c1c002c52d09c6ebc2115382b2a039c2dab4e6a7158380af84e414862087b4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI2M2RjZGNmMGMyMjhkYmY1MWYzYWNiNzQzNWQ1ODQ5OWIwZmI0YzYwMTczZjUxZWZjMDU2MzZjM2UyNDhhZDE5IiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI4NTgwYjc2NTE4ZGFlOTc5ZmFlYmQwMjM2N2EyOTI5MmE1MGQ5NzYwOTIyNTFhMzhhNmNlMzA4ODBiYTQyODI1IiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiJlMmFlYzhiMmE5ODhkZTQ0MGEyMjc2NThhOTQyMDk3NDhmYzY5NmM0NzBkOGViNjhkZmMxZWNjZTQwZGMxZjZkIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiIxYjIyNjZiMjVmM2E5YTRlZDU0NDRmNGNmMDU4YThhODU0OTQyYzM2NGVlMTMxOTZiZTAwODUwZTc2MzRmOGQzIn0"
+        },
+        {
+          "resource": "repo://src/__tests__/widgets/positionLiquidityWidget.test.tsx#L344-L390",
+          "version": "repo-lines-v1:sha256:26b8729e2fe92f23bca875abbf21102a3f2c07c2096a55e0dce1e6794dec5e26:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZkZTRlZDk1MjgxZjRlOTdiNzIwN2Q0MjdiMTllYjkyNTBlY2IwMWZhNjBmMjFmOGZjOTcyOTliMGU2ZWE1NmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFlZjBiOWRjMmI1ZTFiOWFiZWNiZjJmMTAxNWE0NTIzY2IyYTc1MWVlZDgyNDQyYTBhNzA4ODBmZmNhZjliZmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_374867de6b7b41a3816ad1b21dadaa83",
+      "statement": "CacheManager.test.ts pins the cache invariants with fake timers: inclusive TTL expiry exactly at the deadline (zero TTL is dead on arrival), in-flight deduplication including fetchers that throw synchronously (one call, both callers rejected, retry allowed after the pending entry clears), error propagation without poisoning the key, and the invalidation-during-flight matrix — a detached request still resolves for its original callers but can never repopulate the cache, overwrite an explicit set, or detach a newer request, while unrelated pending requests survive pattern invalidation.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L231-L255",
+          "version": "repo-lines-v1:sha256:027a2e7d2c0b1df847e3f8d200ea30efd0c3f589655766c4c201f11c30dd0997:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0YzFkOGM5ZmE1MTMxZWU2Mjk1ODgxN2U4NzhiYzkwMmNkMWExMGRiZTg5YWIxMDVlMjdlZDRiMWI2NmMyZGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI5MWZkYmMwZTdhOWFhZGRiN2E0YjEwMTQxMzVhYmQwMGQ3M2RmYWZjOWNkZWM1MWEwMTNkMGIwMjEwN2Q2YzciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI0MDJiZmFiNmM0M2JmZjQxZTg4MmI1ZWQyYzk2YWNhOGQ2MDM5Mjc3YTNlNWZkZWY2OGQxNjQxZWVhODhmNjMifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L279-L355",
+          "version": "repo-lines-v1:sha256:99995cf3bc880fb8eddf15b32c99e96afb8ceb43a984d5cd559c440c6ba28114:eyJzZWxlY3RlZExpbmVDb3VudCI6NzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY5ZjQxNDZkYjVlOGM1OWQ4ZGU2NDcyYjkwN2Y2ZGIwMjNiNTk2ZjdlZjhlYzRhYTE1MTcxNGY2MzRmNGZlNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJkMGVjOWI3YWQ3YTFhZDk3MjVmNDM0YmM3ZjFlYmM3NmIwMjU3MWVjMjgyOTU2MmUxYzdjNjc1ZDhjYmM0MjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQyODgxMDI4MTM4OWEzY2YxOWJiZDJhNDU0NmM0YzdlYjJiYzhjYTNhMDRjYWFlZDE1MzAyNTBjYzEyMGVjZmYifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/stores/CacheManager.test.ts#L81-L97",
+          "version": "repo-lines-v1:sha256:166bdb942d1ce88694fcbc6fb58bb8e01a86e60b4a2d11a5213355d1fe8f12aa:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjZGFjMGUyODU4ZDcwMzQzZjMzYjdmYTY5NzZmNGNkMDk4YzM2ZmFjMjAyNzRlODc1OWU4NTMyZWJjNGU2ZTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwYzhhNTZlMDY5MTQ5NzU0NjI5ZDUwOTViMTI4MmU4OGIwMjE4MWFlMWY5OTNmYmUwM2Q5MDE0YWYyZjVjM2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwYTcwMjM2NjJkOTQ1NjdiNTlmNmNiZWIwMTRiZTBkMjFmODFlY2U0YjQxZTY4ZDQ3Njg2NWExMWRkNzAxNGEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_90bd283bb75f44c884d5f2b030ab2cbb",
+      "statement": "positionPipeline.test.ts runs createPositionPipeline with an injected fresh cache against the real dlmmApi client (only fetch, the DLMM SDK, token fetching, and config modules replaced) and pins: paginated PnL pages are fully resolved and cached (page=2 request observed; a repeat loadPortfolio makes no new fetch calls), a failing page — first or later — leaves nothing cached so the next load retries cleanly, token-price failures degrade to null TokenInfo and $0.00 values, pnlSol/pnlSolPctChange arrive identically as strings or numbers without a Helius key, invalidateWallet only clears wallet-suffixed pnl: keys (token_data and other wallets survive), and fetchPortfolioSummary tolerates one pool's PnL failing while another succeeds.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L173-L242",
+          "version": "repo-lines-v1:sha256:299f58c1e26f36caf5df3a239bd3909af6ca11ac4afa73e8d2f71f38f14ba020:eyJzZWxlY3RlZExpbmVDb3VudCI6NzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJlNjIyYjQ2MDAxMzllZmNkM2RkZTIwNmViNzVkNDk1YzQyYTg2ZWVhNjgwYjg2YWI1OWZjYTMwOGJjMWY4ZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQzYjA4OWQxOGE2OGRkNmZiYmM2NWIyYzczMDhmMDA1N2FkNzhkMDg2NzM3YjZkNWUyZTMxZGJkMjhjMTlkMmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg4OTlhMjQ4MzRmOGQ5NzRlYzhhYzk2ZWM1MjVhMjUwOTkwZDhjNTNkYzhmNTUwYWY1MjE5MWIyYjVkMmZlNDAifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L244-L341",
+          "version": "repo-lines-v1:sha256:686d8d052a596a48cb4aee5e35d5beee9852e113c3a98a223bd727fe4cc1018c:eyJzZWxlY3RlZExpbmVDb3VudCI6OTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE3ZTc0YzM1YTYyMGRiZTA2YzBjNjY0ZWUwODhkNjJlYzlhMDdiMGExOWNlMTU2NTlhMzczYjEzNDllMmRiNTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIzOGE3NjQ1OTA3ZjgyYTVhYzhkOTczMGVhY2ZiMDU3Zjk3OTZkN2NlOWNlZTBhYWE3MjZlZmM2OGE5MTRkZjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRhYTRjZmM1ZmRmYWRmNTU1MGU4Yjk1NDdhNGVjMGVmZDM5YWRkZTY5YzhlN2YzZDI2YzZlNDFjZDc4YjdiOGIifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L343-L423",
+          "version": "repo-lines-v1:sha256:0cd065d538261d958c7f43c6335af83279f3e93d12a23ff3c5973653eccca5e5:eyJzZWxlY3RlZExpbmVDb3VudCI6ODEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJiMGM4YTRjYjEyZDEyNTk5MTM4NjZmNzIwN2M1OWMzNzUyNDIyNTY0YWFjMWJhMDUwODZlNTlmYWE4M2RkMGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY3YmM3ZTMyNzFlMTU0ODRhMzYyMTRkOWQ1N2I1NWFlZWUwMGVlZTAzOGU4ZGUyNDZjYzg1ZTAxODlkYTllYjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRkMTIxN2Q2OTcwYTc3ZGNjMTRmNjM1MDY1NzE1ZTZhNTk0ZmIyYmNhM2M2YjE3ZTFhM2Y5YmFhMWI4NjVjMjkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ec27579f85e649349b5165cf914365ef",
+      "statement": "pnlAggregation.test.ts pins the net cost basis invariant: computePoolPnLSummary computes totalInitialDepositSol as deposits minus withdrawals, never gross deposits (the deposit 4.5 → withdraw 4.5 → redeposit 4.5 case yields 4.5, not 9.0), with partial withdrawals reducing the basis proportionally, null withdrawal SOL treated as zero, the value − uPnL fallback when no deposit SOL data exists, and per-position aggregation.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/pnlAggregation.test.ts#L44-L143",
+          "version": "repo-lines-v1:sha256:35205eb18f16e19be30ae4f42e6c082305733ea10d0cd7fe47fe97639f91ef1b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAwLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiIzZWQ2ODYxODM0YTFmYWFiZGE3NjZhN2RlNWMzZTJlMmRlMWEwNjMxZjQwNTcyNDFmODE2Yzc0MDIzZTMyOTIyIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI2NDc1ZTk0YTkwNGFjNDliMzE1NGQ0NjcyYTY2ZTg2MjliODZkYWM3NGUzZTI5MzdiZTY5MjdhZTNkYTExYzUzIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiI1YjI4Y2NmM2YyYzYxZmJhNzU3OGEzMDBhZDc0NzVmMWFjZDhlODViYjM4YTBjZmNhNDBmNTlmZmJjOGQzNjUxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJmMmI1MTRiODBjMTQ3OWFkNjQ2YjY2MmJmNGMzN2JlMmQ1N2UxYzBiYTllNWJlMTM4NjkxODAzMDU1MDFhN2MzIn0"
+        }
+      ]
+    },
+    {
+      "id": "claim_0c523f5a22b04802858e0e9b1825d319",
+      "statement": "computePositionViewData.test.ts and formatters.test.ts pin the view-model boundary: defaults when positionData or both tokens are missing ($0.00, '-', null PnL and liquidity shape), in-range detection at bin boundaries, zero PnL preserved as valid while undefined/null/empty/non-numeric/Infinity/NaN map to null, and the feePerTvl24h round trip — the API's percentage string (\"1.31\" = 1.31%) is stored as the ratio 0.0131 and rendered back as 1.31%, with missing/negative/non-numeric input becoming null and null rendering as an em dash.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/computePositionViewData.test.ts#L261-L328",
+          "version": "repo-lines-v1:sha256:cdb4b3bdf77c6457ca251a3cec682dcaecb77b7a0da980b5dd34968f7c213d1e:eyJzZWxlY3RlZExpbmVDb3VudCI6NjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMyMjdlM2YzMjhiYjliMmFjOWViMWU4ZTFjNmIyODNiZmVmMjlmMzBiYWI3MDk4MTdlZTVhYzA3ODhmNGI5MDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlMTk2NmQwOTA1ZDA4MDZhZjJmZTRjMTZjMzBmZWYxYzUxM2Q3OWMzNzk0ODY2M2Q4YjQxNTAyN2NkNzJlNTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhlMGEyZGZmYWQxYjEyNmRkYjNlM2U1NTU0ZTJkN2U5NmQ0ZGI3OGQwYTA4YWE0MTNkOTBmMGY3MzIwNWY5MzIifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/utils/formatters.test.ts#L161-L205",
+          "version": "repo-lines-v1:sha256:7f3e751ebbb89d0838ab4f09aac5cef018e418de57925bcd1a372fc05d2e2379:eyJzZWxlY3RlZExpbmVDb3VudCI6NDUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ3ZmUyZmYzMzJlMGNiZmY5NjU3ZTg0NzY0MTEzMzc2ZTc4YjUxZjlhZmZkYmYyZmZkNmFlYTlkNTFlZjg2YjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFlZjBiOWRjMmI1ZTFiOWFiZWNiZjJmMTAxNWE0NTIzY2IyYTc1MWVlZDgyNDQyYTBhNzA4ODBmZmNhZjliZmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e41ff3bad25a4e31b572407234fb5c49",
+      "statement": "outOfRange.test.ts pins transition-only alerting: detectOutOfRangeAlerts emits alerts only for in-range → out-of-range transitions; a first-ever check (previous === null) records state but alerts nothing to prevent a notification storm on install, already-out positions stay silent, brand-new positions never alert, and recovery to in-range never alerts.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/outOfRange.test.ts#L12-L56",
+          "version": "repo-lines-v1:sha256:649607ad473b10aaa44c2b8fd193102160299ec9c05c66540da8866e05dc788d:eyJzZWxlY3RlZExpbmVDb3VudCI6NDUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM3ODZkNTZhMjUxZDI2ZDkyMjQxZTkyZTBhZDZkMDU2MGJmMGZlZjIyMjBjN2VhMzhiNDFjODkzN2M2MmI4MTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEzMmNkMDE4N2RkYzViMzczMGQ4YjY0ZmRjYzQxMDljM2I0NmJmMjhmMWE4OTFhYzc0YzZkYTAxZjg4YzMyZDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4111d68ff11a4a4fb047fa6d259df130",
+      "statement": "downsampleChartBins.test.ts pins that chart downsampling keeps the peak bin per bucket rather than the sum, so equal-magnitude bins stay equal-height across uneven bucket sizes, the global peak survives, bar counts stay exact, and input at or below the cap is returned untouched.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/downsampleChartBins.test.ts#L24-L56",
+          "version": "repo-lines-v1:sha256:7c4eff556a6426f20b9b0bb0f2a7629772e2fb4af98460e3f5d3a5a3c48fb4e9:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU1ZDI3MWMyN2E3YTE5OTM3OTVjNGFlNWNiMzc3OGEyODc2ZDAzNTBjMzk5ZTI4Zjk1ZDVlNDI0N2VmODAzYTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE1MjhiMjFlZGQ0ZTVhNzgzN2VmZTJjM2Y5ODIxMDk5MzU4MThmYjJjZDVlMzRmYzc3ZTIxNjk0MzAxNzhiY2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjlkYzVjZGY1NTczMmY2ZGRiMGNjNGYxZTc5MTJkYjY3OTJjOGU4Y2IwY2QxNjdkNmQwMTJiY2UyYTczNTcyNTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_82ee3caa90174dc3ab7a2af77efe3780",
+      "statement": "dlmmApi.test.ts pins the transport contract with a stubbed global fetch: documented URL construction, DlmmApiError carrying HTTP status (null status on network failure), the pagination walk until hasNext is false, rejection at the 10-page cap, outOfRangeCount and pool-value-weighted feesTvl24h rollups, and no partial rollups when a later page fails.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L121-L215",
+          "version": "repo-lines-v1:sha256:27c68f3958fb8fa5681ea87184804b16f178ad776ac0b1508e094b38beca65af:eyJzZWxlY3RlZExpbmVDb3VudCI6OTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc0YmYyMjY0MzlhYTkyZTAyZjk0Mjc4NzZlYTc1Yzg0ZDEwNGRkMzNjZWU0NzAzYjg3MDRmNDQzODFlOTVkMGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFlZjBiOWRjMmI1ZTFiOWFiZWNiZjJmMTAxNWE0NTIzY2IyYTc1MWVlZDgyNDQyYTBhNzA4ODBmZmNhZjliZmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L89-L108",
+          "version": "repo-lines-v1:sha256:2c394391aa56f8f16bd257e3a76adeca3780993ae568873537c68b449e02bcc6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY2ZTczZWRjYzJhNzVlOTQ1YzYzZWJhMDIwNzc4YWY1YmEyMDFhMWU2N2ZhYTM3NzhhYzk2ZjA5MTFmOGFlYTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhMDc4OTUyZWIyMTljODBiZTI4MzVkMDZhNGM1M2FkYThiNGUwNjQ2NjliOTk2YzA5N2UyNTZlM2Y1MzhmMDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlY2MxOTllN2IyZWVmYjllNzg1NzhhNzI2YzZiYTIzZWNhOTMwNjBhYmI3MGM0ZjhmNmI1MGRjODFhMDhjNmYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_25e72f06db1d4015951725b488227638",
+      "statement": "data.test.ts pins DataServices behavior against an injected fresh cache: token prices cached across repeat calls, per-mint batch isolation on partial failure, and OHLCV cached per pool + timeframe with distinct timeframes re-fetching.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/data.test.ts#L36-L129",
+          "version": "repo-lines-v1:sha256:ff6e7237f2fc07cdc5094901eeb03cf59463e20e7f042d52f077f702e823b56b:eyJzZWxlY3RlZExpbmVDb3VudCI6OTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJjZTY0ZGYwMWMxNGEzNjdiMzJhYzcxMzAxNmY5YjMwMWYyZTIwYTNjZTMzZWZjOTg5Mjg1M2EwMzg0YWRjMTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFjNTI2NmFhMzFjZTQ4YWI4YWVhZTQ4YzJjZjE5MTZlOWIzNzI4MjUzYzlmOTNmOTE3OTc2OTkyODhhMjlmNjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI0YTE4OWMwMTQwYjliN2I5NzkxMGE4Nzc4ZGJmNDBmOTA3MGNhZTEzZjRkZTcxMTZmNWM4MWYwZWQ4YjAxMjUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d14c7590ff764b3284ab1d7cfb523833",
+      "statement": "theme.test.ts guards design-token drift by reading src/global.css and asserting each @variant block's color values match themeTokens for both dark and light, keeping the uniwind CSS in sync with the source of truth in src/config/theme.ts.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/config/theme.test.ts#L26-L63",
+          "version": "repo-lines-v1:sha256:c55000a377e6256a162bc84bc160153a1f8af088144ef1119b52e4d2a913885d:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyODEzYWUyMTc5NGZhMDI5ZjMxMmIwMWRkNTNlZTkzMzk1ZGZjMWE0NjQ2YjUyZDMyZTIzZjY0MzUyNWE5YmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRmOWFiZmZmZjkwNzI5MjEyYzg0ZTBmYTlkNGY5NTRkNDViOWEyYjc2Mjg1ODEyMWQ0ZDk1ZGE3MWQxMDUwNGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

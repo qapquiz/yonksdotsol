@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:da085f8047336158c7e088280118d661b58f361f89b89d221f103d5798736ca9",
+  "claims": [
+    {
+      "id": "claim_76f8bca6877247efb2a96ed2978ff136",
+      "statement": "detectOutOfRangeAlerts is pure (no I/O, no store access) and emits at most one alert per position, and only when the previous snapshot records the position in range (previous[id] === true) while the current snapshot records it out of range — state alone never alerts.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/outOfRange.test.ts#L25-L56",
+          "version": "repo-lines-v1:sha256:b574ebc238c0d744b03f4a2fccf3c55b80cd92a7cd5e8d21dea6ab19e66c37e9:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFlMTJmZjViNDUwOWYzYmEzNzliMzkwZjAzODk0OThjYzQyOGQ5NGY2N2U1YThjYWJlYTJlYzU3Y2IwOTdjOGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI1MThjMGM5Y2VhYjJmY2JiNGQxZWY2MzQzYjIzYzcwYzVkOGEzZDRiMWI2MzE3YzZlN2Y0Y2U4NWY3Zjc3YjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUifQ"
+        },
+        {
+          "resource": "repo://src/utils/alerts/outOfRange.ts#L20-L46",
+          "version": "repo-lines-v1:sha256:39ef3925927d6b8be054acc86bdf929f15b9bc4034878198e5fd333431105fb3:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg0YzM4M2ZlNzlmYmUzM2Y4Yjg0MDdlOTU0NzM0MDZmMDQzMmI0NGRmYTE0ZmVhNDczMjI2Mjc4MDgyYWI3YTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE0Y2MxNWI2ZTkxYTE3MDY4N2UxMDc5ZjRmODdiN2YxZjk3ZmQ0MjU3Nzk2NDg4NWYxZTYwZDg4MjY1OGVlYzAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1746ebaf8ecb474794652a5bcec6343f",
+      "statement": "A previous state of null (wallet never seen, or corrupt store read) makes detectOutOfRangeAlerts record state and emit no alerts — the no-first-check-storm rule that prevents a notification storm on install or on connecting a wallet that already has out-of-range positions.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/outOfRange.test.ts#L13-L23",
+          "version": "repo-lines-v1:sha256:d41731267286aadefb307fbc5c9abf00ab75ba1aa9e9f1234a231c469afcf4d8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhNGY3YmZkZWRlOWYwNjFmNjI4MTAwOTA0ZTYwODA2YmJkMWZiZDVhY2Q2NTVkNTY4OTRlMjZhODkwOGJkOWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA2YTIwYjlmYzk5MzEwNDNkMWZmMWFiNGE4YjllZGU1ZmQ1NjZmZTlkOTliZWNiNTNhNGVmYmQyYjA5MzAwZTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYyNjgzNjJjOGNjZDI0N2Q0ZjFhNDIwN2EwZGU4MTEyZjMzYzk0YmYxODEwOGY1YjI0Nzk2YWZjZDg3NWY4NWUifQ"
+        },
+        {
+          "resource": "repo://src/utils/alerts/outOfRange.ts#L24-L30",
+          "version": "repo-lines-v1:sha256:7e6fc011bd2e6efe0585e2a18cf2c8d9337d69a7b45cfb2ebf4e1a8f69774209:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjIzY2I0YzEzZDY3NzU5ZDU0Zjc2NzFkNDQwMzQ5NzJkMDkwM2EzOWQwOGFmYWU3M2JiOTgxZWI5YWIwZGNmMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTcyYTQyOTM4MmIyZTE0NzE4ZTBlMzdiMDU3MGE4YTE3MDI5OTFmY2Q4NDk4Y2Q4NDA2MGE4YmY0ZjA1MDE3YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjhkNTQ1YzNhMzhkYjQ2ZDViMWU4YjgzODMyMzU3ZWRkZGNlN2MxNTQ1MzU5ZGQ5ZjUwNDNlZDhiMGIyN2U3MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDAyYWNjNWE1NGViZGQ5N2Y1MWE1NjY4ZjA1YzU1MjM5MzY2MDc4MjA0NjEzZTE5YThiNTI0ZmUzMjBlNjJjOSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_24fc238bbd9242fd971b2164de597546",
+      "statement": "Positions absent from the previous snapshot never alert (brand-new positions are recorded, not notified), and nextState contains exactly the ids present in current, so closed or removed positions drop out of the stored baseline on every run.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/outOfRange.test.ts#L35-L44",
+          "version": "repo-lines-v1:sha256:bbd1cbf89f873667e64e773f75c69db61011caf40c7bc5a6da524c5fa41a20ee:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBjODNhNDE0NjMzYTc3MTFmY2QzNTg5MDhiMGI1ZTRmZTIzMzkwZjdkMjAyYTc5ZDc5YzM4ZmY0ZGZkNWE4OTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg0YjAzZThiNGI4NzMyMWVhMmM0N2I3MzNmN2VjZGMzZGU4NWI5MjU0ZWIwOWI4ZmY3M2YzMjlhNWNiY2FkMDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc2ODRlZjIyZDhjODRiNjRhOTgwNGJhN2NmMTE4MDg0YzgxYTllNDJmY2M0NDFiYzg2Y2FmODY0ZDg0YmM1OTQifQ"
+        },
+        {
+          "resource": "repo://src/utils/alerts/outOfRange.ts#L28-L45",
+          "version": "repo-lines-v1:sha256:2ed61c1ee9f7c34b92928ccb554888695b6c9e567a609eed1a231473b9097316:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA3OTUxYTNiODcwNTI1YzZmMTM3YmJiYzI0MmIyMjk3NWM2MGY5MGUxNDJkMmIxOWI3MTA0ZmZlMDY3NTdjNjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVjMTU5MzgxMzdkMDY0ODU3NzFkMmJiNzdlYTU1N2IxMjcwMWUyMGM4MzA0NGU4MjQzMTAyYTk2OTNlMzhmZmYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU1ZTAxNGFlZTRiYjRlOWJjNmE3MTMzYmU5OTc3MTVkYWRjYmQyOGU1N2RlNzdkYjI3N2JiNmIyYzUzMjk2NmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJiMWMyNzkxZjdhNTcxN2VhYzdkMDFiMTMxZmFhNjQ3MGRlOGFhOTQ5ZTgyNWY2ZWUzMDBkMmIzYjk1MTI1MTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ea1c5cf15bac4c18b59e13029e4d86b1",
+      "statement": "sendOutOfRangeNotifications schedules a single coalesced local notification for the whole alert batch (title carries the count) on the Android channel 'out-of-range' at HIGH importance, with a 1-second TIME_INTERVAL trigger and tap data { screen: 'positions' }; despite the doc comment's 'one local notification per alert', the implementation always emits one notification, and the whole body is wrapped in a try/catch that logs and swallows failures so a notification error never propagates to its caller.",
+      "evidence": [
+        {
+          "resource": "repo://src/utils/alerts/outOfRange.ts#L48-L75",
+          "version": "repo-lines-v1:sha256:9f59f8790002556090453ebd0d91d8f5262d182ef28192ab9cf51363fe16f1d6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZkNmQwZmNmZmU0ZDIwNDA2NTQ5MTA5NTllODFhNzJlZjE1NjYyODc0ZGJkMTEwODk1ODI4YjIyYzEwZmMzNTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA0M2QyYzUxZTIwNzNmNGIwZjI3NWE0YzdlMTJkZjAyNjEwMWE5MzZlOTRlYjM4YTk5NzJhZDBhZmI3YjQ2NmYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0aec6a5871e84d498000b99b65489b11",
+      "statement": "alertStore owns a dedicated MMKV instance created with createMMKV({ id: 'alerts' }) and stores all state under a single key out_of_range_state: one JSON record mapping wallet address to RangeStateMap (position id -> inRange boolean from the last background check). getRangeState returns null for an unseen wallet or on unparseable JSON; clearRangeState deletes only that wallet's entry and wipes the whole key if the record cannot be parsed, so corrupt storage never poisons a later comparison.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/alertStore.ts#L1-L38",
+          "version": "repo-lines-v1:sha256:c8773134305d64109f1f9debffd944f9ac2854bfb29d8178aae72193ef269daa:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjViMjgxM2U3Y2RlZTEyOGI1NmUwOWNhYmE0MzlkNGJhM2YyYmExZDZkNzU2ZmYwZDVlNTYwZjE2MGU4YjQ5MzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a326298114fa4628897a77d5b24390a6",
+      "statement": "Unlike its siblings, setRangeState does not guard its JSON.parse: a corrupt stored record makes it throw, which lands in the background task's alert try/catch (logged as 'widgetBackgroundSync: alert check failed' and swallowed) rather than crashing the task.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/alertStore.ts#L21-L26",
+          "version": "repo-lines-v1:sha256:f3332f7697424abf61fc3ae818805e4269554d12796ba6b5d876ae3cd3f0b0cb:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmE3YWYwNTE4NDNhODBiOWI4MmVhMTljYTI3MzMwNTIxMGE1ZmZhYzQ1NzZlYWZmNDk2NDRlZmQwMzcwZjZjMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI1ODBlOTY0ZjgzYTQ3M2Y0M2Q0NDM4NDYyOTQ5ZDY4YjU2MDBmZGE3ODdmMTYzNzQ1ZDAwZGU4OWNiZjM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODQwNmIzNTY4MzI1ZGI4OTZhZDk4MzgyMGI2N2ZlYWFhNWFkMjI4MjMwNzdlN2Y0ZTE1N2FkNWNiMDE2ODc3ZCJ9"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L31-L48",
+          "version": "repo-lines-v1:sha256:2d751a97d0edb91c89cdaf50a8d905442b6c6d2ca3881d9dfe7c71ee0d720807:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjljMDdhNjNkNjRmYzIxMTQ3MTg4YTI1MzZhMzk2Y2Y1ZTQyYTRmODgyODg0YThlOTY5ZmIyYzFjNjZjZTdhZjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBkYzRmZDJkYTFhNTMwZTZiYzFiNzVlZGJlOTE2ZjNkMTEzYzgyNzNiZThiNWZlZTJlZDE2YmIzYWMzYjhlNjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU1MTc1YWYyNzUwMzA2ZDdlNTU3ODY3MGMwY2UwNmQ1M2FjNjhjZDYxMWM4MDg0MTQwMDBkZDllNjhhNjNmNjQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_886aa8855d9943a4a4d8abd47c2c77bd",
+      "statement": "The widget-background-sync task is the feature's only production call site: after syncWidgets completes and the wallet checks pass, it gates on useSettingsStore.getState().alertsEnabled (persisted Zustand setting, default false, read headlessly without React), loads the portfolio via createPositionPipeline().loadPortfolio, maps each position to { id, inRange: p.vm.inRange }, then reads previous via getRangeState, stores nextState with setRangeState, and only then awaits sendOutOfRangeNotifications.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/settingsStore.ts#L48-L58",
+          "version": "repo-lines-v1:sha256:b041f8822f21684f28b2d7af579a61f99eb32643aa38ee2ec489757260d98117:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk0ZGY2MDQ2NGU2NTNhZGJiYmZiZDRkNmNjY2UxMjRjNGVhNGMxOWNiOWI0MDg0NjZkZTliOWI5Y2VmZGZhZDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcwMTk5NWYyYTNlNGEzYTcwZjJlYzZlZWVjZjdiODE2YmQ2OTI3OGQ0ZTNhNjc2YTlmZjQ5MTk0NDBiYWM3MmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY2MDI0MDRmMDAxNzc2MDkxNjg5NmQ5YTg2OGUwM2Q0YzFlMGNmMzE2OTExMTRhMzQ0YjQ0NzRkMGFmYjkyYzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZhZmJhMDUyN2MzOTUzYzRiNmUwZTViNTczOWJhODM2MTJmODA1M2JjZGM5NDY2NzMwMTkzY2QxZDU5MGI0MDgifQ"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L26-L49",
+          "version": "repo-lines-v1:sha256:e8ef66334458b4e203249bffca466a3b3e6f5fe6a2a4becf710e94932ec630b5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2NTk1ZjRlZTVmZjYzZDUwOTUwNDE5ZGMzNDQxNDUxMzg1MWRjOTczNmZkMTdhNGY3YmZhOTMwYjI2MWI2ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRjZjRhMTQzYjM1NmUwYjg3OWU5YjRjZjI5NjIzYzU0ZWI2ZjFlMjcxZjY2MmNjYWFkMzk4MTI0MTQ2NWNlODkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUyYzkyNjdlZjc0YTllMjAyYTMwMGFkNWY4NTI3NTZmODdjZjFjZjJjNzk3MjY1OGJmNTAwMjE4Nzg2MmM3MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ3ZmY1ZTllZTE5NTJkNDE4YTljNWFjZGE3NWZhYTgzNjEzODc2OTE5NWEyOTkyZGYyMmZlYzhjYWQzMjViZGUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a08b4cbb754f4b5e9caa9f588c3df797",
+      "statement": "The task persists nextState via setRangeState before awaiting the notification send, so a delivery failure loses that alert (best-effort) instead of re-alerting the same transition on the next run.",
+      "evidence": [
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L41-L44",
+          "version": "repo-lines-v1:sha256:12cab7bbd0df953e5743bfea1f66bf4c5685baa61ecdb62493123be71c5a969d:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzEwNjFjZWZlMDJkZDA1Y2ZjMGY0YTllZjAwODIwNWRjOTQwNDY5MTk0ZTg2NjhmYjQ5NmMxM2JhNWI5ZjU3MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmNkODIwNGNiOWVhYjI3NmM2ZmMzOTBmOTA0MTQwZDkyODkwYTMzN2VjZThhNWY3ODVjZTRmZTZmMDU3ZmUxNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzQzODNkYThjYzUxZmI1ZWNhMzYxNDc5MDRmN2ViYTYwMjVlNWJmZTA5OTg4YTk2NWVjZmFlYTE1YTYxODg3YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2JjMGYwOTY3MWEwMjBlMjI5ZjhiZWFhNDQzY2ZkM2FkMTU5NmMxN2VjMTJhZGY3YTlmZTBiOTQzYzYwOTNkZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_ed668cd58ce248f6b2805c48e769cd2c",
+      "statement": "The task captures getStoredWalletSnapshot() at start and defines walletIsCurrent() as an address-AND-revision comparison against a fresh read; it re-checks after syncWidgets (with the no-address check, returning NoData if the wallet vanished) and again after the awaited loadPortfolio, so a wallet switch, disconnect, or same-address reconnect in flight aborts before any state is read, recorded, or alerted — the task never alerts the wrong wallet or a stale session.",
+      "evidence": [
+        {
+          "resource": "repo://src/stores/walletStore.ts#L18-L40",
+          "version": "repo-lines-v1:sha256:57f095c9fd15835f2cee3cac5169e44aed0128107b064fb7a1485510b7f64d5e:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMyZWU4ZmQ2ZTQ0YzQ4NTAyMTUzNTQ0ODM1MzBhZDdkYTU1NThkZGM2ZDM2NWRlZDNhYjgxNmRiNWVjMTM2NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyMjQ1ZDIxZjNkMGVlYjBjN2IxZTQ5N2RkZTNjYmYwOGI1YWFjYTZiYzBlOTRjOWJlYmE1ZTZiMGViYTQ5MDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L18-L36",
+          "version": "repo-lines-v1:sha256:cb1e9410de7c812d4527566a4451794b8b162d60966fd08e3035d44f7b41e1fc:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhZmE2Nzc1ZjBkMGQ4NjRhMTUzMmU3MzU0ZmVlZGM5ZTMwYWQ5NWVkNmExOWE2YjI5YTRlNjI0YjliNTRlMDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQwYTI5MTRiOGI1MmEzYTJiODIzN2U4NzQyZDE4Y2E2ZmNjNzgyZWQzZGFiYmRhZGZlNWE0ZjU0MGJjZGRkYWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJiOWI0MDM5OWRlZGRhNjA5NjU4MmUwMmUzNTgzYjM1ZTIyYzk4ZGI3NzA3N2U3NTIwYTQyOTViYjJjNTRkMDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk2NTM3Y2IzMGRiMTEyOTExNTNiM2RlZWNhNjVjZjZhOGYxZjIxOTc4NTY0OTg5Y2VmNjVlYjk5ODIyZmM1NGYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_212e1ae81d4346fdabbab82070ed02fa",
+      "statement": "The entire alert block (setting read, portfolio load, store reads/writes, send) runs inside its own try/catch, and sendOutOfRangeNotifications swallows its own errors; the task's BackgroundFetchResult therefore reflects only the widget sync outcome — NewData for 'updated', NoData for 'no-data', Failed only when syncWidgets throws or returns 'failed' — so notification or RPC failures can never get the task throttled by the OS.",
+      "evidence": [
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L26-L53",
+          "version": "repo-lines-v1:sha256:8615ee1cb33367cde79c974c3c1ad4bd0ed80a8ba262decf7beb0f9de45aeb57:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2NTk1ZjRlZTVmZjYzZDUwOTUwNDE5ZGMzNDQxNDUxMzg1MWRjOTczNmZkMTdhNGY3YmZhOTMwYjI2MWI2ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUyYzkyNjdlZjc0YTllMjAyYTMwMGFkNWY4NTI3NTZmODdjZjFjZjJjNzk3MjY1OGJmNTAwMjE4Nzg2MmM3MjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBjMGJhNzM2YzQyY2FiZjFkNjhlZWE0NDA1N2M1Mjk5YTNhNWQ1NDRkNTdmYjU3MGZkNTc2N2I5ODZlNjU1MDEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ad0b29d656ff4165a87f5110c84d97dc",
+      "statement": "The task is defined with defineTask('widget-background-sync') and registered idempotently (guarded by isTaskRegisteredAsync) from useWidgetSync on mount with minimumInterval 1800 (30 minutes), stopOnTerminate false, and startOnBoot true; the native-only seam means the web stub never registers it, and unregisterWidgetBackgroundSync exists for symmetry but has no production caller.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWidgetSync.ts#L68-L72",
+          "version": "repo-lines-v1:sha256:01c9c83e61659fe94b5695a34c0480b39535a10cc38cc7f9d5a9180cce4a5062:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2YwMGEzMGFkZWJjMGUyZTFjNGFlMmM0YTBiYTU5ODc5ZTQzNzBhMmQ2Y2RiM2JjMGU4YzljM2ZjZTA5Nzk5NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ3NWU5NGE5MDRhYzQ5YjMxNTRkNDY3MmE2NmU4NjI5Yjg2ZGFjNzRlM2UyOTM3YmU2OTI3YWUzZGExMWM1MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzRhYjFlNGI4YTI3ODUxZTE3MDNiMTllMzFmMDk1ZDZlZThlNmM4MDc5ZWJhNjM3OTAwODY2ZDkzNTM5NWY4ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNmE1NGVjYjA4ZjExNmY1Yzc1ODAwMWYxNzM5ZGU0YWE5ZWViMzVlNGVkODYzMGJhZDliMDU4NGQ4OTNlNWNhMCJ9"
+        },
+        {
+          "resource": "repo://src/hooks/useWidgetSync.web.ts#L1-L10",
+          "version": "repo-lines-v1:sha256:140ef66b676f11cfdaf82ddfd57e496eca741817ef4a42568cb746c35bbd0a93:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L16-L72",
+          "version": "repo-lines-v1:sha256:85dc6e4b4c96ad309561b02453834961770b33782906aab00312ef8d09c74c4a:eyJzZWxlY3RlZExpbmVDb3VudCI6NTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkNzU2Zjk3N2QyYjI0ODQ3NTUwOTdhODRhODBhZTIzYjE3M2NiNWMwNzhmYjRmYzY2YmExZDMxY2MyYWYzOTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUxMTEyZmRmNGQ1MTJkOTE4NzU0ODQ3MjAzNmI4MTM1YmVmZGI0OTQ0YmRlYTI0MWI1ZmJmNWY0Njg3NTBhMjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_bb22508231174a70b4bdc324e8a8a408",
+      "statement": "The task short-circuits with BackgroundFetchResult.NoData when env.devMock is set (EXPO_PUBLIC_DEV_MOCK=1, or always on web) before any widget sync or alert work runs.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/env.ts#L11-L21",
+          "version": "repo-lines-v1:sha256:c869c8416adf0d95647c629ef946cefd89d763fa9bccdcd480e0ef075021a05a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1ZTRjODI0NWQxNTUzMWU5ZDE0Zjc1NWIzYmFhNmEyNDEyNWVhMmY2Y2E0MDEyYzYyYTFiNjk4NmUwMzRmNTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMzOWRjNTFhMDU0NDlhMjdkYTM3MmRhNTM4N2M3Yjk3MGM3OTAwYTdhMTYzN2Y0ZjA3Mjk1MzQyMGNhMjlmZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L18-L19",
+          "version": "repo-lines-v1:sha256:a3e93dcba4a186c437bb7f818e09015d039caa76f6e7ff10e01bfa316d94ce18:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGFmYTY3NzVmMGQwZDg2NGExNTMyZTczNTRmZWVkYzllMzBhZDk1ZWQ2YTE5YTZiMjlhNGU2MjRiOWI1NGUwMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2ZmZDhhNzRlYTEyYTMxZTI0NjQ3ZjkxOGViNmUyN2VjOTBkNDZkY2I3YWU0MzdkMDRlYzg4YWFkYzVhMzIyNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmI5YjQwMzk5ZGVkZGE2MDk2NTgyZTAyZTM1ODNiMzVlMjJjOThkYjc3MDc3ZTc1MjBhNDI5NWJiMmM1NGQwNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTQwMGVlNjA3MjZhMzVkNDYzZmQzZmUyZjlkYmJhNDE5MGE1NjIwMmRmMzMyMzQ3N2ZhYTNmMDRjOWQ4NWY4YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5777bd1eff0243a5b763f77b68dff827",
+      "statement": "The 'Out-of-range alerts' toggle in SettingsSheet requests OS notification permission before enabling and forces alertsEnabled back to false on denial (with an inline hint), so an enabled flag implies permission was granted at toggle time; delivery remains best-effort if the OS later revokes it.",
+      "evidence": [
+        {
+          "resource": "repo://src/components/ui/SettingsSheet.tsx#L19-L33",
+          "version": "repo-lines-v1:sha256:bd38a990c12aec27daddd0ac6ab9763af65a4ffe1cdb26d723e47f0bf0ebf097:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4MmM5OWMxNWQwYjMzZTEzYTk4NDJmMzU2MWIyMzk0NTk4N2FjN2NjN2EwNWZmZjA3Njk3OGNlNTJjMmI1YmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2MjY3OTM1ZmM2MzM0NjVkODQ4YjQwYTRlZDY5NjdlN2I3YTMyM2Y4MWNkNTNjMTEwYWUyMTAyOTY4N2FhMTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM4MmIyZGU3YmYwZDE0MTEwMjJmZWRiMjA3ZjAyOWY5MTkyZDAxNDhmODdiYmY0YmE5Y2Q3OTI4ZDI4YTdiOTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU3YjM4ZjBlNjU1NDBjN2I4NWE1YWQxNjEyYTVhYmM4ODQ5YjFhODI1OWM3YmQ5MzVhYzI4MjY1MzVhMGM4ZTEifQ"
+        },
+        {
+          "resource": "repo://src/stores/settingsStore.ts#L48-L57",
+          "version": "repo-lines-v1:sha256:45c55310cacb39e14bdb065e6b4143c3f96d1eeaa08be4a43feb9c4fb2122172:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk0ZGY2MDQ2NGU2NTNhZGJiYmZiZDRkNmNjY2UxMjRjNGVhNGMxOWNiOWI0MDg0NjZkZTliOWI5Y2VmZGZhZDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmMGNkYjk3MmE3YmZiN2VkMjQ2ZjlmZjY3MjM4NWU1NWY0OTY4ZmMxMTA0M2RjNWI2ODRkNTFkZmEzMWRiY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjY2MDI0MDRmMDAxNzc2MDkxNjg5NmQ5YTg2OGUwM2Q0YzFlMGNmMzE2OTExMTRhMzQ0YjQ0NzRkMGFmYjkyYzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzNGJhMzNmNTA0MGM5N2NiNWFkYTU0NTA4NDYzNDYxZjZhYTI2MDE2YWE3NjdmMzE5MzA1Y2U3YTgyNzEyYmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_85041a2b459f440d83e7152b7e081794",
+      "statement": "useWalletLifecycle's handleDisconnect captures the stored address before awaiting disconnect(), then calls setStoredWalletAddress(undefined) followed by clearRangeState(currentAddress), deleting that wallet's baseline so a future session — even a reconnect of the same address — starts record-only as if the wallet were new.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/useWalletLifecycle.ts#L87-L97",
+          "version": "repo-lines-v1:sha256:b220ac426b2b1e279fda430ca3dc524bf3ce3ca246cf6ab2f8ecadf86c58849e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwOTcxMjUyYWM5MmJhZDIzZjVhNDQwZjFiMmQ5ZmY1YjIwYjM3MzkzYTgwNzUyZmFjOTc4NTE0NmIxYTIyOTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFjODQzMDMxZjQ1NWVkNWZhNWFkYzNhMjkxOGUyMjZkM2EwYWIxOWMxYTY3MjA3ODkxZDZhYmViNmNhMjlhN2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRkYjQ1YTI4MDAwMTcxYzNiMDU5NzIwMTcwNDVlN2M2OWVhYTY3ZDZkZDViOWM1MTZjNWFjNTViNjQwNTNhZDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA3YjZmMmE3MDYzOWQ3MmQzMzgxYTRkMTQxYWU4NjU1NjNmY2E2MTA4MWYyNzE5ZDhmMWNmNWZkNzg3Y2RmYTMifQ"
+        },
+        {
+          "resource": "repo://src/stores/alertStore.ts#L28-L38",
+          "version": "repo-lines-v1:sha256:792e9536603e4bd2eb8c83bae455b8b5742c046c28d415340494b8762b51948e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3YzVkZTc0ZDM2NzkwNWU2ZjI4ZTc3NzEyZWRmZjcxOGM5NWI0MWQyYzI1YzYyYzg3MjI5NjZiM2YwYTZiNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJiMWEyMzY5NTdhYTdkOWMxZTRjYWFmOTQwNTEwN2FmYzQ2NzEwYWYzODM0NmE1MzBiMmQyNmMzNzMwMjM2OGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c5f7e289e72e405cb187cd1f2c7ecaf9",
+      "statement": "The alert snapshot's inRange signal originates in the position view model: computePositionViewData computes inRange as activeId within [lowerBinId, upperBinId] (false when position data is missing), and the task reads it as p.vm.inRange from PositionPipeline.loadPortfolio results.",
+      "evidence": [
+        {
+          "resource": "repo://src/tasks/widgetBackgroundSync.ts#L37-L40",
+          "version": "repo-lines-v1:sha256:23d642add2f30a628f5e46e700b02224a647f737279e9bab4c82ec76dc941b90:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWFhYjdiYjM4ZjcyYjk0ZDk3ODRhNmMxMGI2N2FlNDU4ZjM1MWJmNjg5Y2ZlMWM4MTgxOTVmNTQ2MmM1MjlkNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTE2ZDgxN2E2OThlZjllODliYWI3YWUwOTllMGY5NGU2YjNhZWNkNzgzNDUxOGZhYjY2ZGVhMDFhMWEyOGI2ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTk2MGQ4ZjBkYzE0NTE4ZGRhOTFkMjI4MWZkZmI3YzM1ZjM3ZmNiNmZjMmFlOGYxZTVlZDIzZjUxMzcxZWU3ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWI4YTNmZjgxZGQ0ZjY0ODJhZjFmMjBjYWM4NGUxNTQwNzM0MjVkMmNkYThjNGU5YWEzYjRlMDQ4YThmMDYxZSJ9"
+        },
+        {
+          "resource": "repo://src/utils/positions/computePositionViewData.ts#L184-L186",
+          "version": "repo-lines-v1:sha256:c082a901c26143556ff283bcfbe766bed862be0fdec83c0865fb0792d840d50a:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjVjOGI4M2I2N2M4OTVlODQ0ZDg3Y2E5MzU3NDFmYThjZmZlYmI3MmMxMjhlMDkzNzg4NjZjMGUzNTM4ZTFhMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTc3YWY4NjFlYjNhYmU4MGMyMzAyZDQwNGE1OTIzY2NhNDg4YWJlYjg5NDM1OWQxNTY1MzFlNDQwYjA5NjYxOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTAzNTIwZDY3MTNiNmQ2OWYyM2E4M2FmYzYwZWY0MWMyYzY5NWE0N2JiYjQ0YTcyY2QyYjQ5OWE1Y2YyYTFiMyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_54a1d258d71b4ddaa782a7de8c429454",
+      "statement": "src/__tests__/utils/outOfRange.test.ts pins the detector's full contract with expo-notifications merely mocked: first-check records only, true->false transitions alert, already-out/brand-new/recovered positions stay silent, and multiple simultaneous transitions each alert; the delivery half has no dedicated unit test — its never-throw contract is enforced by construction.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/outOfRange.test.ts#L1-L57",
+          "version": "repo-lines-v1:sha256:2d6da1afa43b2885c346a60087c2658224757ee38dfa01184494e3fc80ea3e11:eyJzZWxlY3RlZExpbmVDb3VudCI6NTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMyM2JmNTdhMzNmMTE4NWYyNmMzODBhNWYzOTUyYTZkOTgzNzljZTEzYzM5MmUwNzlhMzQyOWFiNDg0NzE2NDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}

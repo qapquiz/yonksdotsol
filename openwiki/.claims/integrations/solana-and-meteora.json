@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:ea6e73f8e221204c09e338aac9d28443ee616e3f051c01665535e83d352f7c3e",
+  "claims": [
+    {
+      "id": "claim_ce7fff87a6f64079900df519f3334279",
+      "statement": "`getSharedConnection()` in `src/config/connection.ts` lazily creates and caches the app's single `@solana/web3.js` `Connection` from `env.rpcUrl`; if `EXPO_PUBLIC_RPC_URL` is unset it throws a setup-guidance error naming `.env.example`, so the failure surfaces at first chain access rather than at boot or module load.",
+      "evidence": [
+        {
+          "resource": "repo://src/config/connection.ts#L4-L16",
+          "version": "repo-lines-v1:sha256:4a31471683476adb872083f165bbc1e0d35ac8cdef295ba37752ddb28ce23b01:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5Y2U5YTJmNjUyMWZjMjgzYmRmOTkxZWM5ODQ5ODU1M2JlN2ViNDdkMjU4ZGNmNDM2M2Q2ZDY2NGZiMzhhMDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJiMmU0MDRiMGE1ODdkYjkzMzJmNDk3NjU5NTM0Yjc4M2JiYjhmN2Q3NmQ3OWUyZTQ2MmIzZWM5MzhkOTJiOWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L86-L99",
+          "version": "repo-lines-v1:sha256:e9a76d7ccdaf2b2d5b97b8fb3b3f496bf8015c923aae352af21baba79942f44a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA5YzhlOTcxNzY3ZjBlMDg5ZWEwYmI1Y2YzNDE5NDVjNWZlZGQ0OTNkM2VkNWQzN2Y3YjEzOWY2NjUyNTk3YjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEyOWE2NGFkM2E5MjM3ZjdkNDEzZTMzNjgwYjFmYmExNzY2ZmE5NGY3ZTdkZGFlYjI5Nzk2NTg5OTExODNjYTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRiMGQ1YzlhNzAxYTlkYzM0OTcwOTY3NjM2MWYwMWY0NGE2YWMzMWRiYjMxMTYxZWUwNTYwZmRmMTMxYmI5ZTMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fe3e1ea3c39d4ba4bb7443cf3de7bd67",
+      "statement": "`src/config/env.ts` maps three external-facing variables: `EXPO_PUBLIC_RPC_URL` → `env.rpcUrl` (used by both `getSharedConnection` and `fetchTokenFromRpc`), `EXPO_PUBLIC_HELIUS_API_KEY` → `env.heliusApiKey` (surfaced but not referenced by any code path — reserved for enhanced data fetching), and `EXPO_PUBLIC_DEV_MOCK=1` → `env.devMock` (forced on for all web runs).",
+      "evidence": [
+        {
+          "resource": "repo://.env.example",
+          "version": "repo-file-v1:sha256:9959cd7c09597ad70fcbeea1a845dde9d1a07f1e4ff2ef1ce59ce8d0b2b0cd07"
+        },
+        {
+          "resource": "repo://src/config/env.ts#L11-L21",
+          "version": "repo-lines-v1:sha256:c869c8416adf0d95647c629ef946cefd89d763fa9bccdcd480e0ef075021a05a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1ZTRjODI0NWQxNTUzMWU5ZDE0Zjc1NWIzYmFhNmEyNDEyNWVhMmY2Y2E0MDEyYzYyYTFiNjk4NmUwMzRmNTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMzOWRjNTFhMDU0NDlhMjdkYTM3MmRhNTM4N2M3Yjk3MGM3OTAwYTdhMTYzN2Y0ZjA3Mjk1MzQyMGNhMjlmZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/tokens/index.ts#L22-L39",
+          "version": "repo-lines-v1:sha256:237717d6defbfe4079315500041554211056f6e4b0dc7cdac4aad6ba5275b72e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVkNjhhMDc5ZjI0YmI1OWUwNWYwMWY1OGQ2ZTkyMGU4YjQ4YTVlMDJhZmY0NzQ2YjBlMzJlODg0NmI0NjRkNWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVmZjJmZmNjNzViYmE1NmI4ODMxYTA5YTc3MWEyOTgxZjIwZWJmNmMxN2YwMDBiMDAwMjc5NzFhYzkwZjIzYTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNjNTJiNTJiYzdjZjFkZTNlYjIyZWVlNjgxZGYzYmQ3OWM1Y2Y1ZjAyNzk2MjkyOTAxMmY1YjdkMzEwN2FjMjEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1f0fa3dc3d984d6683f68b0c187bbbbe",
+      "statement": "Token metadata and per-token USD pricing are fetched by POSTing a Helius-style DAS `getAsset` JSON-RPC request (params `{ id: mint, displayOptions: { showFungible: true } }`) to `env.rpcUrl` itself — so the configured RPC endpoint must support `getAsset`; the key alone in `EXPO_PUBLIC_HELIUS_API_KEY` is inert.",
+      "evidence": [
+        {
+          "resource": "repo://.env.example#L1-L2",
+          "version": "repo-lines-v1:sha256:1e6512feb0dcc3791d41c4d349c9f16de842b59f4f582f814aec055c9a5f235b:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODAxMzI0MTBlZjQ3MTUzMzhmNzMyODQ5Y2UyMmQ5OWU1ZjNmNzU3ZTIyNmMxODA5ZTc5NWYzOGVjZDAwYzNmZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2RiZjUyZDk0ZGE2YzY2YzAxNDRhYjUyMTg4NTZlNDY0MTBhMTc3ZjJlNzMyZWYxZjExYmRmNTFlYjc0Mjg4OSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTkzM2U4NmM2OWI1YzE0YWQwZjJhNWE4MzVlMTVkNDdjOTM2M2RjNGRlNzg0MDIyZTg5NGI0ZWYwY2ZlNzg5NiJ9"
+        },
+        {
+          "resource": "repo://src/config/connection.ts#L6-L13",
+          "version": "repo-lines-v1:sha256:e56ae3d520b4545343a76708eecc104af55113306103f8de8c3cf37078f0fa0e:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjcwZDk3MDMxMTJkNmJjMGNjMDE3MThjYzIyOWQ4NDM1MzMxNjI5ZWY2YTI2ZmEwZGNmOTlhMGE4NWEyY2JlYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDU0YTRhMGMyMjczNDM1YjgyNzM5NWE5NDdiOWU4ZTgwMmU3NGNkZGE3OGMxMTlmZDU0ZWFiMzhmMmRkMzNmYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2IxYWQyMDUyNWE2MzE0NTRiZDIzYzIxYTJjNzFhYWFjMGMzM2IxYzZmYTlmYTNhMjYyNTU1NDhkMGJhNzcyOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGM2OWIxZjZiNGViOTgyZTkzMTRhMTYzOTYxZDg2ZjY5NDdlMWU3ODFiMDFhZTE1NDZmNmQ1MmQxZjJhYjg3OSJ9"
+        },
+        {
+          "resource": "repo://src/tokens/index.ts#L22-L39",
+          "version": "repo-lines-v1:sha256:237717d6defbfe4079315500041554211056f6e4b0dc7cdac4aad6ba5275b72e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVkNjhhMDc5ZjI0YmI1OWUwNWYwMWY1OGQ2ZTkyMGU4YjQ4YTVlMDJhZmY0NzQ2YjBlMzJlODg0NmI0NjRkNWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVmZjJmZmNjNzViYmE1NmI4ODMxYTA5YTc3MWEyOTgxZjIwZWJmNmMxN2YwMDBiMDAwMjc5NzFhYzkwZjIzYTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNjNTJiNTJiYzdjZjFkZTNlYjIyZWVlNjgxZGYzYmQ3OWM1Y2Y1ZjAyNzk2MjkyOTAxMmY1YjdkMzEwN2FjMjEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_687d970907384b8a9f8b5b0a0cd07fed",
+      "statement": "`fetchTokenFromRpc` throws on both HTTP failures and JSON-RPC `error` payloads (no silent nulls); it maps `result.token_info` into the `TokenInfo` shape including `price_info.price_per_token`, the live-spot price that all value and PnL math is required to use.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/utils/dataFetching.test.ts#L74-L103",
+          "version": "repo-lines-v1:sha256:c94da55b52e8ff9751fb9f6cbdcc4ada18dfa7969e3f5a11afd17c11ead06b25:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhYThmOWE1ZjBlNzIyM2QxMDYxMjM4NTM5ZjUyNTI1ZGVhMmQwZGExODNlYjFlZmE3NjU5ODZhNTIwNmExMDciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc5OGNmMGUxN2Q2ZGIxZmIyNzIzY2JmNzQ5MmY5OGY5ZGQzY2NkMTk0M2FlNjZjNzhhMzhkZTk1NmUxNjBkNDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUifQ"
+        },
+        {
+          "resource": "repo://src/tokens/index.ts#L40-L59",
+          "version": "repo-lines-v1:sha256:90beb6ac52b1c6bf2ea5d60c72d04ec93e3855f7272bfa7ef61cfe35388921f0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQxMDRkZmQxYjBhMDlhMmNiZGQ3MmVmOGI4MzU4ZThhYWI1OTA4NWU2ZmQzNGEyMjJkNWUxOGQzM2UwODI2MjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_4df80c3a563941f1bb84f4c0269f02cb",
+      "statement": "`getCurrentSolUsdPrice` derives the SOL→USD price by fetching token info for `WRAPPED_SOL_MINT` (`So11111111111111111111111111111111111111112`) through the cached `TokenService`, returning a validated finite number or `null` on any failure (logged, never thrown); `usePositionsPage` calls it on wallet change and refresh to feed the SOL/USD display toggle.",
+      "evidence": [
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L131-L133",
+          "version": "repo-lines-v1:sha256:eb768ee88806979a24d6b7ea19e4846bf3bc9b7522031a924f92a81bb7b8c85e:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTk2OGUwNzQ3ZmY5NmIyZTZjN2M3YjI2ZTgwNDdiNTNlYmRlMzFlZjhhYWJkZjRjYWU2ODllMzI5YTVlMjBjNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGYwMDQxMGZjZTkwMDBjYmRkMjgzN2JjODE0NDkyOTVlMzFhNTA0Y2Q4YzRmZjczMGFmOGZkNmE4OTQ0NzFiYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2I1ZjhlYzFjYzVkYjYxN2U1MjcwMTczNjM3MjQ2YThmZDEzYjEzMDFiNTc1NmFjMTU1Mzk0YjRhNDBmOGNjNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZGI4YTRiNzNiNTA3NzNkYTQzMTg4YWI5OTRiM2Y2ZDZhNWU1MmYyOWY2Y2EwMDZmNjdiZTI3NTFhODkxNGQ2MSJ9"
+        },
+        {
+          "resource": "repo://src/hooks/usePositionsPage.ts#L84-L86",
+          "version": "repo-lines-v1:sha256:eb768ee88806979a24d6b7ea19e4846bf3bc9b7522031a924f92a81bb7b8c85e:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTk2OGUwNzQ3ZmY5NmIyZTZjN2M3YjI2ZTgwNDdiNTNlYmRlMzFlZjhhYWJkZjRjYWU2ODllMzI5YTVlMjBjNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGYwMDQxMGZjZTkwMDBjYmRkMjgzN2JjODE0NDkyOTVlMzFhNTA0Y2Q4YzRmZjczMGFmOGZkNmE4OTQ0NzFiYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzIyNjQ2MTJlYzZmYjY2YTAxMWFkMTMzMjczNGE5ZjczNWI2MjhkZjI0MTQ5MDA3ZTRmMzI5NGI3MjYyN2NlOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTU4MThmNTlhOWUyZTgwNzhmNTk4ODk0M2FjMTBhNWFmOWRlNjYxNGNmZjIyYjE1MDFiNTY5OWEwNjQ1MjMyYiJ9"
+        },
+        {
+          "resource": "repo://src/services/solPrice.ts#L4-L19",
+          "version": "repo-lines-v1:sha256:9997171e506a2ac0575962ba994c510d6ff9f4ce9b26c2f8db940afa4498fff0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZkMzhmN2NmZDFhYWZiYzBhYTJkYzg0MGUzMTlkNmVmNzg2ZWExODQ1OTAyYTU1Y2FjYjdjZjgwMzQ2MmI2MmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/tokens/index.ts#L15-L16",
+          "version": "repo-lines-v1:sha256:90b2e94c1a00c9393eb38e63644ac3c0655758662933db21aa794bd56722fff4:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2M5NDY3MGNkNTM4YzdkMDlhZGQ0ZGQ1ODdjZDMyNjFmZTVkMjI2NGM1ZDAyN2E0NzQ3NjRmMzFkYWU2M2UzYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWQyMjcyOTkzYjA1NWM0ODQzMThmY2Y5OWM3MWVmMDc2MGZmY2IzOTZjZDA1ZjU5Mzc5MjMxZTNjY2MyNGFlNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI1ODBlOTY0ZjgzYTQ3M2Y0M2Q0NDM4NDYyOTQ5ZDY4YjU2MDBmZGE3ODdmMTYzNzQ1ZDAwZGU4OWNiZjM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTYyOTcwM2RlZjBlNTFkZWUxZTk3MTM0NmI4NzUwNTJmNmIwYjgxOWYzNGQzNzQxYzQwYzkxOTJjZTE4YzM3OSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_17953fcfc70746a9af2663efea60a7d0",
+      "statement": "The production code's only use of the Meteora DLMM SDK is `DLMM.getAllLbPairPositionsByUser(connection, wallet)` in `PositionPipeline.loadPortfolio`, which returns a Map of pair address → `PositionInfo`; the call requires the Buffer polyfill installed by `index.js` importing `./polyfill` before the router, because the SDK's Anchor/buffer-layout deserialization needs Node Buffer methods Hermes lacks — SDK failures on Buffer methods are fixed in `polyfill.js`, not by forking the SDK.",
+      "evidence": [
+        {
+          "resource": "repo://index.js#L1-L6",
+          "version": "repo-lines-v1:sha256:50b5960281391bab460355989c165b8ba76d4109ab2ec583ae11593d066ba581:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWExNjMwM2IyNTRmNjc1ODBlYTA0MDEzZmE5YTg5M2QwZDUwZDY4MGRkZWM1MTYwZjMzZDM1NzQ0MmMyNjQ5NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzVmZTE3YjJhMmZjNTczMzA1MDliOWFjMDdkNWU2OTZiMzU4OTc0NGE0NjdkNTQwNDQyMDUyZWY5NzlkNDRmMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://polyfill.js#L1-L10",
+          "version": "repo-lines-v1:sha256:60ee30ee010d983c48e6de7a081c91fe5e834aebf1e1b8be1def21ce9a2a1df1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkZWUzOGEwZWRhMmE5ZmI0NmExZGZmNTNjZGQ4YWU4MTdhMzA0MTU3ODgyNWQ3ZjdjZjYwMjg2MjRiMzA5NTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjExMDIxMGIyOGJlYjQyN2M1NTdjMzAxNTg0MWM1YTdkNzRhYjdkMzQzN2NlMTM0NjI2ZDc3NWFjMmEyNzExYmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRjMzcwZGZmNGM2OWFjOTZhNjE4OTIwZjBmNmE3MjQzNTFlMTYyNzZmZTI3Y2U4ZGZiYmJmYjliMGEwMTNmOTMifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L1-L2",
+          "version": "repo-lines-v1:sha256:09d133895f3df78abb3097dd76746a9973de8a1d878d0f8b44c8e052e38aafca:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYWU1MzQ3ZGNlMjNiMTY2NjliOTM3ZDVjOTI0M2RlM2QzM2Q5ZGMwYzFkZjQzOTMzMmJjZWI0MWQ3MjdmMGU2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjQ3OWU0MTVlMDAxNjM4MGM5MjZmODg0MDgzODMzYWM4MTlkZjYyNGUyMTVhNzY1MDBhYzA5YmVkYmI0YWE1NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjRiMTQ1ZGMyNjM1NjRlY2I4Y2EwOGI3Nzc1MTBhNWZhOGQ0ZDkxYTIwMmI1ZDY2ODUyMDlhY2NhNDViOTc0MSJ9"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L108-L113",
+          "version": "repo-lines-v1:sha256:471fa74559865e21b47f2c0fd64a0351c7e8eb397be64922702191947e4bd9ee:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmJkZTk2ZWFhNDdiZGY5OGY3Nzg0ZDExZDBhZTNkMGFmZTkwZGIyOTYyMmQwZjJmOTczMjQyMWFlZDE1ZDNhYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmUxNzg2MWY1MjU3ZGE5YjE0ODBhZDk1NDc1ZWE2Nzc2ZjJmNTcxZGY3NWE4M2UxYTE4NzU5MmE3NTc2NTY5NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWQ1ZWUxNTA0ZmY4NDJjMzAxZjZiYWNiNDYzMmRlZDFmYjJkNTQyZDQxYzE1YjhjMmEzZGU2NDdjMzkzNTQ3OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzBiNDU3YWE3MDgzNGViNTkxYjM2MzIwNWU2NzJjZmM2MzU5N2JiMTg3OTE0NTA3Y2Q3M2VjMDdiZDZhYTMyNyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5007e1fd47d84e75b8df66db022362b0",
+      "statement": "`src/services/dlmmApi.ts` is the app-owned, typed transport for the officially documented Meteora DLMM Data API at `DLMM_API_BASE = 'https://dlmm.datapi.meteora.ag'`, replacing the `metcomet` dependency so wire types, error semantics, and pagination live in this repo; it serves `/positions/{pool}/pnl` (pipeline) and `/portfolio/open` (Android portfolio widget).",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0002-widget-summary-from-server-totals.md#L11-L16",
+          "version": "repo-lines-v1:sha256:d74bf8800cb4bb873a03af2d5fe47c4ed19e36684f124fa38aa29fcdc9b700b6:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjkwYjEwOGMyODE5MDc3YjRiOGEzZTcxNDdhYTkxNjljZTU1Zjc5YWU5YTliYzg4OGFiMzUxNWY4NjE5MzExNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmUyZDkyMDE4MDcwYmZkMzY5MTZmOGJkNDhkYzkyNTU2MTQ0YzQyMzNjY2QwNzAxMDhiNTRiMDY1NjQ5OTk3ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjc4MDYzZDQzNzZmZWY0OGRjNjUwMzkxNzhlOWIzZTIxNWQzNjU1OGUyMTIwNTkyNDdlODA5MTNmOGQzZTNjMyJ9"
+        },
+        {
+          "resource": "repo://docs/adr/0002-widget-summary-from-server-totals.md#L41-L44",
+          "version": "repo-lines-v1:sha256:919aa7275a60790c04c543cf7f77664913433d0a3175783bf9fab32c0f985171:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTI5YmQ5NGRjZmM3MzE3M2Q3OWExYTgzYmIxYzVkY2VmZjZiMmQyN2MzMTI4OWQ0NGU3OWI5MDAzZWU4MzUxMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTYxYzU1ZDQ5NWY0MGJhNWI3ZTI5N2VkMDg3ZjI3MWE3OTZiZmM1ZDY5NTliMDZlZjM0NTI4NWZiYzVjMjQzYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGU3NmRjNjhkMmM1YWZkODJjN2U0MmQ3NTE2MTZmOWRmZDVkOGYxODg5ZGZhNmU1M2Y5Y2FmZTA0M2E0YjFmYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L1-L15",
+          "version": "repo-lines-v1:sha256:61b5f2dda7094752f32971ea81fb3272f1e286f1c8b1bf547f026ac6c4f31e89:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMwMTZjNjIwN2FhODgzOGFiZTQ3NzM4ZDc0YzU3ZWZiMzhhNTk0MGM0Y2I3MDUzMzNkYWI4ODYzNmQwNWQ1YTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUxNWNlY2Q4NmQ2N2MzYmZjYmU5YTllNGE3ODYwYmQ4ZjgzMTg0NDIyM2NmM2Q3ZjAzY2ZlNTRlYzNkMGY2NTUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYxMTg5N2E4NGFjZTUyNTNhY2M5MTAwZjFhNTkwMDVkNGY4N2UzNzk5ZWMyOGJmZWM5ZTM1MjUwNzc3MDJhZjkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d6ebf8e2bcfd42dab6b36de569d8b293",
+      "statement": "All DLMM Data API transport failures raise the typed `DlmmApiError` — carrying the HTTP status for non-OK responses and `status: null` for network-level rejections — with no silent nulls; the error explicitly marks pagination overrun, and callers catch and decide how to degrade.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0002-widget-summary-from-server-totals.md#L43-L44",
+          "version": "repo-lines-v1:sha256:35293a6c8b5d00df5977e51ea7887ceedb2892a7762bdd89cd902a315c80763c:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmU0YmEwZGRkNzRmN2E4MWNkNDhkNzFkMjcwYjMxNzM2NjczMDE5ZDAyZmE4ZDYzOTgzNWU5ZDUxNDg2ZWM2OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTYxYzU1ZDQ5NWY0MGJhNWI3ZTI5N2VkMDg3ZjI3MWE3OTZiZmM1ZDY5NTliMDZlZjM0NTI4NWZiYzVjMjQzYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjU1NzhmYTAwOTNkMWZmNmNkMTgzZWY3ZTIwZWM2NTQ5ZmEwYTg4Y2M4MGJkYWY5YWRmOTg2MTg0MWFiNDExMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L96-L109",
+          "version": "repo-lines-v1:sha256:6cf0e423c98c091f2d8c8793b8e36f83b9928cc300530d0b311651d12b43117e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRlNWU0NDZhMTliOGJjMjIyNGVhYzZlZGQyNDBmYmI5NDA4NjlkN2Y2MTBiZjlhMjI5MmJkMjAyYjQ2ODUyZDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEzMmZjODAyMDQyNDMzNDg2MzFlZTcwNGVkZWI3OWUxMTYxZGMzYzM1NjI3ZWZjMjNiMWY3OTAxNWUzYTZkNTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIwOWM5MDMwNTlkYmMxZWRiMTA1ZDFiMWEwYWUyNjE4ZDc2YWZiNzQ0ZWViNDJiYzdjNTMzOWRlYWZkMjE0NTUifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L17-L41",
+          "version": "repo-lines-v1:sha256:1607b968d70158c07b8a567687a5d53a44e925fd400328c1b48acdfe1c46bd0f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2MDQ2NDk3NzY1MDJiMzQ1NzkzY2NlN2IzOGNmMmE3MjM5NWNkM2U1ZTZiNTE2OTE0NWU4OTI2NTNhZTQ4NWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI3ZjIxNjY5MmQ5MjRkZWZlNTA1NmQ1ZGY4NTRkMDcwYTEzMWE0NDRhN2ZmMWVlNTEwMGMxYTQ1ZTlmOWJhODciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU4NmQ1Mjg4YTZiOWVhZmZkNTcyMDNkNTIyZDVjNTA5ODIzNzYwZmQ4Mzc2NTk0ZTAzNjMwNzZlNDBmMThlNGEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d286d81104bc45778a316cddffb6e75e",
+      "statement": "List endpoints paginate at `DEFAULT_PAGE_SIZE = 50` driven by the server's `hasNext` flag, capped at `MAX_PAGES = 10`; `fetchPages` throws `DlmmApiError` if the cap is reached before completion rather than returning partial data, so `fetchAllPositionPnL` (pipeline) and `fetchOpenPortfolioSummary` (widget) are all-or-nothing — and because only resolved promises reach the cache, a mid-pagination failure leaves no cache entry and the next load retries cleanly.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L188-L214",
+          "version": "repo-lines-v1:sha256:4d61aef45c65d6332c80f463621dd175d64e990b170777de0ae944af39c9eda2:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQwMzM5YWQyZmQzOGE3NTExMWNjMjM0MmVkZjlhNmUxZWEzMmM5MjUwM2IyOTBjMjIwZmFjMThlNGQ1NWFkMmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImY2NTBkZWNlMWE0Y2E4ZWRmYTRiYTgwNTcxOTAzZDk3Njk4Y2NjNDg4OGFmMDQ2ZmM5N2Q5YjgyZTYyYjRhNTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1ODBiNzY1MThkYWU5NzlmYWViZDAyMzY3YTI5MjkyYTUwZDk3NjA5MjI1MWEzOGE2Y2UzMDg4MGJhNDI4MjUifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L153-L159",
+          "version": "repo-lines-v1:sha256:b651e0d3c969d5c39b5450c4446ffd0481134dbffc009a99f9564ad1d6993e5f:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTliZDg0NjhhODdmMjU5YmY2NDc3N2NlNmU1Y2E3ZTY5NWM0ODNiYWVmYTA2ZDU5ODc3NDY4YTIyODMzMGYxYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2UyN2RiY2JiM2YxMmIxYTQ0ZDgyNjdmNzI5OTE3MjU1YTYwMDhjOTY1MmVjMDRkZjM2MDE3M2E5N2NjODQxZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGU2NjkzNzZkMDMxZjVmNjE3YjI0ZWUzODYxM2IyZDIzMGE3NWM0N2EyYjVjOWU5NzY2M2E2YTU3M2JmYjA0OSJ9"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L259-L261",
+          "version": "repo-lines-v1:sha256:b04d4383f151e98308960505897973c02ddc213d73ca42052d57bf81a365f43e:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjUzNjcxMTY0ZTU0OGRkMzc5MzJmYjgwYzU4ZWZhMTY5MWZhNmQ0Y2ZhYjBiZTg3ODBjOGI3ZmI4YTMzN2NiNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjJiNTA5YTQ1YWZkNmExNmJjYzRkMzI4OGFhZTJjM2IwMTk1ODlkODlmZmNlYjUyZDgwNjYxZjk5MjJiNDIzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmNiMThjMWVmZDBlOGQ2YTc3ZmM1NzE2ZWQ4ZTNhYmNlOGZmOGU5ZjFlMjI5MjM5OWNlZWMwZGU4ODI3NjZjNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWZlOGZjMTJkM2IxNDkwZjMzNzI2MTA1ODQ0ZmExOTUyZGE1ZTI3MzhmMTEzYTM1MzM4NjdkYWU0NDViYzRlNCJ9"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L43-L63",
+          "version": "repo-lines-v1:sha256:95a4bb028abeb2f038b5878b6c065fd2b0c91a359f5d757d79d0d5d8648349e4:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlYTc1ZTMxZWM3ZjA1ODY5MTAyOGZlYWJlOTRjY2NmOWE3ODdkMDM4ZjJlNGYyMTk5NTlkOTRjN2NjYmJlOGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRjODg4NzRlNjcyNWVkZDcwNDdmOTEwNThlNTViYmM4ZTc5ZGY1ZDM5MTg0ZDllYmRlNmE1NThlNDM2ZWJkMTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMyMDI4NjNlNTZmYWUxOGIyNjM1YTEzZTNlYjdhYWFjNjYyOWJmYmRhODgzM2UzYjhhNGE4MjY4YWYwOGY5NzIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ac77886385d7477b910811e9762e072d",
+      "statement": "USD and SOL money figures on the DLMM Data API wire (`usd`, `sol`, `pnlSol`, `balancesSol`, `totalDeposit`, …) are decimal strings that the transport never converts — consumers do. The only tolerated variance is `pnlSol`/`pnlSolPctChange`, typed `string | number | null` because older responses used numbers or omitted the SOL fields; legacy shapes normalize at the view-model boundary, not in the client.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L128-L132",
+          "version": "repo-lines-v1:sha256:b775306c62ea6eeb9aa461e5db2b1c441e8db2a4b5ff03edbb6af2d347881149:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2ExYzc2YzE2NjYzNWMzY2Q3YWRiZWNmODkxMjhmNzJlYjFiNDRjNzk5NTFhYTdhNTE4NDllZWQzNDMwZTdiNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjIzNTI1ODljMzRkM2M2MDY4NTkzMWI2ZWNjNGQ1MDk5MWE3YzU2YzhmYmEyODk0MTE0NjU3NjkwMjcyY2FjMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMWRlZTdhZjVmYjhkZTU0NjhlMGMwYTg4NDdkMzUyMjQ4ZjJjNzQ4ZTgzOTQ0ZDM0Yzg3NDIzNjVjZTI5ZTFhMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2RlOWM0MjYyODk1N2FhNjE0ZWU4NjU5MTlkNzgxN2QyZmNmNGU2ZmNhZjgwYzM4YjliOTY4YTJmZjgzZDQ2MyJ9"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L1-L11",
+          "version": "repo-lines-v1:sha256:fe64b42b15217cc774d9f7772996bf649ca733cf60aaf951d448b29c767ffb37:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMwMTZjNjIwN2FhODgzOGFiZTQ3NzM4ZDc0YzU3ZWZiMzhhNTk0MGM0Y2I3MDUzMzNkYWI4ODYzNmQwNWQ1YTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhZWNlMmFlY2I2OTI3YzM3MzBkOTFkMmVhOWViOGE3ZjI1ZjhmZDU4ZWJhZmExYjNhNmRjYjlhNDIyYjIyNjQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBhZTg3MTY0YmRiNjNiOWI0Njk0OGJmY2VmYzRmMjhiYWQwNTA4NDcxN2NjODJjMDk5NzU0MWVkZDYwYzNlMTkifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L104-L117",
+          "version": "repo-lines-v1:sha256:9d57afcb866824e5620c96cd790f09361d32644b3dd45695c913ae0858009810:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyOTNjNjFmMmE2MGI3NjE3NDU4ZDMxODM1YmE4NDQzN2VlYjczMmUyMWNmYzJhN2RiMzU2ZjllOGQ0NGY4NTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM4ZjJiNzVhYmNhZDZiOGNhODM1NTg1YjBjMWQyMDFlNjU0MTQyZDRkNDExMjJkZjA4NzViMzIwZTY1ZTkyMjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNjg1YTUzZDgyNDUwMzQxNjY1YmJjMTNiYzI2ZjZlZGUyMzA1NmQ0M2Q3YWFjZjg1MTY5ZjkyN2I3MTYyNzUifQ"
+        },
+        {
+          "resource": "repo://src/widgets/updatePortfolioWidget.tsx#L309-L333",
+          "version": "repo-lines-v1:sha256:7cafa7e3f66b7b9afff74f6a45cfb15da125548c11433ff83a7c1f7367e447ad:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4YTM1MTI2NGQ1MWFjODJhMGM1ZDA0ODkyYzcyYzIyN2UxNzE4YmM3MzAxM2JkYTMxZTZmZjFkYmM3NDM1YWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZlZDFhNzg0MjQ0N2RjYTcwMmE3NDgwMGE4YzVjMzlkMThmYjIyMWNkMDExNGYxNWViYzNhMmE5YTU3ZDUzOGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzMmRhZjQ2YTg1YzNkNTE3NjhmMTFkNGQyYzNkMWI5ZTYyMTQyZGZlNTQyMWI2ZmEzMzJmMTUwN2ZkNTgxNTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_07d38c7a54ea47f39e1954a35851d9c9",
+      "statement": "`fetchOpenPortfolioSummary` walks every `/portfolio/open` page and surfaces the server-aggregated `total` (kept global across pages, as is `totalCount`), then rolls up the two fields the server does not: `outOfRangeCount` (Σ `positionsOutOfRange.length`) and a pool-value-weighted `feesTvl24h` (`parseFeePerTvl24h` converts the API's percentage string to an internal ratio; weighted by each pool's `balancesSol`, null when no weight).",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/dlmmApi.test.ts#L147-L179",
+          "version": "repo-lines-v1:sha256:fbedade5e230610275530a69955ed9a43a072eaca7aeb59d523561769233ca5f:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlYzU5MDdkNTA5ZWY2MDM3ZTJlNTA4YzM5YTZkMjA2NGNiODI3MmQ3MWY4ZTZiNmQzMTdiZTRkZDVmMWFmNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzUyNTg5YzM0ZDNjNjA2ODU5MzFiNmVjYzRkNTA5OTFhN2M1NmM4ZmJhMjg5NDExNDY1NzY5MDI3MmNhYzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE1ZWM2YzAwZTJhNmY1MmYzNGYxZjRhMzI4YTNlY2UxYmZmMTYzNDVlNWQ3ZThhN2JjZjQ0ZWQzM2I2YzU5YzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVjYzlkNmNlMzMxOWJkMzE2ZWY3MWY1Y2E3NjliMzFhM2U0MTQ0ZDAyODAyY2Q0ZDEzM2Q0NTljNWMzMmJiMmUifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L230-L300",
+          "version": "repo-lines-v1:sha256:7d03ac51ee7d3602f523c2131bf327e62b5546234311e456b3a46b69aac42bbb:eyJzZWxlY3RlZExpbmVDb3VudCI6NzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVlYmY0ZmJmYzZmN2JjMjk4ODc2ZWJlMzNmMDBhMjkyY2NiYjYxYWYyMDNjYTcwYmUzZGE0MDExOTRlNTZhNzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFiZjQ2YmY4M2RiNzc2NTdhNDhmMDQ5YmQwNDdiNTNjNzc3YTI2Zjk2NTVjNjQ3OWUzMTUwMjI4MzJjNDc2YTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/utils/positions/formatters.ts#L45-L60",
+          "version": "repo-lines-v1:sha256:ecaeda91b849f6798d5ae06e8999f01b21d9d252929feb9d2580a5efb6bca0dd:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFlYmZmMzUyY2QyYTY4NTM4ZThhNThmM2VlY2M5ZjA5ZTgyNjZiNzA2ODQwMzQ2YzhhYmM0YzA5MWJlZjUwNWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJhMjE0YjIzYTY3YmM3Mjc5NzhmYWFlNjkwMzI5MWNlNjY1MDhjZDFmNmE2NmUxN2ZjYzg2OWVhYWQ4ZmVmMDUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_59e0ce3487584de6a4308c39877dc475",
+      "statement": "`fetchOpenPortfolioSummary` deliberately does not roll up per-pool `totalDepositSol`: that figure is gross and double-counts redeposits after a withdrawal (documented in the client docstring), so the widget derives its deposited figure as `totalValueSol - totalPnlSol` from the server's own value/uPnL pair instead (ADR 0002).",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0002-widget-summary-from-server-totals.md#L28-L40",
+          "version": "repo-lines-v1:sha256:4d7e9e537bebc3beba0ba4c751869c60f237363709cf53629ed0fffdb551e165:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2MTA1YjQxN2YxOTU4OTRiZjUxOWJkZWQ3ZmNjNDc4MjhiZGQ2ZDdiMjczMTQyOTcyZDY0ZDAwMzI4NjQ0YjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmYjVhYWYxNzc4OTE4ZTk1OWE1NzhlNjgwZDE3NTJjOTBmODc0NzlmZjc2NDE0YTRkMmQ4NTU3OGUzM2U4N2UiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRjODk2ZTE3ZjE4NjMzMWZjYmU2MjM3NmFlOWQ5MmNkNGViMTdmODM0NzhlZDdjMDkzYmVkMTUzNDcwMzM4ZGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYzc0MjFiNTE0NThjYWRhNjdmYTkxZmQxMzE2M2Y1ZThiYmZiODA2NWY4ZTk3M2RiMzAxZTA4NThmZTgyODYifQ"
+        },
+        {
+          "resource": "repo://src/services/dlmmApi.ts#L247-L258",
+          "version": "repo-lines-v1:sha256:a56d5987a992282ffdf392206999d60041d96b66e0e484ee48f4a0ecffcd3f3e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3MmE0MjkzODJiMmUxNDcxOGUwZTM3YjA1NzBhOGExNzAyOTkxZmNkODQ5OGNkODQwNjBhOGJmNGYwNTAxN2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM0MjNlMGQzYWIzNjUzMjc0YTNiM2JlN2Q3ZGIzMGM5MmU2OGFkMjZjMGYxY2Y4ZDE0ZDNkNzc0M2E4ZTZkMjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIwNGQ0MzgzZjE1MWU5ODMwODk2MDUwNTg5Nzk3M2MwMmRkYzIxM2Q3M2NhNDIwNTJkNTdiZjgxYTM2NWY0M2UifQ"
+        },
+        {
+          "resource": "repo://src/widgets/updatePortfolioWidget.tsx#L309-L333",
+          "version": "repo-lines-v1:sha256:7cafa7e3f66b7b9afff74f6a45cfb15da125548c11433ff83a7c1f7367e447ad:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4YTM1MTI2NGQ1MWFjODJhMGM1ZDA0ODkyYzcyYzIyN2UxNzE4YmM3MzAxM2JkYTMxZTZmZjFkYmM3NDM1YWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZlZDFhNzg0MjQ0N2RjYTcwMmE3NDgwMGE4YzVjMzlkMThmYjIyMWNkMDExNGYxNWViYzNhMmE5YTU3ZDUzOGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzMmRhZjQ2YTg1YzNkNTE3NjhmMTFkNGQyYzNkMWI5ZTYyMTQyZGZlNTQyMWI2ZmEzMzJmMTUwN2ZkNTgxNTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_cdd084227b4a4bb3aad64af40abc0932",
+      "statement": "`fetchPoolOhlcv` fetches display-only candles from `GET /pools/{address}/ohlcv?timeframe=…` on the DLMM API base (duplicated as local constant `METEORA_DLMM_API`); it is a pure fetch with no caching or singleton, supports timeframes `5m|30m|1h|2h|4h|12h` with default `'4h'`, coerces string-valued fields to numbers, tolerates a missing `data` array as empty candles, and throws on non-OK responses.",
+      "evidence": [
+        {
+          "resource": "repo://src/services/data.ts#L68-L76",
+          "version": "repo-lines-v1:sha256:36140e4a873cdb313d2266eb53fa2f1028c2a81732720efd3648e214b6f4b72e:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDdmMjNjZTgxZjg5ZWQ5YzM5N2MyN2M2YmFiNjU3Mzk2YTJlZGVhZDViM2Y1YzY4YTRiYTY1NDU4OGI5N2JmYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjdlNTc4OGQ1ZDlkNzNkMjRhODFkYmMwYTVhNzRiZmE4MmM5YzNiM2FmOTllNTJhZjc5NmU5MGI0NjhhOGEzZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjZjM2M1MmQ3YmQ3MTI2N2QwMmEzMzNmMDZjZGQ4M2Y1ODExYWY2Nzc4MjBmNGQ5YzM5NTk0YmE4NzIxZjA0MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWYxOTI5OTE1YjU4NzYzNjhjMzc0NTNjMmVhOWU1MzFmMjdkNzUyODM0OWMzOGVlYmVkMmU5NzZhNjQ2MzlhOSJ9"
+        },
+        {
+          "resource": "repo://src/services/ohlcv.ts#L1-L31",
+          "version": "repo-lines-v1:sha256:41206d23de0d64781e88edb4062cea814148caa573373d4fdf4d4c57012b0d80:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiMjBkNDYwMDQxMzg1M2QxNzZiZDRlZjQ3NTcyZmNhNzZhZGIxYmMwNWMwMzJmNmYwMWIwYTA5ZTMyZWExMWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFhNTE2MmVjYTJjMDJiNWM3YWE0MTQwNThlYmJmMzA4ZTYyNDM5ZmE5NGU4NmE0ZDQ0ZmQ3ZjY0ZjVhY2E2ZDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVkOGE1NjA5YTA5ZjVmYmM4ZjZlNGZlMGNkNWQyZTU0ZGYwYzQyOGQwNDVmZTkxNjRlZWNiNjZkZjQwYmM4MmMifQ"
+        },
+        {
+          "resource": "repo://src/services/ohlcv.ts#L49-L80",
+          "version": "repo-lines-v1:sha256:d78e243e6889c45eeaa9352dcd382baf4f514add4b1886146429439793f67007:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQwZTY0OTBjN2MzNzI4MDc5YzRkOWQ4NDlhNjY2MDc1NGEyYWJlNzA5YjUwYjc1NDViYjQ4OTA2MTQyNTBlODciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fb77d692c5c445c9ae70629ded653d3b",
+      "statement": "The OHLCV series is denominated in the pool's native Token X / Token Y ratio — the same units as a bin's `pricePerToken` — which lets `PriceChart` share one axis between the candle line and a position's Range low/high prices with no conversion; the data is display-only by ADR 0001 and must never feed PnL or value computation, and `usePoolOhlcv` serves a deterministic mock series in `env.devMock`.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0001-no-local-historical-pricing.md#L13-L16",
+          "version": "repo-lines-v1:sha256:533533b5d0b28f42470c9fd420c71660b43286b180f10954433394b5eb782415:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODYxMDViNDE3ZjE5NTg5NGJmNTE5YmRlZDdmY2M0NzgyOGJkZDZkN2IyNzMxNDI5NzJkNjRkMDAzMjg2NDRiNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDc1YjZiYzkxODE2N2Y3NzZmNjMxOTNiMzgzODJhMzUyMWNjMmY1ZjVmNDk5OWY3YzkzMDg1NDZkMWVhYjI3MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzM3Y2E2MWE3NTllZmEwYjEyZThjZjliNDI2NDJkMWNiOGRkOTY0N2ViMmJlZGNhMTg0MjRhNmZjYmE0ZDRlNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/components/positions/PriceChart.tsx#L56-L83",
+          "version": "repo-lines-v1:sha256:6f16b266ba312871af20d00a786cd0c2e393c0bdb3888b2cdbb4b9faa87e530f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4M2Y3MTIzOWY1N2Q3OWE2ZjYzZmRjODhiMzAxOGM5NWNiMDU2M2VmMDM5ZTk3NTJjM2NhZjk2MjY5NThlOTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhlYWFjYzdhZDY5Mzc4ODM0MDc1M2UzNzU2ZGIzNGU2MGI5ZTIzNWRmMzE3ZWI3N2FlNTA0NjIwYzQ2MTdmM2EiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNjY2M2NWUxYzk2OGJkN2I2ZjdkOGM3MTZhODU3OTdhYmMwNzUxZjQ0ZjAxZWMwZDllZjdiZTQyYzNlOGE4MjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM0NTM2Y2Y1OTE2MjE0ZmI4OTg4ZDFhYzJiYjc3YTA0NWFkYjczODlhMzFkMTk3ZmU5N2VlMzdlOWM2Mjc3MDcifQ"
+        },
+        {
+          "resource": "repo://src/hooks/usePoolOhlcv.ts#L13-L24",
+          "version": "repo-lines-v1:sha256:59c90a8c0bbb4c695a3a1a2ef7cb85f3a52feb766b7bc681258564f16bc10ad0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1ODI0ODk5MWZlOTk3OTFkMDZmMTFmMDk1MjYxNjAyMTIxZjY3YTlhYjJhNzZhNzRkODUyMWJlMTU1OTFiODciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI5NDVkMDAwMGEyODA0NzczMjM1NmMzYjM3OTE4MzczY2UzMDRiMGEyYWQxZjVmYTE2NWI0ZWNkOGNhMzE1ZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFiY2NkZmQ1MmJkYTNiOGM1OTJjYWQyNGRlM2MyYjdmNWFlY2ZmMjlkYmM0NzhlNDJiYWJjMGU3N2UzMGZlODkifQ"
+        },
+        {
+          "resource": "repo://src/services/ohlcv.ts#L1-L9",
+          "version": "repo-lines-v1:sha256:ed97a7ccdbffe1bbbdace33e6e3290de665db60c3d161c095bb21fc0c04364d6:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2IyMGQ0NjAwNDEzODUzZDE3NmJkNGVmNDc1NzJmY2E3NmFkYjFiYzA1YzAzMmY2ZjAxYjBhMDllMzJlYTExYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmY2YmU1ZDAxM2FmMDMyNGEzZDI5M2ZmNDgxMDJhOTY0ZTBhODMwYTljYjBhZjkwMDc1ZDk2ZmU2NGZhOTk3NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWJlODBhYjM2MGE3YThlMmM4NDMxNDY0NjYxMDhjNjg5ZjhiMTNlOGY2NmVlMmFkMzM1ZDlmYWVlY2E5ZjE5MCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_420cedf79e244eca84502c81d043ca03",
+      "statement": "ADR 0001 (`docs/adr/0001-no-local-historical-pricing.md`) is binding across all integrations: every monetary value derives from live-spot prices (`TokenInfo.price_info.price_per_token`, SOL via the wrapped-SOL mint); there is no local historical price computation (no OHLCV for math, no Pyth benchmarks, no local historical-SOL lookup) — historical-SOL PnL comes from the server's aggregated endpoints; and OHLCV is the sanctioned display-only carve-out.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0001-no-local-historical-pricing.md#L1-L12",
+          "version": "repo-lines-v1:sha256:f6e5fc784d63c47711a6343f8e501b65e9808eac8ebdae5300b45eb3269bc4d4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIwMmUzZDU4MTdkZjE4MjQ1Yjk1ZWMwY2RjNmQ3Y2U2NmU0OTZjZTA2MjA0ZTQwYTM5ZDJkNDA5NzRiNDIxYzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE2YTI3YTgyZjc0ODJmODk5MjYwYzQ4YzUzMGQwYzE3NmIxZjdjYmYyODdiNWQ3ZWQ5OTJjZmUyNTQ5YmZmNzAifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L135-L136",
+          "version": "repo-lines-v1:sha256:ff0c770157e8f4296c9b26d8ce22e23d3a97f32e2da8610706ae0e1028fc27f2:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGNmMDY1N2FiZjgzZjVlMjY0MDU4Mzk0OTA2ZDMyY2QzZGZlMTA1MmY3NDdjNzkzOTM3ZjI5ZDcwYWMwMDNlZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDYyMjM2ZWQ5NDM2ZjJhNjU1MmE1NWYzZjNiZjE0OTNjYWYxNDBhZTEyZDA3N2NkNmExYjU3YjY4YzgwNjdhOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzkyNzllNGMzOWEzY2Y4MDVjMzkxNDUzZWZhZDBkNGRhYTM1ODI5MWQwZTg0YzNlYjg5ODRjMzMwMTE0OWUwZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTVlYzUxYzRlN2M4YjUzMzgwNjZjZWJmMDFmNzc2OWJlNWUxYjViY2Y0NDZmZDFkMDI3ZTY3MWIxN2I2Y2VhOSJ9"
+        },
+        {
+          "resource": "repo://src/tokens/index.ts#L15-L16",
+          "version": "repo-lines-v1:sha256:90b2e94c1a00c9393eb38e63644ac3c0655758662933db21aa794bd56722fff4:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2M5NDY3MGNkNTM4YzdkMDlhZGQ0ZGQ1ODdjZDMyNjFmZTVkMjI2NGM1ZDAyN2E0NzQ3NjRmMzFkYWU2M2UzYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWQyMjcyOTkzYjA1NWM0ODQzMThmY2Y5OWM3MWVmMDc2MGZmY2IzOTZjZDA1ZjU5Mzc5MjMxZTNjY2MyNGFlNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmI1ODBlOTY0ZjgzYTQ3M2Y0M2Q0NDM4NDYyOTQ5ZDY4YjU2MDBmZGE3ODdmMTYzNzQ1ZDAwZGU4OWNiZjM2YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTYyOTcwM2RlZjBlNTFkZWUxZTk3MTM0NmI4NzUwNTJmNmIwYjgxOWYzNGQzNzQxYzQwYzkxOTJjZTE4YzM3OSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_0444edd1442c4f1db3f5a229529e6151",
+      "statement": "ADR 0001 records that local historical pricing was built and removed twice (a `PriceService` with OHLCV + Pyth fetchers, deleted as fully orphaned; a Helius-based true-SOL-numeraire PnL, rejected in the Pass 2 audit), each time duplicating server work and risking a second PnL definition disagreeing with Meteora's displayed numbers — so future 'value-over-time chart' or 'local real-SOL PnL' proposals start from this decision rather than re-deriving it.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0001-no-local-historical-pricing.md#L3-L5",
+          "version": "repo-lines-v1:sha256:ad6ffdca50d69fffb71fdea80ae0a9d59a563d292f438d3a8536ee6ebf87bf2b:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmEyZjBkOWI0OTIyYWQ5OWI3MGM2ZDRkN2M3NDkxOGI1NTZiOGJkMWVlMjI4MzQ5MDIyM2Y2NWJlYWE4YTY3OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTdiYzliMGE2NWJkNGFlZjJhZjc0Nzg5NzVhMmYwNThjNmNiZTZjZDgwZGI1ODA4YTgyM2Q3NWI2Nzc3YjFiMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDA3Mzg3NWUyYTFlMTQzOGU4ZmYyMmRjNzAxNWI1NTk3MGI2YjYyNjFkYjU2ZTEwNjRjNTI4Y2VkMWZkZGViMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzQ1OTY0YTg4Y2IwYTIyNzkwZjkyYzQ0MmY5ZDFlMGZlZjdkNjIzNGM2Yzc3NmZmMTMwYmZmMTRlMzVhNmY2MyJ9"
+        },
+        {
+          "resource": "repo://docs/adr/0001-no-local-historical-pricing.md#L7-L11",
+          "version": "repo-lines-v1:sha256:380817a430dbea26de02e22f081fd14fd5b5211217b1d5bf32a7c179cc2a37d9:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGNlNzg5ZTdmMTQ0MjU0OTE4MDBmZjFhYTI5YWE3NjAxYTU4Mzg4MDM5ODc1YTE0ZTNjNGM2ODAzZWY5YjIzOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWQ5MzUzYjI5OTY4YmYwYjJjNDBiMzUwNmNiYmQxNjdmYzY1MzE4MzNlN2Q3MDdiZTNmYTE1OGE5ZDE0OTk2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDljYjk1ZmRjODIxOGZhNGQxMWY2OTQxZGM4MmU2MGI0ZmVkOWFkMjQ4YjVhNDBjMjJkYTMzYmRjZmE0YTA4NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWY3MzI4OWRlMWJiNWUzYTg0MzRjZmYzNjE2NzM4Zjg1ZTdkNDMyYzkxMzZjYTgwOTQwYjQ1OTgwYThhZWI4ZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6caddaf9ca404959ae3f67f331177da9",
+      "statement": "`createDataServices()` (`src/services/data.ts`) wraps the raw RPC and OHLCV fetches in `CacheManager` and exposes `TokenService` (`getPrice`/batch `getPrices`, cached 60 s under `token_data:{mint}`) and `OhlcvService` (`getOhlcv`, cached 60 s under `ohlcv:{pairAddress}:{timeframe}`); the batch fetch runs per-mint under `Promise.allSettled` and omits mints whose fetch rejected, so partial RPC failure returns the successes and the pipeline tolerates missing entries as `null` token info.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/data.test.ts#L79-L89",
+          "version": "repo-lines-v1:sha256:2be7e40d95d3a0f7834793a2ce816566dd4da3bb8e6d8e758301e085514890c4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhjMGQwOGY2ZTUwYWUxOGVmMTk5ZGJjMGNmYjk3ZTcyZGJhNDU2YTcxNjFiMWRhNmQyM2M1N2Q2MDFjMjY1ZDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NzVlOTRhOTA0YWM0OWIzMTU0ZDQ2NzJhNjZlODYyOWI4NmRhYzc0ZTNlMjkzN2JlNjkyN2FlM2RhMTFjNTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEzNjYzZjQxNjY4ZWQxNWE5ODZmYzNmOGEwOGI5ODM4ZDAyNzg0ZGZmODczNWE4NDM4NDM3MTlmOWI2NzA1NTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJlOTNmMWMyNzczOTI2NjQ5ZmU3ZWY1MTk2NGEwNDkyMThkZTRmNDNiM2ZmODE3NmVkZWU3ODViNjlkYTYwNTYifQ"
+        },
+        {
+          "resource": "repo://src/config/cache.ts",
+          "version": "repo-file-v1:sha256:db8dfc4f1feeaa4638cbb6682e9e2fb3737ca7ea8628de323d1660de65cefda4"
+        },
+        {
+          "resource": "repo://src/services/data.ts#L40-L66",
+          "version": "repo-lines-v1:sha256:6bf25083b3aa18bd47b2f89983bc1b3ee6e01d85720ef2087088eafe56e7dbf6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0MTMwNWIyMzQ4NTRkZTQwYTE2M2QzYjk3ODg0NzQ5NmUyODA1M2NkNjkxYWRkMTk0OGVjNzU4NWEyYmU4OTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJkODkyMjcxYzFhOTg2M2U5ZTdhNmEyOGJlMDhhZjI4NDI4MzM4YWEwNzg0NmI4MDA3NjVkMGE5NzQwNzZjYWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNlNGE1NDcwMWUyYzg5ZGIyNDc0MTE0OTAwZTI3MzNkZjcxY2RkYzUwMDZjODYzOWMxNTg1MzcyMDMwMDU3OTQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9e36045997984b728c39d9fd6fa73caa",
+      "statement": "The Android portfolio-summary widget's data path (`syncPortfolioWidget` → `updatePortfolioWidget.fetchPortfolioSummary` → `fetchOpenPortfolioSummary`) uses only the DLMM Data API client — no RPC connection, no SDK, no Helius key — so it works whenever the API is reachable, and it fails hard on `DlmmApiError` by rendering the widget's error state.",
+      "evidence": [
+        {
+          "resource": "repo://docs/adr/0002-widget-summary-from-server-totals.md#L41-L44",
+          "version": "repo-lines-v1:sha256:919aa7275a60790c04c543cf7f77664913433d0a3175783bf9fab32c0f985171:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTI5YmQ5NGRjZmM3MzE3M2Q3OWExYTgzYmIxYzVkY2VmZjZiMmQyN2MzMTI4OWQ0NGU3OWI5MDAzZWU4MzUxMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTYxYzU1ZDQ5NWY0MGJhNWI3ZTI5N2VkMDg3ZjI3MWE3OTZiZmM1ZDY5NTliMDZlZjM0NTI4NWZiYzVjMjQzYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGU3NmRjNjhkMmM1YWZkODJjN2U0MmQ3NTE2MTZmOWRmZDVkOGYxODg5ZGZhNmU1M2Y5Y2FmZTA0M2E0YjFmYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/widgets/syncPortfolioWidget.ts#L86-L101",
+          "version": "repo-lines-v1:sha256:e3bf73fd51798b3e2e4ebea5125f4c5fd8f36f6d1d4f4060047417cd4f4f7302:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjExZGY4N2E0NzMxNmM3MDhjNTUwMjA5OGU5YWY2YzQ0NTM0ZWI4MGJlYWRjZjYwNjMwMjhlZmNhODU5MzdhYmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE3YWRiNjYwM2VmYTFlODI5NWFhMmQwMmUxZjBhODk0OWUwNGE1MzMwNjdjMGQ0Mzc2MDY2MzVlODVmNzMxNjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImViOTBkNjJiYjQwNzViZDU5ZmY0Y2EyYTg4ZWYzYWNkOTAwZTJlZDI4Yzg1MGU3NThmOTQ0N2IxMmVmZDc3NTMifQ"
+        },
+        {
+          "resource": "repo://src/widgets/updatePortfolioWidget.tsx#L307-L310",
+          "version": "repo-lines-v1:sha256:a61b4da2aaeffa547309c9439bf912f2fa693ef4e0d9834de90fd0cf2d35c12c:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmI5ZWRkMGZmMjY3ZWJiMTI4MjllZmMxZTc0ZWYxMzAwMzAyMzE3MDc2NDMwYzgyMjRiZmQ0MDFhOTczZDFmMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmM0MDcxZTA5MDhkNTI1ZjM5NTgyMzM3ZjhiZjFlZmM4ZTMxOGMzOWJiNDY1ZWZmODRiMmM1ZmE1ODZiMDQ4NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzQwYzVkM2RjM2E3NzMwNzkzYzg5Mjc5NDhiNTU5NjY0MjA3Zjc5YmE4Nzc3M2MyMTUwMDQ0MzE5NjJmZDQ4OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2U2M2E0ZjdjOGI0ZTBlMWVkZTE2MWViNzZlNDY1MGQxZTBiOTk2NTk1ZTFhYmQ5YzIxZTYxMTcwZDI1ZDBjZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f715b1f8d7714b46a158b86072cd9b24",
+      "statement": "External-surface dependencies are injectable for tests: `PositionPipeline` accepts `PipelineDeps` (`cache`, `connection`, `dataServices`), `createDataServices` accepts a fresh `CacheManager`, and pipeline tests run the real `dlmmApi` client with its real pagination against a stubbed `globalThis.fetch` while mocking only the SDK and token fetchers.",
+      "evidence": [
+        {
+          "resource": "repo://src/__tests__/services/positionPipeline.test.ts#L40-L71",
+          "version": "repo-lines-v1:sha256:295a442001d7d41d3554878bcf7aac709232bebe8c2a5907b4fce2fcb4ab9df6:eyJzZWxlY3RlZExpbmVDb3VudCI6MzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjMmQ3YjBlNmZjNGYwYzI5YjhkZjgzMmIzM2Y1NjJmZmEwMzg1MzQ4ODYzNWEzNDNhZTNhMjQ2NDcxNzRhMjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIzNjVlN2YzNGZhM2RlYWFlNjgyMWRjNmEwODVlZDEyMzQ4MTczYmY5YzMyNTdlNTEwY2I4YmI1MWMwM2Y3YjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFhMTNmMjQ5NzE2ZTYzODA0NWVjNjUzMGMyNjVkYWNiNDE2OTQ1Y2M2NTNhNTkxMTA1NjVjNjRkNWQ3ZGM1M2IifQ"
+        },
+        {
+          "resource": "repo://src/services/positionPipeline.ts#L85-L99",
+          "version": "repo-lines-v1:sha256:44ee2b8246f5087e82bcadb344401e34ebe4f6afde2c921342808aab13a6e6d3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIxMzJlYzM0YjgwNmE4NWZiYjY4NmFiZDE2YTFhOWI0MGVlMjQ2NTI0MTE1ZmQ4MTUxNjBkMzdiMjkxMDEwYjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZTU3ODhkNWQ5ZDczZDI0YTgxZGJjMGE1YTc0YmZhODJjOWMzYjNhZjk5ZTUyYWY3OTZlOTBiNDY4YThhM2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk3N2E2MTEzMGJiNmZjODZiYjMxZmRlZWEyZThkN2JkMzUyNGQyNTBlMDQ2MmJkMTRlYzA4OTYxZjY1MjNjN2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRiMGQ1YzlhNzAxYTlkYzM0OTcwOTY3NjM2MWYwMWY0NGE2YWMzMWRiYjMxMTYxZWUwNTYwZmRmMTMxYmI5ZTMifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-13T11:52:56.431Z"
+  }
+}
