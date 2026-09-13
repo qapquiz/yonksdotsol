@@ -28,10 +28,9 @@ interface WidgetButtonProps {
   action: string
   label: string
   muted?: boolean
-  small?: boolean
 }
 
-function WidgetButton({ action, label, muted = false, small = false }: WidgetButtonProps): ReactElement {
+function WidgetButton({ action, label, muted = false }: WidgetButtonProps): ReactElement {
   const accessibilityLabel =
     action === 'NEXT_POSITION'
       ? 'Next position'
@@ -42,18 +41,9 @@ function WidgetButton({ action, label, muted = false, small = false }: WidgetBut
     <FlexWidget
       clickAction={action}
       accessibilityLabel={accessibilityLabel}
-      style={{
-        width: small ? 56 : 64,
-        height: small ? 36 : TOUCH_SIZE,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 8,
-      }}
+      style={{ width: 64, height: TOUCH_SIZE, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 8 }}
     >
-      <TextWidget
-        text={label}
-        style={{ fontSize: small ? 11 : 12, color: muted ? C.textMuted : C.primary, fontWeight: '700' }}
-      />
+      <TextWidget text={label} style={{ fontSize: 12, color: muted ? C.textMuted : C.primary, fontWeight: '700' }} />
     </FlexWidget>
   )
 }
@@ -69,15 +59,10 @@ export default function PositionLiquidityWidget({
   refreshing = false,
   message,
 }: PositionLiquidityWidgetProps): ReactElement {
-  // Content tiers: the widget can shrink to 4×2 cells (~110dp), so the layout
-  // degrades gracefully — compact drops the fees row, micro drops the liquidity
-  // section entirely and keeps symbol, range, value, and uPnL.
-  const compact = height < 280
-  const micro = height < 200
-  const chartWidth = Math.max(width - INSET * 2, 64)
-  const baseChartHeight = micro ? 0 : Math.min(160, height - (compact ? 220 : 250) - (message ? 16 : 0))
-  const chartHeight = Math.max(24, Math.round(baseChartHeight * (compact ? 0.95 : 0.9)))
-  const graph = micro ? null : buildLiquidityGraph(position?.liquidityShape ?? null, chartWidth, chartHeight)
+  const chartWidth = Math.max(120, width - INSET * 2)
+  const baseChartHeight = Math.max(message ? 32 : 48, Math.min(160, height - 280 - (message ? 16 : 0)))
+  const chartHeight = Math.max(32, Math.round(baseChartHeight * 0.85))
+  const graph = buildLiquidityGraph(position?.liquidityShape ?? null, chartWidth, chartHeight)
   const statusColor = position?.inRange ? C.primary : C.secondary
   const pnl = position?.pnlSol
   const pnlText = pnl != null ? `${pnl >= 0 ? '+' : '-'}${Math.abs(pnl).toFixed(4)} SOL` : '—'
@@ -112,12 +97,10 @@ export default function PositionLiquidityWidget({
         }}
       >
         <FlexWidget style={{ flex: 1, flexDirection: 'column' }}>
-          {!micro && (
-            <TextWidget
-              text="POSITION LIQUIDITY"
-              style={{ fontSize: 10, color: C.textMuted, letterSpacing: 1.5, fontWeight: '700', marginBottom: 4 }}
-            />
-          )}
+          <TextWidget
+            text="POSITION LIQUIDITY"
+            style={{ fontSize: 10, color: C.textMuted, letterSpacing: 1.5, fontWeight: '700', marginBottom: 4 }}
+          />
           <TextWidget
             text={position ? `${position.tokenXSymbol} / ${position.tokenYSymbol}` : 'Your positions'}
             maxLines={1}
@@ -125,7 +108,7 @@ export default function PositionLiquidityWidget({
             style={{ fontSize: 18, color: C.text, fontWeight: '700' }}
           />
         </FlexWidget>
-        <WidgetButton action="REFRESH" label="Refresh" muted={!refreshing} small={micro} />
+        <WidgetButton action="REFRESH" label="Refresh" muted={!refreshing} />
       </FlexWidget>
 
       {position ? (
@@ -169,69 +152,60 @@ export default function PositionLiquidityWidget({
               />
             </FlexWidget>
           </FlexWidget>
-          {!micro && (
-            <FlexWidget style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-              <FlexWidget
-                style={{
-                  flexDirection: 'row',
-                  width: 'match_parent',
-                  justifyContent: 'space-between',
-                  marginBottom: 4,
-                }}
-              >
-                <TextWidget text="LIQUIDITY SHAPE" style={{ fontSize: 10, color: C.textMuted, letterSpacing: 1 }} />
-                <TextWidget
-                  text={graph ? `${graph.totalBins} bins` : 'Unavailable'}
-                  style={{ fontSize: 10, color: C.textMuted }}
-                />
-              </FlexWidget>
-              {graph ? (
-                <SvgWidget
-                  svg={graph.svg}
-                  accessibilityLabel={`Liquidity across ${graph.totalBins} bins. ${position.inRange ? 'The dashed line marks the active bin.' : 'The active bin is outside the position range.'}`}
-                  style={{ width: chartWidth, height: chartHeight }}
-                />
-              ) : (
-                <FlexWidget style={{ height: chartHeight, alignItems: 'center', justifyContent: 'center' }}>
-                  <TextWidget text="Liquidity data unavailable" style={{ fontSize: 12, color: C.textMuted }} />
-                </FlexWidget>
-              )}
-              <FlexWidget
-                style={{ flexDirection: 'row', width: 'match_parent', justifyContent: 'space-between', marginTop: 4 }}
-              >
-                <TextWidget text={graph?.minPrice ?? '—'} style={{ fontSize: 10, color: C.textSecondary }} />
-                <FlexWidget style={{ flex: 1, alignItems: 'center' }}>
-                  <TextWidget
-                    text={`${position.tokenYSymbol} per ${position.tokenXSymbol}`}
-                    maxLines={1}
-                    truncate="END"
-                    style={{ fontSize: 9, color: C.textMuted, textAlign: 'center' }}
-                  />
-                </FlexWidget>
-                <TextWidget text={graph?.maxPrice ?? '—'} style={{ fontSize: 10, color: C.textSecondary }} />
-              </FlexWidget>
+          <FlexWidget style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+            <FlexWidget
+              style={{ flexDirection: 'row', width: 'match_parent', justifyContent: 'space-between', marginBottom: 4 }}
+            >
+              <TextWidget text="LIQUIDITY SHAPE" style={{ fontSize: 10, color: C.textMuted, letterSpacing: 1 }} />
               <TextWidget
-                text={position.inRange ? 'Dashed line: active bin' : 'Active bin is outside this range'}
-                style={{ fontSize: 9, color: statusColor, marginTop: 4 }}
+                text={graph ? `${graph.totalBins} bins` : 'Unavailable'}
+                style={{ fontSize: 10, color: C.textMuted }}
               />
             </FlexWidget>
-          )}
-          {!compact && (
+            {graph ? (
+              <SvgWidget
+                svg={graph.svg}
+                accessibilityLabel={`Liquidity across ${graph.totalBins} bins. ${position.inRange ? 'The dashed line marks the active bin.' : 'The active bin is outside the position range.'}`}
+                style={{ width: chartWidth, height: chartHeight }}
+              />
+            ) : (
+              <FlexWidget style={{ height: chartHeight, alignItems: 'center', justifyContent: 'center' }}>
+                <TextWidget text="Liquidity data unavailable" style={{ fontSize: 12, color: C.textMuted }} />
+              </FlexWidget>
+            )}
             <FlexWidget
-              style={{
-                flexDirection: 'row',
-                width: 'match_parent',
-                justifyContent: 'space-between',
-                borderTopWidth: 1,
-                borderTopColor: C.border,
-                paddingTop: 8,
-                marginTop: 8,
-              }}
+              style={{ flexDirection: 'row', width: 'match_parent', justifyContent: 'space-between', marginTop: 4 }}
             >
-              <TextWidget text="UNREALIZED FEES" style={{ fontSize: 10, color: C.textMuted }} />
-              <TextWidget text={position.unrealizedFees ?? '—'} style={{ fontSize: 12, color: C.text }} />
+              <TextWidget text={graph?.minPrice ?? '—'} style={{ fontSize: 10, color: C.textSecondary }} />
+              <FlexWidget style={{ flex: 1, alignItems: 'center' }}>
+                <TextWidget
+                  text={`${position.tokenYSymbol} per ${position.tokenXSymbol}`}
+                  maxLines={1}
+                  truncate="END"
+                  style={{ fontSize: 9, color: C.textMuted, textAlign: 'center' }}
+                />
+              </FlexWidget>
+              <TextWidget text={graph?.maxPrice ?? '—'} style={{ fontSize: 10, color: C.textSecondary }} />
             </FlexWidget>
-          )}
+            <TextWidget
+              text={position.inRange ? 'Dashed line: active bin' : 'Active bin is outside this range'}
+              style={{ fontSize: 9, color: statusColor, marginTop: 4 }}
+            />
+          </FlexWidget>
+          <FlexWidget
+            style={{
+              flexDirection: 'row',
+              width: 'match_parent',
+              justifyContent: 'space-between',
+              borderTopWidth: 1,
+              borderTopColor: C.border,
+              paddingTop: 8,
+              marginTop: 8,
+            }}
+          >
+            <TextWidget text="UNREALIZED FEES" style={{ fontSize: 10, color: C.textMuted }} />
+            <TextWidget text={position.unrealizedFees ?? '—'} style={{ fontSize: 12, color: C.text }} />
+          </FlexWidget>
         </FlexWidget>
       ) : (
         <FlexWidget style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -252,14 +226,14 @@ export default function PositionLiquidityWidget({
           marginTop: 4,
         }}
       >
-        {count > 1 && <WidgetButton action="PREVIOUS_POSITION" label="‹ Prev" small={micro} />}
+        {count > 1 && <WidgetButton action="PREVIOUS_POSITION" label="‹ Prev" />}
         <FlexWidget style={{ flex: 1, alignItems: 'center' }}>
           {count > 0 && (
             <TextWidget text={`${index + 1} / ${count}`} style={{ fontSize: 11, color: C.textSecondary }} />
           )}
           <TextWidget text={footer} style={{ fontSize: 9, color: C.textMuted, marginTop: 2 }} />
         </FlexWidget>
-        {count > 1 && <WidgetButton action="NEXT_POSITION" label="Next ›" small={micro} />}
+        {count > 1 && <WidgetButton action="NEXT_POSITION" label="Next ›" />}
       </FlexWidget>
     </FlexWidget>
   )

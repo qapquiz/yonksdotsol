@@ -23,7 +23,7 @@ An Android home-screen widget for browsing individual positions and their liquid
 - Previous/Next buttons cycle through every position without fetching. Each installed widget retains its own selection by position address. If the selected position closes, it falls back to the first remaining address.
 - Refresh fetches new data. Tapping the body opens Yonks.
 
-The widget is fixed at 4 columns wide and resizes vertically between 2 and 4 rows (250dp × 110dp floor; the 4 × 2 placement is the default). Horizontal resize is disabled, so the width never changes. The content adapts to the frame: below roughly 280dp of height the fees row drops and the graph becomes a strip, and below roughly 200dp the widget keeps only the token pair, range status, value, and uPnL with smaller touch targets. The graph grows with available space up to a 160dp cap. Buttons have at least 36dp of touch height in micro mode, 44dp otherwise, and explicit accessibility labels.
+The default footprint is 4 × 4 cells, with a 320dp minimum width and height. Both dimensions can be resized. The graph grows with available space. Buttons have at least 44dp of touch height and explicit accessibility labels.
 
 ## Data and Refresh
 

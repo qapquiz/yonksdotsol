@@ -17,7 +17,6 @@ const native = vi.hoisted(() => ({
   rendered: new Map<number, WidgetTree>(),
   history: [] as WidgetTree[],
   widgetIds: [10, 11],
-  widgetHeights: new Map<number, number>(),
   loadPortfolio: vi.fn<(...args: unknown[]) => Promise<PortfolioResult>>(),
   lookup: vi.fn(async () => {}),
 }))
@@ -27,7 +26,7 @@ function info(widgetId: number): WidgetInfo {
     widgetName: 'PositionLiquidity',
     widgetId,
     width: 320,
-    height: native.widgetHeights.get(widgetId) ?? 340,
+    height: 340,
     screenInfo: { screenWidthDp: 400, screenHeightDp: 800, density: 1, densityDpi: 160 },
   }
 }
@@ -171,7 +170,6 @@ beforeEach(() => {
   native.rendered.clear()
   native.history.length = 0
   native.widgetIds = [10, 11]
-  native.widgetHeights.clear()
   native.loadPortfolio.mockReset().mockResolvedValue(portfolio())
   native.lookup.mockReset().mockResolvedValue(undefined)
   setStoredWalletAddress('wallet-A')
@@ -340,42 +338,6 @@ describe('position liquidity widget', () => {
     })
     expect(visible()).toContain('position-C')
     expect(native.loadPortfolio).toHaveBeenCalledTimes(1)
-  })
-
-  it('omits unrealized fees while preserving the liquidity shape in compact mode', async () => {
-    native.widgetHeights.set(10, 240)
-    await run()
-    expect(visible()).toContain('SOL / USDC')
-    expect(visible()).toContain('POSITION LIQUIDITY')
-    expect(visible()).toContain('LIQUIDITY SHAPE')
-    expect(visible()).toContain('$1,250.00')
-    expect(visible()).not.toContain('UNREALIZED FEES')
-    expect(svg()).toContain('<rect')
-  })
-
-  it('drops header label and liquidity shape with smaller touch targets in micro mode', async () => {
-    native.widgetHeights.set(10, 180)
-    await run()
-    expect(visible()).toContain('SOL / USDC')
-    expect(visible()).toContain('position-A')
-    expect(visible()).toContain('$1,250.00')
-    expect(visible()).toContain('+0.2000 SOL')
-    expect(visible()).toContain('IN RANGE')
-    expect(visible()).not.toContain('POSITION LIQUIDITY')
-    expect(visible()).not.toContain('LIQUIDITY SHAPE')
-    expect(visible()).not.toContain('UNREALIZED FEES')
-    expect(svg()).toBeUndefined()
-
-    const buttons = flattened(native.rendered.get(10)).filter((node) =>
-      ['REFRESH', 'PREVIOUS_POSITION', 'NEXT_POSITION'].includes(
-        (node.props as { clickAction?: string }).clickAction ?? '',
-      ),
-    )
-    expect(buttons.length).toBeGreaterThanOrEqual(1)
-    for (const button of buttons) {
-      expect((button.props as { height?: number; width?: number }).height).toBe(36)
-      expect((button.props as { height?: number; width?: number }).width).toBe(56)
-    }
   })
 })
 
