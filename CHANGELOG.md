@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   use `app-primary`, down candles `app-negative`; range band, grid, and
   axis labels unchanged. Same OHLCV endpoint — open/high/low were already
   fetched but unused.
+- **Positions widget sizing** — the PositionLiquidity widget is now fixed at
+  4 columns wide with vertical resize from 2 rows (110dp) upward, defaulting
+  to 4 × 2. The widget content adapts to small frames: compact mode drops the
+  fees row, micro mode keeps only pair, range, value, and uPnL.
 - **Mock OHLCV in dev mode** — `devMock` builds (including the web
   preview) now synthesize deterministic candles per mock pool
   (`src/services/mockOhlcv.ts`), so the price chart renders without RPC.

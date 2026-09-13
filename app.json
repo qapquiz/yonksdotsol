@@ -62,11 +62,11 @@
               "label": "Yonks Positions",
               "description": "Browse each position and its liquidity graph",
               "previewImage": "./assets/widget-preview/position-liquidity.png",
-              "minWidth": "320dp",
-              "minHeight": "320dp",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
               "targetCellWidth": 4,
-              "targetCellHeight": 4,
-              "resizeMode": "horizontal|vertical",
+              "targetCellHeight": 2,
+              "resizeMode": "vertical",
               "updatePeriodMillis": 1800000
             }
           ]
