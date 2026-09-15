@@ -27,6 +27,10 @@ jobs:
 
       - name: 🤖 Setup Android SDK
         uses: android-actions/setup-android@v4
+        with:
+          # `tools` is Google's deprecated legacy SDK package — modern sdkmanager
+          # (cmdline-tools 20+) fails with "Failed to find package 'tools'".
+          packages: platform-tools
 
       - name: 📦 Install dependencies with Bun
         run: bun install --frozen-lockfile
