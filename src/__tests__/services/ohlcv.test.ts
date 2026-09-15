@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-import { fetchPoolOhlcv, DEFAULT_OHLCV_TIMEFRAME } from '../../services/ohlcv'
+import { fetchPoolOhlcv, DEFAULT_OHLCV_TIMEFRAME, OHLCV_TIMEFRAMES } from '../../services/ohlcv'
 
 describe('fetchPoolOhlcv', () => {
   const mockOhlcvResponse = {
@@ -58,6 +58,13 @@ describe('fetchPoolOhlcv', () => {
       expect.stringContaining('timeframe=1h'),
       expect.objectContaining({ headers: { 'Content-Type': 'application/json' } }),
     )
+  })
+
+  it('requests every supported timeframe', async () => {
+    for (const tf of OHLCV_TIMEFRAMES) {
+      await fetchPoolOhlcv('PoolAddr123', tf)
+      expect(fetch).toHaveBeenCalledWith(expect.stringContaining(`timeframe=${tf}`), expect.anything())
+    }
   })
 
   it('uses the default timeframe when omitted', async () => {

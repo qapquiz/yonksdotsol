@@ -8,7 +8,10 @@
 // DISPLAY-ONLY. This never feeds PnL or value computation; see ADR 0001
 // (its carve-out pre-sanctions a read-only price-movement chart).
 
-export type OhlcvTimeframe = '5m' | '30m' | '1h' | '2h' | '4h' | '12h'
+export type OhlcvTimeframe = '5m' | '30m' | '1h' | '2h' | '4h' | '12h' | '24h'
+
+/** Every timeframe the Meteora OHLCV endpoint accepts, shortest first (10 candles each). */
+export const OHLCV_TIMEFRAMES: readonly OhlcvTimeframe[] = ['5m', '30m', '1h', '2h', '4h', '12h', '24h']
 
 export interface OhlcvCandle {
   timestamp: number

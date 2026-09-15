@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { createDataServices } from '../services/data'
 import { DEFAULT_OHLCV_TIMEFRAME, type OhlcvSeries, type OhlcvTimeframe } from '../services/ohlcv'
 import { getMockOhlcv } from '../services/mockOhlcv'
@@ -8,6 +8,8 @@ export interface UsePoolOhlcvResult {
   data: OhlcvSeries | null
   loading: boolean
   error: Error | null
+  /** Re-run the fetch for the current pool + timeframe. Failures aren't cached, so this goes back to the network. */
+  retry: () => void
 }
 
 /**
@@ -28,7 +30,10 @@ export function usePoolOhlcv(
   const [data, setData] = useState<OhlcvSeries | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
+  const [attempt, setAttempt] = useState(0)
   const mountedRef = useRef(true)
+
+  const retry = useCallback(() => setAttempt((n) => n + 1), [])
 
   useEffect(() => {
     mountedRef.current = true
@@ -81,7 +86,7 @@ export function usePoolOhlcv(
     return () => {
       active = false
     }
-  }, [pairAddress, timeframe])
+  }, [pairAddress, timeframe, attempt])
 
-  return { data, loading, error }
+  return { data, loading, error, retry }
 }

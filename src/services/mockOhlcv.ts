@@ -15,13 +15,14 @@
 import { DEFAULT_OHLCV_TIMEFRAME, type OhlcvCandle, type OhlcvSeries, type OhlcvTimeframe } from './ohlcv'
 import { MOCK_POOL_BASE_PRICES } from './mockPortfolio'
 
-const TIMEFRAME_SECONDS: Record<OhlcvTimeframe, number> = {
+export const TIMEFRAME_SECONDS: Record<OhlcvTimeframe, number> = {
   '5m': 300,
   '30m': 1800,
   '1h': 3600,
   '2h': 7200,
   '4h': 14400,
   '12h': 43200,
+  '24h': 86400,
 }
 
 const CANDLE_COUNT = 20

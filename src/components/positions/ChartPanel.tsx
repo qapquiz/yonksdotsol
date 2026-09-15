@@ -6,6 +6,8 @@ interface ChartPanelProps {
   title: string
   /** Current price shown top-right, as quiet mono reference text */
   currentPrice: string
+  /** Optional control row (e.g. the price chart's timeframe selector) between header and body */
+  toolbar?: ReactNode
   children: ReactNode
 }
 
@@ -19,13 +21,14 @@ interface ChartPanelProps {
  * created a box-in-a-box inside the position card. The chart now sits directly
  * on the card, framed by its eyebrow and grid lines instead of a container.
  */
-function ChartPanelComponent({ title, currentPrice, children }: ChartPanelProps) {
+function ChartPanelComponent({ title, currentPrice, toolbar, children }: ChartPanelProps) {
   return (
     <View className="mb-4">
       <View className="flex-row justify-between items-baseline mb-3">
         <Text className="text-app-text-muted text-[10px] font-sans-bold tracking-wider">{title}</Text>
         <Text className="text-app-text-muted text-[10px] font-mono">{currentPrice}</Text>
       </View>
+      {toolbar}
       {children}
     </View>
   )

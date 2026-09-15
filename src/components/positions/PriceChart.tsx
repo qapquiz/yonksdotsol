@@ -1,9 +1,11 @@
 import { memo, useCallback, useMemo, useState } from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, Text, View } from 'react-native'
 import { Line, G, Rect, Svg } from 'react-native-svg'
 import type { LiquidityShape } from '../../utils/positions/computePositionViewData'
 import { usePoolOhlcv } from '../../hooks/usePoolOhlcv'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
+import { DEFAULT_OHLCV_TIMEFRAME, OHLCV_TIMEFRAMES, type OhlcvTimeframe } from '../../services/ohlcv'
+import { SegmentedControl } from '../ui/SegmentedControl'
 import { ChartPanel } from './ChartPanel'
 
 interface PriceChartProps {
@@ -24,6 +26,12 @@ const CANDLE_BODY_SLOT_RATIO = 0.7
 const CANDLE_BODY_MAX_WIDTH = 10
 const CANDLE_MIN_BODY_HEIGHT = 1 // doji (open === close) still renders a visible dash
 
+/** Timeframe picker options — every timeframe the OHLCV endpoint supports. */
+const TIMEFRAME_OPTIONS: readonly { value: OhlcvTimeframe; label: string }[] = OHLCV_TIMEFRAMES.map((tf) => ({
+  value: tf,
+  label: tf,
+}))
+
 /** Format a price compactly for axis labels (handles tiny meme-token prices). */
 function formatPriceLabel(price: number): string {
   if (!Number.isFinite(price) || price === 0) return '0'
@@ -33,8 +41,9 @@ function formatPriceLabel(price: number): string {
 function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) {
   const tokens = useThemeTokens()
   const [containerWidth, setContainerWidth] = useState(0)
+  const [timeframe, setTimeframe] = useState<OhlcvTimeframe>(DEFAULT_OHLCV_TIMEFRAME)
   const pairAddress = liquidityShape?.pairAddress ?? null
-  const { data: ohlcv, loading } = usePoolOhlcv(pairAddress)
+  const { data: ohlcv, loading, error, retry } = usePoolOhlcv(pairAddress, timeframe)
 
   // Chart colors — up candles derive from app-primary (profit), down from
   // app-negative (loss), per the semantic mapping. Band stays primary-tinted.
@@ -65,6 +74,17 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
   }, [liquidityShape])
 
   const candles = useMemo(() => ohlcv?.candles ?? [], [ohlcv])
+
+  // SWR: while a refetch is in flight, keep showing candles until the series
+  // for the requested timeframe arrives — dim only when what's on screen is
+  // not what was asked for (cache hits resolve without a visible blink).
+  const stale = loading && ohlcv != null && ohlcv.timeframe !== timeframe
+
+  const timeframeSelector = (
+    <View className="mb-3 flex-row justify-end">
+      <SegmentedControl options={TIMEFRAME_OPTIONS} value={timeframe} onChange={setTimeframe} />
+    </View>
+  )
 
   const svgContent = useMemo(() => {
     if (candles.length === 0 || containerWidth === 0) return null
@@ -187,11 +207,25 @@ function PriceChartComponent({ liquidityShape, currentPrice }: PriceChartProps) 
   // spinner/empty state renders INSIDE the measured box rather than in a branch
   // that swaps it in once data arrives.
   return (
-    <ChartPanel title="PRICE" currentPrice={currentPrice}>
-      <View className="w-full items-center justify-center" style={{ height: CHART_HEIGHT }} onLayout={handleLayout}>
+    <ChartPanel title="PRICE" currentPrice={currentPrice} toolbar={timeframeSelector}>
+      <View
+        className="w-full items-center justify-center"
+        style={{ height: CHART_HEIGHT, opacity: stale ? 0.4 : 1 }}
+        onLayout={handleLayout}
+      >
         {svgContent ??
           (loading ? (
             <ActivityIndicator size="small" color={colors.candleUp} />
+          ) : error ? (
+            <View className="items-center gap-2">
+              <Text className="text-app-text-muted text-xs">Price data unavailable</Text>
+              <Pressable
+                onPress={retry}
+                className="rounded-md border border-app-border/50 bg-app-bg/50 px-3 py-1.5 active:opacity-80"
+              >
+                <Text className="text-[10px] font-sans-bold text-app-text-secondary">Retry</Text>
+              </Pressable>
+            </View>
           ) : (
             <Text className="text-app-text-muted text-xs">No price data</Text>
           ))}

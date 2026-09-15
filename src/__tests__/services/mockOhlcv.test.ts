@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { DEFAULT_OHLCV_TIMEFRAME, type OhlcvCandle } from '../../services/ohlcv'
-import { getMockOhlcv } from '../../services/mockOhlcv'
+import { DEFAULT_OHLCV_TIMEFRAME, OHLCV_TIMEFRAMES, type OhlcvCandle } from '../../services/ohlcv'
+import { getMockOhlcv, TIMEFRAME_SECONDS } from '../../services/mockOhlcv'
 import { MOCK_POOL_BASE_PRICES } from '../../services/mockPortfolio'
 
 const mockPools = Object.entries(MOCK_POOL_BASE_PRICES)
@@ -19,6 +19,17 @@ describe('getMockOhlcv', () => {
       expect(series?.pairAddress).toBe(pairAddress)
       expect(series?.timeframe).toBe(DEFAULT_OHLCV_TIMEFRAME)
       expect(series?.candles).toHaveLength(20)
+    }
+  })
+
+  it('generates a series for every supported timeframe', () => {
+    for (const [pairAddress] of mockPools) {
+      for (const tf of OHLCV_TIMEFRAMES) {
+        const series = getMockOhlcv(pairAddress, tf)
+        expect(series?.pairAddress).toBe(pairAddress)
+        expect(series?.timeframe).toBe(tf)
+        expect(series?.candles).toHaveLength(20)
+      }
     }
   })
 
@@ -57,11 +68,14 @@ describe('getMockOhlcv', () => {
     }
   })
 
-  it('spaces timestamps by the timeframe', () => {
+  it('spaces timestamps by each timeframe', () => {
     for (const [pairAddress] of mockPools) {
-      const candles = candlesOf(pairAddress)
-      for (let i = 1; i < candles.length; i++) {
-        expect(candles[i].timestamp - candles[i - 1].timestamp).toBe(4 * 3600)
+      for (const tf of OHLCV_TIMEFRAMES) {
+        const series = getMockOhlcv(pairAddress, tf)
+        if (!series) throw new Error(`expected series for ${pairAddress} ${tf}`)
+        for (let i = 1; i < series.candles.length; i++) {
+          expect(series.candles[i].timestamp - series.candles[i - 1].timestamp).toBe(TIMEFRAME_SECONDS[tf])
+        }
       }
     }
   })
