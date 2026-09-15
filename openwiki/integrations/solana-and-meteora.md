@@ -55,7 +55,7 @@ sources:
     resource: repo://src/widgets/syncPortfolioWidget.ts
   - id: openwiki-source-a2a218d2079077a97edcb24b
     resource: repo://src/widgets/updatePortfolioWidget.tsx
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Solana & Meteora Integrations
@@ -65,7 +65,7 @@ three external boundaries: a **Solana RPC endpoint**, the **Meteora DLMM
 SDK** (which reads on-chain programs through that RPC), and the **Meteora
 DLMM Data API** (a hosted REST service). This page documents each boundary's
 owner, contract, failure semantics, and configuration. The internal
-orchestration that *consumes* these surfaces lives on
+orchestration that _consumes_ these surfaces lives on
 [Position Data Pipeline](/openwiki/architecture/data-pipeline.md); how they
 are cached is on [Caching Strategy](/openwiki/concepts/caching.md).
 
@@ -94,8 +94,8 @@ flowchart LR
     CHART -->|"fetchPoolOhlcv display-only"| API
 ```
 
-*Each app surface and the external service it calls. The widget path
-deliberately touches no RPC and no SDK.*
+_Each app surface and the external service it calls. The widget path
+deliberately touches no RPC and no SDK._
 
 ## The shared RPC connection
 
@@ -105,8 +105,8 @@ caller constructs it from `env.rpcUrl`, and every later caller reuses the
 same instance.
 
 The laziness is load-bearing. When `EXPO_PUBLIC_RPC_URL` is unset,
-`getSharedConnection` throws a setup-guidance error — *"copy .env.example to
-.env and set your RPC endpoint before fetching on-chain data"* — but that only
+`getSharedConnection` throws a setup-guidance error — _"copy .env.example to
+.env and set your RPC endpoint before fetching on-chain data"_ — but that only
 happens when something actually scans the chain. Constructing a
 `PositionPipeline` never touches the connection (it resolves
 `getSharedConnection()` on first use, not in the constructor), which is why
@@ -116,11 +116,11 @@ configuration.
 `src/config/env.ts` maps the three external-facing variables from
 `.env.example`:
 
-| Variable | `env` field | Used by |
-| --- | --- | --- |
-| `EXPO_PUBLIC_RPC_URL` | `env.rpcUrl` | `getSharedConnection`, `fetchTokenFromRpc` |
+| Variable                     | `env` field        | Used by                                                                                    |
+| ---------------------------- | ------------------ | ------------------------------------------------------------------------------------------ |
+| `EXPO_PUBLIC_RPC_URL`        | `env.rpcUrl`       | `getSharedConnection`, `fetchTokenFromRpc`                                                 |
 | `EXPO_PUBLIC_HELIUS_API_KEY` | `env.heliusApiKey` | surfaced but not referenced by any code path today — reserved for "enhanced data fetching" |
-| `EXPO_PUBLIC_DEV_MOCK` | `env.devMock` | forces mock data when `1`; **always** mock on web (`Platform.OS === 'web'`) |
+| `EXPO_PUBLIC_DEV_MOCK`       | `env.devMock`      | forces mock data when `1`; **always** mock on web (`Platform.OS === 'web'`)                |
 
 One operational consequence: because token metadata is fetched by POSTing a
 `getAsset` JSON-RPC call to `env.rpcUrl` itself (see below), the configured
@@ -157,11 +157,11 @@ documented DLMM Data API, based at `DLMM_API_BASE =
 wire types, error semantics, and pagination live in this repo. Three
 endpoints are used:
 
-| Function | Endpoint | Consumer |
-| --- | --- | --- |
-| `fetchPositionPnL` / `fetchAllPositionPnL` | `GET /positions/{pool}/pnl` | pipeline's per-pool PnL step |
-| `fetchOpenPortfolio` / `fetchOpenPortfolioSummary` | `GET /portfolio/open` | Android portfolio-summary widget |
-| `fetchPoolOhlcv` (in `src/services/ohlcv.ts`, same base URL) | `GET /pools/{address}/ohlcv` | in-card price chart |
+| Function                                                     | Endpoint                     | Consumer                         |
+| ------------------------------------------------------------ | ---------------------------- | -------------------------------- |
+| `fetchPositionPnL` / `fetchAllPositionPnL`                   | `GET /positions/{pool}/pnl`  | pipeline's per-pool PnL step     |
+| `fetchOpenPortfolio` / `fetchOpenPortfolioSummary`           | `GET /portfolio/open`        | Android portfolio-summary widget |
+| `fetchPoolOhlcv` (in `src/services/ohlcv.ts`, same base URL) | `GET /pools/{address}/ohlcv` | in-card price chart              |
 
 ### Explicit typed errors — no silent nulls
 

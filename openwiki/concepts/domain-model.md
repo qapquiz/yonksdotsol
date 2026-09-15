@@ -2,7 +2,8 @@
 type: concept
 title: Domain Model & Vocabulary
 description: Canonical domain terms for Yonks — Position, Pool and pair address, Bins, in-range, uPnL, Position view model, Liquidity shape — plus the flagged naming ambiguities that cause real bugs if misread.
-tags: [domain-model, ubiquitous-language, terminology, positions, pnl, upnl, view-model, liquidity-shape, display-currency]
+tags:
+  [domain-model, ubiquitous-language, terminology, positions, pnl, upnl, view-model, liquidity-shape, display-currency]
 verified:
   - by: openwiki/0.5.1
     at: 2026-09-13T11:52:56.431Z
@@ -53,7 +54,7 @@ sources:
     resource: repo://src/widgets/positionWidgetData.ts
   - id: openwiki-source-061d476fc78a0b45454dbf63
     resource: repo://UBIQUITOUS_LANGUAGE.md
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Domain Model & Vocabulary
@@ -67,7 +68,7 @@ rules govern every page in this wiki:
   **wallet ready** — not the aliases flagged on each term below.
 - **Code identifiers are never renamed.** The code keeps `pairAddress`,
   `pnlSol`, `token_data:`, and friends; the vocabulary tells you how to
-  *read* them correctly.
+  _read_ them correctly.
 
 ## The core nouns
 
@@ -85,7 +86,7 @@ erDiagram
     Position }o--o| TokenInfo : "needs one for token X and token Y"
 ```
 
-*A Wallet holds zero or more Positions, each inside one Pool; a Pool contains many Bins and marks exactly one as active. Each Position is displayed through one PositionViewModel, which optionally carries a LiquidityShape, and is optionally enriched by PositionPnLData from the DLMM Data API.*
+_A Wallet holds zero or more Positions, each inside one Pool; a Pool contains many Bins and marks exactly one as active. Each Position is displayed through one PositionViewModel, which optionally carries a LiquidityShape, and is optionally enriched by PositionPnLData from the DLMM Data API._
 
 The relationship chain in code: a wallet address feeds
 `DLMM.getAllLbPairPositionsByUser`, which returns a `Map` of pair address →
@@ -94,30 +95,30 @@ entries, so **one pool can hold several Positions for the same wallet and the
 position count can exceed the pool count** (the pipeline flattens the map into
 one `ResolvedPosition` per entry, keyed `"<position public key>-<index>"`).
 
-| Term | Meaning | In code | Avoid |
-| --- | --- | --- | --- |
-| **Wallet** | The user's Solana wallet; an address for sign-in and position queries | `walletAddress: string \| undefined` | account, signer, keypair |
-| **Position** | A single liquidity provision in a DLMM pool, spread across a bin range | `PositionData`, `ResolvedPosition` | LB position, stake |
-| **Position address** | The on-chain public key identifying one Position | `positionAddress`, `position.publicKey` | position key, pubkey |
-| **Pool** | A Meteora DLMM liquidity pool (an `LbPair` on-chain) | — (user-facing term only) | pair, market |
-| **Pair address** | The on-chain public key of a Pool | `pairAddress` | pool address, lbPair address |
-| **Bin** | A discrete price bucket within a Pool; pools hold many bins at incrementally higher prices | `PositionBinData`, `binId` | tick, step |
-| **Bin range** | The lower–upper bin IDs spanning a Position's liquidity | `lowerBinId`, `upperBinId` | tick range |
-| **Active bin** | The Bin at the current market price of the Pool | `position.lbPair.activeId` | current price level |
-| **In range / Out of range** | Position's bin range includes / excludes the Active bin | `vm.inRange` | active, inTicks, inactive |
-| **Range low / high price** | The price of the lowest / highest bin of the Bin range | first/last `binDistribution[].price` | range floor, low bin price |
-| **Token X / Token Y** | Base / quote token of the Pool pair | `tokenX`, `tokenY`, `tokenXInfo` | tokenA, tokenB |
-| **Token info** | Metadata for a token: mint, symbol, decimals, icon, price per token | `TokenInfo` | token data, token metadata |
-| **Mint** | The on-chain token address; the lookup key for Token info | `tokenXMint`, `mint` | token address |
-| **Unrealized fees** | Fees accrued but not yet claimed, in both tokens | `positionData.feeX`, `feeY` | pending fees, earned fees |
-| **Claimed fees** | Fees already withdrawn | `totalClaimedFeeXAmount`, `totalClaimedFeeYAmount` | collected fees |
-| **uPnL** | Unrealized PnL — current value minus initial deposit | `pnlSol`, `pnlSolPctChange` (misleadingly named!) | floating PnL |
-| **PnL** | The general profit/loss concept, including aggregates | — | profit, return |
-| **Position view model** | Display-ready object computed from raw data | `PositionViewModel` | VM, display model |
-| **Liquidity shape** | Chart data for a Position's bin distribution | `LiquidityShape` | chart data, bin data |
-| **Cache manager** | In-memory singleton with TTL and dedup | `CacheManager` | cache, memo |
-| **Data services** | Facade providing the Token service and OHLCV service | `createDataServices()` | service layer |
-| **Wallet ready** | The wallet provider has resolved (address available or timed out) | `walletReady` | wallet resolved |
+| Term                        | Meaning                                                                                    | In code                                            | Avoid                        |
+| --------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------- | ---------------------------- |
+| **Wallet**                  | The user's Solana wallet; an address for sign-in and position queries                      | `walletAddress: string \| undefined`               | account, signer, keypair     |
+| **Position**                | A single liquidity provision in a DLMM pool, spread across a bin range                     | `PositionData`, `ResolvedPosition`                 | LB position, stake           |
+| **Position address**        | The on-chain public key identifying one Position                                           | `positionAddress`, `position.publicKey`            | position key, pubkey         |
+| **Pool**                    | A Meteora DLMM liquidity pool (an `LbPair` on-chain)                                       | — (user-facing term only)                          | pair, market                 |
+| **Pair address**            | The on-chain public key of a Pool                                                          | `pairAddress`                                      | pool address, lbPair address |
+| **Bin**                     | A discrete price bucket within a Pool; pools hold many bins at incrementally higher prices | `PositionBinData`, `binId`                         | tick, step                   |
+| **Bin range**               | The lower–upper bin IDs spanning a Position's liquidity                                    | `lowerBinId`, `upperBinId`                         | tick range                   |
+| **Active bin**              | The Bin at the current market price of the Pool                                            | `position.lbPair.activeId`                         | current price level          |
+| **In range / Out of range** | Position's bin range includes / excludes the Active bin                                    | `vm.inRange`                                       | active, inTicks, inactive    |
+| **Range low / high price**  | The price of the lowest / highest bin of the Bin range                                     | first/last `binDistribution[].price`               | range floor, low bin price   |
+| **Token X / Token Y**       | Base / quote token of the Pool pair                                                        | `tokenX`, `tokenY`, `tokenXInfo`                   | tokenA, tokenB               |
+| **Token info**              | Metadata for a token: mint, symbol, decimals, icon, price per token                        | `TokenInfo`                                        | token data, token metadata   |
+| **Mint**                    | The on-chain token address; the lookup key for Token info                                  | `tokenXMint`, `mint`                               | token address                |
+| **Unrealized fees**         | Fees accrued but not yet claimed, in both tokens                                           | `positionData.feeX`, `feeY`                        | pending fees, earned fees    |
+| **Claimed fees**            | Fees already withdrawn                                                                     | `totalClaimedFeeXAmount`, `totalClaimedFeeYAmount` | collected fees               |
+| **uPnL**                    | Unrealized PnL — current value minus initial deposit                                       | `pnlSol`, `pnlSolPctChange` (misleadingly named!)  | floating PnL                 |
+| **PnL**                     | The general profit/loss concept, including aggregates                                      | —                                                  | profit, return               |
+| **Position view model**     | Display-ready object computed from raw data                                                | `PositionViewModel`                                | VM, display model            |
+| **Liquidity shape**         | Chart data for a Position's bin distribution                                               | `LiquidityShape`                                   | chart data, bin data         |
+| **Cache manager**           | In-memory singleton with TTL and dedup                                                     | `CacheManager`                                     | cache, memo                  |
+| **Data services**           | Facade providing the Token service and OHLCV service                                       | `createDataServices()`                             | service layer                |
+| **Wallet ready**            | The wallet provider has resolved (address available or timed out)                          | `walletReady`                                      | wallet resolved              |
 
 ## In range: the definition everything leans on
 
@@ -152,7 +153,7 @@ collects the unique mints of every position's token X and token Y and
 batch-fetches them with per-mint failure isolation (a failed mint yields a
 missing map entry, read back as `null`).
 
-Token info is *load-bearing for display*: when either token's info is missing,
+Token info is _load-bearing for display_: when either token's info is missing,
 `computePositionViewData` degrades to `$0.00` value strings, `-` fee
 displays, and a `null` liquidity shape; the card renders a skeleton while
 both token infos are `null`, and the list-level `tokenDataReady` flag gates
@@ -166,7 +167,7 @@ shared by both charts.
 ## PnL and uPnL: the naming trap
 
 The fields `pnlSol` and `pnlSolPctChange` — on the `PositionPnLData` wire
-type *and* on `PositionViewModel` — hold **uPnL** (unrealized PnL: current
+type _and_ on `PositionViewModel` — hold **uPnL** (unrealized PnL: current
 value minus initial deposit), despite the `pnl` name. This is an upstream
 naming convention the codebase inherits and deliberately does not rename.
 Display code always treats them as uPnL (`formatUPNLDisplaySol` /
@@ -198,13 +199,13 @@ to a display-ready object. It carries two kinds of fields:
   `unrealizedFeesValue` / `claimedFeesValue` (`$X.XX`). USD values here come
   from each token's own `price_per_token` — they are independent of the
   SOL/USD display toggle below.
-- **Structured numbers**: `inRange`, `feesTvl24h` (a daily *ratio*), and
+- **Structured numbers**: `inRange`, `feesTvl24h` (a daily _ratio_), and
   `pnlSol` / `pnlSolPctChange` (the uPnL fields, normalized to finite
   numbers or `null`).
 
 Missing inputs degrade rather than throw: no `positionData` or missing token
 info yields the `$0.00` / `-` defaults above; missing PnL yields `null`
-fields; and only when position data *and* both token infos exist is the
+fields; and only when position data _and_ both token infos exist is the
 liquidity shape generated.
 
 ## Liquidity shape
@@ -235,14 +236,14 @@ Positions in one Pool) from a **Portfolio summary** (all pools, one wallet).
 Read the code accordingly:
 
 - `computePoolPnLSummary` (`PoolPnLSummary`) is the aggregation function —
-  but in the in-app path `computeSummary` *flattens every pool's PnL rows*
+  but in the in-app path `computeSummary` _flattens every pool's PnL rows_
   through it, so the type named "Pool" PnL summary actually carries the
   app's **Portfolio summary** (`PortfolioSummaryData` = `PoolPnLSummary` +
   `positionCount`). Its totals are all SOL-denominated.
 - The widget's portfolio summary takes a separate server-totals path
   (`/portfolio/open`) and never builds `PoolPnLSummary`.
 
-The per-position cost basis inside the aggregation is *net* (gross deposits −
+The per-position cost basis inside the aggregation is _net_ (gross deposits −
 gross withdrawals, falling back to value − uPnL when no deposit data exists),
 and both weighted figures (percent, 24 h fees/TVL) are weight-adjusted means.
 The arithmetic is documented on the [Position Data
@@ -250,8 +251,8 @@ Pipeline](/openwiki/architecture/data-pipeline.md) page; the vocabulary point
 is only the name-vs-scope mismatch.
 
 The **24h fees/TVL** ratio crosses a unit boundary worth memorizing: the
-Meteora API returns a *percentage* string (`"1.31"` = 1.31 % daily);
-`parseFeePerTvl24h` divides by 100 so every stored value is a *ratio*
+Meteora API returns a _percentage_ string (`"1.31"` = 1.31 % daily);
+`parseFeePerTvl24h` divides by 100 so every stored value is a _ratio_
 (`0.0131`), and `formatFeesTvl24h` multiplies by 100 for display.
 
 ## Display currency: SOL-native values with an optional USD lens
@@ -279,14 +280,14 @@ computation:
 The formatters encode one convention everywhere: **missing data renders as a
 benign placeholder, never `NaN` and never a fabricated number.**
 
-| Function | Input | Output |
-| --- | --- | --- |
-| `formatUSD` | any finite number | `$X.XX` (en-US, 2 decimals; negatives render as `$-100.50`) |
-| `formatUsdFromSol` | null / non-finite price **or** amount | `$0.00` |
-| `formatUPNLDisplaySol` / `formatUPNLDisplay` | null / undefined uPnL **or** percent | `''` (empty string) |
-| `formatFeesTvl24h` | null / non-finite ratio | `—` (em dash) |
-| `parseFeePerTvl24h` | missing / non-finite / negative | `null` |
-| `parsePnlNumber` (view-model boundary) | missing / blank / non-finite | `null` (a real `0` is preserved) |
+| Function                                     | Input                                 | Output                                                      |
+| -------------------------------------------- | ------------------------------------- | ----------------------------------------------------------- |
+| `formatUSD`                                  | any finite number                     | `$X.XX` (en-US, 2 decimals; negatives render as `$-100.50`) |
+| `formatUsdFromSol`                           | null / non-finite price **or** amount | `$0.00`                                                     |
+| `formatUPNLDisplaySol` / `formatUPNLDisplay` | null / undefined uPnL **or** percent  | `''` (empty string)                                         |
+| `formatFeesTvl24h`                           | null / non-finite ratio               | `—` (em dash)                                               |
+| `parseFeePerTvl24h`                          | missing / non-finite / negative       | `null`                                                      |
+| `parsePnlNumber` (view-model boundary)       | missing / blank / non-finite          | `null` (a real `0` is preserved)                            |
 
 `PositionHeader` adds one UI-level rule on top: when uPnL itself is `null`,
 the line renders a fixed placeholder string (`+$0.00 (+0.00%)` /
@@ -314,14 +315,14 @@ language, with the stale-state indicator as a possible overlay on Data.
 These are inherited verbatim from `UBIQUITOUS_LANGUAGE.md` because each has
 caused (or invites) real misreadings:
 
-| Flag | Code reality | Canonical usage |
-| --- | --- | --- |
-| **`pairAddress` (code) vs Pool (UI)** | The variable is `pairAddress` (matching DLMM's `LbPair`): the map key from `getAllLbPairPositionsByUser`, the `LiquidityShape.pairAddress` field, and the OHLCV cache-key component. The same value also flows into fields literally named `poolAddress` (`ResolvedPosition.poolAddress`, `ComputePositionViewDataInput.poolAddress`, the `pnl:{poolAddress}:{walletAddress}` cache key). | **Pool** in user-facing text; **pair address** in code and data keys. Both identifiers hold the same on-chain key — never "rename" either. |
-| **`pnlSol` holds uPnL** | `pnlSol` / `pnlSolPctChange` on `PositionPnLData` and `PositionViewModel` are unrealized (value − deposit); upstream naming, kept as-is. | **uPnL** when specifically referring to the unrealized figure; **PnL** for the general concept. |
-| **`token_data:` (cache key) vs Token info (type)** | Cache keys are `token_data:{mint}`; the TypeScript interface is `TokenInfo`. | **Token info** in conversation and docs; `token_data:` only inside cache-key strings. |
-| **`lowerBinId`/`upperBinId` vs Range low/high price** | Those fields are bin **IDs**; the endpoint **prices** are separate values derived from the shape's first/last bin. | **Range low price / Range high price** as display terms; bin IDs stay bin IDs. |
-| **`walletReady` vs `walletResolved`** | Both meant the same state; the alias was renamed away, so the code now says `walletReady` uniformly. | **Wallet ready.** |
-| **`PoolPnLSummary` name vs portfolio scope** | The type is named "Pool" PnL summary, but the in-app path aggregates *all* pools through it into the Portfolio summary. | Call the per-scope concept **Pool PnL summary**; call the app's headline figure the **Portfolio summary**. |
+| Flag                                                  | Code reality                                                                                                                                                                                                                                                                                                                                                                              | Canonical usage                                                                                                                            |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **`pairAddress` (code) vs Pool (UI)**                 | The variable is `pairAddress` (matching DLMM's `LbPair`): the map key from `getAllLbPairPositionsByUser`, the `LiquidityShape.pairAddress` field, and the OHLCV cache-key component. The same value also flows into fields literally named `poolAddress` (`ResolvedPosition.poolAddress`, `ComputePositionViewDataInput.poolAddress`, the `pnl:{poolAddress}:{walletAddress}` cache key). | **Pool** in user-facing text; **pair address** in code and data keys. Both identifiers hold the same on-chain key — never "rename" either. |
+| **`pnlSol` holds uPnL**                               | `pnlSol` / `pnlSolPctChange` on `PositionPnLData` and `PositionViewModel` are unrealized (value − deposit); upstream naming, kept as-is.                                                                                                                                                                                                                                                  | **uPnL** when specifically referring to the unrealized figure; **PnL** for the general concept.                                            |
+| **`token_data:` (cache key) vs Token info (type)**    | Cache keys are `token_data:{mint}`; the TypeScript interface is `TokenInfo`.                                                                                                                                                                                                                                                                                                              | **Token info** in conversation and docs; `token_data:` only inside cache-key strings.                                                      |
+| **`lowerBinId`/`upperBinId` vs Range low/high price** | Those fields are bin **IDs**; the endpoint **prices** are separate values derived from the shape's first/last bin.                                                                                                                                                                                                                                                                        | **Range low price / Range high price** as display terms; bin IDs stay bin IDs.                                                             |
+| **`walletReady` vs `walletResolved`**                 | Both meant the same state; the alias was renamed away, so the code now says `walletReady` uniformly.                                                                                                                                                                                                                                                                                      | **Wallet ready.**                                                                                                                          |
+| **`PoolPnLSummary` name vs portfolio scope**          | The type is named "Pool" PnL summary, but the in-app path aggregates _all_ pools through it into the Portfolio summary.                                                                                                                                                                                                                                                                   | Call the per-scope concept **Pool PnL summary**; call the app's headline figure the **Portfolio summary**.                                 |
 
 ## Related pages
 

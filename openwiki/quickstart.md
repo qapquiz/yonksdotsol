@@ -47,7 +47,7 @@ sources:
     resource: repo://src/widgets/registerWidgetTask.web.ts
   - id: openwiki-source-fbadcd8591b65031efaaedce
     resource: repo://vitest.config.ts
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Quickstart
@@ -74,11 +74,11 @@ Copy the example and fill in what you need:
 cp .env.example .env
 ```
 
-| Variable | Value | Used for |
-| --- | --- | --- |
-| `EXPO_PUBLIC_RPC_URL` | Solana RPC endpoint — Helius, Triton, or the public mainnet RPC (example default: `https://api.mainnet-beta.solana.com`) | The shared `Connection` for all on-chain reads, and token metadata via the `getAsset` call |
-| `EXPO_PUBLIC_HELIUS_API_KEY` | Helius API key (optional) | Enhanced data fetching |
-| `EXPO_PUBLIC_DEV_MOCK` | `1` to render mock positions instead of on-chain data; `0`/unset for live (defaults off) | Dev-only mock portfolio; always on for web (see below) |
+| Variable                     | Value                                                                                                                    | Used for                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ |
+| `EXPO_PUBLIC_RPC_URL`        | Solana RPC endpoint — Helius, Triton, or the public mainnet RPC (example default: `https://api.mainnet-beta.solana.com`) | The shared `Connection` for all on-chain reads, and token metadata via the `getAsset` call |
+| `EXPO_PUBLIC_HELIUS_API_KEY` | Helius API key (optional)                                                                                                | Enhanced data fetching                                                                     |
+| `EXPO_PUBLIC_DEV_MOCK`       | `1` to render mock positions instead of on-chain data; `0`/unset for live (defaults off)                                 | Dev-only mock portfolio; always on for web (see below)                                     |
 
 Everything is read through `src/config/env.ts` — `env.rpcUrl`, `env.heliusApiKey`, `env.devMock`. Never use `process.env` directly in components. Zod validation is present but commented out, so values are consumed as-is. If `EXPO_PUBLIC_RPC_URL` is missing, the failure is deferred and actionable: the shared connection is created lazily, and the first on-chain fetch throws an error telling you to copy `.env.example` to `.env` — constructing the pipeline itself never needs an RPC URL.
 
@@ -149,11 +149,11 @@ Tests live in `src/__tests__/`, mirroring the `src/` layout. The Vitest environm
 
 ## Where to go next
 
-| Need | Read |
-| --- | --- |
-| System boundaries — app shell, pipeline, stores, widgets, and how they bound each other | [architecture/overview.md](architecture/overview.md), then [architecture/data-pipeline.md](architecture/data-pipeline.md) and [architecture/state-and-persistence.md](architecture/state-and-persistence.md) |
-| End-to-end behavior — boot & wallet lifecycle, the positions screen, widget sync, out-of-range alerts | [workflows/app-boot-and-wallet.md](workflows/app-boot-and-wallet.md), [workflows/positions-screen.md](workflows/positions-screen.md), [workflows/widget-sync.md](workflows/widget-sync.md), [workflows/out-of-range-alerts.md](workflows/out-of-range-alerts.md) |
-| Invariants and vocabulary — domain terms (Position, Pool, Bins, uPnL), caching contract, design tokens, platform seams | [concepts/domain-model.md](concepts/domain-model.md), [concepts/caching.md](concepts/caching.md), [concepts/theming-and-design.md](concepts/theming-and-design.md), [concepts/platform-seams.md](concepts/platform-seams.md) |
-| External surfaces — Solana RPC, the Meteora DLMM SDK and Data API, Helius metadata, OHLCV | [integrations/solana-and-meteora.md](integrations/solana-and-meteora.md) |
-| Tooling and release — bun scripts, Expo app.json plugins, EAS profiles, tag-triggered builds | [operations/build-and-tooling.md](operations/build-and-tooling.md) |
-| How tests are structured and what they guard | [testing/strategy.md](testing/strategy.md) |
+| Need                                                                                                                   | Read                                                                                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| System boundaries — app shell, pipeline, stores, widgets, and how they bound each other                                | [architecture/overview.md](architecture/overview.md), then [architecture/data-pipeline.md](architecture/data-pipeline.md) and [architecture/state-and-persistence.md](architecture/state-and-persistence.md)                                                     |
+| End-to-end behavior — boot & wallet lifecycle, the positions screen, widget sync, out-of-range alerts                  | [workflows/app-boot-and-wallet.md](workflows/app-boot-and-wallet.md), [workflows/positions-screen.md](workflows/positions-screen.md), [workflows/widget-sync.md](workflows/widget-sync.md), [workflows/out-of-range-alerts.md](workflows/out-of-range-alerts.md) |
+| Invariants and vocabulary — domain terms (Position, Pool, Bins, uPnL), caching contract, design tokens, platform seams | [concepts/domain-model.md](concepts/domain-model.md), [concepts/caching.md](concepts/caching.md), [concepts/theming-and-design.md](concepts/theming-and-design.md), [concepts/platform-seams.md](concepts/platform-seams.md)                                     |
+| External surfaces — Solana RPC, the Meteora DLMM SDK and Data API, Helius metadata, OHLCV                              | [integrations/solana-and-meteora.md](integrations/solana-and-meteora.md)                                                                                                                                                                                         |
+| Tooling and release — bun scripts, Expo app.json plugins, EAS profiles, tag-triggered builds                           | [operations/build-and-tooling.md](operations/build-and-tooling.md)                                                                                                                                                                                               |
+| How tests are structured and what they guard                                                                           | [testing/strategy.md](testing/strategy.md)                                                                                                                                                                                                                       |

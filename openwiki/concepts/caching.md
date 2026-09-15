@@ -35,7 +35,7 @@ sources:
     resource: repo://src/tasks/widgetBackgroundSync.ts
   - id: openwiki-source-243e1c1b6c6a3f9a0796a1b6
     resource: repo://src/utils/cache/CacheManager.ts
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Caching Strategy
@@ -57,15 +57,15 @@ The whole cache is two `Map`s on one instance: `cache` (key →
 `{ value, expiresAt }`) and `pending` (key → in-flight `Promise`). Reads,
 writes, and invalidation treat the two maps as a unit:
 
-| Member | Behavior |
-| --- | --- |
-| `get(key)` | Cached value or `null`; expired entries are dropped on read. Cannot distinguish a missing key from a cached `null`. |
-| `set(key, value, ttl?)` | Writes `expiresAt = now + ttl` (default 15 min) and **deletes any pending promise for the key** — an explicit write supersedes in-flight work. |
-| `has(key)` | Existence check with expiry applied. |
-| `delete(key)` | Removes the cached entry **and** the pending promise. |
-| `clear()` | Empties both maps. |
-| `invalidatePattern(pattern)` | `delete`s every key — cached **or** pending — that contains `pattern` as a substring. |
-| `getOrFetch(key, fetchFn, ttl?)` | Cache-aside read with deduplication; see below. |
+| Member                           | Behavior                                                                                                                                       |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `get(key)`                       | Cached value or `null`; expired entries are dropped on read. Cannot distinguish a missing key from a cached `null`.                            |
+| `set(key, value, ttl?)`          | Writes `expiresAt = now + ttl` (default 15 min) and **deletes any pending promise for the key** — an explicit write supersedes in-flight work. |
+| `has(key)`                       | Existence check with expiry applied.                                                                                                           |
+| `delete(key)`                    | Removes the cached entry **and** the pending promise.                                                                                          |
+| `clear()`                        | Empties both maps.                                                                                                                             |
+| `invalidatePattern(pattern)`     | `delete`s every key — cached **or** pending — that contains `pattern` as a substring.                                                          |
+| `getOrFetch(key, fetchFn, ttl?)` | Cache-aside read with deduplication; see below.                                                                                                |
 
 Expiry is inclusive and lazy: an entry is dead once `Date.now() >= expiresAt`,
 so it disappears exactly at its deadline (a zero TTL is dead on arrival).
@@ -96,7 +96,7 @@ flowchart TD
     H --> L
 ```
 
-*The `getOrFetch` decision path. The identity guard (`pending.get(key) === promise`) is what makes invalidation safe.*
+_The `getOrFetch` decision path. The identity guard (`pending.get(key) === promise`) is what makes invalidation safe._
 
 Three properties of this path matter whenever cache behavior changes:
 
@@ -111,7 +111,7 @@ Three properties of this path matter whenever cache behavior changes:
   rejection propagates to all joined callers and leaves no entry, so the next
   request retries cleanly. The pipeline's "partial PnL is never cached"
   behavior is exactly this rule plus all-or-nothing pagination in `dlmmApi`.
-- **Nulls are cached like values.** `getOrFetch` checks entry *existence* (not
+- **Nulls are cached like values.** `getOrFetch` checks entry _existence_ (not
   truthiness), so a fetched `null` is cached and deduplicated for its TTL even
   though `get()` alone could not distinguish it from a miss.
 
@@ -144,7 +144,7 @@ sequenceDiagram
     Note over CM: identity guard passes, entry cached
 ```
 
-*A pull-to-refresh invalidates the wallet while the previous load's PnL fetch is still in flight. The late first response cannot repopulate the cache, and the replacement fetch owns the key.*
+_A pull-to-refresh invalidates the wallet while the previous load's PnL fetch is still in flight. The late first response cannot repopulate the cache, and the replacement fetch owns the key._
 
 The invariants proven by `src/__tests__/stores/CacheManager.test.ts` (a
 `describe.each` matrix runs all of them for `delete`, `clear`, and
@@ -155,7 +155,7 @@ The invariants proven by `src/__tests__/stores/CacheManager.test.ts` (a
    `cache.has(key)` stays false.
 2. **A replacement request starts immediately and is protected.** A
    `getOrFetch` after invalidation launches a fresh fetch that owns the
-   pending slot. The old request's settlement — resolve *or* reject — can
+   pending slot. The old request's settlement — resolve _or_ reject — can
    neither overwrite the fresh result nor detach its pending entry, so a third
    caller arriving later still deduplicates onto the replacement.
 3. **Explicit writes win.** `set` deletes the pending entry first, so a
@@ -181,7 +181,7 @@ this.cache.invalidatePattern(`:${walletAddress}`)
 ```
 
 The key grammar makes this work: `pnl:{poolAddress}:{walletAddress}` is the
-only key family that *ends* with the wallet address, so the pattern matches
+only key family that _ends_ with the wallet address, so the pattern matches
 every PnL entry (cached or still in flight) for that wallet, across all its
 pools — and nothing else. `token_data:{mint}` entries survive (prices are
 wallet-independent), `ohlcv:*` entries survive, and other wallets' PnL entries
@@ -190,7 +190,7 @@ survival pattern.
 
 `usePositionsPage` invokes it at every data boundary:
 
-- **Wallet change** — the *previous* address is invalidated before the new
+- **Wallet change** — the _previous_ address is invalidated before the new
   wallet's portfolio loads, so stale PnL can never bleed across a
   connect/switch/disconnect transition.
 - **Every refresh** — `refresh()` invalidates the current wallet before
@@ -207,11 +207,11 @@ identity guard, so the repopulated cache contains only post-invalidation data.
 
 All TTLs live in `src/config/cache.ts`:
 
-| Key | Producer | TTL | Notes |
-| --- | --- | --- | --- |
-| `token_data:{mint}` | `TokenService.getPrice` / `getPrices` | 60 s (`CACHE_TTL.TOKEN_DATA`) | Wallet-independent; also serves SOL via the wrapped-SOL mint for `getCurrentSolUsdPrice` |
-| `ohlcv:{pairAddress}:{timeframe}` | `OhlcvService.getOhlcv` | 60 s (`CACHE_TTL.OHLCV`) | **Display-only** per ADR 0001; each timeframe is a distinct key |
-| `pnl:{poolAddress}:{walletAddress}` | `PositionPipeline.fetchAllPnL` | 15 min (`CACHE_TTL.UPNL_PER_POSITION`) | The only wallet-scoped family; ends with the wallet, which suffix invalidation relies on |
+| Key                                 | Producer                              | TTL                                    | Notes                                                                                    |
+| ----------------------------------- | ------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `token_data:{mint}`                 | `TokenService.getPrice` / `getPrices` | 60 s (`CACHE_TTL.TOKEN_DATA`)          | Wallet-independent; also serves SOL via the wrapped-SOL mint for `getCurrentSolUsdPrice` |
+| `ohlcv:{pairAddress}:{timeframe}`   | `OhlcvService.getOhlcv`               | 60 s (`CACHE_TTL.OHLCV`)               | **Display-only** per ADR 0001; each timeframe is a distinct key                          |
+| `pnl:{poolAddress}:{walletAddress}` | `PositionPipeline.fetchAllPnL`        | 15 min (`CACHE_TTL.UPNL_PER_POSITION`) | The only wallet-scoped family; ends with the wallet, which suffix invalidation relies on |
 
 Notes on the producers:
 

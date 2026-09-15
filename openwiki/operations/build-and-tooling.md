@@ -2,7 +2,23 @@
 type: operations
 title: Build, Tooling & Release
 description: How Yonks is checked, built, and shipped — the Bun/tsgo/oxfmt/ESLint toolchain and its scripts, the mandatory Metro Uniwind pipeline, Expo app.json integration points that code depends on (widgets, fonts, permissions, the Gradle-heap config plugin), EAS build profiles, and the tag-triggered Android release workflow.
-tags: [build, tooling, release, ci, eas, expo-prebuild, tsgo, oxfmt, eslint, metro, uniwind, android-widgets, gradle, app-json]
+tags:
+  [
+    build,
+    tooling,
+    release,
+    ci,
+    eas,
+    expo-prebuild,
+    tsgo,
+    oxfmt,
+    eslint,
+    metro,
+    uniwind,
+    android-widgets,
+    gradle,
+    app-json,
+  ]
 verified:
   - by: openwiki/0.5.1
     at: 2026-09-13T11:52:56.431Z
@@ -49,7 +65,7 @@ sources:
     resource: repo://src/widgets/syncPositionWidgets.tsx
   - id: openwiki-source-98d5ddb014a0fd4d678f6f2a
     resource: repo://tsconfig.json
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Build, Tooling & Release
@@ -71,7 +87,7 @@ There are two check pipelines and one release pipeline:
   Android prebuild.
 - **The AGENTS.md before-commit list** — the human check: `tsgo --noEmit`,
   `bun run lint`, `bun run fmt`, `bun run build`, `bun run test`.
-- **A `v*` tag push** — the release: a GitHub Actions workflow runs a *local*
+- **A `v*` tag push** — the release: a GitHub Actions workflow runs a _local_
   EAS build of the `preview` profile and uploads the APK as a run artifact.
 
 ## Toolchain and scripts
@@ -79,16 +95,16 @@ There are two check pipelines and one release pipeline:
 All day-to-day commands live in `package.json` and are run via `bun run`
 (`bunx` for one-off tools):
 
-| Script | What it actually runs |
-| --- | --- |
-| `bun run build` | `tsgo --noEmit && expo prebuild -p android` — "build" means *type check + regenerate the native project*, not compile a bundle |
-| `bun run ci` | `tsgo --noEmit && expo lint && oxfmt --check . && expo prebuild -p android` |
-| `bun run lint` / `lint:check` | `expo lint --fix` (auto-fix) / `expo lint` (report only — what CI uses) |
-| `bun run fmt` / `fmt:check` | `oxfmt --write .` / `oxfmt --check .` |
-| `bun run dev` | `expo start --clear --dev-client --reset-cache` |
-| `bun run android` / `ios` / `web` / `start` | `expo run:android` / `run:ios` / `start --web` / `start` |
-| `bun run test` / `test:watch` / `test:coverage` | Vitest run / watch / V8 coverage |
-| `bun run doctor` | `expo-doctor` health check |
+| Script                                          | What it actually runs                                                                                                          |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `bun run build`                                 | `tsgo --noEmit && expo prebuild -p android` — "build" means _type check + regenerate the native project_, not compile a bundle |
+| `bun run ci`                                    | `tsgo --noEmit && expo lint && oxfmt --check . && expo prebuild -p android`                                                    |
+| `bun run lint` / `lint:check`                   | `expo lint --fix` (auto-fix) / `expo lint` (report only — what CI uses)                                                        |
+| `bun run fmt` / `fmt:check`                     | `oxfmt --write .` / `oxfmt --check .`                                                                                          |
+| `bun run dev`                                   | `expo start --clear --dev-client --reset-cache`                                                                                |
+| `bun run android` / `ios` / `web` / `start`     | `expo run:android` / `run:ios` / `start --web` / `start`                                                                       |
+| `bun run test` / `test:watch` / `test:coverage` | Vitest run / watch / V8 coverage                                                                                               |
+| `bun run doctor`                                | `expo-doctor` health check                                                                                                     |
 
 Type checking runs through `tsconfig.json`, which only extends
 `expo/tsconfig.base` and turns on `strict` — all other compiler behavior comes
@@ -112,7 +128,7 @@ the tree type-checks.
   `arrowParens: always`, `trailingComma: all`, 2-space indent.
 - `ignorePatterns` protects generated and vendored trees: `/android`, `/ios`,
   `/dist`, `/coverage`, `/.expo`, `pnpm-lock.yaml`, and notably
-  `/src/uniwind-types.d.ts` — a *generated* file (see Metro below) that must
+  `/src/uniwind-types.d.ts` — a _generated_ file (see Metro below) that must
   never be hand-formatted.
 
 **ESLint** uses the Expo flat config (`eslint.config.js` composes
@@ -152,10 +168,10 @@ of its sections are load-bearing for code:
 The `react-native-android-widget` plugin declares two home-screen widgets, and
 widget code matches their `name` strings **literally**:
 
-| `name` (matched in code) | Label | Min / target size | Resize | Update period |
-| --- | --- | --- | --- | --- |
-| `PortfolioSummary` | Yonks Portfolio | 320×110dp / 4×2 cells | vertical | 1800000 ms (30 min) |
-| `PositionLiquidity` | Yonks Positions | 320×320dp / 4×4 cells | horizontal + vertical | 1800000 ms (30 min) |
+| `name` (matched in code) | Label           | Min / target size     | Resize                | Update period       |
+| ------------------------ | --------------- | --------------------- | --------------------- | ------------------- |
+| `PortfolioSummary`       | Yonks Portfolio | 320×110dp / 4×2 cells | vertical              | 1800000 ms (30 min) |
+| `PositionLiquidity`      | Yonks Positions | 320×320dp / 4×4 cells | horizontal + vertical | 1800000 ms (30 min) |
 
 - `src/widgets/syncPortfolioWidget.ts` queries
   `getWidgetInfo('PortfolioSummary')` with a module-local
@@ -179,12 +195,12 @@ receivers.
 
 The `expo-font` plugin bundles exactly four files from `assets/fonts/`:
 
-| File (bundled) | Family name consumers use |
-| --- | --- |
-| `GeistPixel-Square.ttf` | `--font-pixel` in `global.css`; `fontFamily: 'GeistPixel-Square'` in `config/fonts.ts` |
-| `Geist-Regular.ttf` | `--font-sans` (`font-sans` class) |
-| `Geist-Bold.ttf` | `--font-sans-bold` (`font-sans-bold` class — the only sanctioned bold) |
-| `DepartureMono-Regular.otf` | `--font-mono`; the alternate pixel-font option in `config/fonts.ts` |
+| File (bundled)              | Family name consumers use                                                              |
+| --------------------------- | -------------------------------------------------------------------------------------- |
+| `GeistPixel-Square.ttf`     | `--font-pixel` in `global.css`; `fontFamily: 'GeistPixel-Square'` in `config/fonts.ts` |
+| `Geist-Regular.ttf`         | `--font-sans` (`font-sans` class)                                                      |
+| `Geist-Bold.ttf`            | `--font-sans-bold` (`font-sans-bold` class — the only sanctioned bold)                 |
+| `DepartureMono-Regular.otf` | `--font-mono`; the alternate pixel-font option in `config/fonts.ts`                    |
 
 `src/global.css` maps them to Uniwind roles under `@theme`, and
 `src/config/fonts.ts` exposes the two pixel fonts (Geist Pixel ↔ Departure
@@ -238,12 +254,12 @@ setting, is the theme authority).
 
 ## `eas.json`: build profiles
 
-| Profile | Behavior |
-| --- | --- |
-| `development` | Dev client (`developmentClient: true`), internal distribution, `environment: development` |
-| `preview` | Internal distribution, `android.buildType: apk` — **the profile the tag workflow builds** |
-| `production` | `autoIncrement: true` (store build; no explicit buildType, so the default AAB) |
-| `dapp-store` | APK build in the `production` environment with EAS-managed env bindings for `EXPO_PUBLIC_RPC_URL` and `EXPO_PUBLIC_HELIUS_API_KEY`, plus `EAS_GRADLE_CACHE=1` |
+| Profile       | Behavior                                                                                                                                                      |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `development` | Dev client (`developmentClient: true`), internal distribution, `environment: development`                                                                     |
+| `preview`     | Internal distribution, `android.buildType: apk` — **the profile the tag workflow builds**                                                                     |
+| `production`  | `autoIncrement: true` (store build; no explicit buildType, so the default AAB)                                                                                |
+| `dapp-store`  | APK build in the `production` environment with EAS-managed env bindings for `EXPO_PUBLIC_RPC_URL` and `EXPO_PUBLIC_HELIUS_API_KEY`, plus `EAS_GRADLE_CACHE=1` |
 
 At the CLI level: `cli.version: ">= 18.0.3"` and `appVersionSource: "remote"` —
 the version code/authority lives on EAS's side, not in the repo, which is what
@@ -269,10 +285,10 @@ flowchart TD
     BUILD --> ART["actions/upload-artifact - name android-ref_name - files apk and aab"]
 ```
 
-*The tagged release: Bun + JDK 17 + the Android SDK are provisioned on the
+_The tagged release: Bun + JDK 17 + the Android SDK are provisioned on the
 runner, dependencies install reproducibly from the lockfile, and a local EAS
 build of the `preview` profile produces the APK that gets uploaded as the run
-artifact.*
+artifact._
 
 Details that matter when operating it:
 

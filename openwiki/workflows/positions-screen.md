@@ -2,7 +2,19 @@
 type: workflow
 title: Positions Screen Data Flow
 description: The home screen's orchestration — the usePositionsPage lifecycle (wallet-change invalidation, 30s-throttled pull refresh, 60s silent auto-refresh), tokenDataReady gating that prevents a blank list frame, the SOL/USD display toggle fed by the wrapped-SOL price, and the four mutually exclusive UI states with the stale overlay on Data.
-tags: [workflow, positions-screen, react-hooks, state-machine, refresh-throttle, sol-price, display-currency, dev-mock, observe, legend-list]
+tags:
+  [
+    workflow,
+    positions-screen,
+    react-hooks,
+    state-machine,
+    refresh-throttle,
+    sol-price,
+    display-currency,
+    dev-mock,
+    observe,
+    legend-list,
+  ]
 verified:
   - by: openwiki/0.5.1
     at: 2026-09-13T11:52:56.431Z
@@ -43,7 +55,7 @@ sources:
     resource: repo://src/utils/positions/formatters.ts
   - id: openwiki-source-061d476fc78a0b45454dbf63
     resource: repo://UBIQUITOUS_LANGUAGE.md
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Positions Screen Data Flow
@@ -82,14 +94,14 @@ wallet button is what triggers the wallet-change lifecycle below.
 `PositionsPageResult` (`src/hooks/usePositionsPage.ts`) is the screen's entire
 data API:
 
-| Field | Meaning |
-| --- | --- |
+| Field                                                                                     | Meaning                                                                                                               |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | `positions`, `summary`, `hasPnLData`, `outOfRangeCount`, `poolAddresses`, `positionCount` | A `PortfolioResult` from the pipeline, flattened to safe defaults (`[]`, `null`, `0`) before the first load completes |
-| `loading` | True during a skeleton-visible load (initial load or pull refresh) |
-| `tokenDataReady` | True when token prices have resolved — the list-frame gate (below) |
-| `solUsdPrice` | Live SOL→USD rate for the display toggle; `null` while loading or on failure |
-| `refresh(options?)` | Manual/automatic reload; `silent: true` skips skeleton and spinner |
-| `walletReady`, `walletAddress` | Passed through from the lifecycle |
+| `loading`                                                                                 | True during a skeleton-visible load (initial load or pull refresh)                                                    |
+| `tokenDataReady`                                                                          | True when token prices have resolved — the list-frame gate (below)                                                    |
+| `solUsdPrice`                                                                             | Live SOL→USD rate for the display toggle; `null` while loading or on failure                                          |
+| `refresh(options?)`                                                                       | Manual/automatic reload; `silent: true` skips skeleton and spinner                                                    |
+| `walletReady`, `walletAddress`                                                            | Passed through from the lifecycle                                                                                     |
 
 The hook runs three triggers — wallet change, throttled refresh, and the
 foreground timer — all converging on the same two calls: `pipeline.loadPortfolio`
@@ -121,10 +133,10 @@ sequenceDiagram
     Hook->>Hook: refresh with silent true (no skeleton or spinner)
 ```
 
-*The three refresh triggers converge on `invalidateWallet` + `loadPortfolio` +
+_The three refresh triggers converge on `invalidateWallet` + `loadPortfolio` +
 a SOL-price fetch. Only an executed pull makes loading visible; a pull inside
 the 30 s cooldown is swallowed before any spinner appears, and the silent path
-never shows one at all.*
+never shows one at all._
 
 ## Trigger 1 — wallet change: invalidate, clear, reload
 
@@ -134,7 +146,7 @@ The wallet-change effect fires on every `walletAddress` transition:
    `pipeline.invalidateWallet(prevAddress)`, which is
    `cache.invalidatePattern(":{walletAddress}")` — suffix-scoped, so PnL keys
    (which end with the wallet) are evicted while shared `token_data:*` prices
-   survive their 60 s TTL. Disconnect is a transition to *no* address and hits
+   survive their 60 s TTL. Disconnect is a transition to _no_ address and hits
    the same invalidation before clearing.
 2. **Reset.** `tokenDataReady` goes `false`, `loading` goes `true`, and
    `result` goes `null` — this is what returns the screen to the Skeleton
@@ -161,7 +173,7 @@ empty-state scroll view. Its guard rails:
   and when there is no `walletAddress`.
 - **30 s cooldown.** `now - lastRefreshRef.current < 30_000` returns early —
   the throttled call does not set `loading`, so a suppressed pull never even
-  starts the native spinner. Every *executed* refresh (pull or auto) updates
+  starts the native spinner. Every _executed_ refresh (pull or auto) updates
   the timestamp, so the two triggers share one budget.
 - **Invalidate then reload.** `pipeline.invalidateWallet(walletAddress)` runs
   before `loadPortfolio`, so PnL figures re-fetch rather than replay from the
@@ -173,7 +185,7 @@ empty-state scroll view. Its guard rails:
 The visibility difference is the point:
 
 - **Pull refresh** (`silent` unset) sets `loading: true`, which shows the
-  native `RefreshControl` spinner. The skeleton does *not* appear for a
+  native `RefreshControl` spinner. The skeleton does _not_ appear for a
   non-empty list — `tokenDataReady` stays `true` and
   `positions.length === 0` is false — so existing cards stay mounted while
   the spinner runs.
@@ -210,7 +222,7 @@ skeleton-cards-with-no-symbols. The gate closes that window:
   wallet is resolved, the fetch is complete, **and** token data is ready.
 
 Individual cards keep their own inner skeleton
-(`PositionCard` renders `PositionCardSkeleton` when *both* token infos are
+(`PositionCard` renders `PositionCardSkeleton` when _both_ token infos are
 still null) as a per-row fallback for positions whose mints failed while
 another position's succeeded.
 
@@ -241,10 +253,10 @@ stateDiagram-v2
     end note
 ```
 
-*The four mutually exclusive screen states. Skeleton, Empty, and Data are
+_The four mutually exclusive screen states. Skeleton, Empty, and Data are
 computed from `walletReady` / `tokenDataReady` / `loading` / `positions`; the
 Error state is exclusively the error-boundary fallback, and Stale is defined
-as an overlay on Data.*
+as an overlay on Data._
 
 Two implementation details deserve care when reasoning about failures:
 
@@ -291,7 +303,7 @@ presentation-time lens:
 The price threads from the hook through `PositionsList` into the summary and
 every `PositionCard`, where `PositionHeader` converts the uPnL line as
 `upnlValue * solUsdPrice` in USD mode and falls back to the SOL rendering when
-the price is null. Card USD *value* strings baked into the view model are
+the price is null. Card USD _value_ strings baked into the view model are
 independent of this toggle — they are computed from each token's own price at
 pipeline time.
 

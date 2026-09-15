@@ -57,7 +57,7 @@ sources:
     resource: repo://src/widgets/syncPositionWidgets.tsx
   - id: openwiki-source-fbadcd8591b65031efaaedce
     resource: repo://vitest.config.ts
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Platform Seams & Polyfills
@@ -76,7 +76,7 @@ mechanisms make that work:
 
 The web preview boots only because all three line up: the seams keep native
 modules out of the web bundle, the polyfills cover the SDK runtime surface that
-still loads there, and dev mock mode makes sure no code path ever *needs* a
+still loads there, and dev mock mode makes sure no code path ever _needs_ a
 wallet or an RPC URL.
 
 ## Dev mock mode: `env.devMock`
@@ -105,16 +105,17 @@ Every consumer of `env.devMock` short-circuits **before** any SDK, wallet, or
 RPC call — that is the property that lets the web bundle boot without a
 Solana endpoint:
 
-| Consumer | In mock mode |
-| --- | --- |
-| `useWalletLifecycle` | Returns `walletReady: true` with a toggleable fake wallet (`MOCK_WALLET_ADDRESS` or `undefined`); connect/disconnect just flip local state |
-| `usePositionsPage` | Returns `createMockPortfolioResult()` synchronously; `refresh` is a no-op; the SOL price is seeded with `MOCK_SOL_USD_PRICE` (145.0) instead of fetched |
-| `usePoolOhlcv` | Serves `getMockOhlcv()` synchronously instead of calling the Meteora DLMM REST endpoint |
-| `useWidgetSync` | Effect returns immediately — no widget sync scheduling |
-| `widgetBackgroundSync` task | Returns `BackgroundFetchResult.NoData` without syncing |
-| `syncPortfolioWidget` / `syncPositionWidgets` | Return `'no-data'` before touching widgets or the pipeline |
+| Consumer                                      | In mock mode                                                                                                                                            |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useWalletLifecycle`                          | Returns `walletReady: true` with a toggleable fake wallet (`MOCK_WALLET_ADDRESS` or `undefined`); connect/disconnect just flip local state              |
+| `usePositionsPage`                            | Returns `createMockPortfolioResult()` synchronously; `refresh` is a no-op; the SOL price is seeded with `MOCK_SOL_USD_PRICE` (145.0) instead of fetched |
+| `usePoolOhlcv`                                | Serves `getMockOhlcv()` synchronously instead of calling the Meteora DLMM REST endpoint                                                                 |
+| `useWidgetSync`                               | Effect returns immediately — no widget sync scheduling                                                                                                  |
+| `widgetBackgroundSync` task                   | Returns `BackgroundFetchResult.NoData` without syncing                                                                                                  |
+| `syncPortfolioWidget` / `syncPositionWidgets` | Return `'no-data'` before touching widgets or the pipeline                                                                                              |
 
 <!-- openwiki: mermaid parse failed and this diagram was converted to a text fence so it does not break rendering. Fix the diagram source and restore the mermaid fence. Parser error: Heuristic: an unescaped angle bracket inside a label breaks rendering; rephrase the label. -->
+
 ```text
 flowchart TD
     ENV["env.devMock<br/>EXPO_PUBLIC_DEV_MOCK=1 or web platform"]
@@ -143,9 +144,9 @@ flowchart TD
     HS -- "live" --> NET
 ```
 
-*Each `env.devMock` consumer branches before any native/RPC call: mock mode
+_Each `env.devMock` consumer branches before any native/RPC call: mock mode
 stays inside pure synchronous modules, live mode goes through the seams and
-the network.*
+the network._
 
 One structural consequence: because mock mode can reach `usePositionsPage`
 without the pipeline ever being constructed, the pipeline must not require an
@@ -205,13 +206,13 @@ behind a platform-split module: Metro resolves the `.web` sibling **only** when
 the platform is `web`; native builds bundle the native file and never see the
 stub. These are the pairs, and their exports must be edited together:
 
-| Seam | Native file | Web sibling | Web behavior |
-| --- | --- | --- | --- |
-| Polyfills | `polyfill.js` | `polyfill.web.js` | Buffer only |
-| Wallet kit | `src/wallet/walletKit.tsx` | `walletKit.web.tsx` | Inert provider; `signIn` throws |
-| Widget sync hook | `src/hooks/useWidgetSync.ts` | `useWidgetSync.web.ts` | No-op |
-| Widget task registration | `src/widgets/registerWidgetTask.ts` | `registerWidgetTask.web.ts` | No-op |
-| Observe | `src/observe/index.ts` | `index.web.tsx` | No-op stubs |
+| Seam                     | Native file                         | Web sibling                 | Web behavior                    |
+| ------------------------ | ----------------------------------- | --------------------------- | ------------------------------- |
+| Polyfills                | `polyfill.js`                       | `polyfill.web.js`           | Buffer only                     |
+| Wallet kit               | `src/wallet/walletKit.tsx`          | `walletKit.web.tsx`         | Inert provider; `signIn` throws |
+| Widget sync hook         | `src/hooks/useWidgetSync.ts`        | `useWidgetSync.web.ts`      | No-op                           |
+| Widget task registration | `src/widgets/registerWidgetTask.ts` | `registerWidgetTask.web.ts` | No-op                           |
+| Observe                  | `src/observe/index.ts`              | `index.web.tsx`             | No-op stubs                     |
 
 The sync rule is stated in each file's header comment ("keep both files'
 exports in sync") and in `AGENTS.md`: adding an export on one side without the
@@ -261,6 +262,7 @@ module Metro evaluates later sees the patched globals. Inside `polyfill.js`
 the order is fixed and must not change:
 
 <!-- openwiki: mermaid parse failed and this diagram was converted to a text fence so it does not break rendering. Fix the diagram source and restore the mermaid fence. Parser error: Heuristic: an unescaped angle bracket inside a label breaks rendering; rephrase the label. -->
+
 ```text
 flowchart TD
     ENTRY["index.js imports ./polyfill"] --> P1["react-native-get-random-values<br/>must be first"]
@@ -272,9 +274,9 @@ flowchart TD
     P6 --> ROUTER["expo-router/entry<br/>SDKs evaluate with patched globals"]
 ```
 
-*The polyfill pipeline: randomness first, crypto `install()` last, Buffer and
+_The polyfill pipeline: randomness first, crypto `install()` last, Buffer and
 its prototype patches in between — then the router (and every SDK module) can
-evaluate.*
+evaluate._
 
 1. `react-native-get-random-values` first — later code needs randomness to
    already work.

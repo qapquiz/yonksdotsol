@@ -2,7 +2,20 @@
 type: workflow
 title: Android Widget Sync
 description: How the PortfolioSummary and PositionLiquidity home-screen widgets stay current — foreground debounce/periodic sync, the >=30-minute background fetch task, click-action handling, the MMKV snapshot/selection handoff, and the request-ID plus wallet-revision guard that makes stale runs never render.
-tags: [workflow, android-widgets, background-fetch, expo-task-manager, mmkv, revision-counter, stale-run-guard, dlmm-data-api, remoteviews, headless-tasks, adr-0002]
+tags:
+  [
+    workflow,
+    android-widgets,
+    background-fetch,
+    expo-task-manager,
+    mmkv,
+    revision-counter,
+    stale-run-guard,
+    dlmm-data-api,
+    remoteviews,
+    headless-tasks,
+    adr-0002,
+  ]
 verified:
   - by: openwiki/0.5.1
     at: 2026-09-13T11:52:56.431Z
@@ -51,7 +64,7 @@ sources:
     resource: repo://src/widgets/syncWidgets.ts
   - id: openwiki-source-a2a218d2079077a97edcb24b
     resource: repo://src/widgets/updatePortfolioWidget.tsx
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Android Widget Sync
@@ -101,9 +114,9 @@ flowchart TD
     GUARD --> RD["renderWidgets re-checks isCurrent inside the native draw callback"]
 ```
 
-*All refresh triggers converge on the two sync coordinators; only
+_All refresh triggers converge on the two sync coordinators; only
 NEXT/PREVIOUS_POSITION navigation takes the cheap per-widgetId path, and every
-render funnel re-checks ownership at the draw boundary.*
+render funnel re-checks ownership at the draw boundary._
 
 ### Foreground: `useWidgetSync`
 
@@ -186,14 +199,14 @@ server snapshot to the widget's `PortfolioSummary`:
 - Money fields arrive as strings and are converted with `Number(...)`; null
   server values become `0`.
 - **Deposited is derived, never read**: `totalInitialDepositSol =
-  totalValueSol - totalPnlSol`, a net cost basis from the server's own
+totalValueSol - totalPnlSol`, a net cost basis from the server's own
   value/uPnL pair — the same fallback semantic as the in-app
   `computePoolPnLSummary`. A null server PnL collapses deposited to equal
   value.
 - `totalCount === 0` returns `null`, which the renderer turns into the
   "No active positions" state — closed positions never resurface from cache.
 
-The position widget, by contrast, *does* use the on-chain pipeline (see
+The position widget, by contrast, _does_ use the on-chain pipeline (see
 below); the server-totals rule applies to the summary widget only.
 
 ## MMKV handoff and the stale-run guard
@@ -211,8 +224,8 @@ Both coordinators share one skeleton:
 1. Read the wallet snapshot `{ address, revision }` from `walletStore`.
 2. Bump the persisted, monotonic request id (`latest_request_id` /
    `request`) **before** doing anything else.
-3. Define `isCurrent()` as *persisted id still equals this run's id **and**
-   the current wallet snapshot still equals the one captured at start*.
+3. Define `isCurrent()` as _persisted id still equals this run's id **and**
+   the current wallet snapshot still equals the one captured at start_.
 4. Check `isCurrent()` after every await — the widget lookup, the optimistic
    render, the fetch, and before the cache write — and abort as `'no-data'`
    (never rendering, never writing) the moment it fails.
@@ -237,7 +250,7 @@ cache is a miss, not a starting point.
 ### Snapshots are validated on read
 
 Both persisted display snapshots embed the wallet snapshot that produced
-them. On read, a mismatched address *or* revision, malformed JSON, or a legacy
+them. On read, a mismatched address _or_ revision, malformed JSON, or a legacy
 snapshot without any wallet identity causes the entry to be **removed** and
 treated as a cache miss — a corrupt or foreign-wallet snapshot is discarded,
 never shown. A summary with zero positions is likewise removed rather than
@@ -270,8 +283,8 @@ sequenceDiagram
     Note over S,R: any failed isCurrent aborts as no-data - a stale run never renders or writes
 ```
 
-*One summary-widget run: the request id and wallet identity gate every step,
-and the draw callback is the final ownership boundary.*
+_One summary-widget run: the request id and wallet identity gate every step,
+and the draw callback is the final ownership boundary._
 
 ## PortfolioSummary sync states
 
@@ -354,7 +367,7 @@ distribution as an inline SVG string for an `SvgWidget`:
 - **At most 48 grouped bars** (`MAX_BARS`) keep large bin ranges legible at
   home-screen size; bins outside the position's range and non-positive
   amounts are skipped.
-- **Peak-bin sampling**: each bar takes the *maximum* bin amount in its
+- **Peak-bin sampling**: each bar takes the _maximum_ bin amount in its
   bucket (`amounts[index] = Math.max(amounts[index], amount)`), so uneven
   bucket sizes cannot manufacture artificial spikes across an otherwise flat
   distribution — a behavior pinned by a dedicated test.

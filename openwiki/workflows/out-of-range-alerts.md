@@ -2,7 +2,18 @@
 type: workflow
 title: Out-of-Range Alerts
 description: The notification feature — pure in-range to out-of-range transition detection against per-wallet stored range state in MMKV, the no-first-check-storm rule, wallet-session re-checks inside the background task, and best-effort delivery through expo-notifications.
-tags: [workflow, notifications, alerts, expo-notifications, background-fetch, mmkv, dlmm, revision-counter, transition-detection]
+tags:
+  [
+    workflow,
+    notifications,
+    alerts,
+    expo-notifications,
+    background-fetch,
+    mmkv,
+    dlmm,
+    revision-counter,
+    transition-detection,
+  ]
 verified:
   - by: openwiki/0.5.1
     at: 2026-09-13T11:52:56.431Z
@@ -31,7 +42,7 @@ sources:
     resource: repo://src/utils/alerts/outOfRange.ts
   - id: openwiki-source-8a1437fa0f0bbba8f16cf835
     resource: repo://src/utils/positions/computePositionViewData.ts
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Out-of-Range Alerts
@@ -90,9 +101,9 @@ sequenceDiagram
     Task-->>OS: result reflects only the widget sync outcome
 ```
 
-*One background run: widget sync first, then the alert check as a fully
+_One background run: widget sync first, then the alert check as a fully
 contained best-effort block whose failures and wallet-session aborts can never
-change the task's result code.*
+change the task's result code._
 
 ## A pure detector and a thin sender
 
@@ -106,21 +117,21 @@ and the previous `Record<string, boolean> | null`, and returns
 `{ alerts, nextState }`. A position alerts **only** when the previous snapshot
 says it was in range and the current one says it is not:
 
-| previous state | current `inRange` | alert? |
-| --- | --- | --- |
-| `null` (first check) | anything | **no — record only** |
-| `true` | `false` | **yes** |
-| `true` | `true` | no |
-| `false` | `false` | no (already out) |
-| `false` | `true` | no (recovery) |
-| absent from previous | `false` | no (brand-new) |
+| previous state       | current `inRange` | alert?               |
+| -------------------- | ----------------- | -------------------- |
+| `null` (first check) | anything          | **no — record only** |
+| `true`               | `false`           | **yes**              |
+| `true`               | `true`            | no                   |
+| `false`              | `false`           | no (already out)     |
+| `false`              | `true`            | no (recovery)        |
+| absent from previous | `false`           | no (brand-new)       |
 
 Three consequences matter:
 
 - **The no-first-check-storm rule.** `previous === null` — a wallet never seen
   before, or a corrupt store read (see below) — means the run records state and
   emits nothing. Installing the app, or connecting a wallet that already has
-  out-of-range positions, produces silence, then a baseline. Only *subsequent*
+  out-of-range positions, produces silence, then a baseline. Only _subsequent_
   changes notify.
 - **Brand-new positions never alert.** A position absent from `previous` is
   recorded as its current state but cannot transition into an alert; a position
@@ -208,7 +219,7 @@ Each run:
 The task captures `getStoredWalletSnapshot()` once at start and defines
 `walletIsCurrent()` as a comparison of **both address and revision** against a
 fresh read — the same pair-based session test the widget syncs use. The
-revision counter increments on every connect, switch, *and* disconnect, so
+revision counter increments on every connect, switch, _and_ disconnect, so
 reconnecting the same address is a new session. `walletIsCurrent()` is checked:
 
 - **after `syncWidgets`** (together with the no-address check): if the wallet
@@ -245,12 +256,12 @@ never get the task throttled or killed.
   `false`. The background task reads it headlessly via
   `useSettingsStore.getState().alertsEnabled` — no React required.
 - **Permission-guarded toggle.** The "Out-of-range alerts" switch in
-  `SettingsSheet` requests OS notification permission *before* enabling; if
+  `SettingsSheet` requests OS notification permission _before_ enabling; if
   permission is denied it shows an inline hint and forces the flag back to
   `false`. So an enabled flag implies permission was granted at toggle time
   (the OS can still revoke it later — delivery remains best-effort).
 - **Disconnect clears the baseline.** `useWalletLifecycle`'s
-  `handleDisconnect` captures the stored address *before* awaiting
+  `handleDisconnect` captures the stored address _before_ awaiting
   `disconnect()`, then calls `setStoredWalletAddress(undefined)` followed by
   `clearRangeState(currentAddress)`. The wallet's baseline is deleted, so a
   future session — even a reconnect of the same address — finds no previous

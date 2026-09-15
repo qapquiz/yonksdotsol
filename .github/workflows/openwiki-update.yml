@@ -3,7 +3,7 @@ name: OpenWiki Update
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 8 * * *"
+    - cron: '0 8 * * *'
 
 permissions:
   contents: write
@@ -24,7 +24,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: "22"
+          node-version: '22'
 
       - name: Install OpenWiki
         # mermaid + jsdom are optional; they add high-fidelity validation of Mermaid diagrams. Remove if your wiki has none.
@@ -38,7 +38,7 @@ jobs:
           OPENWIKI_PROVIDER: openai-compatible
           OPENAI_COMPATIBLE_API_KEY: ${{ secrets.OPENAI_COMPATIBLE_API_KEY }}
           OPENAI_COMPATIBLE_BASE_URL: ${{ vars.OPENAI_COMPATIBLE_BASE_URL }}
-          OPENWIKI_MODEL_ID: "glm-5.3-flash"
+          OPENWIKI_MODEL_ID: 'glm-5.3-flash'
           # Required for the LangSmith connector's code-mode pull to authenticate.
           # For extra workspaces, add OPENWIKI_LANGSMITH_API_KEY_2, _3, ... as repo
           # secrets and env entries here.
@@ -46,7 +46,7 @@ jobs:
           # Optional: also trace this workflow's own OpenWiki run to LangSmith.
           LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
           LANGCHAIN_PROJECT: openwiki
-          LANGCHAIN_TRACING_V2: "true"
+          LANGCHAIN_TRACING_V2: 'true'
 
       - name: Remove transient OpenWiki run state
         if: ${{ !cancelled() }}
@@ -62,8 +62,8 @@ jobs:
             CLAUDE.md
             .github/workflows/openwiki-update.yml
           branch: openwiki/update
-          commit-message: "docs: update OpenWiki"
-          title: "docs: update OpenWiki"
+          commit-message: 'docs: update OpenWiki'
+          title: 'docs: update OpenWiki'
           body: |
             Automated OpenWiki documentation update.
 

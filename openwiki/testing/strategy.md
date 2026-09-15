@@ -43,7 +43,7 @@ sources:
     resource: repo://src/utils/cache/CacheManager.ts
   - id: openwiki-source-fbadcd8591b65031efaaedce
     resource: repo://vitest.config.ts
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Testing Strategy
@@ -76,7 +76,7 @@ tolerance, and wallet-lifecycle flashing.
 
 The `expo-observe` alias is the web seam run in reverse. The native package
 resolves its module at import time, which fails under Node; the web stub is a
-no-op that imports only the `ObserveConfig` *type*. Aliasing it in makes every
+no-op that imports only the `ObserveConfig` _type_. Aliasing it in makes every
 module in the test graph — hooks that emit Observe events included —
 importable without a native runtime. Metro performs the same substitution for
 the web bundle, so the stub's exports stay honest for both consumers.
@@ -119,10 +119,10 @@ src/__tests__/
 
 Commands (from `package.json`):
 
-| Command | What it runs |
-| --- | --- |
-| `bun run test` | `vitest run` — the whole suite once |
-| `bun run test:watch` | `vitest` — watch mode |
+| Command                 | What it runs                                 |
+| ----------------------- | -------------------------------------------- |
+| `bun run test`          | `vitest run` — the whole suite once          |
+| `bun run test:watch`    | `vitest` — watch mode                        |
 | `bun run test:coverage` | `vitest run --coverage` — V8 coverage report |
 
 ## Dependency injection over singletons
@@ -147,6 +147,7 @@ feed the real `dlmmApi` client `Response` fixtures, and assert on the pipeline's
 output and on how many times `fetch` was called.
 
 <!-- openwiki: mermaid parse failed and this diagram was converted to a text fence so it does not break rendering. Fix the diagram source and restore the mermaid fence. Parser error: Heuristic: an unescaped angle bracket inside a label breaks rendering; rephrase the label. -->
+
 ```text
 flowchart TD
     subgraph PURE["Pure-function tests"]
@@ -177,9 +178,9 @@ flowchart TD
     BASE --> W1
 ```
 
-*Three test layers share one harness; each layer replaces progressively more
+_Three test layers share one harness; each layer replaces progressively more
 of the runtime — platform modules, singletons, network transport, and native
-widget rendering — while keeping the code under test real.*
+widget rendering — while keeping the code under test real._
 
 ## Coverage scope
 
@@ -293,7 +294,7 @@ pins: current numbers stay visible with an `Updating…` badge during a manual
 refresh; closed positions are never restored from the previous snapshot; a
 wallet switch during refresh never shows the old wallet's numbers; a
 disconnected refresh never flashes cached numbers; a late response from a
-previous wallet (success *or* failure) is ignored; reconnecting the same
+previous wallet (success _or_ failure) is ignored; reconnecting the same
 address does not resurrect the previous session's cache; hook unmount cancels
 the scheduled launch update; a background task without a wallet clears stale
 numbers instead of fetching; a background response never overwrites a newer

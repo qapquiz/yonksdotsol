@@ -63,7 +63,7 @@ sources:
     resource: repo://src/widgets/PositionLiquidityWidget.tsx
   - id: openwiki-source-a2a218d2079077a97edcb24b
     resource: repo://src/widgets/updatePortfolioWidget.tsx
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Theming & Design System
@@ -75,7 +75,7 @@ neutral grayscale. The architecture that keeps that system coherent has one
 rule at its core: **every hex value lives in exactly one place**, and every
 rendering surface — Uniwind classes, JS-driven native props, in-app SVG, and
 headless Android widgets — derives its colors from that place instead of
-restating values. `DESIGN.md` is the written source of truth for *how to use*
+restating values. `DESIGN.md` is the written source of truth for _how to use_
 the tokens; `src/config/theme.ts` is the machine source of truth for the
 values themselves.
 
@@ -99,14 +99,14 @@ test run — the test fails if the CSS copy drifts.
 
 The token families:
 
-| Family | Tokens | Purpose |
-| --- | --- | --- |
-| Surfaces | `bg`, `surface`, `surfaceHighlight`, `border` | Screen, cards, recessed fills, hairlines (and skeleton blocks) |
-| Accents | `primary`, `secondary` (+ `-dim`, `primaryDark`) | Sage and copper, with tint variants for badge/selected backgrounds |
-| Negative | `negative`, `negativeDim` | Clay-red for loss/error, plus its badge tint |
-| On-container/on-accent | `primaryDimText`, `secondaryDimText`, `negativeDimText`, `onPrimary`, `onSecondary` | Text/icons sitting on tinted or full-strength fills |
-| Text | `text`, `textSecondary`, `textMuted` | Three-step text hierarchy |
-| Native-only | `refreshTint`, `statusBar` | Props Uniwind cannot set (`RefreshControl` tint, status-bar style) |
+| Family                 | Tokens                                                                              | Purpose                                                            |
+| ---------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Surfaces               | `bg`, `surface`, `surfaceHighlight`, `border`                                       | Screen, cards, recessed fills, hairlines (and skeleton blocks)     |
+| Accents                | `primary`, `secondary` (+ `-dim`, `primaryDark`)                                    | Sage and copper, with tint variants for badge/selected backgrounds |
+| Negative               | `negative`, `negativeDim`                                                           | Clay-red for loss/error, plus its badge tint                       |
+| On-container/on-accent | `primaryDimText`, `secondaryDimText`, `negativeDimText`, `onPrimary`, `onSecondary` | Text/icons sitting on tinted or full-strength fills                |
+| Text                   | `text`, `textSecondary`, `textMuted`                                                | Three-step text hierarchy                                          |
+| Native-only            | `refreshTint`, `statusBar`                                                          | Props Uniwind cannot set (`RefreshControl` tint, status-bar style) |
 
 ## How a theme reaches a pixel
 
@@ -144,19 +144,19 @@ flowchart TD
     T --> W
 ```
 
-*One store value selects the variant for the class and JS paths; the headless
-widget path skips React entirely and reads the dark constants at module scope.*
+_One store value selects the variant for the class and JS paths; the headless
+widget path skips React entirely and reads the dark constants at module scope._
 
 ## Semantic color mapping
 
 State colors are **mapped onto the accent palette** rather than forming a
 separate design language:
 
-| State | Token | Where it shows up |
-| --- | --- | --- |
-| Profit, in-range, accruing | `app-primary` (sage) | PnL ≥ 0, "IN RANGE" badge, unrealized fees |
-| Loss, error | `app-negative` (clay-red) | PnL < 0, denied-permission text, down candles |
-| Out-of-range, caution, claimed | `app-secondary` (copper) | "OUT OF RANGE" badge, claimed fees, dev banner, out-of-range banner |
+| State                          | Token                     | Where it shows up                                                   |
+| ------------------------------ | ------------------------- | ------------------------------------------------------------------- |
+| Profit, in-range, accruing     | `app-primary` (sage)      | PnL ≥ 0, "IN RANGE" badge, unrealized fees                          |
+| Loss, error                    | `app-negative` (clay-red) | PnL < 0, denied-permission text, down candles                       |
+| Out-of-range, caution, claimed | `app-secondary` (copper)  | "OUT OF RANGE" badge, claimed fees, dev banner, out-of-range banner |
 
 This is visible consistently across the position surfaces: `PositionHeader`
 renders the range badge as a `primaryDim`/`secondaryDim` background with the
@@ -187,12 +187,12 @@ an opacity hack; this replaces the old raw-alpha pattern
 
 Four font roles, configured in `global.css` under `@theme`:
 
-| Role | Family / access | Used for |
-| --- | --- | --- |
-| Sans | `font-sans` (Geist-Regular) | Default body/UI text |
-| Sans bold | `font-sans-bold` (Geist-Bold) | **All** bold weight — labels, eyebrows, headings |
-| Pixel | `usePixelFont()` → inline `fontFamily` | Numbers, values, SOL amounts, PnL |
-| Mono | `font-mono` (DepartureMono-Regular) | Chart axis labels, price chips — tabular reference data only |
+| Role      | Family / access                        | Used for                                                     |
+| --------- | -------------------------------------- | ------------------------------------------------------------ |
+| Sans      | `font-sans` (Geist-Regular)            | Default body/UI text                                         |
+| Sans bold | `font-sans-bold` (Geist-Bold)          | **All** bold weight — labels, eyebrows, headings             |
+| Pixel     | `usePixelFont()` → inline `fontFamily` | Numbers, values, SOL amounts, PnL                            |
+| Mono      | `font-mono` (DepartureMono-Regular)    | Chart axis labels, price chips — tabular reference data only |
 
 Two rules are enforced, not aspirational:
 

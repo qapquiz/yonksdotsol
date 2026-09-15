@@ -89,7 +89,7 @@ sources:
     resource: repo://src/widgets/updatePortfolioWidget.tsx
   - id: openwiki-source-fbadcd8591b65031efaaedce
     resource: repo://vitest.config.ts
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # System Overview
@@ -138,7 +138,7 @@ order:
   keeps home-screen widgets fresh on wallet changes, app launch/foreground,
   and a 30-minute interval while active.
 - **Provider stack: `GestureHandlerRootView → PixelFontProvider →
-  MobileWalletProvider → Slot`.** The wallet provider is built once at module
+MobileWalletProvider → Slot`.** The wallet provider is built once at module
   scope from `createSolanaMainnet({ url: env.rpcUrl || '' })` plus an app
   identity; `PixelFontProvider` publishes the user-selected pixel font from
   `settingsStore` through React context. `MobileWalletProvider` comes from
@@ -186,16 +186,16 @@ SDK error — add the missing method to the polyfill instead.
 
 The `src/` tree is organized by responsibility, not by technical layer cake:
 
-| Location | Owns | Must not contain |
-| --- | --- | --- |
-| `src/services/` | The data layer: everything crossing the network/SDK boundary — `positionPipeline` (on-chain scan → view models → summary), `dlmmApi` (owned DLMM Data API client), `data.ts` (cached token/OHLCV facade), `ohlcv`/`solPrice` fetchers, dev mocks | React state, UI concerns |
-| `src/hooks/` | Orchestration: React coordination between UI and services (`usePositionsPage`, `useWalletLifecycle`, `useWidgetSync`, `usePoolOhlcv`) plus presentation providers (`useFontConfig`, `useThemeTokens`) | Fetch logic of its own — it schedules and delegates |
-| `src/stores/` | State: `settingsStore` (Zustand + persist), `walletStore` and `alertStore` (plain MMKV modules) | Business computation |
-| `src/widgets/` + `src/tasks/` | The headless Android surface: widget rendering, snapshot persistence, and the background-fetch task | Direct RPC plumbing (it consumes the pipeline / API client) |
-| `src/utils/` | Pure logic: `positions/` (view model, PnL aggregation, formatters, downsampling) and `alerts/` (pure detection + one thin notification sender) | Store access, fetching, React |
-| `src/app/`, `src/components/` | Routing and UI | Data plumbing |
-| `src/config/` | `env`, the shared `Connection`, cache TTLs, theme tokens, fonts | Feature logic |
-| `src/observe/`, `src/wallet/` | Platform seams around native-only packages | — |
+| Location                      | Owns                                                                                                                                                                                                                                             | Must not contain                                            |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| `src/services/`               | The data layer: everything crossing the network/SDK boundary — `positionPipeline` (on-chain scan → view models → summary), `dlmmApi` (owned DLMM Data API client), `data.ts` (cached token/OHLCV facade), `ohlcv`/`solPrice` fetchers, dev mocks | React state, UI concerns                                    |
+| `src/hooks/`                  | Orchestration: React coordination between UI and services (`usePositionsPage`, `useWalletLifecycle`, `useWidgetSync`, `usePoolOhlcv`) plus presentation providers (`useFontConfig`, `useThemeTokens`)                                            | Fetch logic of its own — it schedules and delegates         |
+| `src/stores/`                 | State: `settingsStore` (Zustand + persist), `walletStore` and `alertStore` (plain MMKV modules)                                                                                                                                                  | Business computation                                        |
+| `src/widgets/` + `src/tasks/` | The headless Android surface: widget rendering, snapshot persistence, and the background-fetch task                                                                                                                                              | Direct RPC plumbing (it consumes the pipeline / API client) |
+| `src/utils/`                  | Pure logic: `positions/` (view model, PnL aggregation, formatters, downsampling) and `alerts/` (pure detection + one thin notification sender)                                                                                                   | Store access, fetching, React                               |
+| `src/app/`, `src/components/` | Routing and UI                                                                                                                                                                                                                                   | Data plumbing                                               |
+| `src/config/`                 | `env`, the shared `Connection`, cache TTLs, theme tokens, fonts                                                                                                                                                                                  | Feature logic                                               |
+| `src/observe/`, `src/wallet/` | Platform seams around native-only packages                                                                                                                                                                                                       | —                                                           |
 
 The boundaries are enforced by shape: `utils/` modules take plain inputs and
 return plain outputs (testable without mocks), `services/` modules accept
@@ -230,10 +230,10 @@ flowchart TD
     Poly -.-> DataAPI
 ```
 
-*Layer map: boot runs outside React; the shell wires seams, state, and
+_Layer map: boot runs outside React; the shell wires seams, state, and
 orchestration; both the UI and the headless surface delegate to the data
 layer, which is the only place that talks to RPC or the DLMM Data API; the
-polyfill patches underpin both SDK transports.*
+polyfill patches underpin both SDK transports._
 
 ## Runtime flow across layers
 
@@ -264,13 +264,13 @@ transitions and schedules local notifications.
 Persistent state lives in five separate MMKV instances, each owned by one
 layer:
 
-| MMKV id | Owner | Contents |
-| --- | --- | --- |
-| `settings` | `settingsStore` (Zustand persist) | theme, pixel font, alerts enabled, display currency |
-| `wallet` | `walletStore` | wallet address + revision counter |
-| `alerts` | `alertStore` | per-wallet in-range snapshots for transition detection |
-| `widget` | `syncPortfolioWidget` | last portfolio summary, latest request id |
-| `position-widget` | `syncPositionWidgets` | position snapshots, per-widget selection, request ids |
+| MMKV id           | Owner                             | Contents                                               |
+| ----------------- | --------------------------------- | ------------------------------------------------------ |
+| `settings`        | `settingsStore` (Zustand persist) | theme, pixel font, alerts enabled, display currency    |
+| `wallet`          | `walletStore`                     | wallet address + revision counter                      |
+| `alerts`          | `alertStore`                      | per-wallet in-range snapshots for transition detection |
+| `widget`          | `syncPortfolioWidget`             | last portfolio summary, latest request id              |
+| `position-widget` | `syncPositionWidgets`             | position snapshots, per-widget selection, request ids  |
 
 In-process state lives in the `CacheManager` singleton (TTL cache + in-flight
 dedup) shared by the token/OHLCV services, the pipeline's PnL fetch, and
@@ -295,13 +295,13 @@ Native-only integrations hide behind platform-split modules; Metro loads the
 `.web.*` sibling only on web, and both sides must keep their export pairs in
 sync:
 
-| Seam | Native | Web |
-| --- | --- | --- |
-| Polyfills | `polyfill.js` | `polyfill.web.js` (Buffer only) |
-| Wallet kit | `src/wallet/walletKit.tsx` | stub — no Mobile Wallet Adapter |
-| Widget sync hook | `src/hooks/useWidgetSync.ts` | no-op |
-| Widget task registration | `src/widgets/registerWidgetTask.ts` | no-op |
-| Observe | `src/observe/index.ts` (real `expo-observe`) | no-op stubs |
+| Seam                     | Native                                       | Web                             |
+| ------------------------ | -------------------------------------------- | ------------------------------- |
+| Polyfills                | `polyfill.js`                                | `polyfill.web.js` (Buffer only) |
+| Wallet kit               | `src/wallet/walletKit.tsx`                   | stub — no Mobile Wallet Adapter |
+| Widget sync hook         | `src/hooks/useWidgetSync.ts`                 | no-op                           |
+| Widget task registration | `src/widgets/registerWidgetTask.ts`          | no-op                           |
+| Observe                  | `src/observe/index.ts` (real `expo-observe`) | no-op stubs                     |
 
 `src/config/env.ts` sets `devMock` when `EXPO_PUBLIC_DEV_MOCK=1` **or when
 `Platform.OS === 'web'`** — the web target exists purely as a mock-data
@@ -375,6 +375,6 @@ any module in the graph stays importable in tests.
 - `/openwiki/workflows/app-boot-and-wallet.md` — the boot and wallet-connect
   walkthrough
 - `/openwiki/workflows/widget-sync.md` — the widget sync flows
-et-connect
+  et-connect
   walkthrough
 - `/openwiki/workflows/widget-sync.md` — the widget sync flows

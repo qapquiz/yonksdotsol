@@ -43,7 +43,7 @@ sources:
     resource: repo://src/widgets/registerWidgetTask.ts
   - id: openwiki-source-da094e41410c5125df7e3ecf
     resource: repo://src/widgets/registerWidgetTask.web.ts
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # App Boot & Wallet Lifecycle
@@ -91,9 +91,9 @@ provide crypto and URL. The patches themselves are documented on
 `src/app/_layout.tsx` does its setup in two places:
 
 - **Module scope, before any screen mounts.** `Observe.configure({
-  integrations: { 'expo-router': true } })` runs when the module is imported —
+integrations: { 'expo-router': true } })` runs when the module is imported —
   toggling the integration later throws — and `createSolanaMainnet({ url:
-  env.rpcUrl || '' })` plus the app identity (`name: 'Yonks'`, repo URI, icon)
+env.rpcUrl || '' })` plus the app identity (`name: 'Yonks'`, repo URI, icon)
   are built once. The default export is wrapped in `ObserveRoot.wrap`, which
   measures Time to First Render around the root layout. Observe is reached only
   through the `src/observe` seam; the web sibling is a no-op.
@@ -140,10 +140,10 @@ sequenceDiagram
     end
 ```
 
-*Boot and wallet resolution: polyfills land before the SDK graph evaluates, the
+_Boot and wallet resolution: polyfills land before the SDK graph evaluates, the
 widget task handler registers at process start, and the home-screen hook turns
 provider resolution into a ready signal — either a real account or the 500ms
-timeout.*
+timeout._
 
 ## Wallet resolution: the `walletReady` latch
 
@@ -199,9 +199,9 @@ stateDiagram-v2
     end note
 ```
 
-*Wallet resolution states: `walletReady` is false only in `Resolving`; both the
+_Wallet resolution states: `walletReady` is false only in `Resolving`; both the
 timeout and a resolved provider reach `Ready`, and the latch prevents any
-return trip.*
+return trip._
 
 Under `env.devMock` — which is always true on web and opted into on native via
 `EXPO_PUBLIC_DEV_MOCK=1` — the hook short-circuits before reading any wallet
@@ -266,7 +266,7 @@ with two invariants:
    self-consistent `{ address, revision }` snapshot rather than a new address
    paired with the old session's revision.
 
-Because the revision increments on every connect, switch, *and* disconnect,
+Because the revision increments on every connect, switch, _and_ disconnect,
 reconnecting the same address is a new session: headless consumers compare the
 pair, never the address alone. The `widget-background-sync` task and both
 widget sync modules guard their work with `getStoredWalletSnapshot()`
@@ -289,9 +289,9 @@ data layer:
   `handleConnect`/`handleDisconnect`, dimmed and disabled while
   `isConnecting`.
 - **Wallet-change data handoff.** `usePositionsPage(walletAddress,
-  walletReady)` invalidates the previous wallet's pipeline cache on an address
+walletReady)` invalidates the previous wallet's pipeline cache on an address
   change, resets `loading`/`tokenDataReady`/result, and loads the new
-  portfolio plus the SOL price; a transition to *no* address clears results,
+  portfolio plus the SOL price; a transition to _no_ address clears results,
   loading, and the price instead.
 - **Empty-state resolution.** A ready wallet with no address is terminal and
   needs no fetch: the effect sets `loading: false` and `tokenDataReady: true`

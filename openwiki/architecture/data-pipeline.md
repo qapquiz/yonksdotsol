@@ -53,7 +53,7 @@ sources:
     resource: repo://src/widgets/updatePortfolioWidget.tsx
   - id: openwiki-source-061d476fc78a0b45454dbf63
     resource: repo://UBIQUITOUS_LANGUAGE.md
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # Position Data Pipeline
@@ -80,11 +80,11 @@ The pipeline composes four collaborators, each independently testable:
 
 ## Who calls the pipeline
 
-| Consumer | Entry point | How it uses the pipeline |
-| --- | --- | --- |
-| Positions screen | `usePositionsPage` (`src/hooks/usePositionsPage.ts`) | `loadPortfolio` on wallet change; refresh is throttled to one call per 30 s and a silent variant re-runs it every 60 s while the app is foregrounded |
-| Position widget | `syncPositionWidgets` (`src/widgets/syncPositionWidgets.tsx`) | `loadPortfolio` raced against a 20 s timeout, then persisted as a display-only `PositionWidgetData` snapshot (MMKV) |
-| Background task | `widgetBackgroundSync` (`src/tasks/widgetBackgroundSync.ts`) | Every ≥30 min, re-runs the widget sync and reuses a pipeline instance to detect out-of-range transitions from `vm.inRange` for notifications |
+| Consumer                 | Entry point                                                           | How it uses the pipeline                                                                                                                                 |
+| ------------------------ | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Positions screen         | `usePositionsPage` (`src/hooks/usePositionsPage.ts`)                  | `loadPortfolio` on wallet change; refresh is throttled to one call per 30 s and a silent variant re-runs it every 60 s while the app is foregrounded     |
+| Position widget          | `syncPositionWidgets` (`src/widgets/syncPositionWidgets.tsx`)         | `loadPortfolio` raced against a 20 s timeout, then persisted as a display-only `PositionWidgetData` snapshot (MMKV)                                      |
+| Background task          | `widgetBackgroundSync` (`src/tasks/widgetBackgroundSync.ts`)          | Every ≥30 min, re-runs the widget sync and reuses a pipeline instance to detect out-of-range transitions from `vm.inRange` for notifications             |
 | Portfolio summary widget | `syncPortfolioWidget` → `updatePortfolioWidget.fetchPortfolioSummary` | **Does not use the pipeline** — it reads server totals via `dlmmApi.fetchOpenPortfolioSummary` (ADR 0002; see [Dual summary paths](#dual-summary-paths)) |
 
 Dev mock mode (`env.devMock`, forced on web) bypasses the pipeline entirely:
@@ -119,7 +119,7 @@ sequenceDiagram
     Pipeline-->>Caller: PortfolioResult with summary and hasPnLData
 ```
 
-*The five steps of `PositionPipeline.loadPortfolio` and the data sources behind each one.*
+_The five steps of `PositionPipeline.loadPortfolio` and the data sources behind each one._
 
 1. **On-chain scan.** `DLMM.getAllLbPairPositionsByUser(connection, wallet)`
    returns a `Map` of pair address → `PositionInfo`. An empty wallet
@@ -142,7 +142,7 @@ sequenceDiagram
 ## Error degradation: positions always render
 
 The pipeline's core contract is that missing auxiliary data degrades the
-*numbers*, never the list.
+_numbers_, never the list.
 
 **Token prices — missing `TokenInfo` tolerates `null`.**
 `TokenService.getPrices` batch-fetches mints with `Promise.allSettled` and
@@ -159,7 +159,7 @@ nor rejects the pipeline. `fetchPortfolioSummary` returns partial data in that
 case — e.g. `positionCount: 2` with numbers from the one pool that succeeded.
 
 **`hasPnLData` — all-or-nothing for the summary.**
-`computeSummary` returns `summary: null` and `hasPnLData: false` when *no*
+`computeSummary` returns `summary: null` and `hasPnLData: false` when _no_
 pool produced PnL rows (all fetches failed, or the wallet simply has no PnL
 data). The positions array is unaffected: every position returns with
 `vm.pnlSol = null` and `vm.pnlSolPctChange = null`. A later retry that succeeds
@@ -196,7 +196,7 @@ The two weighted ratios use the same aggregation:
 - `totalPnlPercent` is the |net cost basis|-weighted mean of per-position
   `pnlSolPctChange` (positions with non-positive basis contribute no weight).
 - `feesTvl24h` is the position-value-weighted mean of `parseFeePerTvl24h`
-  ratios. The API returns a *percentage* (`"1.31"` = 1.31% daily); the parser
+  ratios. The API returns a _percentage_ (`"1.31"` = 1.31% daily); the parser
   converts it to the internal ratio `0.0131` so display multiplies by 100.
 - Per-position value comes from `unrealizedPnl.balancesSol`; when that SOL
   figure is absent, it falls back to `unrealizedPnl.balances / 200` — the raw
@@ -237,11 +237,11 @@ tokenXInfo, tokenYInfo, pnlData }` to a `PositionViewModel`:
 `PositionPipeline` takes an optional `PipelineDeps` object, which is what makes
 the whole five-step flow testable without an RPC endpoint:
 
-| Seam | Default | Test/alternative |
-| --- | --- | --- |
-| `cache` | `CacheManager.getInstance()` singleton | `CacheManager.createFresh()` — a private-constructor instance made for tests |
-| `connection` | `getSharedConnection()`, resolved **lazily** on first use | Inject a stub; construction must not require an RPC URL (web mock mode has none) |
-| `dataServices` | `createDataServices(this.cache)` | Inject fake `TokenService`/`OhlcvService` |
+| Seam           | Default                                                   | Test/alternative                                                                 |
+| -------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `cache`        | `CacheManager.getInstance()` singleton                    | `CacheManager.createFresh()` — a private-constructor instance made for tests     |
+| `connection`   | `getSharedConnection()`, resolved **lazily** on first use | Inject a stub; construction must not require an RPC URL (web mock mode has none) |
+| `dataServices` | `createDataServices(this.cache)`                          | Inject fake `TokenService`/`OhlcvService`                                        |
 
 `createPositionPipeline(deps)` is the factory used by all consumers. The
 connection's laziness matters operationally: `getSharedConnection` throws a
@@ -258,16 +258,16 @@ and aggregation logic.
 All caching goes through `CacheManager.getOrFetch` (TTL expiry, in-flight
 request deduplication, explicit invalidation) with these keys:
 
-| Key | Producer | TTL |
-| --- | --- | --- |
-| `pnl:{poolAddress}:{walletAddress}` | `fetchAllPnL` | `CACHE_TTL.UPNL_PER_POSITION` (15 min) |
-| `token_data:{mint}` | `TokenService` | `CACHE_TTL.TOKEN_DATA` (60 s) |
-| `ohlcv:{pairAddress}:{timeframe}` | `OhlcvService` | `CACHE_TTL.OHLCV` (60 s) |
+| Key                                 | Producer       | TTL                                    |
+| ----------------------------------- | -------------- | -------------------------------------- |
+| `pnl:{poolAddress}:{walletAddress}` | `fetchAllPnL`  | `CACHE_TTL.UPNL_PER_POSITION` (15 min) |
+| `token_data:{mint}`                 | `TokenService` | `CACHE_TTL.TOKEN_DATA` (60 s)          |
+| `ohlcv:{pairAddress}:{timeframe}`   | `OhlcvService` | `CACHE_TTL.OHLCV` (60 s)               |
 
 Two invariants are worth knowing when changing this code:
 
 - **Partial PnL is never cached.** `fetchAllPositionPnL` walks pages (50 per
-  page, max 10) and *rejects* — without returning partial data — if pagination
+  page, max 10) and _rejects_ — without returning partial data — if pagination
   fails or exceeds the page limit. Since only resolved promises reach the
   cache, a mid-pagination failure leaves no entry, and the next
   `loadPortfolio` retries the pool cleanly (the tests cover a failure on the

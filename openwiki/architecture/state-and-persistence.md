@@ -39,7 +39,7 @@ sources:
     resource: repo://src/widgets/syncPortfolioWidget.ts
   - id: openwiki-source-300ef64378ea0f77e6c493bc
     resource: repo://src/widgets/syncPositionWidgets.tsx
-generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
+generated: { by: 'openwiki/0.5.1', at: '2026-09-13T11:52:56.431Z' }
 ---
 
 # State & Persistence
@@ -47,7 +47,7 @@ generated: { by: "openwiki/0.5.1", at: "2026-09-13T11:52:56.431Z" }
 Yonks keeps state in two deliberately separate tiers:
 
 - **MMKV persistence** — five small, per-domain instances on disk, readable and
-  writable from *any* JS context. This is the only medium shared between the
+  writable from _any_ JS context. This is the only medium shared between the
   app process and headless widget/background runs, so it carries everything a
   headless run needs: the active wallet, alert state, and widget snapshots.
 - **In-memory caching** — the `CacheManager` singleton, a `Map` with TTL and
@@ -65,12 +65,12 @@ Each `createMMKV({ id })` call happens at module scope in exactly one owning
 module, so importing the owner opens the instance. The five ids and their
 contents:
 
-| Instance id | Owner module | Keys | Contents |
-| --- | --- | --- | --- |
-| `settings` | `src/stores/settingsStore.ts` | `settings-store` | The whole settings state as one zustand-persist JSON blob: `theme`, `pixelFont`, `alertsEnabled`, `displayCurrency` |
-| `wallet` | `src/stores/walletStore.ts` | `wallet_address`, `wallet_revision` | Active wallet address plus the session revision counter |
-| `alerts` | `src/stores/alertStore.ts` | `out_of_range_state` | One JSON record: wallet address → position id → in-range boolean (last background check) |
-| `widget` | `src/widgets/syncPortfolioWidget.ts` | `last_portfolio_summary`, `latest_request_id` | Last nonempty portfolio summary with its embedded wallet snapshot; monotonic request counter |
+| Instance id       | Owner module                          | Keys                                                              | Contents                                                                                                                                                 |
+| ----------------- | ------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `settings`        | `src/stores/settingsStore.ts`         | `settings-store`                                                  | The whole settings state as one zustand-persist JSON blob: `theme`, `pixelFont`, `alertsEnabled`, `displayCurrency`                                      |
+| `wallet`          | `src/stores/walletStore.ts`           | `wallet_address`, `wallet_revision`                               | Active wallet address plus the session revision counter                                                                                                  |
+| `alerts`          | `src/stores/alertStore.ts`            | `out_of_range_state`                                              | One JSON record: wallet address → position id → in-range boolean (last background check)                                                                 |
+| `widget`          | `src/widgets/syncPortfolioWidget.ts`  | `last_portfolio_summary`, `latest_request_id`                     | Last nonempty portfolio summary with its embedded wallet snapshot; monotonic request counter                                                             |
 | `position-widget` | `src/widgets/syncPositionWidgets.tsx` | `positions`, `request`, `loading_request`, `selection:{widgetId}` | Position snapshot with embedded wallet snapshot, request counters, a persisted "refresh in progress" marker, and one saved selection per widget instance |
 
 These instances are the **handoff medium between processes**. The widget task
@@ -116,9 +116,9 @@ flowchart TD
     Services -. per-context only, never persisted .-> Cache["CacheManager"]
 ```
 
-*Ownership map: every MMKV instance has one owning module; both the app and the
+_Ownership map: every MMKV instance has one owning module; both the app and the
 headless surface reach the same storage, while the pipeline's `CacheManager`
-stays per-JS-context.*
+stays per-JS-context._
 
 ## The wallet revision counter
 
@@ -130,7 +130,7 @@ task use the identical code path as the UI.
 
 The revision counter answers one question: **is this the same wallet session
 as the one that produced a given piece of cached data?** A revision changes on
-every connect, switch, *and* disconnect, so reconnecting the same address
+every connect, switch, _and_ disconnect, so reconnecting the same address
 still counts as a new session and cannot reuse the previous session's cached
 summaries or let their in-flight requests win.
 
@@ -138,7 +138,7 @@ Two invariants define the write path in `setStoredWalletAddress`:
 
 1. **No-op on an unchanged address.** Writing the same address returns early,
    so the revision only moves on real transitions.
-2. **The revision is written *before* the address.** MMKV fires
+2. **The revision is written _before_ the address.** MMKV fires
    value-changed listeners per key; by bumping `wallet_revision` first, any
    listener woken by the subsequent `wallet_address` write (or removal) reads
    a complete, self-consistent `{ address, revision }` transition rather than a
@@ -161,8 +161,8 @@ sequenceDiagram
     Sync->>Store: re-check snapshot before every draw
 ```
 
-*A wallet transition: the revision lands before the address so listeners and
-headless readers always observe a complete session change.*
+_A wallet transition: the revision lands before the address so listeners and
+headless readers always observe a complete session change._
 
 Every consumer that gates work on wallet identity compares the **pair**, never
 the address alone: `sameWallet()` in `syncPortfolioWidget` and
@@ -209,7 +209,7 @@ notifications for detected transitions.
 
 The store's semantics make absence meaningful:
 
-- `getRangeState` returns `null` for a wallet it has never seen *or* on
+- `getRangeState` returns `null` for a wallet it has never seen _or_ on
   corrupt JSON. A `null` previous state means "first check": the detector
   records state but emits **no alerts**, preventing a notification storm on
   install or on connecting a wallet that already has out-of-range positions.
@@ -227,7 +227,7 @@ both follow the same read contract:
 
 - **Snapshots embed their wallet snapshot.** `last_portfolio_summary` and
   `positions` are stored as JSON with the full `{ address, revision }` pair
-  inside. On read, a mismatched address *or* revision — or malformed JSON, or
+  inside. On read, a mismatched address _or_ revision — or malformed JSON, or
   a legacy snapshot without any wallet identity — causes the entry to be
   removed and treated as a cache miss. A snapshot can never be rendered for
   another wallet or a previous session of the same wallet.
