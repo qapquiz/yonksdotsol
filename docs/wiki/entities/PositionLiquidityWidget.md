@@ -23,7 +23,9 @@ An Android home-screen widget for browsing individual positions and their liquid
 - Previous/Next buttons cycle through every position without fetching. Each installed widget retains its own selection by position address. If the selected position closes, it falls back to the first remaining address.
 - Refresh fetches new data. Tapping the body opens Yonks.
 
-The default footprint is 4 × 4 cells, with a 320dp minimum width and height. Both dimensions can be resized. The graph grows with available space. Buttons have at least 44dp of touch height and explicit accessibility labels.
+The default footprint is 4 × 4 cells, with a 320dp minimum width and height. Both dimensions can be resized. The graph grows with available space.
+
+Rows degrade by height tier so the graph never collapses (a short widget's fixed rows used to consume all `flex: 1` space, erasing the chart): everything renders at ≥310dp; the hint and unrealized-fees rows drop below that, the address/status row below 260dp, the shape label and range prices below 230dp, and VALUE/uPnL below 190dp — leaving header + graph + footer at the smallest sizes. Buttons have at least 44dp of touch height and explicit accessibility labels.
 
 ## Data and Refresh
 

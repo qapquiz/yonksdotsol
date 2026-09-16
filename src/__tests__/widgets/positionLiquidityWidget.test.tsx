@@ -21,12 +21,14 @@ const native = vi.hoisted(() => ({
   lookup: vi.fn(async () => {}),
 }))
 
+let widgetDims = { width: 320, height: 340 }
+
 function info(widgetId: number): WidgetInfo {
   return {
     widgetName: 'PositionLiquidity',
     widgetId,
-    width: 320,
-    height: 340,
+    width: widgetDims.width,
+    height: widgetDims.height,
     screenInfo: { screenWidthDp: 400, screenHeightDp: 800, density: 1, densityDpi: 160 },
   }
 }
@@ -166,6 +168,7 @@ async function run(action?: string, widgetId = 10): Promise<void> {
 }
 
 beforeEach(() => {
+  widgetDims = { width: 320, height: 340 }
   native.storage.clear()
   native.rendered.clear()
   native.history.length = 0
@@ -338,6 +341,45 @@ describe('position liquidity widget', () => {
     })
     expect(visible()).toContain('position-C')
     expect(native.loadPortfolio).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('layout tiers', () => {
+  it('keeps the chart visible and drops chrome rows as the widget shrinks', async () => {
+    await run()
+    expect(svg()).toContain('<rect')
+    expect(visible()).toContain('UNREALIZED FEES')
+    expect(visible()).toContain('Dashed line: active bin')
+    expect(visible()).toContain('LIQUIDITY SHAPE')
+    expect(visible()).toContain('$1,250.00')
+
+    widgetDims = { width: 320, height: 270 }
+    await run()
+    expect(svg()).toContain('<rect')
+    expect(visible()).toContain('LIQUIDITY SHAPE')
+    expect(visible()).toContain('$1,250.00')
+    expect(visible()).toContain('position-A')
+    expect(visible()).not.toContain('UNREALIZED FEES')
+    expect(visible()).not.toContain('Dashed line: active bin')
+
+    widgetDims = { width: 320, height: 210 }
+    await run()
+    expect(svg()).toContain('<rect')
+    expect(visible()).toContain('$1,250.00')
+    expect(visible()).not.toContain('position-A')
+    expect(visible()).not.toContain('LIQUIDITY SHAPE')
+    expect(visible()).not.toContain('UNREALIZED FEES')
+
+    widgetDims = { width: 320, height: 160 }
+    await run()
+    expect(svg()).toContain('<rect')
+    expect(visible()).not.toContain('$1,250.00')
+    expect(visible()).not.toContain('UNREALIZED FEES')
+
+    widgetDims = { width: 320, height: 140 }
+    await run()
+    expect(svg()).toContain('<rect')
+    expect(visible()).toContain('1 / 3')
   })
 })
 
