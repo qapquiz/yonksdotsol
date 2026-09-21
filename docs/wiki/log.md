@@ -147,3 +147,7 @@ Reproduced the remaining widget dash using a live position API response whose SO
 ## [2026-09-10] update | Dashed active-bin marker in the app
 
 Changed [[LiquidityBarChart]] from a filled full-height active-bin highlight to a dashed line and top pointer matching [[PositionLiquidityWidget]]. Retained the existing 500ms slide animation and proportional liquidity bars, and updated the legend to a dashed "Active bin" swatch. Documented the marker and current theme tokens in DESIGN.md, the chart page, and [[index]].
+
+## [2026-09-21] feature | Data freshness stamp and refresh lifecycle docs
+
+Documented the refresh lifecycle as a concept page: trigger table (wallet change, pull, stamp tap, 60s foreground interval, foreground return), the shared 30s cooldown, silent vs pull semantics, and why polling beats push when two of three data sources are REST. Added [[LastUpdatedStamp]] for the new freshness caption (absolute time, no tick) and updated [[usePositionsPage]] for `lastUpdatedAt`, the silent-refresh signature, and the shared `applyPortfolioResult` handler. Updated [[index]].

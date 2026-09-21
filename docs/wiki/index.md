@@ -2,7 +2,7 @@
 title: Wiki Index
 type: index
 created: 2026-04-18
-updated: 2026-09-10
+updated: 2026-09-21
 tags: [index, wiki]
 ---
 
@@ -42,6 +42,7 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 | [[PositionFooter]]           | Fee display footer                                                         | `src/components/positions/PositionFooter.tsx`           |
 | [[TokenIcons]]               | Overlapping token icon pair                                                | `src/components/positions/TokenIcons.tsx`               |
 | [[EmptyState]]               | No positions empty state                                                   | `src/components/positions/EmptyState.tsx`               |
+| [[LastUpdatedStamp]]         | Freshness caption — absolute load time, tap to refresh                     | `src/components/positions/LastUpdatedStamp.tsx`         |
 | [[PositionCardSkeleton]]     | Skeleton placeholder for PositionCard                                      | `src/components/positions/PositionCardSkeleton.tsx`     |
 | [[PortfolioSummarySkeleton]] | Skeleton placeholder for PortfolioSummary                                  | `src/components/positions/PortfolioSummarySkeleton.tsx` |
 | [[PixelAvatar]]              | Pixelated avatar component                                                 | `src/components/ui/PixelAvatar.tsx`                     |
@@ -54,6 +55,7 @@ Content catalog for the yonksdotsol project wiki. Updated as pages are created o
 | [[Caching Strategy]]      | Shared caching, request invalidation, and widget wallet snapshots        |
 | [[Theming]]               | Dark/light mode with Uniwind tokens — see [`DESIGN.md`](../../DESIGN.md) |
 | [[Connection Lifecycle]]  | Singleton pattern for RPC connection                                     |
+| [[Refresh Lifecycle]]     | Refresh triggers, shared 30s cooldown, silent vs pull, freshness stamp   |
 | [[Position Architecture]] | One pair → many positions relationship                                   |
 | [[Skeleton Loading]]      | Per-block shimmer pattern                                                |
 
