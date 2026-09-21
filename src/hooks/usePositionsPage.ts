@@ -61,6 +61,16 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
   const [solUsdPrice, setSolUsdPrice] = useState<number | null>(env.devMock ? MOCK_SOL_USD_PRICE : null)
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null)
 
+  /** Apply a resolved portfolio to state — shared by the wallet-change load and refreshes */
+  const applyPortfolioResult = useCallback((res: PortfolioResult) => {
+    setResult(res)
+    setLoading(false)
+    setLastUpdatedAt(Date.now())
+    // Signal token data ready: positions exist and at least one has token info,
+    // or there are no positions at all (empty state)
+    setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
+  }, [])
+
   // ── Wallet change: invalidate old data, fetch new ──
   const prevWalletRef = useRef<string | null>(null)
 
@@ -81,14 +91,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       setResult(null)
       setLastUpdatedAt(null)
 
-      pipeline.loadPortfolio(currentAddress).then((res) => {
-        setResult(res)
-        setLoading(false)
-        setLastUpdatedAt(Date.now())
-        // Signal token data ready: positions exist and at least one has token info,
-        // or there are no positions at all (empty state)
-        setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
-      })
+      pipeline.loadPortfolio(currentAddress).then(applyPortfolioResult)
       getCurrentSolUsdPrice()
         .then(setSolUsdPrice)
         .catch(() => setSolUsdPrice(null))
@@ -101,7 +104,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
     }
 
     prevWalletRef.current = currentAddress
-  }, [walletAddress, pipeline])
+  }, [walletAddress, pipeline, applyPortfolioResult])
 
   // ── When wallet resolves with no address, show empty state ──
   useEffect(() => {
@@ -130,10 +133,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       if (!options?.silent) setLoading(true)
       const startedAt = Date.now()
       pipeline.loadPortfolio(walletAddress).then((res) => {
-        setResult(res)
-        setLoading(false)
-        setLastUpdatedAt(Date.now())
-        setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
+        applyPortfolioResult(res)
         Observe.logEvent('positions.refreshed', {
           attributes: { durationMs: Date.now() - startedAt, positionCount: res.positionCount, source },
         })
@@ -142,16 +142,26 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
         .then(setSolUsdPrice)
         .catch(() => setSolUsdPrice(null))
     },
-    [walletAddress, pipeline],
+    [walletAddress, pipeline, applyPortfolioResult],
   )
 
   // ── Foreground auto-refresh (silent; skipped in dev mock) ──
+  // Interval keeps bin/shape state current; the AppState listener covers the
+  // gap the interval can't — data up to a full cadence stale after background
+  // time. Returning to foreground refreshes immediately (cooldown throttles
+  // quick background/foreground flaps).
   useEffect(() => {
     if (env.devMock || !walletAddress) return
     const interval = setInterval(() => {
       if (AppState.currentState === 'active') refresh({ silent: true })
     }, AUTO_REFRESH_INTERVAL_MS)
-    return () => clearInterval(interval)
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') refresh({ silent: true })
+    })
+    return () => {
+      clearInterval(interval)
+      subscription.remove()
+    }
   }, [walletAddress, refresh])
 
   // ── Dev mock mode: return static portfolio, bypass the pipeline ──
