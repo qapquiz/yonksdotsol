@@ -2,6 +2,7 @@ import { LegendList } from '@legendapp/list/react-native'
 import { useCallback, useMemo } from 'react'
 import { RefreshControl, ScrollView, Text, View } from 'react-native'
 import EmptyState from '../../components/positions/EmptyState'
+import LastUpdatedStamp from '../../components/positions/LastUpdatedStamp'
 import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PortfolioSummarySkeleton from '../../components/positions/PortfolioSummarySkeleton'
 import PositionCard from '../../components/positions/PositionCard'
@@ -19,6 +20,8 @@ interface PositionsListProps {
   tokenDataReady: boolean
   /** Live SOL→USD price for the SOL/USD display toggle */
   solUsdPrice: number | null
+  /** Epoch ms of the last successful load; null hides the freshness stamp */
+  lastUpdatedAt: number | null
   walletReady: boolean
   walletAddress?: string
   refresh: () => void
@@ -33,6 +36,7 @@ export default function PositionsList({
   loading,
   tokenDataReady,
   solUsdPrice,
+  lastUpdatedAt,
   walletReady,
   walletAddress,
   refresh,
@@ -58,6 +62,7 @@ export default function PositionsList({
           positionCount={positionCount}
           solUsdPrice={solUsdPrice}
         />
+        <LastUpdatedStamp lastUpdatedAt={lastUpdatedAt} loading={loading} onRefresh={refresh} />
         {outOfRangeCount > 0 && (
           <View className="flex-row items-center gap-2 mb-4 px-1">
             <View className="w-4 h-4 rounded-full bg-app-secondary-dim items-center justify-center">
@@ -70,7 +75,7 @@ export default function PositionsList({
         )}
       </>
     ),
-    [summary, hasPnLData, positionCount, outOfRangeCount, solUsdPrice],
+    [summary, hasPnLData, positionCount, outOfRangeCount, solUsdPrice, lastUpdatedAt, loading, refresh],
   )
 
   // Show skeleton until wallet is resolved, positions fetch completes, AND token

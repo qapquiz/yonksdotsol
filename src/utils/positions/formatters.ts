@@ -65,3 +65,18 @@ export function formatFeesTvl24h(feePerTvl: number | null): string {
   if (pct >= 100) return `${pct.toFixed(0)}%`
   return `${pct.toFixed(2)}%`
 }
+
+/**
+ * Format a data-freshness caption time: "2:47 PM" (device-local, 12-hour).
+ * Absolute local time — unlike a relative label it needs no re-render tick,
+ * so the stamp only repaints when new data actually lands.
+ * Built manually (not Intl) so output is identical on Node and Hermes.
+ */
+export function formatUpdateTime(timestampMs: number): string {
+  const d = new Date(timestampMs)
+  const hours24 = d.getHours()
+  const suffix = hours24 >= 12 ? 'PM' : 'AM'
+  const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12
+  const minutes = String(d.getMinutes()).padStart(2, '0')
+  return `${hours12}:${minutes} ${suffix}`
+}

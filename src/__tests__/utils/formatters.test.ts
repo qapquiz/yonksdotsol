@@ -7,6 +7,7 @@ import {
   formatUPNLDisplay,
   parseFeePerTvl24h,
   formatFeesTvl24h,
+  formatUpdateTime,
 } from '../../utils/positions/formatters'
 
 describe('formatUSD', () => {
@@ -201,5 +202,22 @@ describe('formatFeesTvl24h', () => {
   it('returns an em dash for null or non-finite input', () => {
     expect(formatFeesTvl24h(null)).toBe('—')
     expect(formatFeesTvl24h(Number.NaN)).toBe('—')
+  })
+})
+
+describe('formatUpdateTime', () => {
+  it('renders hour:minute in en-US 12-hour form', () => {
+    // Constructed from local components so the assertion holds in any runner timezone
+    expect(formatUpdateTime(new Date(2024, 0, 1, 14, 47).getTime())).toBe('2:47 PM')
+    expect(formatUpdateTime(new Date(2024, 5, 1, 9, 5).getTime())).toBe('9:05 AM')
+  })
+
+  it('zero-pads minutes', () => {
+    expect(formatUpdateTime(new Date(2024, 0, 1, 0, 3).getTime())).toMatch(/^12:03 AM$/)
+  })
+
+  it('renders midnight and noon without dates', () => {
+    expect(formatUpdateTime(new Date(2024, 0, 1, 0, 0).getTime())).toBe('12:00 AM')
+    expect(formatUpdateTime(new Date(2024, 0, 1, 12, 0).getTime())).toBe('12:00 PM')
   })
 })

@@ -120,6 +120,7 @@ export default function App() {
             loading={pageData.loading}
             tokenDataReady={pageData.tokenDataReady}
             solUsdPrice={pageData.solUsdPrice}
+            lastUpdatedAt={pageData.lastUpdatedAt}
             walletReady={pageData.walletReady}
             walletAddress={pageData.walletAddress}
             refresh={pageData.refresh}

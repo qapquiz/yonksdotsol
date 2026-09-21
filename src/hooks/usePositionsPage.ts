@@ -31,6 +31,8 @@ export interface PositionsPageResult {
   tokenDataReady: boolean
   /** Live SOL→USD price for the SOL/USD display toggle; null while loading or on failure */
   solUsdPrice: number | null
+  /** Epoch ms of the last successful portfolio load (initial, pull, or silent auto-refresh) */
+  lastUpdatedAt: number | null
   /** Refresh handler (pull / button); `silent: true` skips skeleton and spinner (auto-refresh) */
   refresh: (options?: { silent?: boolean }) => void
   /** Wallet ready status */
@@ -44,6 +46,9 @@ export interface PositionsPageResult {
 /** Foreground auto-refresh cadence — keeps bin/shape state current without pulls */
 const AUTO_REFRESH_INTERVAL_MS = 60_000
 
+/** Dev-mock data is static for the session — stamp it once at module load (render stays pure) */
+const MOCK_LOADED_AT = Date.now()
+
 export function usePositionsPage(walletAddress: string | undefined, walletReady: boolean): PositionsPageResult {
   const pipeline = useMemo(() => createPositionPipeline(), [])
   const mockPortfolio = useMemo(() => createMockPortfolioResult(), [])
@@ -54,6 +59,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
   // Mock mode seeds the SOL price synchronously (no RPC on web); live mode
   // starts null and is filled by the wallet-change / refresh effects below.
   const [solUsdPrice, setSolUsdPrice] = useState<number | null>(env.devMock ? MOCK_SOL_USD_PRICE : null)
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null)
 
   // ── Wallet change: invalidate old data, fetch new ──
   const prevWalletRef = useRef<string | null>(null)
@@ -73,10 +79,12 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       setTokenDataReady(false)
       setLoading(true)
       setResult(null)
+      setLastUpdatedAt(null)
 
       pipeline.loadPortfolio(currentAddress).then((res) => {
         setResult(res)
         setLoading(false)
+        setLastUpdatedAt(Date.now())
         // Signal token data ready: positions exist and at least one has token info,
         // or there are no positions at all (empty state)
         setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
@@ -89,6 +97,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       setResult(null)
       setLoading(false)
       setSolUsdPrice(null)
+      setLastUpdatedAt(null)
     }
 
     prevWalletRef.current = currentAddress
@@ -123,6 +132,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       pipeline.loadPortfolio(walletAddress).then((res) => {
         setResult(res)
         setLoading(false)
+        setLastUpdatedAt(Date.now())
         setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
         Observe.logEvent('positions.refreshed', {
           attributes: { durationMs: Date.now() - startedAt, positionCount: res.positionCount, source },
@@ -159,6 +169,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
         loading: false,
         tokenDataReady: true,
         solUsdPrice,
+        lastUpdatedAt: null,
         refresh,
         walletReady: true,
         walletAddress,
@@ -174,6 +185,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       loading: false,
       tokenDataReady: true,
       solUsdPrice,
+      lastUpdatedAt: MOCK_LOADED_AT,
       refresh,
       walletReady: true,
       walletAddress,
@@ -190,6 +202,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
     loading,
     tokenDataReady,
     solUsdPrice,
+    lastUpdatedAt,
     refresh,
     walletReady,
     walletAddress,
