@@ -20,7 +20,8 @@ interface PositionsListProps {
   tokenDataReady: boolean
   /** Live SOL→USD price for the SOL/USD display toggle */
   solUsdPrice: number | null
-  /** Epoch ms of the last successful load; null hides the freshness stamp */
+  /** Epoch ms of the last successful load; null hides the freshness stamp — and it's
+   *  intentionally omitted from skeleton/empty states, so it only describes live data */
   lastUpdatedAt: number | null
   walletReady: boolean
   walletAddress?: string

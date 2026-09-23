@@ -5,7 +5,8 @@ import { useThemeTokens } from '../../hooks/useThemeTokens'
 import { formatUpdateTime } from '../../utils/positions/formatters'
 
 interface LastUpdatedStampProps {
-  /** Epoch ms of the last successful load; null renders nothing */
+  /** Epoch ms of the last successful load; null renders nothing.
+   *  Host decides placement — PositionsList shows it in its data branch only. */
   lastUpdatedAt: number | null
   /** True while a (non-silent) fetch is in flight — shows "Updating…" and blocks the tap target */
   loading: boolean
