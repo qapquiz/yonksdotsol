@@ -27,13 +27,13 @@ event-driven: the stamp only repaints when data actually lands.
 
 ## Triggers
 
-| Trigger                          | Mode        | Notes                                            |
-| -------------------------------- | ----------- | ------------------------------------------------ |
-| Wallet connect / change          | non-silent  | Clears `lastUpdatedAt` first, full skeleton      |
-| Pull-to-refresh                  | non-silent  | `RefreshControl` spinner; Observe source `pull`  |
-| Stamp tap                        | non-silent  | Same handler as pull, shares the cooldown        |
-| 60s foreground interval          | silent      | Fires only when `AppState` is active; source `auto` |
-| Foreground return (`background → active`) | silent | Immediate, so data isn't a full cadence stale after background time |
+| Trigger                                   | Mode       | Notes                                                               |
+| ----------------------------------------- | ---------- | ------------------------------------------------------------------- |
+| Wallet connect / change                   | non-silent | Clears `lastUpdatedAt` first, full skeleton                         |
+| Pull-to-refresh                           | non-silent | `RefreshControl` spinner; Observe source `pull`                     |
+| Stamp tap                                 | non-silent | Same handler as pull, shares the cooldown                           |
+| 60s foreground interval                   | silent     | Fires only when `AppState` is active; source `auto`                 |
+| Foreground return (`background → active`) | silent     | Immediate, so data isn't a full cadence stale after background time |
 
 All silent/non-silent refresh paths share the 30s cooldown
 (`lastRefreshRef`), which throttles stamp taps and quick
