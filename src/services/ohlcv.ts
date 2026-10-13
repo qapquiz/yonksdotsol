@@ -28,6 +28,8 @@ export interface OhlcvSeries {
   candles: OhlcvCandle[]
 }
 
+import { fetchWithTimeout } from './fetchWithTimeout'
+
 const METEORA_DLMM_API = 'https://dlmm.datapi.meteora.ag'
 
 /** Default resolution for the in-card price chart — ~40h of 4h candles. */
@@ -59,7 +61,7 @@ export async function fetchPoolOhlcv(
 ): Promise<OhlcvSeries> {
   const url = `${METEORA_DLMM_API}/pools/${pairAddress}/ohlcv?timeframe=${timeframe}`
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     headers: { 'Content-Type': 'application/json' },
   })
 

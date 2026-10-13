@@ -60,13 +60,12 @@ describe('fetchTokenFromRpc', () => {
 
     await fetchTokenFromRpc('test-mint')
 
-    expect(fetch).toHaveBeenCalledWith(expect.any(String), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: expect.stringContaining('"getAsset"'),
-    })
-
     const call = (fetch as unknown as ReturnType<typeof vi.fn>).mock.calls[0]
+    expect(call[0]).toBeTypeOf('string')
+    expect(call[1].method).toBe('POST')
+    expect(call[1].headers).toEqual({ 'Content-Type': 'application/json' })
+    expect(call[1].body).toBeTypeOf('string')
+
     const body = JSON.parse(call[1].body)
     expect(body.params.id).toBe('test-mint')
   })

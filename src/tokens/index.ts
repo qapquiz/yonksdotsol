@@ -1,4 +1,5 @@
 import { env } from '../config/env'
+import { fetchWithTimeout } from '../services/fetchWithTimeout'
 
 export interface TokenInfo {
   mint: string
@@ -20,7 +21,7 @@ export const WRAPPED_SOL_MINT = 'So11111111111111111111111111111111111111112'
  * No caching, no singleton. Fully testable.
  */
 export async function fetchTokenFromRpc(mint: string): Promise<TokenInfo> {
-  const response = await fetch(env.rpcUrl || '', {
+  const response = await fetchWithTimeout(env.rpcUrl || '', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

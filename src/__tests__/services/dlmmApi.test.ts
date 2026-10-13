@@ -213,3 +213,34 @@ describe('fetchOpenPortfolioSummary', () => {
     await expect(fetchOpenPortfolioSummary({ user: 'WALLET' })).rejects.toThrow(DlmmApiError)
   })
 })
+
+describe('request timeout', () => {
+  it('rejects with DlmmApiError at the deadline, not before, when the request stalls', async () => {
+    vi.useFakeTimers()
+    try {
+      // A proper fetch rejects only when its signal aborts; without a signal
+      // passed by the caller it must hang (that hang is the bug).
+      fetchMock.mockImplementation(
+        (_url, init) =>
+          new Promise((_resolve, reject) => {
+            init?.signal?.addEventListener('abort', () => reject(new Error('The operation was aborted')))
+          }),
+      )
+
+      const pending = fetchPositionPnL({ poolAddress: 'POOL', user: 'WALLET' })
+      let settled = false
+      pending.catch(() => {
+        settled = true
+      })
+
+      await vi.advanceTimersByTimeAsync(14_999)
+      expect(settled).toBe(false)
+
+      await vi.advanceTimersByTimeAsync(1)
+      expect(settled).toBe(true)
+      await expect(pending).rejects.toThrow(DlmmApiError)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+})

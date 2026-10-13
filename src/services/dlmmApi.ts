@@ -11,6 +11,7 @@
 // converted to numbers by consumers, never in the transport.
 
 import { parseFeePerTvl24h } from '../utils/positions/formatters'
+import { fetchWithTimeout } from './fetchWithTimeout'
 
 export const DLMM_API_BASE = 'https://dlmm.datapi.meteora.ag'
 
@@ -30,7 +31,7 @@ export class DlmmApiError extends Error {
 async function requestJson<T>(url: string): Promise<T> {
   let response: Response
   try {
-    response = await fetch(url, { headers: { 'Content-Type': 'application/json' } })
+    response = await fetchWithTimeout(url, { headers: { 'Content-Type': 'application/json' } })
   } catch (cause) {
     throw new DlmmApiError(`DLMM API network error: ${String(cause)}`)
   }
