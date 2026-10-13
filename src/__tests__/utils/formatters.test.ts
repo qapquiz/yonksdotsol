@@ -28,7 +28,7 @@ describe('formatUSD', () => {
   })
 
   it('formats negative values', () => {
-    expect(formatUSD(-100.5)).toBe('$-100.50')
+    expect(formatUSD(-100.5)).toBe('-$100.50')
   })
 })
 
@@ -82,6 +82,10 @@ describe('formatTokenAmount', () => {
     expect(formatTokenAmount(0n, 9)).toBe('0.0')
   })
 
+  it('keeps the sign for negative amounts', () => {
+    expect(formatTokenAmount(-1500000000n, 9)).toBe('-1.5')
+  })
+
   it('handles very small amounts', () => {
     expect(formatTokenAmount(1n, 9)).toBe('0.0')
   })
@@ -121,7 +125,11 @@ describe('formatUPNLDisplaySol', () => {
   })
 
   it('formats negative SOL values', () => {
-    expect(formatUPNLDisplaySol(-0.5, -10.5)).toBe('0.5000 SOL (-10.50%)')
+    expect(formatUPNLDisplaySol(-0.5, -10.5)).toBe('-0.5000 SOL (-10.50%)')
+  })
+
+  it('signs the percent from the percent itself when signs diverge', () => {
+    expect(formatUPNLDisplaySol(0.5, -10.5)).toBe('+0.5000 SOL (-10.50%)')
   })
 
   it('formats zero values', () => {
@@ -147,7 +155,11 @@ describe('formatUPNLDisplay', () => {
   })
 
   it('formats negative USD values', () => {
-    expect(formatUPNLDisplay(-100.5, -15.25)).toBe('$100.50 (-15.25%)')
+    expect(formatUPNLDisplay(-100.5, -15.25)).toBe('-$100.50 (-15.25%)')
+  })
+
+  it('signs the percent from the percent itself when signs diverge', () => {
+    expect(formatUPNLDisplay(100.5, -15.25)).toBe('+$100.50 (-15.25%)')
   })
 
   it('formats zero values', () => {

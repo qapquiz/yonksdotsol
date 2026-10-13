@@ -1,8 +1,9 @@
 export function formatUSD(value: number): string {
-  return `$${value.toLocaleString('en-US', {
+  const abs = Math.abs(value).toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  })}`
+  })
+  return value < 0 ? `-$${abs}` : `$${abs}`
 }
 
 export type DisplayCurrency = 'SOL' | 'USD'
@@ -22,24 +23,30 @@ export function formatTokenAmount(amount: string | bigint, decimals: number): st
   } else {
     amountValue = amount
   }
+  const negative = amountValue < 0n
+  if (negative) amountValue = -amountValue
   const divisor = 10n ** BigInt(decimals)
   const whole = BigInt(amountValue) / divisor
   const remainder = BigInt(amountValue) % divisor
   const decimalStr = remainder.toString().padStart(decimals, '0').slice(0, 6)
   const trimmedDecimal = decimalStr.replace(/0+$/, '')
-  return `${whole.toString()}.${trimmedDecimal || '0'}`
+  return `${negative ? '-' : ''}${whole.toString()}.${trimmedDecimal || '0'}`
 }
 
 export function formatUPNLDisplaySol(upnl: number | undefined | null, percent: number | undefined | null): string {
   if (upnl == null || percent == null) return ''
-  const sign = upnl >= 0 ? '+' : ''
-  return `${sign}${Math.abs(upnl).toFixed(4)} SOL (${sign}${Number(percent).toFixed(2)}%)`
+  const amountSign = upnl >= 0 ? '+' : '-'
+  const pctValue = Number(percent)
+  const pctSign = pctValue >= 0 ? '+' : '-'
+  return `${amountSign}${Math.abs(upnl).toFixed(4)} SOL (${pctSign}${Math.abs(pctValue).toFixed(2)}%)`
 }
 
 export function formatUPNLDisplay(upnl: number | undefined | null, percent: number | undefined | null): string {
   if (upnl == null || percent == null) return ''
-  const sign = upnl >= 0 ? '+' : ''
-  return `${sign}$${Math.abs(upnl).toFixed(2)} (${sign}${Number(percent).toFixed(2)}%)`
+  const amountSign = upnl >= 0 ? '+' : '-'
+  const pctValue = Number(percent)
+  const pctSign = pctValue >= 0 ? '+' : '-'
+  return `${amountSign}$${Math.abs(upnl).toFixed(2)} (${pctSign}${Math.abs(pctValue).toFixed(2)}%)`
 }
 
 /**
