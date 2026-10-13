@@ -33,6 +33,8 @@ export interface PositionsPageResult {
   solUsdPrice: number | null
   /** Epoch ms of the last successful portfolio load (initial, pull, or silent auto-refresh) */
   lastUpdatedAt: number | null
+  /** True when the last portfolio load failed and no data is on screen */
+  loadError: boolean
   /** Refresh handler (pull / button); `silent: true` skips skeleton and spinner (auto-refresh) */
   refresh: (options?: { silent?: boolean }) => void
   /** Wallet ready status */
@@ -56,19 +58,33 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
   const [result, setResult] = useState<PortfolioResult | null>(null)
   const [loading, setLoading] = useState(true)
   const [tokenDataReady, setTokenDataReady] = useState(false)
+  const [loadError, setLoadError] = useState(false)
+  const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null)
   // Mock mode seeds the SOL price synchronously (no RPC on web); live mode
   // starts null and is filled by the wallet-change / refresh effects below.
   const [solUsdPrice, setSolUsdPrice] = useState<number | null>(env.devMock ? MOCK_SOL_USD_PRICE : null)
-  const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null)
+  // Shared by pull/refresh/auto-refresh throttling; a failed load resets it so
+  // the error-state retry is never throttled out.
+  const lastRefreshRef = useRef(0)
 
   /** Apply a resolved portfolio to state — shared by the wallet-change load and refreshes */
   const applyPortfolioResult = useCallback((res: PortfolioResult) => {
     setResult(res)
     setLoading(false)
+    setLoadError(false)
     setLastUpdatedAt(Date.now())
     // Signal token data ready: positions exist and at least one has token info,
     // or there are no positions at all (empty state)
     setTokenDataReady(res.positions.length === 0 || res.positions.some((p) => p.tokenXInfo !== null))
+  }, [])
+
+  /** A failed load must not leave the skeleton or spinner up — surface the retry UI */
+  const handleLoadFailure = useCallback((error: unknown) => {
+    console.error('Portfolio load failed:', error)
+    Observe.logEvent('positions.load_failed', { severity: 'error' })
+    setLoadError(true)
+    setLoading(false)
+    lastRefreshRef.current = 0
   }, [])
 
   // ── Wallet change: invalidate old data, fetch new ──
@@ -91,7 +107,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       setResult(null)
       setLastUpdatedAt(null)
 
-      pipeline.loadPortfolio(currentAddress).then(applyPortfolioResult)
+      pipeline.loadPortfolio(currentAddress).then(applyPortfolioResult).catch(handleLoadFailure)
       getCurrentSolUsdPrice()
         .then(setSolUsdPrice)
         .catch(() => setSolUsdPrice(null))
@@ -99,12 +115,13 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       // Disconnected
       setResult(null)
       setLoading(false)
+      setLoadError(false)
       setSolUsdPrice(null)
       setLastUpdatedAt(null)
     }
 
     prevWalletRef.current = currentAddress
-  }, [walletAddress, pipeline, applyPortfolioResult])
+  }, [walletAddress, pipeline, applyPortfolioResult, handleLoadFailure])
 
   // ── When wallet resolves with no address, show empty state ──
   useEffect(() => {
@@ -112,12 +129,12 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
     if (walletReady && !walletAddress) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false)
+      setLoadError(false)
       setTokenDataReady(true)
     }
   }, [walletReady, walletAddress])
 
   // ── Throttled refresh (30s cooldown) ──
-  const lastRefreshRef = useRef(0)
   const refresh = useCallback(
     (options?: { silent?: boolean }) => {
       if (env.devMock) return // dev mock: no-op refresh
@@ -132,17 +149,20 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       // no RefreshControl spinner; numbers just update in place.
       if (!options?.silent) setLoading(true)
       const startedAt = Date.now()
-      pipeline.loadPortfolio(walletAddress).then((res) => {
-        applyPortfolioResult(res)
-        Observe.logEvent('positions.refreshed', {
-          attributes: { durationMs: Date.now() - startedAt, positionCount: res.positionCount, source },
+      pipeline
+        .loadPortfolio(walletAddress)
+        .then((res) => {
+          applyPortfolioResult(res)
+          Observe.logEvent('positions.refreshed', {
+            attributes: { durationMs: Date.now() - startedAt, positionCount: res.positionCount, source },
+          })
         })
-      })
+        .catch(handleLoadFailure)
       getCurrentSolUsdPrice()
         .then(setSolUsdPrice)
         .catch(() => setSolUsdPrice(null))
     },
-    [walletAddress, pipeline, applyPortfolioResult],
+    [walletAddress, pipeline, applyPortfolioResult, handleLoadFailure],
   )
 
   // ── Foreground auto-refresh (silent; skipped in dev mock) ──
@@ -178,6 +198,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
         positionCount: 0,
         loading: false,
         tokenDataReady: true,
+        loadError: false,
         solUsdPrice,
         lastUpdatedAt: null,
         refresh,
@@ -194,6 +215,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
       positionCount: mockPortfolio.positionCount,
       loading: false,
       tokenDataReady: true,
+      loadError: false,
       solUsdPrice,
       lastUpdatedAt: MOCK_LOADED_AT,
       refresh,
@@ -210,6 +232,7 @@ export function usePositionsPage(walletAddress: string | undefined, walletReady:
     poolAddresses: result?.poolAddresses ?? [],
     positionCount: result?.positionCount ?? 0,
     loading,
+    loadError,
     tokenDataReady,
     solUsdPrice,
     lastUpdatedAt,

@@ -4,6 +4,8 @@ import { Pressable, Text, View } from 'react-native'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
 
 interface PositionsErrorStateProps {
+  /** Body copy; defaults to the render-boundary wording */
+  message?: string
   /** Clears the boundary's caught error and re-mounts the positions list */
   onRetry: () => void
 }
@@ -11,9 +13,10 @@ interface PositionsErrorStateProps {
 /**
  * Fallback UI for the error boundary around the positions list.
  * The boundary records the render error as an EAS Observe `exception` event;
- * this component is what the user sees in its place.
+ * this component is what the user sees in its place. Also reused for
+ * portfolio load failures, where the list passes its own message.
  */
-function PositionsErrorState({ onRetry }: PositionsErrorStateProps) {
+function PositionsErrorState({ message, onRetry }: PositionsErrorStateProps) {
   const tokens = useThemeTokens()
 
   const handleRetry = useCallback(() => {
@@ -27,7 +30,7 @@ function PositionsErrorState({ onRetry }: PositionsErrorStateProps) {
       </View>
       <Text className="text-2xl font-sans-bold text-app-text mb-2">Something went wrong</Text>
       <Text className="text-base text-app-text-secondary text-center mb-8">
-        The positions list hit an unexpected error while rendering.
+        {message ?? 'The positions list hit an unexpected error while rendering.'}
       </Text>
       <Pressable onPress={handleRetry} className="rounded-full bg-app-primary px-8 py-3 active:opacity-80">
         <Text className="text-sm font-sans-bold uppercase tracking-wider text-app-on-primary">Try again</Text>

@@ -118,6 +118,7 @@ export default function App() {
             outOfRangeCount={pageData.outOfRangeCount}
             positionCount={pageData.positionCount}
             loading={pageData.loading}
+            loadError={pageData.loadError}
             tokenDataReady={pageData.tokenDataReady}
             solUsdPrice={pageData.solUsdPrice}
             lastUpdatedAt={pageData.lastUpdatedAt}

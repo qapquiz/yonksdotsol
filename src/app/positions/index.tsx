@@ -7,6 +7,7 @@ import PortfolioSummary from '../../components/positions/PortfolioSummary'
 import PortfolioSummarySkeleton from '../../components/positions/PortfolioSummarySkeleton'
 import PositionCard from '../../components/positions/PositionCard'
 import PositionCardSkeleton from '../../components/positions/PositionCardSkeleton'
+import PositionsErrorState from '../../components/positions/PositionsErrorState'
 import { useThemeTokens } from '../../hooks/useThemeTokens'
 import type { ResolvedPosition, PortfolioSummaryData } from '../../hooks/usePositionsPage'
 
@@ -17,6 +18,8 @@ interface PositionsListProps {
   outOfRangeCount: number
   positionCount: number
   loading: boolean
+  /** True when the portfolio load failed with nothing on screen — shows the retry UI */
+  loadError: boolean
   tokenDataReady: boolean
   /** Live SOL→USD price for the SOL/USD display toggle */
   solUsdPrice: number | null
@@ -35,6 +38,7 @@ export default function PositionsList({
   outOfRangeCount,
   positionCount,
   loading,
+  loadError,
   tokenDataReady,
   solUsdPrice,
   lastUpdatedAt,
@@ -84,6 +88,19 @@ export default function PositionsList({
   // occurs when positions exist but token prices haven't loaded yet.
   const showSkeleton = !walletReady || !tokenDataReady || (positions.length === 0 && loading)
   const showEmpty = walletReady && !loading && positions.length === 0
+
+  // A failed load with nothing on screen beats the skeleton — skeleton waits on
+  // tokenDataReady, which never arrives after a rejection.
+  const handleRetry = useCallback(() => refresh(), [refresh])
+
+  if (loadError && positions.length === 0) {
+    return (
+      <PositionsErrorState
+        message="Couldn't load your positions. Check your connection and try again."
+        onRetry={handleRetry}
+      />
+    )
+  }
 
   if (showSkeleton) {
     return (
