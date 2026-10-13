@@ -1,7 +1,7 @@
 import { CacheManager } from '../utils/cache/CacheManager'
 import { CACHE_TTL } from '../config/cache'
 import { fetchPoolOhlcv, DEFAULT_OHLCV_TIMEFRAME, type OhlcvSeries, type OhlcvTimeframe } from './ohlcv'
-import { fetchTokenFromRpc, type TokenInfo } from '../tokens'
+import { fetchTokenFromRpc, fetchTokensFromRpc, type TokenInfo } from '../tokens'
 
 // ─── Cache key generators (internalized) ─────────────────────────────
 
@@ -46,20 +46,33 @@ export function createDataServices(cache?: CacheManager): DataServices {
     },
 
     async getPrices(mints: string[]): Promise<Map<string, TokenInfo>> {
-      const results = await Promise.allSettled(
-        mints.map((mint) =>
-          cm
-            .getOrFetch(getTokenDataKey(mint), () => fetchTokenFromRpc(mint), CACHE_TTL.TOKEN_DATA)
-            .then((info) => [mint, info] as const),
-        ),
-      )
-
       const data = new Map<string, TokenInfo>()
-      for (const result of results) {
-        if (result.status === 'fulfilled') {
-          const [mint, info] = result.value
+
+      // Serve fresh per-mint cache hits; batch-fetch only the misses in one
+      // getAssetBatch POST instead of one request per mint.
+      const missing: string[] = []
+      for (const mint of mints) {
+        const cached = cm.get<TokenInfo>(getTokenDataKey(mint))
+        if (cached) {
+          data.set(mint, cached)
+        } else {
+          missing.push(mint)
+        }
+      }
+      if (missing.length === 0) return data
+
+      try {
+        const batchKey = `token_batch:${missing.slice().sort().join(',')}`
+        const fetched = await cm.getOrFetch(batchKey, () => fetchTokensFromRpc(missing), CACHE_TTL.TOKEN_DATA)
+        for (const [mint, info] of fetched) {
+          // Seed the per-mint keys so getPrice() (e.g. the SOL price path)
+          // shares this cache instead of refetching.
+          cm.set(getTokenDataKey(mint), info, CACHE_TTL.TOKEN_DATA)
           data.set(mint, info)
         }
+      } catch {
+        // Best-effort: failed mints are simply absent, same as the old
+        // per-mint allSettled semantics.
       }
       return data
     },

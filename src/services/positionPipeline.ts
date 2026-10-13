@@ -94,8 +94,14 @@ export class PositionPipeline {
    * positions still return with pnlSol/pnlSolPctChange = null and hasPnLData = false.
    */
   async loadPortfolio(walletAddress: string): Promise<PortfolioResult> {
-    // Step 1: Fetch positions from DLMM
-    const positionsMap = await DLMM.getAllLbPairPositionsByUser(this.connection, new PublicKey(walletAddress))
+    // Step 1: Fetch positions from DLMM — cached briefly so the 60s auto-refresh,
+    // widget syncs, and overlapping background tasks don't re-run the heaviest
+    // RPC; invalidateWallet (explicit pull, wallet switch) always refetches.
+    const positionsMap = await this.cache.getOrFetch(
+      `positions:${walletAddress}`,
+      () => DLMM.getAllLbPairPositionsByUser(this.connection, new PublicKey(walletAddress)),
+      CACHE_TTL.POSITIONS,
+    )
     const positionsEntries = Array.from(positionsMap.entries())
     const positionsArray = positionsEntries.map(([, pos]) => pos)
     const poolAddresses = positionsEntries.map(([addr]) => addr)
@@ -120,11 +126,12 @@ export class PositionPipeline {
     }
     const uniqueMints = Array.from(mintSet)
 
-    // Token prices: best-effort — failures are tolerated (null TokenInfo)
-    const tokenData = await this.dataServices.tokens.getPrices(uniqueMints)
-
-    // Step 3: Fetch PnL data per pool (best-effort)
-    const pnlResults = await this.fetchAllPnL(poolAddresses, walletAddress)
+    // Steps 2-3 in parallel: token prices (best-effort, failures tolerated as
+    // null TokenInfo) and per-pool PnL (best-effort) are independent.
+    const [tokenData, pnlResults] = await Promise.all([
+      this.dataServices.tokens.getPrices(uniqueMints),
+      this.fetchAllPnL(poolAddresses, walletAddress),
+    ])
 
     // Step 4: Compute view models
     const resolvedPositions = this.resolvePositions(positionsEntries, tokenData, pnlResults, walletAddress)

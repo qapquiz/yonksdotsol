@@ -58,3 +58,71 @@ export async function fetchTokenFromRpc(mint: string): Promise<TokenInfo> {
     price_info: data.result.token_info.price_info,
   } as TokenInfo
 }
+
+/** Raw `getAsset`/`getAssetBatch` result item — parsed defensively, entries can be null. */
+interface RawAsset {
+  id?: string
+  token_info?: {
+    symbol: string
+    supply: number
+    decimals: number
+    price_info: TokenInfo['price_info']
+  }
+  content?: { links?: { image?: string } }
+}
+
+function parseAsset(asset: RawAsset | null, fallbackMint: string): TokenInfo | null {
+  if (!asset?.token_info || !asset.content?.links?.image) return null
+  return {
+    mint: asset.id ?? fallbackMint,
+    symbol: asset.token_info.symbol,
+    supply: asset.token_info.supply,
+    cdn_url: asset.content.links.image,
+    decimals: asset.token_info.decimals,
+    price_info: asset.token_info.price_info,
+  }
+}
+
+/**
+ * Batch fetch — one `getAssetBatch` POST for all mints. Entries that come
+ * back null (unknown/unsupported mint) are omitted, mirroring the
+ * error-isolated semantics of the per-mint path.
+ */
+export async function fetchTokensFromRpc(mints: string[]): Promise<Map<string, TokenInfo>> {
+  if (mints.length === 0) return new Map()
+
+  const response = await fetchWithTimeout(env.rpcUrl || '', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: '1',
+      method: 'getAssetBatch',
+      params: {
+        ids: mints,
+        displayOptions: {
+          showFungible: true,
+        },
+      },
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`)
+  }
+
+  const data = await response.json()
+
+  if (data.error) {
+    throw new Error(data.error.message || 'RPC error')
+  }
+
+  const result = new Map<string, TokenInfo>()
+  mints.forEach((mint, i) => {
+    const info = parseAsset(data.result?.[i] ?? null, mint)
+    if (info) result.set(mint, info)
+  })
+  return result
+}

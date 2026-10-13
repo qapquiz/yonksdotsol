@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { TokenInfo } from '../../tokens'
 import { CacheManager } from '../../utils/cache/CacheManager'
 
-import { fetchTokenFromRpc } from '../../tokens'
+import { fetchTokenFromRpc, fetchTokensFromRpc } from '../../tokens'
 import { fetchPoolOhlcv } from '../../services/ohlcv'
 import { createDataServices } from '../../services/data'
 
@@ -21,6 +21,7 @@ const mockTokenInfo: TokenInfo = {
 // Mock the pure fetch functions
 vi.mock('../../tokens', () => ({
   fetchTokenFromRpc: vi.fn(),
+  fetchTokensFromRpc: vi.fn(),
 }))
 
 vi.mock('../../services/ohlcv', () => ({
@@ -62,24 +63,31 @@ describe('DataServices', () => {
       expect(fetchTokenFromRpc).toHaveBeenCalledTimes(1)
     })
 
-    it('batch-fetches multiple token prices', async () => {
+    it('batch-fetches multiple token prices in one call', async () => {
       const token1 = { ...mockTokenInfo, mint: 'mint1', symbol: 'TK1' }
       const token2 = { ...mockTokenInfo, mint: 'mint2', symbol: 'TK2' }
 
-      vi.mocked(fetchTokenFromRpc).mockResolvedValueOnce(token1).mockResolvedValueOnce(token2)
+      vi.mocked(fetchTokensFromRpc).mockResolvedValue(
+        new Map([
+          ['mint1', token1],
+          ['mint2', token2],
+        ]),
+      )
 
       const services = createDataServices(freshCache)
       const result = await services.tokens.getPrices(['mint1', 'mint2'])
 
+      expect(fetchTokensFromRpc).toHaveBeenCalledTimes(1)
+      expect(fetchTokensFromRpc).toHaveBeenCalledWith(['mint1', 'mint2'])
       expect(result.size).toBe(2)
       expect(result.get('mint1')).toEqual(token1)
       expect(result.get('mint2')).toEqual(token2)
     })
 
-    it('handles partial failures in batch fetch', async () => {
+    it('handles partial results from batch fetch', async () => {
       const token1 = { ...mockTokenInfo, mint: 'mint1' }
 
-      vi.mocked(fetchTokenFromRpc).mockResolvedValueOnce(token1).mockRejectedValueOnce(new Error('Failed'))
+      vi.mocked(fetchTokensFromRpc).mockResolvedValue(new Map([['mint1', token1]]))
 
       const services = createDataServices(freshCache)
       const result = await services.tokens.getPrices(['mint1', 'mint2'])

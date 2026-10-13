@@ -50,6 +50,7 @@ function pnlPage(positions: PositionPnLData[], hasNext = false): Response {
 // Mock token fetching
 vi.mock('../../tokens', () => ({
   fetchTokenFromRpc: vi.fn(),
+  fetchTokensFromRpc: vi.fn(),
 }))
 
 // Mock env
@@ -207,10 +208,13 @@ describe('PositionPipeline', () => {
       vi.mocked(DLMM.default.getAllLbPairPositionsByUser).mockResolvedValue(positionsMap)
 
       // Mock token fetching
-      const { fetchTokenFromRpc } = await import('../../tokens')
-      vi.mocked(fetchTokenFromRpc)
-        .mockResolvedValueOnce(MOCK_TOKEN_X as any)
-        .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
+      const { fetchTokensFromRpc } = await import('../../tokens')
+      vi.mocked(fetchTokensFromRpc).mockResolvedValue(
+        new Map([
+          [MOCK_TOKEN_X.mint, MOCK_TOKEN_X as any],
+          [MOCK_TOKEN_Y.mint, MOCK_TOKEN_Y as any],
+        ]),
+      )
 
       // Mock PnL fetching
       fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA], paginated))
@@ -269,10 +273,13 @@ describe('PositionPipeline', () => {
       const DLMM = await import('@meteora-ag/dlmm')
       vi.mocked(DLMM.default.getAllLbPairPositionsByUser).mockResolvedValue(positionsMap)
 
-      const { fetchTokenFromRpc } = await import('../../tokens')
-      vi.mocked(fetchTokenFromRpc)
-        .mockResolvedValueOnce(MOCK_TOKEN_X as any)
-        .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
+      const { fetchTokensFromRpc } = await import('../../tokens')
+      vi.mocked(fetchTokensFromRpc).mockResolvedValue(
+        new Map([
+          [MOCK_TOKEN_X.mint, MOCK_TOKEN_X as any],
+          [MOCK_TOKEN_Y.mint, MOCK_TOKEN_Y as any],
+        ]),
+      )
 
       // PnL fetch throws
       if (laterPage) fetchMock.mockResolvedValueOnce(pnlPage([MOCK_PNL_DATA], true))
@@ -325,8 +332,8 @@ describe('PositionPipeline', () => {
       vi.mocked(DLMM.default.getAllLbPairPositionsByUser).mockResolvedValue(positionsMap)
 
       // Token fetch fails
-      const { fetchTokenFromRpc } = await import('../../tokens')
-      vi.mocked(fetchTokenFromRpc).mockRejectedValue(new Error('RPC error'))
+      const { fetchTokensFromRpc } = await import('../../tokens')
+      vi.mocked(fetchTokensFromRpc).mockRejectedValue(new Error('RPC error'))
 
       pipeline = createPositionPipeline({ cache })
 
@@ -368,10 +375,13 @@ describe('PositionPipeline', () => {
       const DLMM = await import('@meteora-ag/dlmm')
       vi.mocked(DLMM.default.getAllLbPairPositionsByUser).mockResolvedValue(positionsMap)
 
-      const { fetchTokenFromRpc } = await import('../../tokens')
-      vi.mocked(fetchTokenFromRpc)
-        .mockResolvedValueOnce(MOCK_TOKEN_X as any)
-        .mockResolvedValueOnce(MOCK_TOKEN_Y as any)
+      const { fetchTokensFromRpc } = await import('../../tokens')
+      vi.mocked(fetchTokensFromRpc).mockResolvedValue(
+        new Map([
+          [MOCK_TOKEN_X.mint, MOCK_TOKEN_X as any],
+          [MOCK_TOKEN_Y.mint, MOCK_TOKEN_Y as any],
+        ]),
+      )
 
       pipeline = createPositionPipeline({ cache })
       // Live position PnL responses can encode these SOL fields as decimal strings.
@@ -419,6 +429,22 @@ describe('PositionPipeline', () => {
       expect(cache.get('token_data:mint1')).toBe('some-token-data')
       // Other wallet's data survives
       expect(cache.get('pnl:pool1:wallet2')).toBe('other-wallet-data')
+    })
+  })
+
+  describe('positions cache', () => {
+    it('serves a second load within the TTL from cache and refetches after invalidateWallet', async () => {
+      const DLMM = await import('@meteora-ag/dlmm')
+      vi.mocked(DLMM.default.getAllLbPairPositionsByUser).mockResolvedValue(new Map())
+      pipeline = createPositionPipeline({ cache })
+
+      await pipeline.loadPortfolio('wallet1')
+      await pipeline.loadPortfolio('wallet1')
+      expect(DLMM.default.getAllLbPairPositionsByUser).toHaveBeenCalledTimes(1)
+
+      pipeline.invalidateWallet('wallet1')
+      await pipeline.loadPortfolio('wallet1')
+      expect(DLMM.default.getAllLbPairPositionsByUser).toHaveBeenCalledTimes(2)
     })
   })
 })
