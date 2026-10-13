@@ -163,7 +163,7 @@ This file contains build commands and code style guidelines for agentic coding a
 
 ## React Native + Solana/Anchor SDK Compatibility
 
-The project uses **two Solana SDKs side by side**: the legacy `@solana/web3.js` (v1) and the new `@solana/kit` (v2). Both, along with Anchor (`@coral-xyz/anchor`) and Meteora DLMM, rely on Node.js `Buffer` methods that don't exist on `Uint8Array` in React Native's Hermes engine. All patches live in `polyfill.js`.
+The project uses the legacy `@solana/web3.js` (v1), Anchor (`@coral-xyz/anchor`), and Meteora DLMM, which rely on Node.js `Buffer` methods that don't exist on `Uint8Array` in React Native's Hermes engine. All patches live in `polyfill.js`.
 
 ### Required Polyfills (already in `polyfill.js`)
 
@@ -196,21 +196,19 @@ Polyfills are loaded in this order (do **not** change):
 
 ## Key Dependencies
 
-| Package                       | Purpose                                                   |
-| ----------------------------- | --------------------------------------------------------- |
-| `expo-router`                 | File-based routing                                        |
-| `zustand`                     | Global state management (stores in `src/stores/`)         |
-| `uniwind`                     | Tailwind CSS for React Native                             |
-| `@wallet-ui/react-native-kit` | Solana wallet connection                                  |
-| `@solana/kit`                 | Solana SDK v2 (new API)                                   |
-| `@solana/web3.js`             | Solana SDK v1 (legacy, still used)                        |
-| `@meteora-ag/dlmm`            | Meteora DLMM pool integration                             |
-| `@legendapp/list`             | High-performance lists                                    |
-| `react-native-mmkv`           | Fast persistent key-value storage                         |
-| `react-native-android-widget` | Android home screen widgets                               |
-| `react-native-quick-crypto`   | Crypto polyfill for Hermes                                |
-| `zod`                         | Schema validation (available, currently unused in env.ts) |
-| `vitest`                      | Test framework                                            |
+| Package                       | Purpose                                           |
+| ----------------------------- | ------------------------------------------------- |
+| `expo-router`                 | File-based routing                                |
+| `zustand`                     | Global state management (stores in `src/stores/`) |
+| `uniwind`                     | Tailwind CSS for React Native                     |
+| `@wallet-ui/react-native-kit` | Solana wallet connection                          |
+| `@solana/web3.js`             | Solana SDK v1 (legacy, still used)                |
+| `@meteora-ag/dlmm`            | Meteora DLMM pool integration                     |
+| `@legendapp/list`             | High-performance lists                            |
+| `react-native-mmkv`           | Fast persistent key-value storage                 |
+| `react-native-android-widget` | Android home screen widgets                       |
+| `react-native-quick-crypto`   | Crypto polyfill for Hermes                        |
+| `vitest`                      | Test framework                                    |
 
 ## Domain Terminology
 

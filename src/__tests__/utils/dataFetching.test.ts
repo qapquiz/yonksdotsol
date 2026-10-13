@@ -67,6 +67,7 @@ describe('fetchTokenFromRpc', () => {
     expect(call[1].body).toBeTypeOf('string')
 
     const body = JSON.parse(call[1].body)
+    expect(body.method).toBe('getAsset')
     expect(body.params.id).toBe('test-mint')
   })
 

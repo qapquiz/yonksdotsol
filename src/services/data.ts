@@ -71,8 +71,20 @@ export function createDataServices(cache?: CacheManager): DataServices {
           data.set(mint, info)
         }
       } catch {
-        // Best-effort: failed mints are simply absent, same as the old
-        // per-mint allSettled semantics.
+        // Batch transport failure (RPC without getAssetBatch, or down): degrade
+        // to per-mint fetches so one unsupported method doesn't drop every token.
+        const settled = await Promise.allSettled(
+          missing.map((mint) =>
+            cm
+              .getOrFetch(getTokenDataKey(mint), () => fetchTokenFromRpc(mint), CACHE_TTL.TOKEN_DATA)
+              .then((info) => [mint, info] as const),
+          ),
+        )
+        for (const result of settled) {
+          if (result.status === 'fulfilled') {
+            data.set(result.value[0], result.value[1])
+          }
+        }
       }
       return data
     },
