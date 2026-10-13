@@ -65,7 +65,6 @@ export async function sendOutOfRangeNotifications(alerts: OutOfRangeAlert[]): Pr
       content: {
         title: count === 1 ? 'Position out of range' : `${count} positions out of range`,
         body: 'Your position is no longer earning fees. Tap to view in Yonks.',
-        data: { screen: 'positions' },
       },
       trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 1, channelId: CHANNEL_ID },
     })

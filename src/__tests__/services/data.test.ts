@@ -30,7 +30,7 @@ vi.mock('../../services/ohlcv', () => ({
 
 // Mock env for tokens module
 vi.mock('../../config/env', () => ({
-  env: { rpcUrl: 'https://test.rpc', heliusApiKey: 'test-key' },
+  env: { rpcUrl: 'https://test.rpc' },
 }))
 
 describe('DataServices', () => {

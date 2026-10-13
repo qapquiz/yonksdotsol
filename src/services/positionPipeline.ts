@@ -51,18 +51,6 @@ export interface PortfolioResult {
   positionCount: number
 }
 
-/** Summary data returned by fetchPortfolioSummary — widget-friendly subset */
-export interface PortfolioSummaryWidgetData {
-  totalPnlSol: number
-  totalPnlPercent: number
-  totalValueSol: number
-  totalInitialDepositSol: number
-  totalUnclaimedFeesSol: number
-  positionCount: number
-  outOfRangeCount: number
-  feesTvl24h: number | null
-}
-
 // ─── Dependency injection ─────────────────────────────────────────────
 
 export interface PipelineDeps {
@@ -158,29 +146,6 @@ export class PositionPipeline {
       outOfRangeCount,
       positionCount: resolvedPositions.length,
       poolAddresses,
-    }
-  }
-
-  /**
-   * Convenience for the Android widget: returns only the summary fields,
-   * no per-position view models. Returns null if wallet has no positions.
-   */
-  async fetchPortfolioSummary(walletAddress: string): Promise<PortfolioSummaryWidgetData | null> {
-    const result = await this.loadPortfolio(walletAddress)
-
-    if (result.positionCount === 0) {
-      return null
-    }
-
-    return {
-      totalPnlSol: result.summary?.totalPnlSol ?? 0,
-      totalPnlPercent: result.summary?.totalPnlPercent ?? 0,
-      totalValueSol: result.summary?.totalValueSol ?? 0,
-      totalInitialDepositSol: result.summary?.totalInitialDepositSol ?? 0,
-      totalUnclaimedFeesSol: result.summary?.totalUnclaimedFeesSol ?? 0,
-      positionCount: result.positionCount,
-      outOfRangeCount: result.outOfRangeCount,
-      feesTvl24h: result.summary?.feesTvl24h ?? null,
     }
   }
 

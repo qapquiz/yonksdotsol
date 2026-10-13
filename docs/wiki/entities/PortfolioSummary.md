@@ -56,22 +56,10 @@ Uses `ShimmerBlock` for skeleton animation.
 
 ## Data Source
 
-Reads from `pnlStore` using selectors:
-
-- `selectPoolPnLSummary(wallet, poolAddresses)` — Aggregated values
-- `selectHasPoolData(wallet, poolAddresses)` — Loading state check
-
-Returns:
-
-```typescript
-{
-  totalPnlSol: number
-  totalPnlPercent: number
-  totalValueSol: number
-  totalInitialDepositSol: number
-  totalUnclaimedFeesSol: number
-}
-```
+Renders the `summary` prop passed down from `PositionsList`. The value is a
+`PortfolioSummaryData` computed in `usePositionsPage` from
+`PositionPipeline.loadPortfolio` (on-chain positions plus Data-API PnL) — there
+is no dedicated PnL store.
 
 ## Styling
 

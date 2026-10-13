@@ -45,7 +45,7 @@ interface PositionCardProps {
 ## Key Relationships
 
 - Depends on [[computePositionViewData]] for the view model
-- Used by `PositionsList` in `src/app/positions/index.tsx`
+- Used by `PositionsList` in `src/components/positions/PositionsList.tsx`
 
 ## See Also
 

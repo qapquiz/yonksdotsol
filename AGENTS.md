@@ -132,9 +132,9 @@ This file contains build commands and code style guidelines for agentic coding a
 ### State Management
 
 - **Zustand** for global/shared state (`src/stores/`)
-  - `pnlStore.ts` — PnL calculations and position data
-  - `settingsStore.ts` — app settings and preferences
-  - `walletStore.ts` — wallet connection state
+  - `settingsStore.ts` — theme, font, alerts, display-currency preferences
+  - `walletStore.ts` — stored wallet address and widget snapshot (plain MMKV)
+  - `alertStore.ts` — out-of-range alert dedup state per wallet
 - React hooks for local component state
   - `useState` for simple values
   - `useReducer` for complex state logic
@@ -149,13 +149,12 @@ This file contains build commands and code style guidelines for agentic coding a
 
 ### Code Organization
 
-- `/src/app/` - Expo Router pages (file-based routing)
+- `/src/app/` - Expo Router pages (file-based routing; render components live in `/src/components/`)
 - `/src/components/` - Reusable UI components (`positions/`, `ui/`)
 - `/src/config/` - Configuration and constants (`connection.ts`, `env.ts`, `fonts.ts`, `theme.ts`, `cache.ts`)
-- `/src/contexts/` - React contexts (reserved for future use, currently empty)
 - `/src/hooks/` - Custom React hooks (`usePositionsPage`, `useWalletLifecycle`, `useThemeTokens`, `useWidgetSync`, `useFontConfig`)
 - `/src/services/` - Data fetching layer (`data.ts`)
-- `/src/stores/` - Zustand stores (`pnlStore`, `settingsStore`, `walletStore`)
+- `/src/stores/` - Zustand and MMKV stores (`settingsStore`, `walletStore`, `alertStore`)
 - `/src/tokens/` - Token lists (`index.ts`)
 - `/src/types/` - Shared TypeScript type definitions (`charts.d.ts`)
 - `/src/utils/` - Pure utility functions (`positions/`, `cache/`)
@@ -206,7 +205,7 @@ Polyfills are loaded in this order (do **not** change):
 | `@solana/kit`                 | Solana SDK v2 (new API)                                   |
 | `@solana/web3.js`             | Solana SDK v1 (legacy, still used)                        |
 | `@meteora-ag/dlmm`            | Meteora DLMM pool integration                             |
-| `@shopify/flash-list`         | High-performance lists                                    |
+| `@legendapp/list`             | High-performance lists                                    |
 | `react-native-mmkv`           | Fast persistent key-value storage                         |
 | `react-native-android-widget` | Android home screen widgets                               |
 | `react-native-quick-crypto`   | Crypto polyfill for Hermes                                |
@@ -288,7 +287,7 @@ Always run:
 - Prefix with `EXPO_PUBLIC_` for client-side access
 - Example: `EXPO_PUBLIC_RPC_URL=https://...`
 - Use via `process.env.EXPO_PUBLIC_RPC_URL`
-- Access via `src/config/env.ts` (`env.rpcUrl`, `env.heliusApiKey`) — never use `process.env` directly in components
+- Access via `src/config/env.ts` (`env.rpcUrl`) — never use `process.env` directly in components
 - Zod validation is currently commented out; values are read directly from `process.env`
 
 <!-- OPENWIKI:START -->

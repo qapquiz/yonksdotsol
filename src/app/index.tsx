@@ -13,7 +13,7 @@ import { useSettingsStore } from '../stores/settingsStore'
 import { useThemeTokens } from '../hooks/useThemeTokens'
 import { useWalletLifecycle } from '../hooks/useWalletLifecycle'
 import PositionsErrorState from '../components/positions/PositionsErrorState'
-import PositionsList from './positions'
+import PositionsList from '../components/positions/PositionsList'
 
 export default function App() {
   const theme = useSettingsStore((s) => s.theme)

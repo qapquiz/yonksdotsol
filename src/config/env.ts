@@ -10,7 +10,6 @@ import { Platform } from 'react-native'
 
 export const env = {
   rpcUrl: process.env.EXPO_PUBLIC_RPC_URL,
-  heliusApiKey: process.env.EXPO_PUBLIC_HELIUS_API_KEY,
   /**
    * Dev-only: render mock positions instead of fetching on-chain data.
    * Always enabled on web — the web target exists purely as a mock-data

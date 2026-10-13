@@ -41,13 +41,9 @@ src/__tests__/
 │   └── formatters.test.ts
 ├── stores/
 │   ├── CacheManager.test.ts
-│   ├── pnlStore.test.ts
 │   └── settingsStore.test.ts
-├── hooks/
-│   └── useBatchTokenData.test.ts
-└── components/
-    └── positions/
-        └── PositionCard.test.tsx
+└── hooks/
+    └── usePositionsPage.test.ts
 ```
 
 ## Setup (`src/__tests__/setup.ts`)
@@ -85,7 +81,6 @@ Zustand store state management with mocked dependencies.
 
 **Files:**
 
-- `src/__tests__/stores/pnlStore.test.ts`
 - `src/__tests__/stores/CacheManager.test.ts`
 - `src/__tests__/stores/settingsStore.test.ts`
 
@@ -102,14 +97,12 @@ Custom React hooks with mocked data sources.
 
 **Files:**
 
-- `src/__tests__/hooks/useBatchTokenData.test.ts`
+- `src/__tests__/hooks/usePositionsPage.test.ts`
 
 **Key Behaviors Tested:**
 
-- Loading states
-- Data fetching
-- Error handling
-- Cleanup on unmount
+- Load failures surface `loadError` instead of hanging the skeleton
+- Failed refreshes reset the throttle so retry is immediate
 
 ### 4. Component Tests (Medium Priority)
 
