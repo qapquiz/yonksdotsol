@@ -59,6 +59,7 @@ exactly four H2 sections: `Sub-features`, `How to get to it (user POV)`,
 | `theme-toggle.md`                 | Dark ↔ light theme toggle and persistence                  |
 | `wallet-mock-toggle.md`           | Mock wallet disconnect → empty state, reconnect → list     |
 | `freshness-stamp-refresh.md`      | "Updated H:MM AM/PM" freshness stamp                       |
+| `meteora-pool-link.md`            | Per-card external link to the pool on Meteora              |
 
 ## Not verifiable on web (native only)
 

@@ -53,7 +53,15 @@ export default function PositionsList({
   const renderItem = useCallback(
     ({ item }: { item: (typeof listData)[number] }) => {
       const r = item.resolved
-      return <PositionCard vm={r.vm} tokenXInfo={r.tokenXInfo} tokenYInfo={r.tokenYInfo} solUsdPrice={solUsdPrice} />
+      return (
+        <PositionCard
+          vm={r.vm}
+          poolAddress={r.poolAddress}
+          tokenXInfo={r.tokenXInfo}
+          tokenYInfo={r.tokenYInfo}
+          solUsdPrice={solUsdPrice}
+        />
+      )
     },
     [solUsdPrice],
   )

@@ -1,7 +1,10 @@
+import { Ionicons } from '@expo/vector-icons'
 import { memo } from 'react'
-import { Text, View } from 'react-native'
+import { Linking, Pressable, Text, View } from 'react-native'
 import type { TokenInfo } from '../../tokens'
 import { usePixelFont } from '../../hooks/useFontConfig'
+import { useThemeTokens } from '../../hooks/useThemeTokens'
+import { meteoraPoolUrl } from '../../utils/links'
 import { formatUPNLDisplay, formatUPNLDisplaySol } from '../../utils/positions/formatters'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { TokenIcons } from './TokenIcons'
@@ -9,6 +12,7 @@ import { TokenIcons } from './TokenIcons'
 interface PositionHeaderProps {
   tokenXInfo: TokenInfo | null
   tokenYInfo: TokenInfo | null
+  poolAddress: string
   inRange: boolean
   totalValue: string
   upnlValue: number | null
@@ -20,6 +24,7 @@ interface PositionHeaderProps {
 function PositionHeaderComponent({
   tokenXInfo,
   tokenYInfo,
+  poolAddress,
   inRange,
   totalValue,
   upnlValue,
@@ -27,6 +32,7 @@ function PositionHeaderComponent({
   solUsdPrice,
 }: PositionHeaderProps) {
   const pixelFont = usePixelFont()
+  const tokens = useThemeTokens()
   const displayCurrency = useSettingsStore((s) => s.displayCurrency)
   const upnlColorClass = upnlValue !== null ? (upnlValue >= 0 ? 'text-app-primary' : 'text-app-negative') : ''
 
@@ -48,6 +54,15 @@ function PositionHeaderComponent({
             {tokenXInfo?.symbol} / {tokenYInfo?.symbol}
           </Text>
         </View>
+        <Pressable
+          className="active:opacity-70"
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="View pool on Meteora"
+          onPress={() => void Linking.openURL(meteoraPoolUrl(poolAddress))}
+        >
+          <Ionicons name="open-outline" size={14} color={tokens.textMuted} />
+        </Pressable>
       </View>
       <View className="items-end gap-1 flex-shrink-0">
         <View className={`px-2 py-1 rounded-md ${inRange ? 'bg-app-primary-dim' : 'bg-app-secondary-dim'}`}>

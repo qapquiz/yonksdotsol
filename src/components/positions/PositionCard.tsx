@@ -11,6 +11,8 @@ import { PositionHeader } from './PositionHeader'
 
 interface PositionCardProps {
   vm: PositionViewModel
+  /** Pair address of the pool; forwarded to PositionHeader for the Meteora link */
+  poolAddress: string
   tokenXInfo: TokenInfo | null
   tokenYInfo: TokenInfo | null
   /** Live SOL→USD price; forwarded to PositionHeader for the uPnL line */
@@ -24,7 +26,7 @@ const CHART_MODE_OPTIONS: readonly { value: ChartMode; label: string }[] = [
   { value: 'price', label: 'Price' },
 ]
 
-function PositionCardComponent({ vm, tokenXInfo, tokenYInfo, solUsdPrice }: PositionCardProps) {
+function PositionCardComponent({ vm, poolAddress, tokenXInfo, tokenYInfo, solUsdPrice }: PositionCardProps) {
   const [chartMode, setChartMode] = useState<ChartMode>('liquidity')
 
   // Show skeleton while token data is loading
@@ -37,6 +39,7 @@ function PositionCardComponent({ vm, tokenXInfo, tokenYInfo, solUsdPrice }: Posi
       <PositionHeader
         tokenXInfo={tokenXInfo}
         tokenYInfo={tokenYInfo}
+        poolAddress={poolAddress}
         inRange={vm.inRange}
         totalValue={vm.totalValue}
         upnlValue={vm.pnlSol}
